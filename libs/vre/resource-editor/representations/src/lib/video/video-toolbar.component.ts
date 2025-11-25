@@ -9,6 +9,7 @@ import {
   CreateSegmentDialogComponent,
   CreateSegmentDialogProps,
 } from '@dasch-swiss/vre/resource-editor/segment-support';
+import { firstValueFrom } from 'rxjs';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { MediaPlayerService } from './media-player.service';
@@ -21,7 +22,10 @@ import { MediaPlayerService } from './media-player.service';
         mat-icon-button
         data-cy="play-pause-button"
         (click)="mediaPlayer.togglePlay()"
-        [matTooltip]="play ? 'Pause' : 'Play'"
+        [matTooltip]="
+          (play ? 'resourceEditor.representations.video.pause' : 'resourceEditor.representations.video.play')
+            | translate
+        "
         [matTooltipPosition]="matTooltipPos">
         <mat-icon>{{ mediaPlayer.isPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
       </button>
@@ -30,7 +34,7 @@ import { MediaPlayerService } from './media-player.service';
         mat-icon-button
         data-cy="go-to-start-button"
         (click)="goToStart()"
-        matTooltip="Stop and go to start"
+        [matTooltip]="'resourceEditor.representations.video.stopAndGoToStart' | translate"
         [matTooltipPosition]="matTooltipPos">
         <mat-icon>skip_previous</mat-icon>
       </button>
@@ -56,12 +60,24 @@ import { MediaPlayerService } from './media-player.service';
         mat-icon-button
         data-cy="cinema-mode-button"
         (click)="toggleCinemaMode.emit()"
-        [matTooltip]="isFullscreen ? 'Default view' : 'Cinema mode'"
+        [matTooltip]="
+          (isFullscreen
+            ? 'resourceEditor.representations.video.defaultView'
+            : 'resourceEditor.representations.video.cinemaMode'
+          ) | translate
+        "
         [matTooltipPosition]="matTooltipPos">
         <mat-icon>{{ isFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
       </button>
     </div>
   </mat-toolbar-row>`,
+  styles: [
+    `
+      .mat-mdc-button-base .mat-icon {
+        min-height: 0;
+      }
+    `,
+  ],
   standalone: false,
 })
 export class VideoToolbarComponent {
@@ -89,13 +105,15 @@ export class VideoToolbarComponent {
     this._setupCssMaterialIcon();
   }
 
-  createVideoSegment() {
+  async createVideoSegment() {
+    const projectShortcode = await firstValueFrom(this.resourceFetcherService.projectShortcode$);
     this._dialog.open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
       ...DspDialogConfig.dialogDrawerConfig(
         {
           type: 'VideoSegment',
           resource: this.parentResource,
           videoDurationSecs: this.mediaPlayer.duration(),
+          projectShortcode,
         },
         true
       ),

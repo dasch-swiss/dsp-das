@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
+import { ensureWithDefaultLanguage } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { existingNamesAsyncValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { DefaultProperties, LocalizationService, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
@@ -14,7 +15,7 @@ import { PropertyForm, EditPropertyDialogData } from './property-form.type';
       <span matPrefix>
         <mat-icon>{{ propertyData.propType.icon }}</mat-icon>
       </span>
-      <mat-label>Property type</mat-label>
+      <mat-label>{{ 'pages.ontology.propertyForm.type' | translate }}</mat-label>
       <mat-select [formControl]="form.controls.guiElement">
         <mat-select-trigger>
           {{ propertyData.propType.group }}
@@ -34,7 +35,7 @@ import { PropertyForm, EditPropertyDialogData } from './property-form.type';
       </mat-select>
     </mat-form-field>
     <app-common-input
-      label="Property name"
+      [label]="'pages.ontology.propertyForm.name' | translate"
       data-cy="name-input"
       prefixIcon="fingerprint"
       [control]="form.controls.name" />
@@ -42,7 +43,7 @@ import { PropertyForm, EditPropertyDialogData } from './property-form.type';
       [formArray]="form.controls.labels"
       [isRequired]="true"
       data-cy="label-input"
-      placeholder="Property label" />
+      [placeholder]="'pages.ontology.propertyForm.labelPlaceholder' | translate" />
 
     @if (propertyData.propType.objectType === Constants.ListValue) {
       <app-gui-attr-list data-cy="object-attribute-list" [control]="form.controls.guiAttr" />
@@ -55,7 +56,7 @@ import { PropertyForm, EditPropertyDialogData } from './property-form.type';
     <app-multi-language-textarea
       [formArray]="form.controls.comments"
       data-cy="comment-textarea"
-      placeholder="Comment"
+      [placeholder]="'pages.ontology.propertyForm.commentPlaceholder' | translate"
       [isRequired]="true" />
   </form>`,
   standalone: false,
@@ -116,8 +117,18 @@ export class PropertyFormComponent implements OnInit {
           asyncValidators: [existingNamesAsyncValidator(this._oes.currentOntologyEntityNames$)],
         }
       ),
-      labels: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.label ?? defaultData, [Validators.required]),
-      comments: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.comment ?? defaultData, [Validators.required]),
+      labels: DEFAULT_MULTILANGUAGE_FORM(
+        this.propertyData.label
+          ? ensureWithDefaultLanguage(this.propertyData.label, this._localizationService.getCurrentLanguage())
+          : defaultData,
+        [Validators.required]
+      ),
+      comments: DEFAULT_MULTILANGUAGE_FORM(
+        this.propertyData.comment
+          ? ensureWithDefaultLanguage(this.propertyData.comment, this._localizationService.getCurrentLanguage())
+          : defaultData,
+        [Validators.required]
+      ),
       guiAttr: this._fb.control<string>(
         {
           value: this.propertyData.guiAttribute!,

@@ -1,6 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { map, startWith, Subject } from 'rxjs';
@@ -14,7 +14,7 @@ import { SearchTipsComponent } from './search-tips.component';
       [ngClass]="{ big: (isNotQuerying$ | async) }">
       <a mat-stroked-button [routerLink]="['..', 'advanced-search']">
         <mat-icon>swap_horiz</mat-icon>
-        Switch to advanced search
+        {{ 'pages.search.fullTextSearch.switchToAdvancedSearch' | translate }}
       </a>
       <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" style="width: 600px">
@@ -23,7 +23,7 @@ import { SearchTipsComponent } from './search-tips.component';
             matInput
             [formControl]="formGroup.controls.query"
             type="text"
-            placeholder="Enter search term..."
+            [placeholder]="'pages.search.fullTextSearch.placeholder' | translate"
             (focus)="showSearchTips()"
             (blur)="hideSearchTips()" />
           <mat-icon matSuffix>search</mat-icon>
@@ -33,25 +33,15 @@ import { SearchTipsComponent } from './search-tips.component';
 
     @if (query$ | async; as query) {
       <mat-divider />
-
-      <app-project-fulltext-search-result [query]="query" [projectId]="projectId" />
+      <div class="whole-height">
+        <app-search-result [query]="query" [projectId]="projectId" />
+      </div>
     }
   `,
-  styles: [
-    `
-      :host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-        display: none !important;
-      }
-
-      .big {
-        margin-top: 70px;
-        flex-direction: column;
-      }
-    `,
-  ],
+  styleUrls: ['./project-fulltext-search-page.component.scss'],
   standalone: false,
 })
-export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnInit, OnDestroy {
+export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnDestroy {
   querySubject = new Subject<string>();
   query$ = this.querySubject.asObservable();
   isNotQuerying$ = this.query$.pipe(
@@ -61,19 +51,15 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnInit
 
   formGroup = this._fb.group({ query: [''] });
 
-  projectId!: string;
+  projectId = this._projectPageService.currentProject.id;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   private overlayRef: OverlayRef | null = null;
 
   constructor(
     private readonly _fb: FormBuilder,
     private readonly _overlay: Overlay,
-    public readonly projectPageService: ProjectPageService
+    private readonly _projectPageService: ProjectPageService
   ) {}
-
-  ngOnInit() {
-    this.projectId = this.projectPageService.currentProjectId;
-  }
 
   ngAfterViewInit() {
     this.searchInput.nativeElement.focus();

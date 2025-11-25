@@ -1,9 +1,9 @@
 openapi: 3.1.0
 info:
   title: DSP-API
-  version: v32.4.0-9-g0217ee4
-  summary: DSP-API is part of the the DaSCH Service Platform, a repository for the
-    long-term preservation and reuse of data in the humanities.
+  version: v32.7.0-21-gf8914fc
+  summary: DSP-API is part of the DaSCH Service Platform, a repository for the long-term
+    preservation and reuse of data in the humanities.
   contact:
     name: DaSCH
     url: https://www.dasch.swiss/
@@ -19,11 +19,6 @@ paths:
         for a given shortcode and filename.
       operationId: getAdminFilesProjectshortcodeFilename
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -115,7 +110,6 @@ paths:
                     allowedCopyrightHolders: []
                     enabledLicenses:
                     - http://rdfh.ch/licenses/boris
-                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/open-licence-2.0
                     - http://rdfh.ch/licenses/cc-by-nc-sa-4.0
                     - http://rdfh.ch/licenses/public-domain
@@ -123,6 +117,8 @@ paths:
                     - http://rdfh.ch/licenses/ai-generated
                     - http://rdfh.ch/licenses/cc-by-4.0
                     - http://rdfh.ch/licenses/cc-by-nc-nd-4.0
+                    - http://rdfh.ch/licenses/noc-nc-1.0
+                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/cc-pdm-1.0
                     - http://rdfh.ch/licenses/cc-0-1.0
                     - http://rdfh.ch/licenses/cc-by-nc-4.0
@@ -165,12 +161,6 @@ paths:
       description: '**Required permissions**: User must SystemAdmin or ProjectAdmin
         of the project the group is created in.'
       operationId: Create new group
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -220,7 +210,6 @@ paths:
                     allowedCopyrightHolders: []
                     enabledLicenses:
                     - http://rdfh.ch/licenses/boris
-                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/open-licence-2.0
                     - http://rdfh.ch/licenses/cc-by-nc-sa-4.0
                     - http://rdfh.ch/licenses/public-domain
@@ -228,6 +217,8 @@ paths:
                     - http://rdfh.ch/licenses/ai-generated
                     - http://rdfh.ch/licenses/cc-by-4.0
                     - http://rdfh.ch/licenses/cc-by-nc-nd-4.0
+                    - http://rdfh.ch/licenses/noc-nc-1.0
+                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/cc-pdm-1.0
                     - http://rdfh.ch/licenses/cc-0-1.0
                     - http://rdfh.ch/licenses/cc-by-nc-4.0
@@ -314,7 +305,6 @@ paths:
                     allowedCopyrightHolders: []
                     enabledLicenses:
                     - http://rdfh.ch/licenses/boris
-                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/open-licence-2.0
                     - http://rdfh.ch/licenses/cc-by-nc-sa-4.0
                     - http://rdfh.ch/licenses/public-domain
@@ -322,6 +312,8 @@ paths:
                     - http://rdfh.ch/licenses/ai-generated
                     - http://rdfh.ch/licenses/cc-by-4.0
                     - http://rdfh.ch/licenses/cc-by-nc-nd-4.0
+                    - http://rdfh.ch/licenses/noc-nc-1.0
+                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/cc-pdm-1.0
                     - http://rdfh.ch/licenses/cc-0-1.0
                     - http://rdfh.ch/licenses/cc-by-nc-4.0
@@ -364,11 +356,6 @@ paths:
       description: Update a group's basic information.
       operationId: putAdminGroupsGroupiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -424,7 +411,6 @@ paths:
                     allowedCopyrightHolders: []
                     enabledLicenses:
                     - http://rdfh.ch/licenses/boris
-                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/open-licence-2.0
                     - http://rdfh.ch/licenses/cc-by-nc-sa-4.0
                     - http://rdfh.ch/licenses/public-domain
@@ -432,6 +418,8 @@ paths:
                     - http://rdfh.ch/licenses/ai-generated
                     - http://rdfh.ch/licenses/cc-by-4.0
                     - http://rdfh.ch/licenses/cc-by-nc-nd-4.0
+                    - http://rdfh.ch/licenses/noc-nc-1.0
+                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/cc-pdm-1.0
                     - http://rdfh.ch/licenses/cc-0-1.0
                     - http://rdfh.ch/licenses/cc-by-nc-4.0
@@ -477,11 +465,6 @@ paths:
       description: Deletes a group by changing its status to 'false'.
       operationId: deleteAdminGroupsGroupiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -522,7 +505,6 @@ paths:
                     allowedCopyrightHolders: []
                     enabledLicenses:
                     - http://rdfh.ch/licenses/boris
-                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/open-licence-2.0
                     - http://rdfh.ch/licenses/cc-by-nc-sa-4.0
                     - http://rdfh.ch/licenses/public-domain
@@ -530,6 +512,8 @@ paths:
                     - http://rdfh.ch/licenses/ai-generated
                     - http://rdfh.ch/licenses/cc-by-4.0
                     - http://rdfh.ch/licenses/cc-by-nc-nd-4.0
+                    - http://rdfh.ch/licenses/noc-nc-1.0
+                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/cc-pdm-1.0
                     - http://rdfh.ch/licenses/cc-0-1.0
                     - http://rdfh.ch/licenses/cc-by-nc-4.0
@@ -576,11 +560,6 @@ paths:
       description: Return all members of a single group.
       operationId: getAdminGroupsGroupiriMembers
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -629,7 +608,6 @@ paths:
                       allowedCopyrightHolders: []
                       enabledLicenses:
                       - http://rdfh.ch/licenses/boris
-                      - http://rdfh.ch/licenses/cc-by-nd-4.0
                       - http://rdfh.ch/licenses/open-licence-2.0
                       - http://rdfh.ch/licenses/cc-by-nc-sa-4.0
                       - http://rdfh.ch/licenses/public-domain
@@ -637,6 +615,8 @@ paths:
                       - http://rdfh.ch/licenses/ai-generated
                       - http://rdfh.ch/licenses/cc-by-4.0
                       - http://rdfh.ch/licenses/cc-by-nc-nd-4.0
+                      - http://rdfh.ch/licenses/noc-nc-1.0
+                      - http://rdfh.ch/licenses/cc-by-nd-4.0
                       - http://rdfh.ch/licenses/cc-pdm-1.0
                       - http://rdfh.ch/licenses/cc-0-1.0
                       - http://rdfh.ch/licenses/cc-by-nc-4.0
@@ -660,7 +640,6 @@ paths:
                     allowedCopyrightHolders: []
                     enabledLicenses:
                     - http://rdfh.ch/licenses/boris
-                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/open-licence-2.0
                     - http://rdfh.ch/licenses/cc-by-nc-sa-4.0
                     - http://rdfh.ch/licenses/public-domain
@@ -668,6 +647,8 @@ paths:
                     - http://rdfh.ch/licenses/ai-generated
                     - http://rdfh.ch/licenses/cc-by-4.0
                     - http://rdfh.ch/licenses/cc-by-nc-nd-4.0
+                    - http://rdfh.ch/licenses/noc-nc-1.0
+                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/cc-pdm-1.0
                     - http://rdfh.ch/licenses/cc-0-1.0
                     - http://rdfh.ch/licenses/cc-by-nc-4.0
@@ -715,11 +696,6 @@ paths:
       description: Updates a group's status.
       operationId: putAdminGroupsGroupiriStatus
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -766,7 +742,6 @@ paths:
                     allowedCopyrightHolders: []
                     enabledLicenses:
                     - http://rdfh.ch/licenses/boris
-                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/open-licence-2.0
                     - http://rdfh.ch/licenses/cc-by-nc-sa-4.0
                     - http://rdfh.ch/licenses/public-domain
@@ -774,6 +749,8 @@ paths:
                     - http://rdfh.ch/licenses/ai-generated
                     - http://rdfh.ch/licenses/cc-by-4.0
                     - http://rdfh.ch/licenses/cc-by-nc-nd-4.0
+                    - http://rdfh.ch/licenses/noc-nc-1.0
+                    - http://rdfh.ch/licenses/cc-by-nd-4.0
                     - http://rdfh.ch/licenses/cc-pdm-1.0
                     - http://rdfh.ch/licenses/cc-0-1.0
                     - http://rdfh.ch/licenses/cc-by-nc-4.0
@@ -877,12 +854,6 @@ paths:
       - Admin API
       description: Creates a new list by creating the root node of the list.
       operationId: postAdminLists
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -984,11 +955,6 @@ paths:
       - Admin API
       operationId: putAdminListsP1
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: p1
         in: path
         description: The IRI of the list.
@@ -1047,11 +1013,6 @@ paths:
       description: Creates a new list node as a child of the specified list node.
       operationId: postAdminListsP1
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: p1
         in: path
         description: The IRI of the list.
@@ -1109,11 +1070,6 @@ paths:
       - Admin API
       operationId: deleteAdminListsP1
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: p1
         in: path
         description: The IRI of the list.
@@ -1371,11 +1327,6 @@ paths:
       - Admin API
       operationId: putAdminListsP1Name
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: p1
         in: path
         description: The IRI of the list.
@@ -1434,11 +1385,6 @@ paths:
       - Admin API
       operationId: putAdminListsP1Labels
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: p1
         in: path
         description: The IRI of the list.
@@ -1497,11 +1443,6 @@ paths:
       - Admin API
       operationId: putAdminListsP1Comments
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: p1
         in: path
         description: The IRI of the list.
@@ -1560,11 +1501,6 @@ paths:
       - Admin API
       operationId: putAdminListsP1Position
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: p1
         in: path
         description: The IRI of the list.
@@ -1623,11 +1559,6 @@ paths:
       - Admin API
       operationId: deleteAdminListsCommentsP1
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: p1
         in: path
         description: The IRI of the list.
@@ -1680,11 +1611,6 @@ paths:
       - Admin API
       operationId: postAdminMaintenanceAction-name
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: action-name
         in: path
         description: |
@@ -1745,12 +1671,6 @@ paths:
       - Admin API
       description: Create a new administrative permission
       operationId: postAdminPermissionsAp
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -1804,11 +1724,6 @@ paths:
       description: Get all administrative permissions for a project.
       operationId: getAdminPermissionsApProjectiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -1863,11 +1778,6 @@ paths:
       description: Get all administrative permissions for a project and a group.
       operationId: getAdminPermissionsApProjectiriGroupiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -1929,11 +1839,6 @@ paths:
       description: Get all default object access permissions for a project.
       operationId: getAdminPermissionsDoapProjectiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -1988,11 +1893,6 @@ paths:
       description: Get all permissions for a project.
       operationId: getAdminPermissionsProjectiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -2049,11 +1949,6 @@ paths:
         class and property for the permission.
       operationId: putAdminPermissionsDoapPermissioniri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: permissionIri
         in: path
         description: The IRI of a permission. Must be URL-encoded.
@@ -2126,11 +2021,6 @@ paths:
       description: Update a permission's group
       operationId: putAdminPermissionsPermissioniriGroup
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: permissionIri
         in: path
         description: The IRI of a permission. Must be URL-encoded.
@@ -2191,11 +2081,6 @@ paths:
       description: Update a permission's set of hasPermissions
       operationId: putAdminPermissionsPermissioniriHaspermissions
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: permissionIri
         in: path
         description: The IRI of a permission. Must be URL-encoded.
@@ -2257,11 +2142,6 @@ paths:
         instead.
       operationId: putAdminPermissionsPermissioniriProperty
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: permissionIri
         in: path
         description: The IRI of a permission. Must be URL-encoded.
@@ -2324,11 +2204,6 @@ paths:
         instead.
       operationId: putAdminPermissionsPermissioniriResourceclass
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: permissionIri
         in: path
         description: The IRI of a permission. Must be URL-encoded.
@@ -2390,11 +2265,6 @@ paths:
       description: Delete an permission.
       operationId: deleteAdminPermissionsPermissioniri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: permissionIri
         in: path
         description: The IRI of a permission. Must be URL-encoded.
@@ -2448,12 +2318,6 @@ paths:
       - Admin API
       description: Create a new default object access permission
       operationId: postAdminPermissionsDoap
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -2627,9 +2491,14 @@ paths:
                   labelEn: LICENCE OUVERTE 2.0
                   isRecommended: false
                   isEnabled: true
+                - id: http://rdfh.ch/licenses/noc-nc-1.0
+                  uri: http://rightsstatements.org/vocab/NoC-NC/1.0/
+                  labelEn: No Copyright - Non-Commercial Use Only
+                  isRecommended: false
+                  isEnabled: true
                 pagination:
-                  pageSize: 13
-                  totalItems: 13
+                  pageSize: 14
+                  totalItems: 14
                   totalPages: 1
                   currentPage: 1
         '400':
@@ -2728,11 +2597,6 @@ paths:
         must be project member, project admin or system admin.
       operationId: getAdminProjectsShortcodeProjectshortcodeLegal-infoAuthorships
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -2830,11 +2694,6 @@ paths:
         project admin or system admin.
       operationId: putAdminProjectsShortcodeProjectshortcodeLegal-infoLicensesLicenseiriEnable
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -2893,11 +2752,6 @@ paths:
         project admin or system admin.
       operationId: putAdminProjectsShortcodeProjectshortcodeLegal-infoLicensesLicenseiriDisable
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -2956,11 +2810,6 @@ paths:
         The user must be project member, project admin or system admin.
       operationId: getAdminProjectsShortcodeProjectshortcodeLegal-infoCopyright-holders
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -3057,11 +2906,6 @@ paths:
         admin.
       operationId: putAdminProjectsShortcodeProjectshortcodeLegal-infoCopyright-holders
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -3121,11 +2965,6 @@ paths:
         The user must be a system or project admin.
       operationId: postAdminProjectsShortcodeProjectshortcodeLegal-infoCopyright-holders
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -3227,12 +3066,6 @@ paths:
       - Admin API
       description: Creates a new project.
       operationId: postAdminProjects
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       requestBody:
         description: The property `enabledLicenses` is optional. If not provided,
           the DaSCH recommended licenses will be used. The property `allowedCopyrightHolders`
@@ -3383,11 +3216,6 @@ paths:
       description: Updates a project identified by the IRI.
       operationId: putAdminProjectsIriProjectiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -3447,11 +3275,6 @@ paths:
       description: Deletes a project identified by the IRI.
       operationId: deleteAdminProjectsIriProjectiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -3710,11 +3533,6 @@ paths:
       description: Sets the project's restricted view settings identified by the IRI.
       operationId: postAdminProjectsIriProjectiriRestrictedviewsettings
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -3838,11 +3656,6 @@ paths:
       description: Sets the project's restricted view settings identified by the shortcode.
       operationId: postAdminProjectsShortcodeProjectshortcodeRestrictedviewsettings
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -3968,11 +3781,6 @@ paths:
         project identified by the IRI.
       operationId: getAdminProjectsIriProjectiriAlldata
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -4037,11 +3845,6 @@ paths:
       description: Returns all project members of a project identified by the IRI.
       operationId: getAdminProjectsIriProjectiriMembers
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -4096,11 +3899,6 @@ paths:
       description: Returns all project members of a project identified by the shortcode.
       operationId: getAdminProjectsShortcodeProjectshortcodeMembers
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -4155,11 +3953,6 @@ paths:
       description: Returns all project members of a project identified by the shortname.
       operationId: getAdminProjectsShortnameProjectshortnameMembers
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortname
         in: path
         description: The shortname of a project.
@@ -4213,11 +4006,6 @@ paths:
       - Admin API
       operationId: getAdminProjectsIriProjectiriAdmin-members
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -4272,11 +4060,6 @@ paths:
       description: Returns all admin members of a project identified by the shortcode.
       operationId: getAdminProjectsShortcodeProjectshortcodeAdmin-members
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -4331,11 +4114,6 @@ paths:
       description: Returns all admin members of a project identified by the shortname.
       operationId: getAdminProjectsShortnameProjectshortnameAdmin-members
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortname
         in: path
         description: The shortname of a project.
@@ -4394,11 +4172,6 @@ paths:
         Only available if the feature has been configured on the server side.
       operationId: deleteAdminProjectsShortcodeProjectshortcodeErase
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -4459,12 +4232,6 @@ paths:
       - Admin API
       description: Lists existing exports of all projects.
       operationId: getAdminProjectsExport
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       responses:
         '200':
           description: ''
@@ -4514,11 +4281,6 @@ paths:
       description: Trigger an export of a project identified by the shortcode.
       operationId: postAdminProjectsShortcodeProjectshortcodeExport
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -4570,11 +4332,6 @@ paths:
         the shortcode and the export location when the process has finished successfully.
       operationId: postAdminProjectsShortcodeProjectshortcodeExport-await
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -4629,11 +4386,6 @@ paths:
       description: Trigger an import of a project identified by the shortcode.
       operationId: postAdminProjectsShortcodeProjectshortcodeImport
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -4695,7 +4447,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       responses:
         '200':
           description: ''
@@ -4747,7 +4499,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       responses:
         '200':
           description: ''
@@ -4799,7 +4551,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       responses:
         '200':
           description: ''
@@ -4843,12 +4595,6 @@ paths:
       - Admin API
       description: Returns all users.
       operationId: getAdminUsers
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       responses:
         '200':
           description: ''
@@ -4894,12 +4640,6 @@ paths:
       - Admin API
       description: Create a new user.
       operationId: postAdminUsers
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -4953,18 +4693,13 @@ paths:
       description: Returns a user identified by their IRI.
       operationId: getAdminUsersIriUseriri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       responses:
         '200':
           description: ''
@@ -5011,18 +4746,13 @@ paths:
       description: Delete a user identified by IRI (change status to false).
       operationId: deleteAdminUsersIriUseriri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       responses:
         '200':
           description: ''
@@ -5070,11 +4800,6 @@ paths:
       description: Returns a user identified by their Email.
       operationId: getAdminUsersEmailEmail
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: email
         in: path
         description: The user email. Must be URL-encoded.
@@ -5130,11 +4855,6 @@ paths:
       description: Returns a user identified by their Username.
       operationId: getAdminUsersUsernameUsername
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: username
         in: path
         description: The user name. Must be URL-encoded.
@@ -5189,18 +4909,13 @@ paths:
       description: Add a user to a project identified by IRI.
       operationId: postAdminUsersIriUseririProject-membershipsProjectiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5254,18 +4969,13 @@ paths:
       description: Remove a user from a project membership identified by IRI.
       operationId: deleteAdminUsersIriUseririProject-membershipsProjectiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5320,18 +5030,13 @@ paths:
       description: Add a user as an admin to a project identified by IRI.
       operationId: postAdminUsersIriUseririProject-admin-membershipsProjectiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5385,18 +5090,13 @@ paths:
       description: Remove a user form an admin project membership identified by IRI.
       operationId: deleteAdminUsersIriUseririProject-admin-membershipsProjectiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5451,18 +5151,13 @@ paths:
       description: Add a user to a group identified by IRI.
       operationId: postAdminUsersIriUseririGroup-membershipsGroupiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -5516,18 +5211,13 @@ paths:
       description: Remove a user form an group membership identified by IRI.
       operationId: deleteAdminUsersIriUseririGroup-membershipsGroupiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -5582,18 +5272,13 @@ paths:
       description: Update a user's basic information identified by IRI.
       operationId: putAdminUsersIriUseririBasicuserinformation
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       requestBody:
         content:
           application/json:
@@ -5647,18 +5332,13 @@ paths:
       description: Change a user's password identified by IRI.
       operationId: putAdminUsersIriUseririPassword
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       requestBody:
         content:
           application/json:
@@ -5712,18 +5392,13 @@ paths:
       description: Change a user's status identified by IRI.
       operationId: putAdminUsersIriUseririStatus
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       requestBody:
         content:
           application/json:
@@ -5777,18 +5452,13 @@ paths:
       description: Change a user's SystemAdmin status identified by IRI.
       operationId: putAdminUsersIriUseririSystemadmin
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: userIri
         in: path
         description: The user IRI. Must be URL-encoded.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/DO4MiUDbSvKfxs1GLYxLjA
+        example: http://rdfh.ch/users/nAw1uipvS4KFWYoTrA0Vxg
       requestBody:
         content:
           application/json:
@@ -5840,12 +5510,6 @@ paths:
       tags:
       - API v2
       operationId: getV2Authentication
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       responses:
         '200':
           description: ''
@@ -5899,13 +5563,6 @@ paths:
       responses:
         '200':
           description: ''
-          headers:
-            Set-Cookie:
-              required: false
-              schema:
-                type: array
-                items:
-                  type: string
           content:
             application/json:
               schema:
@@ -5944,22 +5601,9 @@ paths:
       tags:
       - API v2
       operationId: deleteV2Authentication
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       responses:
         '200':
           description: ''
-          headers:
-            Set-Cookie:
-              required: false
-              schema:
-                type: array
-                items:
-                  type: string
           content:
             application/json:
               schema:
@@ -6052,13 +5696,6 @@ paths:
       responses:
         '200':
           description: ''
-          headers:
-            Set-Cookie:
-              required: false
-              schema:
-                type: array
-                items:
-                  type: string
           content:
             application/json:
               schema:
@@ -6100,18 +5737,13 @@ paths:
       description: Returns a list (a graph with all list nodes).
       operationId: getV2ListsListiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: listIri
         in: path
         description: The iri to a list.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/alNZf76JQIG2IgWBkeYR3A
+        example: http://rdfh.ch/lists/0001/_xSdPeJTRsa0qSB3PYYxdw
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -6212,18 +5844,13 @@ paths:
       description: Returns a list node.
       operationId: getV2NodeListiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: listIri
         in: path
         description: The iri to a list.
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/alNZf76JQIG2IgWBkeYR3A
+        example: http://rdfh.ch/lists/0001/_xSdPeJTRsa0qSB3PYYxdw
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -6391,11 +6018,6 @@ paths:
       description: Find detailed documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: getV2ValuesResourceiriValueuuid
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceIri
         in: path
         description: The IRI of a Resource.
@@ -6500,12 +6122,6 @@ paths:
       - API v2
       description: Find detailed documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: putV2Values
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -6572,12 +6188,6 @@ paths:
       - API v2
       description: Find detailed documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: postV2Values
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -6644,12 +6254,6 @@ paths:
       - API v2
       description: Find detailed documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: postV2ValuesDelete
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -6717,12 +6321,6 @@ paths:
       description: Erase a Value and all of its old versions from the database completely.
         Find detailed documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: postV2ValuesErase
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -6790,12 +6388,6 @@ paths:
       description: Erase all old versions of a Value from the database completely
         and keep only the latest version. Find detailed documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: postV2ValuesErasehistory
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -6862,11 +6454,6 @@ paths:
       - API v2
       operationId: getV2ResourcesCandelete
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -6971,11 +6558,6 @@ paths:
       - API v2
       operationId: getV2GraphResourceiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceIri
         in: path
         required: true
@@ -7100,11 +6682,6 @@ paths:
       - API v2
       operationId: getV2ResourcesIiifmanifestResourceiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceIri
         in: path
         required: true
@@ -7209,11 +6786,6 @@ paths:
       - API v2
       operationId: getV2Resourcespreview
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -7313,11 +6885,6 @@ paths:
       - API v2
       operationId: getV2ResourcesProjecthistoryeventsProjectiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectIri
         in: path
         required: true
@@ -7422,11 +6989,6 @@ paths:
       - API v2
       operationId: getV2ResourcesResourcehistoryeventsResourceiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceIri
         in: path
         required: true
@@ -7531,11 +7093,6 @@ paths:
       - API v2
       operationId: getV2ResourcesHistoryResourceiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceIri
         in: path
         required: true
@@ -7660,11 +7217,6 @@ paths:
       - API v2
       operationId: getV2Resources
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceClass
         in: query
         required: true
@@ -7785,11 +7337,6 @@ paths:
       - API v2
       operationId: putV2Resources
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -7894,11 +7441,6 @@ paths:
       - API v2
       operationId: postV2Resources
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -8004,11 +7546,6 @@ paths:
       - API v2
       operationId: getV2TeiResourceiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceIri
         in: path
         required: true
@@ -8097,11 +7634,6 @@ paths:
       - API v2
       operationId: postV2ResourcesErase
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -8207,11 +7739,6 @@ paths:
       - API v2
       operationId: postV2ResourcesDelete
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -8317,11 +7844,6 @@ paths:
       - API v2
       operationId: postV2Mapping
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -8418,11 +7940,6 @@ paths:
         system and project admins.
       operationId: getV2MetadataProjectsProjectshortcodeResources
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: projectShortcode
         in: path
         description: The shortcode of a project. Must be a 4 digit hexadecimal String.
@@ -8512,11 +8029,6 @@ paths:
       description: Search for resources by label.
       operationId: getV2SearchSearchterm
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: searchTerm
         in: path
         required: true
@@ -8656,11 +8168,6 @@ paths:
       description: Search for resources by label.
       operationId: getV2SearchCountSearchterm
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: searchTerm
         in: path
         required: true
@@ -8784,11 +8291,6 @@ paths:
       description: Search for resources by label.
       operationId: getV2SearchbylabelSearchterm
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: searchTerm
         in: path
         required: true
@@ -8915,11 +8417,6 @@ paths:
       description: Search for resources by label.
       operationId: getV2SearchbylabelCountSearchterm
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: searchTerm
         in: path
         required: true
@@ -9037,11 +8534,6 @@ paths:
       description: Search for resources using a Gravsearch query.
       operationId: postV2Searchextended
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -9155,11 +8647,6 @@ paths:
       description: Search for resources using a Gravsearch query.
       operationId: getV2SearchextendedP1
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: p1
         in: path
         description: The Gravsearch query. See https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/query-language/
@@ -9272,11 +8759,6 @@ paths:
       description: Count resources using a Gravsearch query.
       operationId: postV2SearchextendedCount
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -9390,11 +8872,6 @@ paths:
       description: Count resources using a Gravsearch query.
       operationId: getV2SearchextendedCountP1
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: p1
         in: path
         description: The Gravsearch query. See https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/query-language/
@@ -9507,11 +8984,6 @@ paths:
       description: Search for incoming links using a Gravsearch query with an offset.
       operationId: getV2SearchincominglinksResourceiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceIri
         in: path
         description: The IRI of the resource to retrieve
@@ -9634,11 +9106,6 @@ paths:
         an offset.
       operationId: getV2SearchstillimagerepresentationsResourceiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceIri
         in: path
         description: The IRI of the resource to retrieve
@@ -9760,11 +9227,6 @@ paths:
       description: Count SearchStillImageRepresentations using a Gravsearch query.
       operationId: getV2SearchstillimagerepresentationscountResourceiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceIri
         in: path
         description: The IRI of the resource to retrieve
@@ -9877,11 +9339,6 @@ paths:
       description: Search for incoming regions using a Gravsearch query with an offset.
       operationId: getV2SearchincomingregionsResourceiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceIri
         in: path
         description: The IRI of the resource to retrieve
@@ -10104,11 +9561,6 @@ paths:
       description: Change the metadata of an ontology
       operationId: putV2OntologiesMetadata
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -10220,11 +9672,6 @@ paths:
         ontology IRI.
       operationId: getOntology
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: allLanguages
         in: query
         required: false
@@ -10331,11 +9778,6 @@ paths:
       description: Get all entities of an ontology
       operationId: getV2OntologiesAllentitiesOntologyiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: ontologyIri
         in: path
         required: true
@@ -10452,11 +9894,6 @@ paths:
         ontology of the class.
       operationId: getV2OntologiesCanreplacecardinalitiesResourceclassiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceClassIri
         in: path
         required: true
@@ -10574,11 +10011,6 @@ paths:
       - API v2
       operationId: getV2OntologiesClassesClassiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: classIri
         in: path
         required: true
@@ -10689,11 +10121,6 @@ paths:
       - API v2
       operationId: getV2OntologiesCandeleteclassResourceclassiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceClassIri
         in: path
         required: true
@@ -10798,11 +10225,6 @@ paths:
       - API v2
       operationId: getV2OntologiesPropertiesPropertyiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: propertyIri
         in: path
         required: true
@@ -10912,11 +10334,6 @@ paths:
       - API v2
       operationId: deleteV2OntologiesPropertiesPropertyiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: propertyIri
         in: path
         required: true
@@ -11026,11 +10443,6 @@ paths:
       - API v2
       operationId: getV2OntologiesCandeletepropertyPropertyiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: propertyIri
         in: path
         required: true
@@ -11135,11 +10547,6 @@ paths:
       - API v2
       operationId: getV2OntologiesCandeleteontologyOntologyiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: ontologyIri
         in: path
         required: true
@@ -11245,11 +10652,6 @@ paths:
       description: Delete the comment of a class definition.
       operationId: deleteV2OntologiesClassesCommentResourceclassiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceClassIri
         in: path
         required: true
@@ -11359,11 +10761,6 @@ paths:
       - API v2
       operationId: deleteV2OntologiesClassesResourceclassiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: resourceClassIri
         in: path
         required: true
@@ -11473,11 +10870,6 @@ paths:
       - API v2
       operationId: deleteV2OntologiesCommentOntologyiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: ontologyIri
         in: path
         required: true
@@ -11587,11 +10979,6 @@ paths:
       - API v2
       operationId: deleteV2OntologiesPropertiesCommentPropertyiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: propertyIri
         in: path
         required: true
@@ -11701,11 +11088,6 @@ paths:
       - API v2
       operationId: deleteV2OntologiesOntologyiri
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: ontologyIri
         in: path
         required: true
@@ -11815,11 +11197,6 @@ paths:
       - API v2
       operationId: putV2OntologiesCardinalities
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -11925,11 +11302,6 @@ paths:
       description: Add cardinalities to a class. For more info check out the <a href="https://docs.dasch.swiss/knora-api-v2/ontologies.html#add-cardinalities-to-a-class">documentation</a>.
       operationId: postV2OntologiesCardinalities
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -12034,11 +11406,6 @@ paths:
       - API v2
       operationId: patchV2OntologiesCardinalities
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -12145,11 +11512,6 @@ paths:
       description: Change the labels or comments of a class
       operationId: putV2OntologiesClasses
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -12255,11 +11617,6 @@ paths:
       description: Create a new class
       operationId: postV2OntologiesClasses
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -12365,11 +11722,6 @@ paths:
       - API v2
       operationId: postV2OntologiesCandeletecardinalities
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -12475,11 +11827,6 @@ paths:
       - API v2
       operationId: putV2OntologiesProperties
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -12584,11 +11931,6 @@ paths:
       - API v2
       operationId: postV2OntologiesProperties
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -12694,11 +12036,6 @@ paths:
       - API v2
       operationId: postV2Ontologies
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -12804,11 +12141,6 @@ paths:
       - API v2
       operationId: putV2OntologiesGuiorder
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -12914,11 +12246,6 @@ paths:
       - API v2
       operationId: putV2OntologiesPropertiesGuielement
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -13018,6 +12345,121 @@ paths:
       security:
       - httpAuth: []
       - httpAuth1: []
+  /v3/projects/{projectIri}/resourcesPerOntology:
+    get:
+      tags:
+      - API v3
+      description: This endpoint returns all ontologies in a project along with their
+        resource classes and the count of resource instances for each class. Note
+        that the `itemCount` includes only non-deleted resources and it includes resources
+        even if the current user may not be permitted to see some of them, for performance
+        reasons.
+      operationId: getV3ProjectsProjectiriResourcesperontology
+      parameters:
+      - name: projectIri
+        in: path
+        description: The IRI of a project. Must be URL-encoded.
+        required: true
+        schema:
+          type: string
+        example: http://rdfh.ch/projects/0001
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OntologyAndResourceClasses'
+              example:
+              - ontology:
+                  iri: http://0.0.0.0:3333/ontology/0001/anything/v2
+                  label: The anything ontology
+                  comment: A sample ontology for anything
+                classesAndCount:
+                - resourceClass:
+                    iri: http://0.0.0.0:3333/ontology/0001/anything/v2#ImageThing
+                    representationClass: StillImageRepresentation
+                    label:
+                    - value: Thing with image representation
+                      language: en
+                    comment:
+                    - value: A thing which is has an image
+                      language: en
+                  itemCount: 42
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /v3/export/resources:
+    post:
+      tags:
+      - API v3
+      operationId: postV3ExportResources
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportRequest'
+            example:
+              resourceClass: classLink
+              selectedProperties:
+              - http://www.knora.org/ontology/knora-base#hasStillImageFileValue
+              language: en
+              includeResourceIri: false
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Content-Type:
+              required: true
+              schema:
+                type: string
+            Content-Disposition:
+              required: true
+              schema:
+                type: string
+          content:
+            text/csv:
+              schema:
+                type: string
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+      security:
+      - {}
+      - httpAuth: []
   /version:
     get:
       tags:
@@ -13031,9 +12473,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/VersionResponse'
               example:
-                webapi: v32.4.0-9-g0217ee4
-                buildCommit: 0217ee4f8
-                buildTime: '2025-10-16T11:29:17.037131113Z'
+                webapi: v32.7.0-21-gf8914fc
+                buildCommit: f8914fcdb
+                buildTime: '2025-11-21T14:30:11.624546314Z'
                 fuseki: 5.5.0-2
                 scala: 3.3.7
                 sipi: v3.16.3
@@ -13115,12 +12557,6 @@ paths:
       tags:
       - Management API
       operationId: postStart-compaction
-      parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
-        in: cookie
-        required: false
-        schema:
-          type: string
       responses:
         '200':
           description: ''
@@ -13269,6 +12705,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AdministrativePermissionADM'
+    ArchiveRepresentation:
+      title: ArchiveRepresentation
+      type: object
+    AudioRepresentation:
+      title: AudioRepresentation
+      type: object
     BadCredentialsException:
       title: BadCredentialsException
       type: object
@@ -13277,6 +12719,18 @@ components:
       properties:
         message:
           type: string
+    BadRequest:
+      title: BadRequest
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     BadRequestException:
       title: BadRequestException
       type: object
@@ -13299,7 +12753,7 @@ components:
         familyName:
           $ref: '#/components/schemas/FamilyName'
         lang:
-          $ref: '#/components/schemas/LanguageCode'
+          type: string
     CanDeleteListResponseADM:
       title: CanDeleteListResponseADM
       type: object
@@ -13467,8 +12921,8 @@ components:
           type: string
         xml:
           type: string
-    DE:
-      title: DE
+    DDDRepresentation:
+      title: DDDRepresentation
       type: object
     DefaultObjectAccessPermissionADM:
       title: DefaultObjectAccessPermissionADM
@@ -13524,6 +12978,9 @@ components:
       properties:
         value:
           $ref: '#/components/schemas/StringLiteralV2'
+    DocumentRepresentation:
+      title: DocumentRepresentation
+      type: object
     DuplicateValueException:
       title: DuplicateValueException
       type: object
@@ -13532,9 +12989,6 @@ components:
       properties:
         message:
           type: string
-    EN:
-      title: EN
-      type: object
     EditConflictException:
       title: EditConflictException
       type: object
@@ -13555,6 +13009,20 @@ components:
           pattern: ^.+@.+$
         password:
           type: string
+    ErrorDetail:
+      title: ErrorDetail
+      type: object
+      required:
+      - code
+      - message
+      - details
+      properties:
+        code:
+          $ref: '#/components/schemas/V3ErrorCode'
+        message:
+          type: string
+        details:
+          $ref: '#/components/schemas/Map_String'
     ExportFormat:
       title: ExportFormat
       default: CSV
@@ -13563,9 +13031,24 @@ components:
       - CSV
       - JSON
       - TSV
-    FR:
-      title: FR
+    ExportRequest:
+      title: ExportRequest
       type: object
+      required:
+      - resourceClass
+      - language
+      - includeResourceIri
+      properties:
+        resourceClass:
+          type: string
+        selectedProperties:
+          type: array
+          items:
+            type: string
+        language:
+          type: string
+        includeResourceIri:
+          type: boolean
     FamilyName:
       title: FamilyName
       type: object
@@ -13574,6 +13057,18 @@ components:
       properties:
         value:
           type: string
+    Forbidden:
+      title: Forbidden
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     ForbiddenException:
       title: ForbiddenException
       type: object
@@ -13744,9 +13239,6 @@ components:
           type: boolean
         message:
           type: string
-    IT:
-      title: IT
-      type: object
     Inactive:
       title: Inactive
       type: object
@@ -13777,14 +13269,28 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StringLiteralV2'
-    LanguageCode:
-      title: LanguageCode
-      oneOf:
-      - $ref: '#/components/schemas/DE'
-      - $ref: '#/components/schemas/EN'
-      - $ref: '#/components/schemas/FR'
-      - $ref: '#/components/schemas/IT'
-      - $ref: '#/components/schemas/RM'
+    LanguageStringDto:
+      title: LanguageStringDto
+      type: object
+      required:
+      - value
+      - language
+      properties:
+        value:
+          type: string
+        language:
+          type: string
+    LanguageTaggedStringLiteralV2:
+      title: LanguageTaggedStringLiteralV2
+      type: object
+      required:
+      - value
+      - language
+      properties:
+        value:
+          type: string
+        language:
+          type: string
     ListADM:
       title: ListADM
       type: object
@@ -14141,6 +13647,14 @@ components:
         uniqueItems: true
         items:
           $ref: '#/components/schemas/PermissionADM'
+    Map_String:
+      title: Map_String
+      type: object
+      additionalProperties:
+        type: string
+    MovingImageRepresentation:
+      title: MovingImageRepresentation
+      type: object
     NodeADM:
       title: NodeADM
       type: object
@@ -14166,6 +13680,18 @@ components:
       properties:
         node:
           $ref: '#/components/schemas/ListNodeADM'
+    NotFound:
+      title: NotFound
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     NotFoundException:
       title: NotFoundException
       type: object
@@ -14174,6 +13700,18 @@ components:
       properties:
         message:
           type: string
+    OntologyAndResourceClasses:
+      title: OntologyAndResourceClasses
+      type: object
+      required:
+      - ontology
+      properties:
+        ontology:
+          $ref: '#/components/schemas/OntologyDto'
+        classesAndCount:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceClassAndCountDto'
     OntologyConstraintException:
       title: OntologyConstraintException
       type: object
@@ -14181,6 +13719,20 @@ components:
       - message
       properties:
         message:
+          type: string
+    OntologyDto:
+      title: OntologyDto
+      type: object
+      required:
+      - iri
+      - label
+      - comment
+      properties:
+        iri:
+          type: string
+        label:
+          type: string
+        comment:
           type: string
     PagedResponse_Authorship:
       title: PagedResponse_Authorship
@@ -14332,6 +13884,14 @@ components:
           uniqueItems: true
           items:
             $ref: '#/components/schemas/PermissionInfoADM'
+    PlainStringLiteralV2:
+      title: PlainStringLiteralV2
+      type: object
+      required:
+      - value
+      properties:
+        value:
+          type: string
     Position:
       title: Position
       type: object
@@ -14569,9 +14129,48 @@ components:
           type: array
           items:
             type: string
-    RM:
-      title: RM
+    RepresentationClass:
+      title: RepresentationClass
+      oneOf:
+      - $ref: '#/components/schemas/ArchiveRepresentation'
+      - $ref: '#/components/schemas/AudioRepresentation'
+      - $ref: '#/components/schemas/DDDRepresentation'
+      - $ref: '#/components/schemas/DocumentRepresentation'
+      - $ref: '#/components/schemas/MovingImageRepresentation'
+      - $ref: '#/components/schemas/StillImageRepresentation'
+      - $ref: '#/components/schemas/TextRepresentation'
+      - $ref: '#/components/schemas/WithoutRepresentation'
+    ResourceClassAndCountDto:
+      title: ResourceClassAndCountDto
       type: object
+      required:
+      - resourceClass
+      - itemCount
+      properties:
+        resourceClass:
+          $ref: '#/components/schemas/ResourceClassDto'
+        itemCount:
+          type: integer
+          format: int32
+    ResourceClassDto:
+      title: ResourceClassDto
+      type: object
+      required:
+      - iri
+      - representationClass
+      properties:
+        iri:
+          type: string
+        representationClass:
+          $ref: '#/components/schemas/RepresentationClass'
+        label:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageStringDto'
+        comment:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageStringDto'
     ResourceInfoDto:
       title: ResourceInfoDto
       type: object
@@ -14660,6 +14259,9 @@ components:
       properties:
         status:
           $ref: '#/components/schemas/UserStatus'
+    StillImageRepresentation:
+      title: StillImageRepresentation
+      type: object
     StringLiteralSequenceV2:
       title: StringLiteralSequenceV2
       type: object
@@ -14670,14 +14272,9 @@ components:
             $ref: '#/components/schemas/StringLiteralV2'
     StringLiteralV2:
       title: StringLiteralV2
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
-        language:
-          type: string
+      oneOf:
+      - $ref: '#/components/schemas/LanguageTaggedStringLiteralV2'
+      - $ref: '#/components/schemas/PlainStringLiteralV2'
     SystemAdmin:
       title: SystemAdmin
       type: object
@@ -14694,6 +14291,9 @@ components:
       properties:
         systemAdmin:
           $ref: '#/components/schemas/SystemAdmin'
+    TextRepresentation:
+      title: TextRepresentation
+      type: object
     TokenResponse:
       title: TokenResponse
       type: object
@@ -14702,6 +14302,18 @@ components:
       properties:
         token:
           type: string
+    Unauthorized:
+      title: Unauthorized
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     UserCreateRequest:
       title: UserCreateRequest
       type: object
@@ -14731,7 +14343,7 @@ components:
         status:
           $ref: '#/components/schemas/UserStatus'
         lang:
-          $ref: '#/components/schemas/LanguageCode'
+          type: string
         systemAdmin:
           $ref: '#/components/schemas/SystemAdmin'
     UserDto:
@@ -14846,6 +14458,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserDto'
+    V3ErrorCode:
+      title: V3ErrorCode
+      oneOf:
+      - $ref: '#/components/schemas/ontology_not_found'
+      - $ref: '#/components/schemas/project_not_found'
+      - $ref: '#/components/schemas/resourceClass_not_found'
+      - $ref: '#/components/schemas/resource_not_found'
     ValidationException:
       title: ValidationException
       type: object
@@ -14912,6 +14531,21 @@ components:
       properties:
         value:
           type: boolean
+    WithoutRepresentation:
+      title: WithoutRepresentation
+      type: object
+    ontology_not_found:
+      title: ontology_not_found
+      type: object
+    project_not_found:
+      title: project_not_found
+      type: object
+    resourceClass_not_found:
+      title: resourceClass_not_found
+      type: object
+    resource_not_found:
+      title: resource_not_found
+      type: object
   securitySchemes:
     httpAuth:
       type: http

@@ -10,6 +10,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
     <app-template-editor-switcher
       [myPropertyDefinition]="myProperty.propDef"
       [resourceClassIri]="resourceClassIri"
+      [projectIri]="projectIri"
       (templateFound)="templateFound($event)" />
 
     @for (control of formArray.controls; track control; let index = $index) {
@@ -28,7 +29,11 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       (myProperty.guiDef.cardinality === Cardinality._0_n || myProperty.guiDef.cardinality === Cardinality._1_n) &&
       formArray.controls[formArray.controls.length - 1].value.item !== null
     ) {
-      <button mat-icon-button type="button" (click)="addEntry()" [matTooltip]="'Add new value'">
+      <button
+        mat-icon-button
+        type="button"
+        (click)="addEntry()"
+        [matTooltip]="'resourceEditor.resourceCreator.propertyValuesCreator.addNewValue' | translate">
         <mat-icon>add_circle</mat-icon>
       </button>
     }
@@ -39,6 +44,7 @@ export class PropertyValuesCreatorComponent {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
   @Input({ required: true }) formArray!: FormValueArray;
   @Input({ required: true }) resourceClassIri!: string;
+  @Input({ required: true }) projectIri!: string;
 
   template!: TemplateRef<any>;
   Cardinality = Cardinality;

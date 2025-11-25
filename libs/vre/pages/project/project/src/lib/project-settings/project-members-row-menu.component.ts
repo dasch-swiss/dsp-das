@@ -14,6 +14,7 @@ import {
 } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs';
 import { CollaborationPageService } from './collaboration/collaboration-page.service';
 
@@ -26,15 +27,25 @@ import { CollaborationPageService } from './collaboration/collaboration-page.ser
 
     <mat-menu #projectUserMenu="matMenu" xPosition="before" class="menu">
       @if (!isProjectAdmin(user.permissions)) {
-        <button mat-menu-item (click)="addProjectAdminMembership()">Add as project admin</button>
+        <button mat-menu-item (click)="addProjectAdminMembership()">
+          {{ 'pages.project.collaboration.addAsProjectAdmin' | translate }}
+        </button>
       }
       @if (isProjectAdmin(user.permissions)) {
-        <button mat-menu-item (click)="removeProjectAdminMembership()">Remove as project admin</button>
+        <button mat-menu-item (click)="removeProjectAdminMembership()">
+          {{ 'pages.project.collaboration.removeAsProjectAdmin' | translate }}
+        </button>
       }
-      <button mat-menu-item (click)="editUser(user)">Edit member</button>
-      <button mat-menu-item (click)="openEditPasswordDialog(user)">Change member's password</button>
+      @if (isSysAdmin$ | async) {
+        <button mat-menu-item (click)="editUser(user)">
+          {{ 'pages.project.collaboration.editMember' | translate }}
+        </button>
+        <button mat-menu-item (click)="openEditPasswordDialog(user)">
+          {{ 'pages.project.collaboration.changeMemberPassword' | translate }}
+        </button>
+      }
       <button mat-menu-item (click)="askToRemoveFromProject(user)" data-cy="remove-member-button">
-        Remove member from project
+        {{ 'pages.project.collaboration.removeMemberFromProject' | translate }}
       </button>
     </mat-menu>
   `,
@@ -45,6 +56,8 @@ export class ProjectMembersRowMenuComponent {
   @Input({ required: true }) project!: ReadProject;
   @Output() refreshParent = new EventEmitter<void>();
 
+  isSysAdmin$ = this._userService.isSysAdmin$;
+
   constructor(
     private readonly _adminApiService: AdminAPIApiService,
     private readonly _collaborationPageService: CollaborationPageService,
@@ -52,7 +65,8 @@ export class ProjectMembersRowMenuComponent {
     private readonly _matDialog: MatDialog,
     private readonly _router: Router,
     private readonly _userApiService: UserApiService,
-    private readonly _userService: UserService
+    private readonly _userService: UserService,
+    private readonly _translateService: TranslateService
   ) {}
 
   isProjectAdmin(permissions: PermissionsData): boolean {
@@ -125,7 +139,7 @@ export class ProjectMembersRowMenuComponent {
 
   askToRemoveFromProject(user: ReadUser) {
     this._dialog
-      .afterConfirmation('Do you want to remove this user from the project?')
+      .afterConfirmation(this._translateService.instant('pages.project.collaboration.confirmRemoveMember'))
       .pipe(
         switchMap(() =>
           this._adminApiService.deleteAdminUsersIriUseririProjectMembershipsProjectiri(user.id, this.project.id)

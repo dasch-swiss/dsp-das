@@ -7,14 +7,14 @@ import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
 
 @Component({
   selector: 'app-edit-ontology-form-dialog',
-  template: ` <app-dialog-header [title]="data.id" [subtitle]="'pages.ontology.ontologyForm.edit' | translate" />
+  template: ` <app-dialog-header [title]="data.label" [subtitle]="'pages.ontology.ontologyForm.edit' | translate" />
 
     <div mat-dialog-content>
       <app-ontology-form [data]="data" [mode]="'edit'" (afterFormInit)="afterFormInit($event)" />
     </div>
 
     <div mat-dialog-actions align="end">
-      <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+      <button color="primary" mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         mat-raised-button
         color="primary"
@@ -22,7 +22,7 @@ import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
         [isLoading]="loading"
         data-cy="submit-button"
         (click)="onSubmit()">
-        {{ 'ui.form.action.submit' | translate }}
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

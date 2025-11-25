@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
@@ -9,10 +9,11 @@ import {
   UpdateListInfoRequest,
 } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { ensureWithDefaultLanguage } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
-import { switchMap } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { ListInfoForm } from './list-info-form.type';
 
 @Component({
@@ -22,17 +23,17 @@ import { ListInfoForm } from './list-info-form.type';
     <div mat-dialog-content>
       <app-multi-language-input
         [formArray]="form.controls.labels"
-        placeholder="Controlled vocabulary label"
+        [placeholder]="_translate.instant('pages.ontology.list.listInfoForm.labelPlaceholder')"
         [isRequired]="true"
         data-cy="label-input" />
 
       <app-multi-language-textarea
         [formArray]="form.controls.comments"
-        placeholder="Controlled vocabulary description"
+        [placeholder]="_translate.instant('pages.ontology.list.listInfoForm.commentPlaceholder')"
         [isRequired]="true"
         data-cy="comments-input" />
       <div mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
         <button
           mat-raised-button
           type="submit"
@@ -42,7 +43,7 @@ import { ListInfoForm } from './list-info-form.type';
           appLoadingButton
           [isLoading]="loading"
           data-cy="submit-button">
-          {{ 'ui.form.action.submit' | translate }}
+          {{ 'ui.common.actions.submit' | translate }}
         </button>
       </div>
     </div>
@@ -51,11 +52,14 @@ import { ListInfoForm } from './list-info-form.type';
 })
 export class ListInfoFormComponent implements OnInit {
   form!: ListInfoForm;
-
   loading = false;
 
+  protected readonly _translate = inject(TranslateService);
+
   get title() {
-    return this.data ? 'Edit controlled vocabulary info' : 'Create new controlled vocabulary';
+    return this.data
+      ? this._translate.instant('pages.ontology.list.listInfoForm.editTitle')
+      : this._translate.instant('pages.ontology.list.listInfoForm.createTitle');
   }
 
   constructor(
@@ -74,12 +78,12 @@ export class ListInfoFormComponent implements OnInit {
   _buildForm() {
     this.form = this._fb.group({
       labels: DEFAULT_MULTILANGUAGE_FORM(
-        this.data ? this.data.labels : [],
+        this.data ? ensureWithDefaultLanguage(this.data.labels, this._translate.currentLang) : [],
         [Validators.maxLength(2000)],
         [atLeastOneStringRequired('value')]
       ),
       comments: DEFAULT_MULTILANGUAGE_FORM(
-        this.data ? this.data.comments : [],
+        this.data ? ensureWithDefaultLanguage(this.data.comments, this._translate.currentLang) : [],
         [Validators.maxLength(2000)],
         [atLeastOneStringRequired('value')]
       ),
@@ -98,7 +102,7 @@ export class ListInfoFormComponent implements OnInit {
   submitCreateList() {
     this._listApiService
       .create({
-        projectIri: this._projectPageService.currentProjectId,
+        projectIri: this._projectPageService.currentProject.id,
         labels: this.form.value.labels as StringLiteral[],
         comments: this.form.value.comments as StringLiteral[],
       })

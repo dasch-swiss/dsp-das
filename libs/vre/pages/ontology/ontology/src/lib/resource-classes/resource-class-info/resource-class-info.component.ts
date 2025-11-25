@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   Inject,
   Input,
   OnDestroy,
@@ -11,13 +12,13 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
 import { ApiResponseError, CanDoResponse, IHasProperty, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription, switchMap, take } from 'rxjs';
 import {
   EditResourceClassDialogComponent,
@@ -50,6 +51,8 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
 
   trackByPropToDisplayFn = (index: number, item: ClassPropertyInfo) => `${index}-${item.propDef.id}`;
 
+  protected readonly _translate = inject(TranslateService);
+
   constructor(
     public ops: OntologyPageService,
     private _cd: ChangeDetectorRef,
@@ -61,8 +64,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     private _projectPageService: ProjectPageService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _viewContainerRef: ViewContainerRef,
-    private _route: ActivatedRoute
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit() {
@@ -102,7 +104,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
 
   deleteResourceClass() {
     this._dialogService
-      .afterConfirmation('Do you want to delete this resource class ?')
+      .afterConfirmation(this._translate.instant('pages.ontology.resourceClassInfo.deleteConfirmation'))
       .pipe(switchMap(_del => this._oes.deleteResourceClass$(this.resourceClass.id)))
       .subscribe();
   }
@@ -126,16 +128,15 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   }
 
   openInDatabrowser() {
-    const projectUuid = this._route.snapshot.params[RouteConstants.uuidParameter];
-
+    const projectUuid = this._projectPageService.currentProjectUuid;
     const ontologyName = OntologyService.getOntologyNameFromIri(this._oes.ontologyId || '');
-    const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.name}`;
+    const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.data}/${ontologyName}/${this.resourceClass.name}`;
     window.open(dataBrowserRoute, '_blank');
   }
 
   copyResourceClassId() {
     this._clipboard.copy(this.resourceClass.id);
-    this._notification.openSnackBar('Resource class ID copied to clipboard.');
+    this._notification.openSnackBar(this._translate.instant('pages.ontology.resourceClassInfo.idCopied'));
   }
 
   private _canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {

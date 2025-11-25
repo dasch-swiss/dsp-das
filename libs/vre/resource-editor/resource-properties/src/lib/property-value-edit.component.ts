@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -10,7 +11,8 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
+import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { Observable, of, Subscription, switchMap } from 'rxjs';
 import { startWith, takeWhile } from 'rxjs/operators';
 import { FormValueGroup } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
@@ -22,6 +24,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     <app-template-editor-switcher
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
       [resourceClassIri]="propertyValueService.editModeData.resource.type"
+      [projectIri]="propertyValueService.editModeData.resource.attachedToProject"
+      [projectShortcode]="projectShortcode"
       [value]="readValue"
       (templateFound)="foundTemplate($event)" />
 
@@ -35,8 +39,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             <app-property-value-basic-comment [control]="group.controls.comment" />
           }
         </div>
-        <div style="display: flex">
-          <button (click)="afterUndo.emit()" mat-icon-button color="primary" [matTooltip]="'undo'">
+        <div style="display: flex; width: 144px">
+          <button
+            (click)="afterUndo.emit()"
+            mat-icon-button
+            color="primary"
+            [matTooltip]="'resourceEditor.resourceProperties.actions.undo' | translate">
             <mat-icon>undo</mat-icon>
           </button>
           <button
@@ -45,14 +53,22 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             color="primary"
             (click)="toggleCommentValue()"
             data-cy="toggle-comment-button"
-            [matTooltip]="commentIsNotNull ? 'remove comment' : 'add comment'">
+            [matTooltip]="
+              commentIsNotNull
+                ? ('resourceEditor.resourceProperties.actions.removeComment' | translate)
+                : ('resourceEditor.resourceProperties.actions.addComment' | translate)
+            ">
             <mat-icon>{{ commentIsNotNull ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
           </button>
-          @if (group.controls.item.value !== null) {
-            <button (click)="onSave()" [matTooltip]="'save'" mat-icon-button data-cy="save-button" color="primary">
-              <mat-icon>save</mat-icon>
-            </button>
-          }
+          <button
+            [disabled]="(hasValidValue$ | async) !== true"
+            (click)="onSave()"
+            [matTooltip]="'resourceEditor.resourceProperties.actions.save' | translate"
+            mat-icon-button
+            data-cy="save-button"
+            color="primary">
+            <mat-icon>save</mat-icon>
+          </button>
         </div>
       </div>
     } @else {
@@ -73,14 +89,19 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
 
   group!: FormValueGroup;
 
+  hasValidValue$?: Observable<boolean>;
+
   get commentIsNotNull() {
     return this.group.controls.comment.value !== null;
   }
 
-  constructor(
-    public propertyValueService: PropertyValueService,
-    private _cd: ChangeDetectorRef
-  ) {}
+  get projectShortcode(): string {
+    return this._resourceService.getProjectShortcode(this.propertyValueService.editModeData.resource.id);
+  }
+
+  private readonly _cd = inject(ChangeDetectorRef);
+  private readonly _resourceService = inject(ResourceService);
+  public propertyValueService = inject(PropertyValueService);
 
   protected readonly Cardinality = Cardinality;
 
@@ -90,6 +111,9 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
       item: propertyType.control(this.readValue ?? propertyType.newValue),
       comment: new FormControl(this.readValue?.valueHasComment || null),
     });
+    this.hasValidValue$ = this.group.controls.item.valueChanges.pipe(
+      switchMap(() => of(this.group.controls.item.valid && !!this.group.controls.item.value))
+    );
 
     this._watchAndSetupCommentStatus();
   }
@@ -124,6 +148,8 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
         } else if (status === 'VALID') {
           this.group.controls.comment.enable();
         }
+
+        this._cd.detectChanges();
       });
   }
 }

@@ -4,24 +4,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Important: Permission Protocol and rules to follow
 
-**ALWAYS ask for explicit permission before:**
-- Making any code changes or modifications
-- Creating new files or directories  
-- Deleting or removing any files
-- Running commands that modify the codebase
-- Installing or updating dependencies
-- Making commits or pushing changes
-
-
-**Only proceed with changes after receiving clear approval from the user.**
-
-**While refactoring and/or moving code, always perform the cleanup afterwards.**
-
-**Try to propose the best practices approach instead of quick fixes. In list of solutions clearly mark which is which.**
+- **ALWAYS ask for explicit permission before:**
+  - Making any code changes or modifications
+  - Creating new files or directories  
+  - Deleting or removing any files
+  - Running commands that modify the codebase
+  - Installing or updating dependencies
+  - Making commits or pushing changes
+- **Only proceed with changes after receiving clear approval from the user.**
+- **Propose the best practices approach first instead of quick fixes.**
+  - If there are more options to consider, mark it clearly in the solutions list which is which.
+- **While following best practices, for consistency reasons, keep an eye on conventions used in the repository and modified files.**
+  - If not sure, ask what to focus on more.
+- **While adding tests, make sure to not over-test functionalities.**
+  - Check for the test's redundancy.
+  - Propose the tests within the scope of the task.
+  - Avoid testing not changed components, services or functions - propose it as a follow up instead.
+- **After refactoring and/or moving the code, remind the user to perform the cleanup afterwards and propose what should be cleaned up.**
+- **Before the cleanup check if something can be still improved (in the scope of prompted task).**
 
 ## Project Overview
 
-This is DaSCH Service Platform (DSP) monorepo - a digital humanities platform for storing, sharing, and working with primary research resources and data. Built with Angular 20.2.4, NX 21.5.1, and Node.js 22.12.0.
+This is DaSCH Service Platform (DSP) monorepo - a digital humanities platform for storing, sharing, and working with primary research resources and data. Built with Angular, NX, and Node.js (see [package.json](package.json) for current versions).
 
 The main application is **DSP-APP** - a user interface for the Swiss National Data and Service Center for the Humanities (DaSCH) research data repository, connecting to DSP-API backend and implementing DSP-JS client library.
 
@@ -29,6 +33,7 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 
 ### Local Development
 - `npm run start-local` or `nx run dsp-app:serve` - Start local development server
+- `npm run start-local-with-observability` - Start local dev server with Grafana observability stack (Loki, Tempo, Grafana UI)
 - `npm run start-dev` - Start with dev server configuration
 
 ### Testing
@@ -40,8 +45,8 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 ### Building and Linting
 - `npm run build` or `nx run dsp-app:build` - Build for development
 - `npm run build-prod` or `nx run dsp-app:build:production` - Build for production
-- `npm run lint-local` or `nx run dsp-app:lint --fix` - Lint with auto-fix
-- `npm run lint-ci` or `nx run dsp-app:lint` - Lint without auto-fix
+- `npm run lint-all` or `nx run-many --all --target=lint` - Lint all libs without auto-fix
+- `npm run lint-fix-all` or `nx run-many --all --target=lint --fix` - Lint all libs with auto-fix
 
 ### OpenAPI Code Generation
 - `npm run generate-openapi-module` - Generate TypeScript client from OpenAPI spec
@@ -56,6 +61,16 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 - `nx run [library-name]:test` - Test specific library
 - `nx run [library-name]:lint` - Lint specific library
 - `nx run [library-name]:build` - Build specific library
+
+### Code Coverage
+- `npm run unit-test-coverage` - Generate combined unit test coverage for all projects
+- `npm run unit-test-coverage-ci` - CI-mode coverage with reports
+- `npm run e2e-coverage` - E2E test coverage with instrumentation
+- Coverage merging via `tools/merge-coverage.js` and `tools/lcov-parser.js`
+
+### Additional Commands
+- `npm run lint-fix-all` - Lint and fix all projects in monorepo
+- `npm run lint-ci-all` - Lint all projects without auto-fix
 
 ## Architecture Overview
 
@@ -77,11 +92,11 @@ The `libs/vre/` directory follows domain-driven design with clear separation:
 - **ui/** - Reusable UI components
 
 ### Key Patterns
-- **Barrel exports** via `*.components.ts` files
 - **exposing exported files** via `*.index.ts` files
 - **TypeScript path mapping** with `@dasch-swiss/vre/*` aliases
 - **Feature-based organization** by domain
 - **Reactive programming** with RxJS observables
+- **Component Store** for local state management
 
 ## Environment Configurations
 
@@ -107,6 +122,15 @@ Multiple environment configurations available:
 - **Jest** for unit tests with Angular-specific preset
 - **Cypress** for E2E tests with multiple configurations
 - Code coverage reporting available
+- **ng-mocks** for advanced Angular component mocking
+
+### TypeScript Configuration
+- **Target:** ES2022 with ES2020 modules
+- **Library support:** ES2021 + DOM APIs
+- **Strict template checking** enabled via Angular compiler
+- **Path aliases** for all VRE libraries (see [tsconfig.base.json](tsconfig.base.json))
+- **Skip lib check** enabled for faster compilation
+- **Experimental decorators** and decorator metadata enabled for Angular
 
 ### NX Integration  
 - Libraries can be tested/built independently
@@ -125,9 +149,34 @@ Application handles various file types and representations:
 - IIIF integration for image viewing
 - Media segment annotations for time-based resources
 
+## Observability and Monitoring
+
+### Grafana Faro Integration
+The application includes comprehensive observability using Grafana Faro:
+- **@grafana/faro-web-sdk** - Web observability SDK for real user monitoring
+- **@grafana/faro-web-tracing** - Distributed tracing integration
+- **@grafana/faro-transport-otlp-http** - OTLP transport for telemetry data
+- Start with observability stack: `npm run start-local-with-observability`
+- Includes Loki (logs), Tempo (traces), and Grafana UI dashboard
+- Configuration defined in environment-specific config files
+
+### Sentry Error Tracking
+Error tracking and performance monitoring with Sentry:
+- **@sentry/angular** - Angular-specific Sentry integration
+- **@sentry/cli** - Command-line tool for sourcemap uploads
+- Upload sourcemaps: `npm run sentry:sourcemaps`
+- Integrated into application bootstrap in `main.ts`
+- Provides real-time error reporting and performance metrics
+
+### Docker Integration
+Local observability infrastructure via Docker Compose:
+- `docker-compose.observability.yml` - Defines observability stack
+- Automatically started with observability development command
+- Grafana dashboard accessible at localhost after startup
+
 ## DSP-JS Client Library (Most Crucial Dependency)
 
-**@dasch-swiss/dsp-js v10.9.0** is the primary API client library for communicating with DSP-API backend. It's deeply integrated throughout the application and essential for all data operations.
+**@dasch-swiss/dsp-js** is the primary API client library for communicating with DSP-API backend. It's deeply integrated throughout the application and essential for all data operations. See [package.json](package.json) for the current version.
 
 ### Configuration and Setup
 
@@ -214,14 +263,6 @@ DSP-JS `Constants` are extensively used throughout the codebase:
 )
 ```
 
-### State Management Integration
-
-DSP-JS is integrated with NGXS state management:
-- **ProjectsState** - Project data, members, groups
-- **OntologiesState** - Ontology loading with caching
-- **UserState** - Authentication and profile management  
-- **ResourceState** - Current resource data
-
 ### Key Features
 
 **Caching Strategy:**
@@ -245,8 +286,8 @@ DSP-JS is integrated with NGXS state management:
 
 ### Development Commands for DSP-JS
 
-- `npm run yalc-add-lib` - Add local DSP-JS development version
-- Check `package.json` for current version: `@dasch-swiss/dsp-js: 10.9.0`
+- `npm run yalc-add-lib` - Add local DSP-JS development version for testing
+- Check [package.json](package.json) for current version
 
 ## Working with APIs
 

@@ -1,10 +1,10 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Cardinality } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
+import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { PropertyValueService } from './property-value.service';
 
-// TODO copied from action-bubble.component.ts -> change when we do a css refactor
 @Component({
   selector: 'app-property-value-action-bubble',
   template: `
@@ -18,7 +18,7 @@ import { PropertyValueService } from './property-value.service';
           }
         }
 
-        <span matTooltip="edit">
+        <span [matTooltip]="'resourceEditor.resourceProperties.actions.edit' | translate">
           @if (userHasPermission('edit')) {
             <button
               mat-button
@@ -30,11 +30,17 @@ import { PropertyValueService } from './property-value.service';
           }
         </span>
 
-        <span [matTooltip]="showDelete ? 'delete' : 'This value cannot be deleted because it is required'">
+        <span
+          [matTooltip]="
+            disableDeleteButton
+              ? ('resourceEditor.resourceProperties.actions.cannotDeleteRequired' | translate)
+              : ('resourceEditor.resourceProperties.actions.delete' | translate)
+          ">
           @if (userHasPermission('delete')) {
             <button
               mat-button
               class="delete"
+              [disabled]="disableDeleteButton"
               data-cy="delete-button"
               (click)="$event.stopPropagation(); deleteAction.emit()">
               <mat-icon>delete</mat-icon>
@@ -44,18 +50,10 @@ import { PropertyValueService } from './property-value.service';
       </div>
     </div>
   `,
-  animations: [
-    trigger('simpleFadeAnimation', [
-      state('in', style({ opacity: 1 })),
-      transition(':enter', [style({ opacity: 0 }), animate(150)]),
-      transition(':leave', animate(150, style({ opacity: 0 }))),
-    ]),
-  ],
   styleUrls: ['./property-value-action-bubble.component.scss'],
   standalone: false,
 })
 export class PropertyValueActionBubbleComponent implements OnInit {
-  @Input({ required: true }) showDelete!: boolean;
   @Input({ required: true }) date!: string;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();
@@ -64,8 +62,15 @@ export class PropertyValueActionBubbleComponent implements OnInit {
 
   constructor(
     private _resourceFetcherService: ResourceFetcherService,
-    private _propertyValueService: PropertyValueService
+    private _propertyValueService: PropertyValueService,
+    private _translateService: TranslateService
   ) {}
+
+  get disableDeleteButton(): boolean {
+    const isRequired = [Cardinality._1, Cardinality._1_n].includes(this._propertyValueService.cardinality);
+    const isOnlyValue = this._propertyValueService.editModeData.values.length === 1;
+    return isRequired && isOnlyValue;
+  }
 
   ngOnInit() {
     this.infoTooltip$ = this._getInfoToolTip();
@@ -84,7 +89,10 @@ export class PropertyValueActionBubbleComponent implements OnInit {
     return this._resourceFetcherService.resource$.pipe(
       map(resource => {
         const creator = resource!.res!.attachedToUser;
-        return `Creation date: ${this.date}. Value creator: ${creator}`;
+        return this._translateService.instant('resourceEditor.resourceProperties.actions.creationInfo', {
+          date: this.date,
+          creator,
+        });
       })
     );
   }
