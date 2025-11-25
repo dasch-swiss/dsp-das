@@ -13,7 +13,7 @@ import { map, Observable } from 'rxjs';
       <div class="infobar mat-caption">
         {{ 'resourceEditor.infoBar.resourceOfProject' | translate }}
         <a
-          [routerLink]="['/', RouteConstants.projectRelative, getProjectUuid(project.id)]"
+          [routerLink]="[RouteConstants.projectRelative, getProjectUuid(project.id)]"
           class="link"
           [title]="project.longname">
           <strong>{{ project?.shortname }}</strong></a
