@@ -1,11 +1,10 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { PropertyValueService } from './property-value.service';
 
-// TODO copied from action-bubble.component.ts -> change when we do a css refactor
 @Component({
   selector: 'app-property-value-action-bubble',
   template: `
@@ -62,11 +61,10 @@ export class PropertyValueActionBubbleComponent implements OnInit {
 
   infoTooltip$!: Observable<string>;
 
-  private readonly _translateService = inject(TranslateService);
-
   constructor(
     private _resourceFetcherService: ResourceFetcherService,
-    private _propertyValueService: PropertyValueService
+    private _propertyValueService: PropertyValueService,
+    private readonly _translateService: TranslateService
   ) {}
 
   get disableDeleteButton(): boolean {
