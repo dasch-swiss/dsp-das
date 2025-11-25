@@ -116,28 +116,28 @@ describe('AddUserComponent', () => {
   });
 
   describe('displayUser', () => {
-    it('should return formatted label for a user object (not URL)', () => {
-      const result = component.displayUser(mockUser1);
-
-      expect(result).toBe('jdoe | jdoe@example.com | John Doe');
-      expect(result).not.toContain('http://');
+    beforeEach(() => {
+      // Populate the users array that displayUser looks up from
+      component.users = [mockUser1, mockUser2, mockUser3];
     });
 
-    it('should return empty string for null user', () => {
-      const result = component.displayUser(null);
+    it('should return formatted label for a user ID (not URL)', () => {
+      const result = component.displayUser('http://rdfh.ch/users/user1');
+
+      expect(result).toBe('jdoe | jdoe@example.com | John Doe');
+      expect(result).not.toContain('user1');
+    });
+
+    it('should return empty string for unknown user ID', () => {
+      const result = component.displayUser('http://rdfh.ch/users/unknown');
 
       expect(result).toBe('');
     });
 
-    it('should handle user with missing optional fields', () => {
-      const userWithoutUsername = {
-        ...mockUser1,
-        username: undefined,
-      } as unknown as ReadUser;
+    it('should look up user from cached users array', () => {
+      const result = component.displayUser('http://rdfh.ch/users/user2');
 
-      const result = component.displayUser(userWithoutUsername);
-
-      expect(result).toBe('jdoe@example.com | John Doe');
+      expect(result).toBe('jsmith | jsmith@example.com | Jane Smith');
     });
   });
 
@@ -145,23 +145,23 @@ describe('AddUserComponent', () => {
     it('should clear the form control immediately when user is selected', () => {
       component.usernameControl.setValue('search text');
 
-      component.onUserSelected(mockUser1);
+      component.onUserSelected('http://rdfh.ch/users/user1');
 
       expect(component.usernameControl.value).toBeNull();
     });
 
-    it('should call addUser with the selected user', () => {
+    it('should call addUser with the selected user ID', () => {
       const addUserSpy = jest.spyOn(component, 'addUser');
 
-      component.onUserSelected(mockUser1);
+      component.onUserSelected('http://rdfh.ch/users/user1');
 
-      expect(addUserSpy).toHaveBeenCalledWith(mockUser1);
+      expect(addUserSpy).toHaveBeenCalledWith('http://rdfh.ch/users/user1');
     });
   });
 
   describe('addUser', () => {
-    it('should add user to project using user.id from ReadUser object', done => {
-      component.addUser(mockUser1);
+    it('should add user to project using user ID', done => {
+      component.addUser('http://rdfh.ch/users/user1');
 
       setTimeout(() => {
         expect(mockDspApiConnection.admin.usersEndpoint.addUserToProjectMembership).toHaveBeenCalledWith(
@@ -173,7 +173,7 @@ describe('AddUserComponent', () => {
     });
 
     it('should trigger project members reload after adding user', done => {
-      component.addUser(mockUser1);
+      component.addUser('http://rdfh.ch/users/user1');
 
       setTimeout(() => {
         expect(mockCollaborationPageService.reloadProjectMembers).toHaveBeenCalled();
@@ -208,15 +208,16 @@ describe('AddUserComponent', () => {
   });
 
   describe('FormControl type handling', () => {
-    it('should handle string, ReadUser, and null values in form control', () => {
-      // String value during typing
+    it('should handle string and null values in form control', () => {
+      // String value during typing/searching
       component.usernameControl.setValue('searching...');
       expect(typeof component.usernameControl.value).toBe('string');
+      expect(component.usernameControl.value).toBe('searching...');
 
-      // ReadUser object after selection
-      component.usernameControl.setValue(mockUser1);
-      expect(typeof component.usernameControl.value).toBe('object');
-      expect(component.usernameControl.value).toEqual(mockUser1);
+      // String value for user ID after selection
+      component.usernameControl.setValue('http://rdfh.ch/users/user1');
+      expect(typeof component.usernameControl.value).toBe('string');
+      expect(component.usernameControl.value).toBe('http://rdfh.ch/users/user1');
 
       // Null after reset
       component.usernameControl.setValue(null);
@@ -232,12 +233,6 @@ describe('AddUserComponent', () => {
       });
     });
 
-    it('should handle ReadUser object in filter without errors', () => {
-      const filterResult = component['_filter']([mockUser1, mockUser2], mockUser1);
-
-      expect(filterResult).toEqual([mockUser1, mockUser2]);
-    });
-
     it('should filter correctly with string input', () => {
       const filterResult = component['_filter']([mockUser1, mockUser2, mockUser3], 'john');
 
@@ -250,10 +245,10 @@ describe('AddUserComponent', () => {
       expect(filterResult).toEqual([mockUser2]);
     });
 
-    it('should return all users when filter value is ReadUser object', () => {
-      const filterResult = component['_filter']([mockUser1, mockUser2, mockUser3], mockUser1);
+    it('should return empty array when no matches found', () => {
+      const filterResult = component['_filter']([mockUser1, mockUser2, mockUser3], 'nonexistent');
 
-      expect(filterResult).toEqual([mockUser1, mockUser2, mockUser3]);
+      expect(filterResult).toEqual([]);
     });
   });
 });

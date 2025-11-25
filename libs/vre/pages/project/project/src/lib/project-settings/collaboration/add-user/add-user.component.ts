@@ -31,7 +31,7 @@ import { CollaborationPageService } from '../collaboration-page.service';
           }
           @if (!loading && (filteredUsers$ | async); as filteredUsers) {
             @for (user of filteredUsers; track user) {
-              <mat-option [value]="user" [disabled]="isMember(user)">
+              <mat-option [value]="user.id" [disabled]="isMember(user)">
                 {{ getLabel(user) }}
               </mat-option>
             }
@@ -57,7 +57,7 @@ export class AddUserComponent {
     return this._projectService.uuidToIri(this.projectUuid);
   }
 
-  usernameControl = new FormControl<string | ReadUser | null>(null);
+  usernameControl = new FormControl<string | null>(null);
   users: ReadUser[] = [];
 
   loading = false;
@@ -75,16 +75,13 @@ export class AddUserComponent {
         this.loading = false;
         this._cdr.detectChanges();
       }),
-      map(response => response.users),
+      map(response => {
+        this.users = response.users;
+        return response.users;
+      }),
       shareReplay(1)
     ),
-  ]).pipe(
-    map(([filterVal, users_]) => {
-      if (!filterVal) return users_;
-      if (typeof filterVal === 'string') return this._filter(users_, filterVal);
-      return users_;
-    })
-  );
+  ]).pipe(map(([filterVal, users_]) => (filterVal ? this._filter(users_, filterVal) : users_)));
 
   constructor(
     @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
@@ -102,7 +99,8 @@ export class AddUserComponent {
     return `${usernameLabel}${emailLabel}${user.givenName} ${user.familyName}`;
   }
 
-  displayUser = (user: ReadUser | null): string => {
+  displayUser = (userId: string): string => {
+    const user = this.users.find(u => u.id === userId);
     return user ? this.getLabel(user) : '';
   };
 
@@ -112,14 +110,14 @@ export class AddUserComponent {
       : false;
   }
 
-  onUserSelected(user: ReadUser) {
-    // Clear the input immediately to prevent the user object from being displayed
+  onUserSelected(userId: string) {
+    // Clear the input immediately to prevent the user ID from being displayed
     this.usernameControl.setValue(null, { emitEvent: false });
-    this.addUser(user);
+    this.addUser(userId);
   }
 
-  addUser(user: ReadUser) {
-    this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(user.id, this.projectIri).subscribe(() => {
+  addUser(userId: string) {
+    this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(userId, this.projectIri).subscribe(() => {
       this.collaborationPageService.reloadProjectMembers();
       this.reloadListSubject.next(null);
     });
@@ -143,10 +141,7 @@ export class AddUserComponent {
       });
   }
 
-  private _filter(list: ReadUser[], filterVal: string | ReadUser) {
-    if (typeof filterVal !== 'string') {
-      return list;
-    }
+  private _filter(list: ReadUser[], filterVal: string) {
     return list.filter(user => `${user.givenName} ${user.familyName}`.toLowerCase().includes(filterVal.toLowerCase()));
   }
 }
