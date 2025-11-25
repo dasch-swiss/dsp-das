@@ -36,7 +36,7 @@ describe('ResourceListSelectionComponent', () => {
   const mockResource3 = createMockResource('resource-3', 'project-uuid-2');
 
   // Mock user
-  const createMockUser = (id: string, isSysAdmin: boolean, projectMemberships: string[] = []): ReadUser =>
+  const createMockUser = (id: string, projectMemberships: string[] = []): ReadUser =>
     ({
       id,
       permissions: {
@@ -143,7 +143,7 @@ describe('ResourceListSelectionComponent', () => {
   describe('showCreateLink$', () => {
     it('should return false when count is 0', done => {
       selectedResourcesSubject.next([]);
-      userSubject.next(createMockUser('user-1', false, ['project-uuid-1']));
+      userSubject.next(createMockUser('user-1', ['project-uuid-1']));
       isSysAdminSubject.next(false);
 
       component.showCreateLink$.subscribe(show => {
@@ -154,7 +154,7 @@ describe('ResourceListSelectionComponent', () => {
 
     it('should return false when count is 1', done => {
       selectedResourcesSubject.next([mockResource1]);
-      userSubject.next(createMockUser('user-1', false, ['project-uuid-1']));
+      userSubject.next(createMockUser('user-1', ['project-uuid-1']));
       isSysAdminSubject.next(false);
 
       component.showCreateLink$.subscribe(show => {
@@ -176,7 +176,7 @@ describe('ResourceListSelectionComponent', () => {
 
     it('should return true when user is sys admin with 2+ resources', done => {
       selectedResourcesSubject.next([mockResource1, mockResource2]);
-      userSubject.next(createMockUser('user-1', true));
+      userSubject.next(createMockUser('user-1'));
       isSysAdminSubject.next(true);
 
       component.showCreateLink$.subscribe(show => {
@@ -187,7 +187,7 @@ describe('ResourceListSelectionComponent', () => {
 
     it('should return true when user is project member with 2+ resources from their project', done => {
       selectedResourcesSubject.next([mockResource1, mockResource2]);
-      userSubject.next(createMockUser('user-1', false, ['project-uuid-1']));
+      userSubject.next(createMockUser('user-1', ['project-uuid-1']));
       isSysAdminSubject.next(false);
 
       component.showCreateLink$.subscribe(show => {
@@ -198,7 +198,7 @@ describe('ResourceListSelectionComponent', () => {
 
     it('should return false when user is not a member of any selected resource project', done => {
       selectedResourcesSubject.next([mockResource1, mockResource2]);
-      userSubject.next(createMockUser('user-1', false, ['project-uuid-999']));
+      userSubject.next(createMockUser('user-1', ['project-uuid-999']));
       isSysAdminSubject.next(false);
 
       component.showCreateLink$.subscribe(show => {
@@ -209,7 +209,7 @@ describe('ResourceListSelectionComponent', () => {
 
     it('should return true when user is a member of ANY selected resource project (mixed projects)', done => {
       selectedResourcesSubject.next([mockResource1, mockResource3]); // Different projects
-      userSubject.next(createMockUser('user-1', false, ['project-uuid-1'])); // Member of first project only
+      userSubject.next(createMockUser('user-1', ['project-uuid-1'])); // Member of first project only
       isSysAdminSubject.next(false);
 
       component.showCreateLink$.subscribe(show => {
@@ -220,7 +220,7 @@ describe('ResourceListSelectionComponent', () => {
 
     it('should return true for sys admin even with resources from different projects', done => {
       selectedResourcesSubject.next([mockResource1, mockResource3]); // Different projects
-      userSubject.next(createMockUser('user-1', true));
+      userSubject.next(createMockUser('user-1'));
       isSysAdminSubject.next(true);
 
       component.showCreateLink$.subscribe(show => {
@@ -316,7 +316,7 @@ describe('ResourceListSelectionComponent', () => {
     it('should show button as enabled when sys admin with same-project resources', done => {
       // Set up initial state
       selectedResourcesSubject.next([mockResource1, mockResource2]);
-      userSubject.next(createMockUser('user-1', true));
+      userSubject.next(createMockUser('user-1'));
       isSysAdminSubject.next(true);
 
       // Check showCreateLink$ first
@@ -335,7 +335,7 @@ describe('ResourceListSelectionComponent', () => {
     it('should show button as disabled when sys admin with different-project resources', done => {
       // Set up initial state
       selectedResourcesSubject.next([mockResource1, mockResource3]); // Different projects
-      userSubject.next(createMockUser('user-1', true));
+      userSubject.next(createMockUser('user-1'));
       isSysAdminSubject.next(true);
 
       // Check showCreateLink$ first
