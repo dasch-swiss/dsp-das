@@ -23,7 +23,7 @@ import { CollaborationPageService } from '../collaboration-page.service';
         <mat-autocomplete
           #user="matAutocomplete"
           [displayWith]="displayUser"
-          (optionSelected)="addUser($event.option.value)">
+          (optionSelected)="onUserSelected($event.option.value)">
           @if (loading) {
             <mat-option [disabled]="true">
               <app-progress-indicator />
@@ -112,9 +112,14 @@ export class AddUserComponent {
       : false;
   }
 
+  onUserSelected(user: ReadUser) {
+    // Clear the input immediately to prevent the user object from being displayed
+    this.usernameControl.setValue(null, { emitEvent: false });
+    this.addUser(user);
+  }
+
   addUser(user: ReadUser) {
     this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(user.id, this.projectIri).subscribe(() => {
-      this.usernameControl.setValue(null);
       this.collaborationPageService.reloadProjectMembers();
       this.reloadListSubject.next(null);
     });
