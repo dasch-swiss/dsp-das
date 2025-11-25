@@ -4,7 +4,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
   selector: 'app-resource-browser',
-  template: ` <div class="whole-height">
+  template: `
     <as-split direction="horizontal">
       <as-split-area [size]="30">
         <app-resources-list [resources]="data.resources" [showBackToFormButton]="showBackToFormButton" />
@@ -13,8 +13,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
         <app-multiple-viewer />
       </as-split-area>
     </as-split>
-  </div>`,
-  styleUrls: ['./resource-browser.component.scss'],
+  `,
   providers: [MultipleViewerService],
   standalone: false,
 })

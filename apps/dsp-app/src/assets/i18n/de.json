@@ -516,8 +516,8 @@
       "tooltip": "Ressourcenberechtigungen",
       "projectAdmin": "Projekt-Admin",
       "projectMember": "Projektmitglied",
-      "knownUser": "Bekannte:r Nutzer:in",
-      "unknownUser": "Unbekannte:r Nutzer:in",
+      "knownUser": "Angemeldet",
+      "unknownUser": "Abgemeldet",
       "usersPermissions": "Ihre Berechtigungen",
       "interactions": {
         "restrictedView": "Leseberechtigung mit Restriktion (RV)",
@@ -701,7 +701,8 @@
         "description": "Beschreibung"
       },
       "errors": {
-        "crossProjectLink": "Dieses Feld enthält Links zu Ressourcen aus anderen Projekten. Nur Links zu Ressourcen innerhalb des aktuellen Projekts sind erlaubt."
+        "crossProjectLink": "Dieses Feld enthält Links zu Ressourcen aus anderen Projekten. Nur Links zu Ressourcen innerhalb des aktuellen Projekts sind erlaubt.",
+        "badLinks": "Fehlerhafte Links:"
       },
       "status": {
         "active": "Aktiv",
