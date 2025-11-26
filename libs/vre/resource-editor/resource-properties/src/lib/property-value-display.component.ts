@@ -71,7 +71,6 @@ export class PropertyValueDisplayComponent implements OnInit {
   }
 
   mouseLeave() {
-    console.log('mouse leave');
     this._isMouseOver = false;
     // Only hide bubble if permission overlay is not open
     if (!this.permissionOverlayOpen) {
