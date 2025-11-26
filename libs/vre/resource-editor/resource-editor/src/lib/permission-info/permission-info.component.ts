@@ -84,7 +84,6 @@ export class PermissionInfoComponent implements OnInit {
     this._setGroupPermissions();
     this._setUsersPermissions();
     this._setCustomGroupsPermissions();
-    console.log('aaa', this);
   }
 
   toggle() {

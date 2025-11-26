@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
@@ -17,21 +18,23 @@ import { PropertyValueService } from './property-value.service';
             </button>
           }
         }
-        <button
-          mat-button
-          class="edit"
-          cdkOverlayOrigin
-          #permissionButton="cdkOverlayOrigin"
-          [matTooltip]="'resourceEditor.permissionInfo.tooltip' | translate"
-          (click)="$event.stopPropagation(); permissionInfo.toggle()">
-          <mat-icon>lock</mat-icon>
-        </button>
-        <app-permission-info
-          #permissionInfo
-          [resourceOrValue]="value"
-          [trigger]="permissionButton"
-          (overlayStateChange)="permissionOverlayOpen.emit($event)"
-          (click)="$event.stopPropagation()" />
+        @if (_userService.isSysAdmin$ | async) {
+          <button
+            mat-button
+            class="edit"
+            cdkOverlayOrigin
+            #permissionButton="cdkOverlayOrigin"
+            [matTooltip]="'resourceEditor.permissionInfo.tooltip' | translate"
+            (click)="$event.stopPropagation(); permissionInfo.toggle()">
+            <mat-icon>lock</mat-icon>
+          </button>
+          <app-permission-info
+            #permissionInfo
+            [resourceOrValue]="value"
+            [trigger]="permissionButton"
+            (overlayStateChange)="permissionOverlayOpen.emit($event)"
+            (click)="$event.stopPropagation()" />
+        }
 
         <span [matTooltip]="'resourceEditor.resourceProperties.actions.edit' | translate">
           @if (userHasPermission('edit')) {
@@ -84,7 +87,8 @@ export class PropertyValueActionBubbleComponent implements OnInit {
   constructor(
     private _resourceFetcherService: ResourceFetcherService,
     private _propertyValueService: PropertyValueService,
-    private _translateService: TranslateService
+    private _translateService: TranslateService,
+    protected _userService: UserService
   ) {}
 
   get disableDeleteButton(): boolean {
