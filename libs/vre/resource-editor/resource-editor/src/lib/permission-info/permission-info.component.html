@@ -1,24 +1,13 @@
-<button
-  color="primary"
-  mat-icon-button
-  [matTooltip]="'resourceEditor.permissionInfo.tooltip' | translate"
-  matTooltipPosition="above"
-  cdkOverlayOrigin
-  #infoButton="cdkOverlayOrigin"
-  (click)="isOpen = !isOpen; overlayStateChange.emit(isOpen)">
-  <mat-icon>lock</mat-icon>
-</button>
-
 <ng-template
   cdkConnectedOverlay
   [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
   [cdkConnectedOverlayHasBackdrop]="true"
   [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
   [cdkConnectedOverlayPositions]="INFOBOX_POSITIONS"
-  [cdkConnectedOverlayOrigin]="infoButton"
+  [cdkConnectedOverlayOrigin]="trigger"
   [cdkConnectedOverlayOpen]="isOpen"
-  (detach)="isOpen = false; overlayStateChange.emit(false)"
-  (backdropClick)="isOpen = false; overlayStateChange.emit(false)">
+  (detach)="close()"
+  (backdropClick)="close()">
   <div class="overlay-info-box">
     <table>
       <tr>

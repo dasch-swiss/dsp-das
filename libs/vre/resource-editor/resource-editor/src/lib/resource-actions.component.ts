@@ -30,7 +30,17 @@ import { TranslateService } from '@ngx-translate/core';
         <mat-icon>share</mat-icon>
       </button>
 
-      <app-permission-info [resourceOrValue]="resource" />
+      <button
+        color="primary"
+        mat-icon-button
+        cdkOverlayOrigin
+        #permissionButton="cdkOverlayOrigin"
+        [matTooltip]="'resourceEditor.permissionInfo.tooltip' | translate"
+        matTooltipPosition="above"
+        (click)="permissionInfo.toggle()">
+        <mat-icon>lock</mat-icon>
+      </button>
+      <app-permission-info #permissionInfo [resourceOrValue]="resource" [trigger]="permissionButton" />
       <ng-content />
     </span>
 

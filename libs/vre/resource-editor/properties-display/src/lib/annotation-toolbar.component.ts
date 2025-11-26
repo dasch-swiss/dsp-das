@@ -48,7 +48,17 @@ import { take } from 'rxjs';
         [matMenuTriggerFor]="share">
         <mat-icon>share</mat-icon>
       </button>
-      <app-permission-info [resourceOrValue]="resource" />
+      <button
+        color="primary"
+        mat-icon-button
+        cdkOverlayOrigin
+        #permissionButton="cdkOverlayOrigin"
+        [matTooltip]="'resourceEditor.permissionInfo.tooltip' | translate"
+        matTooltipPosition="above"
+        (click)="permissionInfo.toggle()">
+        <mat-icon>lock</mat-icon>
+      </button>
+      <app-permission-info #permissionInfo [resourceOrValue]="resource" [trigger]="permissionButton" />
       <app-incoming-resource-more-menu
         [resource]="resource"
         (resourceDeleted)="onResourceDeleted()"

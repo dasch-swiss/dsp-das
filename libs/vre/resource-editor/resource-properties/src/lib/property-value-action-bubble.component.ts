@@ -17,8 +17,19 @@ import { PropertyValueService } from './property-value.service';
             </button>
           }
         }
+        <button
+          mat-button
+          class="edit"
+          cdkOverlayOrigin
+          #permissionButton="cdkOverlayOrigin"
+          [matTooltip]="'resourceEditor.permissionInfo.tooltip' | translate"
+          (click)="$event.stopPropagation(); permissionInfo.toggle()">
+          <mat-icon>lock</mat-icon>
+        </button>
         <app-permission-info
+          #permissionInfo
           [resourceOrValue]="value"
+          [trigger]="permissionButton"
           (overlayStateChange)="permissionOverlayOpen.emit($event)"
           (click)="$event.stopPropagation()" />
 

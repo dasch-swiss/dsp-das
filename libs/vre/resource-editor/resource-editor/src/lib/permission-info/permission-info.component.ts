@@ -1,4 +1,4 @@
-import { ConnectionPositionPair, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin, ConnectionPositionPair, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { ApiResponseData, GroupResponse, KnoraApiConnection, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -20,6 +20,7 @@ import {
 })
 export class PermissionInfoComponent implements OnInit {
   @Input({ required: true }) resourceOrValue!: ReadResource | ReadValue;
+  @Input({ required: true }) trigger!: CdkOverlayOrigin;
   @Output() overlayStateChange = new EventEmitter<boolean>();
 
   isOpen = false;
@@ -84,6 +85,25 @@ export class PermissionInfoComponent implements OnInit {
     this._setUsersPermissions();
     this._setCustomGroupsPermissions();
     console.log('aaa', this);
+  }
+
+  toggle() {
+    this.isOpen = !this.isOpen;
+    this.overlayStateChange.emit(this.isOpen);
+  }
+
+  open() {
+    if (!this.isOpen) {
+      this.isOpen = true;
+      this.overlayStateChange.emit(true);
+    }
+  }
+
+  close() {
+    if (this.isOpen) {
+      this.isOpen = false;
+      this.overlayStateChange.emit(false);
+    }
   }
 
   private _setGroupPermissions() {
