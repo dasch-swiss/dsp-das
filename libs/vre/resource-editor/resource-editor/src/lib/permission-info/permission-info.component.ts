@@ -1,5 +1,5 @@
 import { ConnectionPositionPair, ScrollStrategyOptions } from '@angular/cdk/overlay';
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { ApiResponseData, GroupResponse, KnoraApiConnection, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { Interaction, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
@@ -20,6 +20,7 @@ import {
 })
 export class PermissionInfoComponent implements OnInit {
   @Input({ required: true }) resourceOrValue!: ReadResource | ReadValue;
+  @Output() overlayStateChange = new EventEmitter<boolean>();
 
   isOpen = false;
 

@@ -18,17 +18,14 @@ import { PropertyValueService } from './property-value.service';
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
       [value]="propertyValueService.editModeData.values[index]"
       (templateFound)="templateFound($event)" />
-    <div
-      data-cy="property-value"
-      class="pos-relative row"
-      (mouseenter)="showBubble = true"
-      (mouseleave)="showBubble = false">
+    <div data-cy="property-value" class="pos-relative row" (mouseenter)="showBubble = true" (mouseleave)="mouseLeave()">
       @if (showBubble && (propertyValueService.lastOpenedItem$ | async) !== index) {
         <app-property-value-action-bubble
           [index]="index"
           [date]="propertyValueService.editModeData.values[index].valueCreationDate"
           (editAction)="propertyValueService.toggleOpenedValue(index)"
-          (deleteAction)="askToDelete()" />
+          (deleteAction)="askToDelete()"
+          (permissionOverlayOpen)="permissionOverlayOpen = $event" />
       }
 
       <div class="value" [ngClass]="{ highlighted: isHighlighted }">
@@ -53,6 +50,7 @@ export class PropertyValueDisplayComponent implements OnInit {
   template?: TemplateRef<any>;
   isHighlighted!: boolean;
   showBubble = false;
+  permissionOverlayOpen = false;
 
   constructor(
     public propertyValueService: PropertyValueService,
@@ -64,6 +62,14 @@ export class PropertyValueDisplayComponent implements OnInit {
 
   ngOnInit() {
     this._highlightArkValue();
+  }
+
+  mouseLeave() {
+    console.log('mouse leave');
+    // Only hide bubble if permission overlay is not open
+    if (!this.permissionOverlayOpen) {
+      this.showBubble = false;
+    }
   }
 
   templateFound(template: TemplateRef<any>) {

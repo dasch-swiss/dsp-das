@@ -17,7 +17,10 @@ import { PropertyValueService } from './property-value.service';
             </button>
           }
         }
-        <app-permission-info [resourceOrValue]="value" (click)="$event.stopPropagation()" />
+        <app-permission-info
+          [resourceOrValue]="value"
+          (overlayStateChange)="permissionOverlayOpen.emit($event)"
+          (click)="$event.stopPropagation()" />
 
         <span [matTooltip]="'resourceEditor.resourceProperties.actions.edit' | translate">
           @if (userHasPermission('edit')) {
@@ -59,6 +62,7 @@ export class PropertyValueActionBubbleComponent implements OnInit {
   @Input({ required: true }) index!: number;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();
+  @Output() permissionOverlayOpen = new EventEmitter<boolean>();
 
   infoTooltip$!: Observable<string>;
 

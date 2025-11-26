@@ -5,7 +5,7 @@
   matTooltipPosition="above"
   cdkOverlayOrigin
   #infoButton="cdkOverlayOrigin"
-  (click)="isOpen = !isOpen">
+  (click)="isOpen = !isOpen; overlayStateChange.emit(isOpen)">
   <mat-icon>lock</mat-icon>
 </button>
 
@@ -17,8 +17,8 @@
   [cdkConnectedOverlayPositions]="INFOBOX_POSITIONS"
   [cdkConnectedOverlayOrigin]="infoButton"
   [cdkConnectedOverlayOpen]="isOpen"
-  (detach)="isOpen = false"
-  (backdropClick)="isOpen = false">
+  (detach)="isOpen = false; overlayStateChange.emit(false)"
+  (backdropClick)="isOpen = false; overlayStateChange.emit(false)">
   <div class="overlay-info-box">
     <table>
       <tr>
