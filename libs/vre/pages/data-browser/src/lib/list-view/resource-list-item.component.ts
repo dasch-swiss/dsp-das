@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { map } from 'rxjs';
+import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { map, shareReplay, switchMap } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 
 @Component({
@@ -17,6 +18,9 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
       <div style="display: flex; align-items: center; min-height: 40px">
         <div style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
           <div style="color: black">
+            @if (projectShortcode$ | async; as shortcode) {
+              <span style="font-weight: 500; color: #555;">[{{ shortcode }}]</span>
+            }
             {{ resource.label }}
           </div>
           @if (foundIn.length > 0) {
@@ -86,11 +90,23 @@ export class ResourceListItemComponent implements OnInit {
     map(resources => resources.map(r => r.id).includes(this.resource.id) && this.multipleViewerService.selectMode)
   );
 
-  constructor(public readonly multipleViewerService: MultipleViewerService) {}
+  projectShortcode$ = this._adminApiService
+    .getAdminProjectsIriProjectiri(this.resource.attachedToProject)
+    .pipe(
+      map(response => response.project.shortcode as unknown as string),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
+
+  constructor(
+    public readonly multipleViewerService: MultipleViewerService,
+    private readonly _adminApiService: AdminAPIApiService
+  ) {}
 
   ngOnInit() {
-    if (this.multipleViewerService.searchKeyword) {
-      this._searchInResource(this.multipleViewerService.searchKeyword);
+    const searchKeyword = this.multipleViewerService.searchKeyword;
+    if (searchKeyword) {
+      this._searchInResourceLabel(searchKeyword);
+      this._searchInResourceProperty(searchKeyword);
     }
   }
 
@@ -102,15 +118,25 @@ export class ResourceListItemComponent implements OnInit {
     }
   }
 
-  private _searchInResource(keyword: string) {
+  private _searchInResourceLabel(keyword: string) {
+    if (this.resource.label.toLowerCase().includes(keyword.toLowerCase())) {
+      this.foundIn.push('Label');
+    }
+  }
+
+  private _searchInResourceProperty(keyword: string) {
     Object.values(this.resource.properties).forEach(values => {
       values.forEach(value => {
+        if (!value.propertyLabel) {
+          return;
+        }
+
         if (
           value.strval &&
           value.strval.toLowerCase().includes(keyword.toLowerCase()) &&
-          !this.foundIn.includes(value.propertyLabel!)
+          !this.foundIn.includes(value.propertyLabel)
         ) {
-          this.foundIn.push(value.propertyLabel!);
+          this.foundIn.push(value.propertyLabel);
         }
       });
     });
