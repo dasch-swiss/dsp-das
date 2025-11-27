@@ -44,7 +44,7 @@ export class DownloadDialogResourcesTabComponent {
           resourceClass: this.resourceClassIri,
           selectedProperties: this.selectedPropertyIds,
           language: 'en',
-          includeResourceIri: this.includeResourceIris,
+          includeIris: this.includeResourceIris,
         },
         undefined,
         undefined,
