@@ -1,6 +1,6 @@
-import { ConnectionPositionPair, ScrollStrategyOptions } from '@angular/cdk/overlay';
-import { Component, Inject, Input, OnInit } from '@angular/core';
-import { ApiResponseData, GroupResponse, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
+import { CdkOverlayOrigin, ConnectionPositionPair, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { ApiResponseData, GroupResponse, KnoraApiConnection, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { Interaction, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { filter, map, take } from 'rxjs';
@@ -19,7 +19,9 @@ import {
   standalone: false,
 })
 export class PermissionInfoComponent implements OnInit {
-  @Input({ required: true }) resource!: ReadResource;
+  @Input({ required: true }) resourceOrValue!: ReadResource | ReadValue;
+  @Input({ required: true }) trigger!: CdkOverlayOrigin;
+  @Output() overlayStateChange = new EventEmitter<boolean>();
 
   isOpen = false;
 
@@ -35,7 +37,7 @@ export class PermissionInfoComponent implements OnInit {
     return this.PERMISSION_HEADERS.map(permission => ({
       interaction: permission.interaction,
       label: permission.label,
-      granted: ResourceUtil.isInteractionGranted(this.resource, permission.interaction as Interaction),
+      granted: ResourceUtil.isInteractionGranted(this.resourceOrValue, permission.interaction as Interaction),
     }));
   }
 
@@ -78,10 +80,29 @@ export class PermissionInfoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this._gpu = new GroupPermissionsUtil(this.resource);
+    this._gpu = new GroupPermissionsUtil(this.resourceOrValue.hasPermissions);
     this._setGroupPermissions();
     this._setUsersPermissions();
     this._setCustomGroupsPermissions();
+  }
+
+  toggle() {
+    this.isOpen = !this.isOpen;
+    this.overlayStateChange.emit(this.isOpen);
+  }
+
+  open() {
+    if (!this.isOpen) {
+      this.isOpen = true;
+      this.overlayStateChange.emit(true);
+    }
+  }
+
+  close() {
+    if (this.isOpen) {
+      this.isOpen = false;
+      this.overlayStateChange.emit(false);
+    }
   }
 
   private _setGroupPermissions() {

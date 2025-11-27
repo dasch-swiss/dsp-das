@@ -1,4 +1,4 @@
-import { PermissionUtil, ReadResource } from '@dasch-swiss/dsp-js';
+import { PermissionUtil } from '@dasch-swiss/dsp-js';
 import { Interaction } from '@dasch-swiss/vre/resource-editor/representations';
 
 export type UserGroup = 'ProjectAdmin' | 'Creator' | 'ProjectMember' | 'KnownUser' | 'UnknownUser' | 'CustomGroup';
@@ -31,8 +31,8 @@ export class GroupPermissionsUtil {
   private _groupsHighestPermission = new Map<UserGroup, PermissionUtil.Permissions>();
   private _customGroupsHighestPermission = new Map<string, PermissionUtil.Permissions>();
 
-  constructor(resource: ReadResource) {
-    resource.hasPermissions.split('|').forEach(section => {
+  constructor(permission: string) {
+    permission.split('|').forEach(section => {
       const [permissionKey, restrictedToGroupStr] = section.split(' ') as [Interaction, string];
       const permissionLevel = PermissionUtil.Permissions[permissionKey];
       const sectionSeparator = section.includes(',') ? ',' : ' ';

@@ -18,16 +18,14 @@ import { PropertyValueService } from './property-value.service';
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
       [value]="propertyValueService.editModeData.values[index]"
       (templateFound)="templateFound($event)" />
-    <div
-      data-cy="property-value"
-      class="pos-relative row"
-      (mouseenter)="showBubble = true"
-      (mouseleave)="showBubble = false">
+    <div data-cy="property-value" class="pos-relative row" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
       @if (showBubble && (propertyValueService.lastOpenedItem$ | async) !== index) {
         <app-property-value-action-bubble
+          [index]="index"
           [date]="propertyValueService.editModeData.values[index].valueCreationDate"
           (editAction)="propertyValueService.toggleOpenedValue(index)"
-          (deleteAction)="askToDelete()" />
+          (deleteAction)="askToDelete()"
+          (permissionOverlayOpen)="onPermissionOverlayStateChange($event)" />
       }
 
       <div class="value" [ngClass]="{ highlighted: isHighlighted }">
@@ -52,6 +50,8 @@ export class PropertyValueDisplayComponent implements OnInit {
   template?: TemplateRef<any>;
   isHighlighted!: boolean;
   showBubble = false;
+  permissionOverlayOpen = false;
+  private _isMouseOver = false;
 
   constructor(
     public propertyValueService: PropertyValueService,
@@ -63,6 +63,28 @@ export class PropertyValueDisplayComponent implements OnInit {
 
   ngOnInit() {
     this._highlightArkValue();
+  }
+
+  mouseEnter() {
+    this._isMouseOver = true;
+    this.showBubble = true;
+  }
+
+  mouseLeave() {
+    this._isMouseOver = false;
+    // Only hide bubble if permission overlay is not open
+    if (!this.permissionOverlayOpen) {
+      this.showBubble = false;
+    }
+  }
+
+  onPermissionOverlayStateChange(isOpen: boolean) {
+    this.permissionOverlayOpen = isOpen;
+    // If overlay closes and mouse is not hovering, hide the bubble
+    if (!isOpen && !this._isMouseOver) {
+      this.showBubble = false;
+      this._cd.detectChanges();
+    }
   }
 
   templateFound(template: TemplateRef<any>) {
