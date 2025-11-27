@@ -33,22 +33,12 @@ import { SearchTipsComponent } from './search-tips.component';
 
     @if (query$ | async; as query) {
       <mat-divider />
-
-      <app-project-fulltext-search-result [query]="query" [projectId]="projectId" />
+      <div class="whole-height">
+        <app-search-result [query]="query" [projectId]="projectId" />
+      </div>
     }
   `,
-  styles: [
-    `
-      :host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-        display: none !important;
-      }
-
-      .big {
-        margin-top: 70px;
-        flex-direction: column;
-      }
-    `,
-  ],
+  styleUrls: ['./project-fulltext-search-page.component.scss'],
   standalone: false,
 })
 export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnDestroy {
@@ -61,14 +51,14 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnDest
 
   formGroup = this._fb.group({ query: [''] });
 
-  projectId = this.projectPageService.currentProjectId;
+  projectId = this._projectPageService.currentProject.id;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   private overlayRef: OverlayRef | null = null;
 
   constructor(
     private readonly _fb: FormBuilder,
     private readonly _overlay: Overlay,
-    public readonly projectPageService: ProjectPageService
+    private readonly _projectPageService: ProjectPageService
   ) {}
 
   ngAfterViewInit() {
