@@ -1,15 +1,13 @@
-import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AuthService } from '@dasch-swiss/vre/core/session';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule , TranslateService } from '@ngx-translate/core';
-import { finalize, Subscription, takeLast, tap } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { finalize, Subscription, switchMap } from 'rxjs';
 import { PasswordFormFieldComponent } from '../password-form/password-form-field.component';
 
 @Component({
