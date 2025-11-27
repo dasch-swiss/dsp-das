@@ -3,10 +3,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AuthService } from '@dasch-swiss/vre/core/session';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule , TranslateService } from '@ngx-translate/core';
 import { finalize, Subscription, takeLast, tap } from 'rxjs';
 import { PasswordFormFieldComponent } from '../password-form/password-form-field.component';
 
@@ -18,17 +20,18 @@ import { PasswordFormFieldComponent } from '../password-form/password-form-field
 
       <app-password-form-field [control]="form.controls.password" [placeholder]="'Password'" data-cy="password-input" />
 
+      @if (loginError) {
+        <div class="login-error" data-cy="login-error">{{ loginError }}</div>
+      }
+
       <button
-        [class.mat-primary]="!isLoginError"
-        [class.mat-warn]="isLoginError"
         mat-raised-button
+        color="primary"
         appLoadingButton
         [isLoading]="loading"
         type="submit"
         data-cy="submit-button">
-        {{
-          isLoginError ? ('ui.common.actions.retry' | translate) : ('pages.userSettings.loginForm.login' | translate)
-        }}
+        {{ 'pages.userSettings.loginForm.login' | translate }}
       </button>
     </form>
   `,
@@ -38,6 +41,13 @@ import { PasswordFormFieldComponent } from '../password-form/password-form-field
         display: flex;
         flex-direction: column;
         padding: 16px;
+      }
+
+      .login-error {
+        color: #e11d48;
+        font-size: 12px;
+        margin-top: 4px;
+        margin-bottom: 8px;
       }
     `,
   ],
@@ -53,81 +63,61 @@ import { PasswordFormFieldComponent } from '../password-form/password-form-field
 })
 export class LoginFormComponent implements OnInit, OnDestroy {
   loading = false;
-  form = this._fb.group({
+  loginError: string | null = null;
+  readonly form = this._fb.nonNullable.group({
     username: ['', Validators.required],
     password: ['', Validators.required],
   });
-  isLoginError = false;
-  returnUrl!: string;
 
-  private subscription?: Subscription;
+  private loginSubscription?: Subscription;
+  private formSubscription?: Subscription;
 
   constructor(
     private _fb: FormBuilder,
-    private router: Router,
     private _authService: AuthService,
-    private route: ActivatedRoute,
-    private location: Location
+    private _translateService: TranslateService,
+    @Inject(DspApiConnectionToken)
+    private readonly _dspApiConnection: KnoraApiConnection
   ) {}
 
-  ngOnInit() {
-    this.returnUrl = this.getReturnUrl();
+  ngOnInit(): void {
+    // Clear error when user starts typing
+    this.formSubscription = this.form.valueChanges.subscribe(() => {
+      this.loginError = null;
+    });
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.loginSubscription?.unsubscribe();
+    this.formSubscription?.unsubscribe();
   }
 
   login() {
-    if (this.form.invalid) {
+    if (!this.form.valid) {
       return;
     }
 
     this.loading = true;
-    this.isLoginError = false;
+    this.loginError = null;
 
-    this.subscription = this._authService
-      .login$(this.form.controls.username.getRawValue()!, this.form.controls.password.getRawValue()!)
+    const identifier = this.form.controls.username.value;
+    const identifierType = identifier.indexOf('@') > -1 ? 'email' : 'username';
+
+    this.loginSubscription?.unsubscribe();
+    this.loginSubscription = this._dspApiConnection.v2.auth
+      .login(identifierType, identifier, this.form.controls.password.value)
       .pipe(
-        takeLast(1),
-        tap({
-          error: () => {
-            this.isLoginError = true;
-          },
-        }),
+        switchMap(response => this._authService.afterSuccessfulLogin$(response.body.token, identifier, identifierType)),
         finalize(() => {
           this.loading = false;
         })
       )
-      .subscribe(() => {
-        if (this.returnUrl) {
-          this.router.navigate([this.returnUrl]);
-        }
+      .subscribe({
+        error: error => {
+          if ((error instanceof ApiResponseError && error.status === 400) || error.status === 401) {
+            this.loginError = this._translateService.instant('core.auth.invalidCredentials');
+          }
+        },
       });
-  }
-
-  private getReturnUrl(): string {
-    const returnUrlParameterName = 'returnUrl';
-    const returnUrl = this.route.snapshot.queryParams[returnUrlParameterName];
-    this.location.go(this.removeParameterFromUrl(this.location.path(), returnUrlParameterName, returnUrl));
-    return returnUrl;
-  }
-
-  private removeParameterFromUrl(path: string, parameterName: string, parameterValue: string): string {
-    const urlSegments = path.split('?');
-    const queryString = urlSegments.pop();
-    if (!queryString) {
-      return path;
-    }
-    const params = queryString.split('&');
-    const newQuerystring = params
-      .filter(item => item !== `${parameterName}=${encodeURIComponent(parameterValue)}`)
-      .join('&');
-
-    if (newQuerystring) {
-      urlSegments.push(newQuerystring);
-    }
-
-    return urlSegments.join('?');
   }
 }

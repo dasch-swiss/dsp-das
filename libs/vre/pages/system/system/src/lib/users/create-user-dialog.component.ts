@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
@@ -49,7 +51,7 @@ export class CreateUserDialogComponent implements OnInit {
   form = this._fb.group(
     {} as {
       user: UserForm;
-      password: FormControl<string>;
+      passwordForm: FormGroup;
       isSystemAdmin: FormControl<boolean>;
     }
   );
@@ -71,8 +73,8 @@ export class CreateUserDialogComponent implements OnInit {
     this.form.addControl('user', form);
   }
 
-  afterPasswordFormInit(form: FormControl<string>): void {
-    this.form.addControl('password', form);
+  afterPasswordFormInit(form: FormGroup): void {
+    this.form.addControl('passwordForm', form);
   }
 
   createUser(): void {
@@ -89,7 +91,7 @@ export class CreateUserDialogComponent implements OnInit {
     user.givenName = userFormControls.givenName.value;
     user.email = userFormControls.email.value;
     user.username = userFormControls.username.value;
-    user.password = this.form.controls.password.value;
+    user.password = this.form.controls.passwordForm.get('password')?.value;
     user.lang = userFormControls.lang.value;
     user.systemAdmin = this.form.controls.isSystemAdmin.value;
     user.status = true;

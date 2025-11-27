@@ -175,7 +175,7 @@
         "sortProjectName": "Nom du projet",
         "statusDeactivated": "Désactivé",
         "createNew": "Créer un nouveau projet",
-        "projectAdmin": "Administrateur du projet",
+        "projectAdmin": "Administrateur·trice du projet",
         "edit": "Modifier les informations du projet",
         "reactivate": "Réactiver le projet",
         "deactivate": "Désactiver le projet",
@@ -361,7 +361,9 @@
       "resourceListSelection": {
         "resourcesSelected": "{{count}} ressources sélectionnées",
         "createLinkObject": "Créer un objet de lien",
-        "createLinkObjectTooltip": "Un objet de lien ne peut être créé qu'entre des ressources appartenant au même projet."
+        "createLinkObjectTooltip": "Un objet de lien ne peut être créé qu'entre des ressources appartenant au même projet.",
+        "noResourcesSelected": "Aucune ressource sélectionnée",
+        "resourcesMustBeSameProject": "Les ressources doivent appartenir au même projet"
       },
       "resourcesList": {
         "backToSearchForm": "Retour au formulaire de recherche"
@@ -550,10 +552,10 @@
     "permissionInfo": {
       "label": "Autorisations",
       "tooltip": "Autorisations de la ressource",
-      "projectAdmin": "Administrateur de projet",
+      "projectAdmin": "Administrateur·trice du projet",
       "projectMember": "Membre du projet",
-      "knownUser": "Utilisateur connu",
-      "unknownUser": "Utilisateur inconnu",
+      "knownUser": "Connecté",
+      "unknownUser": "Déconnecté",
       "usersPermissions": "Vos autorisations",
       "interactions": {
         "restrictedView": "Autorisation de vue restreinte (RV)",
@@ -699,7 +701,8 @@
         "description": "Description"
       },
       "errors": {
-        "crossProjectLink": "Ce champ contient des liens vers des ressources d'autres projets. Seuls les liens vers des ressources du projet actuel sont autorisés."
+        "crossProjectLink": "Ce champ contient des liens vers des ressources d'autres projets. Seuls les liens vers des ressources du projet actuel sont autorisés.",
+        "badLinks": "Liens incorrects :"
       },
       "status": {
         "active": "Actif",
