@@ -51,8 +51,9 @@ describe('LoginFormComponent', () => {
     } as unknown as jest.Mocked<KnoraApiConnection>;
 
     await TestBed.configureTestingModule({
-      declarations: [LoginFormComponent, PasswordFormFieldComponent],
       imports: [
+        PasswordFormFieldComponent,
+        LoginFormComponent,
         ReactiveFormsModule,
         MatButtonModule,
         MatFormFieldModule,
