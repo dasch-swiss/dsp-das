@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { APIV3ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { finalize } from 'rxjs';
 
@@ -47,7 +48,8 @@ export class DownloadDialogResourcesTabComponent {
 
   constructor(
     private _v3: APIV3ApiService,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private _localizationService: LocalizationService
   ) {}
 
   downloadCsv(): void {
@@ -58,7 +60,7 @@ export class DownloadDialogResourcesTabComponent {
         {
           resourceClass: this.resourceClassIri,
           selectedProperties: this.selectedPropertyIds,
-          language: 'en',
+          language: this._localizationService.getCurrentLanguage(),
           includeIris: this.includeResourceIris,
         },
         undefined,
