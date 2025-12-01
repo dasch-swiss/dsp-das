@@ -5,7 +5,7 @@ import { ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { DataBrowserPageService } from '../data-browser-page.service';
 import { ResourceResultService } from '../resource-result.service';
@@ -83,40 +83,37 @@ describe('ResourcesListFetcherComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should auto-select first resource when class has resources', done => {
+  it('should auto-select first resource when class has resources', async () => {
     mockDspApiConnection.v2.search.doExtendedSearch.mockReturnValue(of({ resources: [mockResource1, mockResource2] }));
     mockDspApiConnection.v2.search.doExtendedSearchCountQuery.mockReturnValue(of({ numberOfResults: 2 }));
 
     component.ngOnChanges();
 
-    component.data$.subscribe(() => {
-      expect(mockMultipleViewerService.selectOneResource).toHaveBeenCalledWith(mockResource1);
-      done();
-    });
+    await firstValueFrom(component.data$);
+
+    expect(mockMultipleViewerService.selectOneResource).toHaveBeenCalledWith(mockResource1);
   });
 
-  it('should call reset when navigating to empty class', done => {
+  it('should call reset when navigating to empty class', async () => {
     mockDspApiConnection.v2.search.doExtendedSearch.mockReturnValue(of({ resources: [] }));
     mockDspApiConnection.v2.search.doExtendedSearchCountQuery.mockReturnValue(of({ numberOfResults: 0 }));
 
     component.ngOnChanges();
 
-    component.data$.subscribe(() => {
-      expect(mockMultipleViewerService.reset).toHaveBeenCalled();
-      done();
-    });
+    await firstValueFrom(component.data$);
+
+    expect(mockMultipleViewerService.reset).toHaveBeenCalled();
   });
 
-  it('should not auto-select when selectMode is true', done => {
+  it('should not auto-select when selectMode is true', async () => {
     mockMultipleViewerService.selectMode = true;
     mockDspApiConnection.v2.search.doExtendedSearch.mockReturnValue(of({ resources: [mockResource1, mockResource2] }));
     mockDspApiConnection.v2.search.doExtendedSearchCountQuery.mockReturnValue(of({ numberOfResults: 2 }));
 
     component.ngOnChanges();
 
-    component.data$.subscribe(() => {
-      expect(mockMultipleViewerService.selectOneResource).not.toHaveBeenCalled();
-      done();
-    });
+    await firstValueFrom(component.data$);
+
+    expect(mockMultipleViewerService.selectOneResource).not.toHaveBeenCalled();
   });
 });

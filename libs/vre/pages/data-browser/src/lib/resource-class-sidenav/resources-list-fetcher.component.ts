@@ -102,7 +102,6 @@ export class ResourcesListFetcherComponent implements OnChanges {
           } else {
             // Clear selection when navigating to a class with no resources
             this._multipleViewerService.reset();
-            this._multipleViewerService.selectMode = false;
           }
         }
         return { resources: currResources!, selectFirstResource };

@@ -1,4 +1,5 @@
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { firstValueFrom } from 'rxjs';
 import { MultipleViewerService } from './multiple-viewer.service';
 
 describe('MultipleViewerService', () => {
@@ -19,79 +20,71 @@ describe('MultipleViewerService', () => {
     service = new MultipleViewerService();
   });
 
+  afterEach(() => {
+    service.reset();
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
   describe('selectOneResource', () => {
-    it('should select a single resource and set selectMode to false', done => {
+    it('should select a single resource and set selectMode to false', async () => {
       service.selectOneResource(mockResource1);
 
-      service.selectedResources$.subscribe(resources => {
-        expect(resources).toEqual([mockResource1]);
-        expect(service.selectMode).toBe(false);
-        done();
-      });
+      const resources = await firstValueFrom(service.selectedResources$);
+      expect(resources).toEqual([mockResource1]);
+      expect(service.selectMode).toBe(false);
     });
 
-    it('should replace previously selected resource', done => {
+    it('should replace previously selected resource', async () => {
       service.selectOneResource(mockResource1);
       service.selectOneResource(mockResource2);
 
-      service.selectedResources$.subscribe(resources => {
-        expect(resources).toEqual([mockResource2]);
-        done();
-      });
+      const resources = await firstValueFrom(service.selectedResources$);
+      expect(resources).toEqual([mockResource2]);
     });
   });
 
   describe('addResources', () => {
-    it('should add multiple resources and set selectMode to true', done => {
+    it('should add multiple resources and set selectMode to true', async () => {
       service.addResources([mockResource1, mockResource2]);
 
-      service.selectedResources$.subscribe(resources => {
-        expect(resources.length).toBe(2);
-        expect(resources).toContain(mockResource1);
-        expect(resources).toContain(mockResource2);
-        expect(service.selectMode).toBe(true);
-        done();
-      });
+      const resources = await firstValueFrom(service.selectedResources$);
+      expect(resources.length).toBe(2);
+      expect(resources).toContain(mockResource1);
+      expect(resources).toContain(mockResource2);
+      expect(service.selectMode).toBe(true);
     });
 
-    it('should not add duplicate resources', done => {
+    it('should not add duplicate resources', async () => {
       service.addResources([mockResource1, mockResource2]);
       service.addResources([mockResource2, mockResource3]);
 
-      service.selectedResources$.subscribe(resources => {
-        expect(resources.length).toBe(3);
-        expect(resources.filter(r => r === mockResource2).length).toBe(1);
-        done();
-      });
+      const resources = await firstValueFrom(service.selectedResources$);
+      expect(resources.length).toBe(3);
+      expect(resources.filter(r => r === mockResource2).length).toBe(1);
     });
 
-    it('should clear single selection when switching to multi-mode', done => {
+    it('should clear single selection when switching to multi-mode', async () => {
       service.selectOneResource(mockResource1);
       service.addResources([mockResource2, mockResource3]);
 
-      service.selectedResources$.subscribe(resources => {
-        expect(resources).not.toContain(mockResource1);
-        expect(resources).toContain(mockResource2);
-        expect(resources).toContain(mockResource3);
-        done();
-      });
+      const resources = await firstValueFrom(service.selectedResources$);
+      expect(resources).not.toContain(mockResource1);
+      expect(resources).toContain(mockResource2);
+      expect(resources).toContain(mockResource3);
     });
   });
 
   describe('removeResources', () => {
-    it('should remove specified resources', done => {
+    it('should remove specified resources', async () => {
       service.addResources([mockResource1, mockResource2, mockResource3]);
       service.removeResources([mockResource2]);
 
-      service.selectedResources$.subscribe(resources => {
-        expect(resources.length).toBe(2);
-        expect(resources).not.toContain(mockResource2);
-        done();
-      });
+      const resources = await firstValueFrom(service.selectedResources$);
+      expect(resources.length).toBe(2);
+      expect(resources).not.toContain(mockResource2);
     });
 
     it('should set selectMode to false when all resources removed', () => {
@@ -101,38 +94,32 @@ describe('MultipleViewerService', () => {
       expect(service.selectMode).toBe(false);
     });
 
-    it('should not throw error when removing non-existent resource', done => {
+    it('should not throw error when removing non-existent resource', async () => {
       service.addResources([mockResource1]);
       service.removeResources([mockResource2]);
 
-      service.selectedResources$.subscribe(resources => {
-        expect(resources).toEqual([mockResource1]);
-        done();
-      });
+      const resources = await firstValueFrom(service.selectedResources$);
+      expect(resources).toEqual([mockResource1]);
     });
   });
 
   describe('reset', () => {
-    it('should clear single selected resource and set selectMode to false', done => {
+    it('should clear single selected resource and set selectMode to false', async () => {
       service.selectOneResource(mockResource1);
       service.reset();
 
-      service.selectedResources$.subscribe(resources => {
-        expect(resources).toEqual([]);
-        expect(service.selectMode).toBe(false);
-        done();
-      });
+      const resources = await firstValueFrom(service.selectedResources$);
+      expect(resources).toEqual([]);
+      expect(service.selectMode).toBe(false);
     });
 
-    it('should clear multiple selected resources', done => {
+    it('should clear multiple selected resources', async () => {
       service.addResources([mockResource1, mockResource2, mockResource3]);
       service.reset();
 
-      service.selectedResources$.subscribe(resources => {
-        expect(resources).toEqual([]);
-        expect(service.selectMode).toBe(false);
-        done();
-      });
+      const resources = await firstValueFrom(service.selectedResources$);
+      expect(resources).toEqual([]);
+      expect(service.selectMode).toBe(false);
     });
   });
 });

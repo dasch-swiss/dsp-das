@@ -32,8 +32,7 @@ export class MultipleViewerService {
 
     resources.forEach(resource => {
       const index = currentResources.indexOf(resource);
-      if (index <= -1) {
-        // does not exist
+      if (index < 0) {
         return;
       }
 
