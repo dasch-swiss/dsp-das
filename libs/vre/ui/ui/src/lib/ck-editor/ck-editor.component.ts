@@ -92,11 +92,9 @@ export class CkEditorComponent implements OnInit, OnDestroy {
       updating = false;
     });
 
-    this.footnoteControl.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(() => {
-      if (!this.control.touched) {
-        this.control.markAsTouched();
-      }
-    });
+    if (!this.control.touched) {
+      this.control.markAsTouched();
+    }
   }
 
   ngOnDestroy() {
