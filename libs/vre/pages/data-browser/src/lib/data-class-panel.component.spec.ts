@@ -1,11 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  ReadResource,
-  ResourceClassDefinitionWithAllLanguages,
-  ResourcePropertyDefinition,
-} from '@dasch-swiss/dsp-js';
+import { ReadResource, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';

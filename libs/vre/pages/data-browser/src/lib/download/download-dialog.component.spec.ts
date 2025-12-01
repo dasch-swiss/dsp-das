@@ -125,9 +125,7 @@ describe('DownloadDialogComponent', () => {
     });
 
     it('should handle large properties array', () => {
-      const manyProperties = Array.from({ length: 20 }, (_, i) =>
-        createMockPropertyInfo(`prop-${i}`, `Property ${i}`)
-      );
+      const manyProperties = Array.from({ length: 20 }, (_, i) => createMockPropertyInfo(`prop-${i}`, `Property ${i}`));
 
       const data: DownloadDialogData = {
         resClass: mockResClass,
