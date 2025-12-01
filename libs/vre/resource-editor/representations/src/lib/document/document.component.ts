@@ -104,7 +104,7 @@ export class DocumentComponent implements OnChanges {
     this.zoomFactor = newZoom <= 0 ? 0.2 : newZoom;
   }
 
-  onPdfLoadError(_error: any) {
+  onPdfLoadError(_error: unknown) {
     this.failedToLoad = true;
   }
 
