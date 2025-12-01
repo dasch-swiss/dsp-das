@@ -54,7 +54,6 @@ export class DownloadDialogResourcesTabComponent {
   downloadCsv(): void {
     this.isDownloading = true;
 
-    this._v3.getV3ProjectsProjectiriResourcesperontology().subscribe({ error: e => {} });
     this._v3
       .postV3ExportResources(
         {
