@@ -41,7 +41,14 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       </div>
 
       <div style="margin-top: 8px; color: #666; font-size: 13px">
-        {{ 'pages.dataBrowser.downloadDialog.selectedCount' | translate: { count: selectedCount, total: properties.length } }}
+        {{
+          'pages.dataBrowser.downloadDialog.selectedCount'
+            | translate
+              : {
+                  count: selectedCount,
+                  total: properties.length,
+                }
+        }}
       </div>
     }
   `,
