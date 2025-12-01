@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { APIV3ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-download-dialog-properties-tab',
@@ -19,9 +21,16 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
     </div>
 
     <div mat-dialog-actions align="end">
-      <button mat-button (click)="afterClosed.emit()" style="margin-right: 16px">Cancel</button>
-      <button mat-raised-button color="primary" (click)="downloadCsv()">
-        <mat-icon>download</mat-icon>
+      <button mat-button (click)="afterClosed.emit()" style="margin-right: 16px" [disabled]="isDownloading">
+        Cancel
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        appLoadingButton
+        [isLoading]="isDownloading"
+        (click)="downloadCsv()"
+        [disabled]="selectedPropertyIds.length === 0 || isDownloading">
         Download CSV
       </button>
     </div>
@@ -32,12 +41,18 @@ export class DownloadDialogResourcesTabComponent {
   @Input({ required: true }) resourceClassIri!: string;
   @Output() afterClosed = new EventEmitter<void>();
   includeResourceIris = false;
+  isDownloading = false;
 
   selectedPropertyIds: string[] = [];
 
-  constructor(private _v3: APIV3ApiService) {}
+  constructor(
+    private _v3: APIV3ApiService,
+    private _notificationService: NotificationService
+  ) {}
 
   downloadCsv(): void {
+    this.isDownloading = true;
+
     this._v3
       .postV3ExportResources(
         {
@@ -50,8 +65,20 @@ export class DownloadDialogResourcesTabComponent {
         undefined,
         { httpHeaderAccept: 'text/csv' }
       )
-      .subscribe(csvText => {
-        this._createBlob(csvText);
+      .pipe(
+        finalize(() => {
+          this.isDownloading = false;
+        })
+      )
+      .subscribe({
+        next: csvText => {
+          this._createBlob(csvText);
+          this._notificationService.openSnackBar('CSV downloaded successfully.');
+          this.afterClosed.emit();
+        },
+        error: () => {
+          this._notificationService.openSnackBar('Failed to download CSV. Please try again.');
+        },
       });
   }
 
