@@ -7,10 +7,14 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
     @if (properties.length > 0) {
       <div style="margin-bottom: 16px">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px">
-          <span style="font-weight: 500">Properties</span>
+          <span style="font-weight: 500">{{ 'pages.dataBrowser.downloadDialog.properties' | translate }}</span>
           <div style="display: flex; gap: 8px">
-            <button mat-button color="primary" (click)="selectAll()">Select All</button>
-            <button mat-button color="primary" (click)="selectNone()">Select None</button>
+            <button mat-button color="primary" (click)="selectAll()">
+              {{ 'pages.dataBrowser.downloadDialog.selectAll' | translate }}
+            </button>
+            <button mat-button color="primary" (click)="selectNone()">
+              {{ 'pages.dataBrowser.downloadDialog.selectNone' | translate }}
+            </button>
           </div>
         </div>
       </div>
@@ -37,7 +41,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       </div>
 
       <div style="margin-top: 8px; color: #666; font-size: 13px">
-        {{ selectedCount }} of {{ properties.length }} properties selected
+        {{ 'pages.dataBrowser.downloadDialog.selectedCount' | translate: { count: selectedCount, total: properties.length } }}
       </div>
     }
   `,

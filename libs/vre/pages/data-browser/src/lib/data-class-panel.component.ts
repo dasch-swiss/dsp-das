@@ -22,7 +22,7 @@ import { ResourceClassCountApi } from './resource-class-count.api';
         <h3 style="flex: 1">{{ classSelected.resClass.labels | appStringifyStringLiteral }}</h3>
         <button mat-stroked-button (click)="openDownloadDialog()" data-cy="download-btn">
           <mat-icon>download</mat-icon>
-          Download
+          {{ 'pages.dataBrowser.downloadDialog.title' | translate }}
         </button>
         @if (hasProjectMemberRights$ | async) {
           <button mat-stroked-button (click)="goToAddClassInstance()" data-cy="create-resource-btn">
@@ -87,7 +87,7 @@ export class DataClassPanelComponent {
       this._multipleViewerService.selectedResources$.pipe(first()),
     ]).subscribe(([resClassCount, resources]) => {
       if (resClassCount === 0 || resources.length === 0) {
-        this._notificationService.openSnackBar('There are no resources to download.');
+        this._notificationService.openSnackBar('pages.dataBrowser.downloadDialog.noResources');
         return;
       }
 

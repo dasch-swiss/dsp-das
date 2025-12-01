@@ -12,7 +12,9 @@ export interface DownloadDialogData {
 @Component({
   selector: 'app-download-dialog',
   template: `
-    <app-dialog-header [title]="'Download'" [subtitle]="data.resourceCount + ' resources available'" />
+    <app-dialog-header
+      [title]="'pages.dataBrowser.downloadDialog.title' | translate"
+      [subtitle]="'pages.dataBrowser.downloadDialog.resourcesAvailable' | translate: { count: data.resourceCount }" />
     <div mat-dialog-content style="max-height: 90vh">
       <app-download-dialog-properties-tab
         [properties]="data.properties"

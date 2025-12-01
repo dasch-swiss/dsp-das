@@ -13,17 +13,16 @@ import { finalize } from 'rxjs';
 
     <div style="margin-top: 16px; padding: 16px; background: #f5f5f5; border-radius: 4px">
       <mat-checkbox [(ngModel)]="includeResourceIris">
-        <span style="font-weight: 500">Include Resource IRIs for reference properties</span>
+        <span style="font-weight: 500">{{ 'pages.dataBrowser.downloadDialog.includeIrisLabel' | translate }}</span>
       </mat-checkbox>
       <p style="margin: 8px 0 0 32px; color: #666; font-size: 13px">
-        When enabled, reference properties export both human-readable values (e.g., 'Alice') and Resource IRIs for
-        proper data referencing.
+        {{ 'pages.dataBrowser.downloadDialog.includeIrisExplanation' | translate }}
       </p>
     </div>
 
     <div mat-dialog-actions align="end">
       <button mat-button (click)="afterClosed.emit()" style="margin-right: 16px" [disabled]="isDownloading">
-        Cancel
+        {{ 'ui.common.actions.cancel' | translate }}
       </button>
       <button
         mat-raised-button
@@ -32,7 +31,7 @@ import { finalize } from 'rxjs';
         [isLoading]="isDownloading"
         (click)="downloadCsv()"
         [disabled]="selectedPropertyIds.length === 0 || isDownloading">
-        Download CSV
+        {{ 'pages.dataBrowser.downloadDialog.downloadCsv' | translate }}
       </button>
     </div>
   `,
@@ -55,6 +54,7 @@ export class DownloadDialogResourcesTabComponent {
   downloadCsv(): void {
     this.isDownloading = true;
 
+    this._v3.getV3ProjectsProjectiriResourcesperontology().subscribe({ error: e => {} });
     this._v3
       .postV3ExportResources(
         {
@@ -75,11 +75,11 @@ export class DownloadDialogResourcesTabComponent {
       .subscribe({
         next: csvText => {
           this._createBlob(csvText);
-          this._notificationService.openSnackBar('CSV downloaded successfully.');
+          this._notificationService.openSnackBar('pages.dataBrowser.downloadDialog.downloadSuccess');
           this.afterClosed.emit();
         },
-        error: () => {
-          this._notificationService.openSnackBar('Failed to download CSV. Please try again.');
+        error: e => {
+          this._notificationService.openSnackBar('pages.dataBrowser.downloadDialog.downloadError');
         },
       });
   }
