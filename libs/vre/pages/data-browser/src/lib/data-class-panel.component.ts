@@ -91,8 +91,6 @@ export class DataClassPanelComponent {
         return;
       }
 
-      console.log(resClassCount);
-
       const properties = generateDspResource(resources[0]).resProps.filter(
         prop => (prop.propDef as ResourcePropertyDefinition).isEditable
       );

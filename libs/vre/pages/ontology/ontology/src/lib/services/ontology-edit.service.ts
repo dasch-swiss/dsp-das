@@ -100,7 +100,6 @@ export class OntologyEditService {
     this.currentProjectsProperties$,
   ]).pipe(
     map(([ontology, allProperties]) => {
-      console.log('ontoeditor', ontology, allProperties);
       if (!ontology) return [];
 
       const classes = this._filterAndSortOntoClasses(
