@@ -17,6 +17,7 @@ import { CalendarDate } from '@dasch-swiss/vre/shared/calendar';
           [matDatepicker]="picker"
           [ngModel]="control.value?.date"
           (dateChange)="editDate($event)"
+          (click)="picker.open()"
           [attr.aria-label]="'resourceEditor.templateSwitcher.timeValue.date' | translate"
           [placeholder]="'resourceEditor.templateSwitcher.timeValue.datePlaceholder' | translate"
           readonly />
