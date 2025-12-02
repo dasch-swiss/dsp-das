@@ -228,13 +228,14 @@ Successfully completed a comprehensive rewrite and migration of the calendar sys
 - Removed from `package.json` dependencies
 - Removed from `tsconfig.base.json` path mappings
 
-### dateAdapter App Broken ⚠️
-- `apps/dateAdapter/` - Standalone demo/test app **will be broken** after deletion
-- This is a separate test application, not part of the main dsp-app
+### dateAdapter Demo App - **DELETED** ✅
+- ~~`apps/dateAdapter/`~~ - **Deleted** (demo app for old libraries)
+- Was a standalone test application showing old date picker functionality
 - Not used in production
-- Can be migrated separately if needed or deleted entirely
+- No longer functional after old library deletion
+- Previously removed in PR #1324, now permanently deleted
 
-**Note:** The old libraries were deleted because they are no longer used by the main application or any production code.
+**Note:** All old calendar code has been completely removed from the codebase. Only the new modern calendar system remains.
 
 ### No Changes Required To
 - End-user functionality (invisible to users)
