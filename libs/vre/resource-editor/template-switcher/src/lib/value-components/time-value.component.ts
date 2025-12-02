@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { CalendarDate } from '@dasch-swiss/vre/shared/calendar';
 import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { CalendarDate } from '@dasch-swiss/vre/shared/calendar';
 
 @Component({
   selector: 'app-time-value',
