@@ -27,7 +27,7 @@ export class JDNDatepickerDirective implements OnChanges, OnDestroy {
 
   constructor(@Inject(ACTIVE_CALENDAR) private readonly _activeCalendarToken: BehaviorSubject<string>) {}
 
-  get activeCalendar() {
+  get activeCalendar(): 'Gregorian' | 'Julian' | 'Islamic' {
     return this._activeCalendar;
   }
 
