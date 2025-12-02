@@ -1,26 +1,28 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { provideCalendarDateAdapter } from '@dasch-swiss/vre/ui/date-picker';
 import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { CalendarDate } from '@dasch-swiss/vre/shared/calendar';
 
 @Component({
   selector: 'app-time-value',
+  providers: [
+    provideCalendarDateAdapter(),
+  ],
   template: `
     <div style="display: flex; gap: 8px">
-      <app-jdn-datepicker [activeCalendar]="'Gregorian'">
-        <mat-form-field>
-          <input
-            matInput
-            [matDatepicker]="picker"
-            [ngModel]="control.value?.date"
-            (dateChange)="editDate($event)"
-            [attr.aria-label]="'resourceEditor.templateSwitcher.timeValue.date' | translate"
-            [placeholder]="'resourceEditor.templateSwitcher.timeValue.datePlaceholder' | translate"
-            readonly />
-          <mat-datepicker-toggle matSuffix [for]="picker" />
-          <mat-datepicker #picker />
-        </mat-form-field>
-      </app-jdn-datepicker>
+      <mat-form-field>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [ngModel]="control.value?.date"
+          (dateChange)="editDate($event)"
+          [attr.aria-label]="'resourceEditor.templateSwitcher.timeValue.date' | translate"
+          [placeholder]="'resourceEditor.templateSwitcher.timeValue.datePlaceholder' | translate"
+          readonly />
+        <mat-datepicker-toggle matSuffix [for]="picker" />
+        <mat-datepicker #picker />
+      </mat-form-field>
 
       <mat-form-field>
         <input
