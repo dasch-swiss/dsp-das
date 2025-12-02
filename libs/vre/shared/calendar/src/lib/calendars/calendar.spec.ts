@@ -4,11 +4,11 @@
  * These tests verify the core functionality of the calendar system.
  */
 
-import { createDate } from '../factories/date.factory';
 import { convertCalendar, compareDates } from '../converters/calendar.converter';
+import { createDate } from '../factories/date.factory';
 import { GregorianCalendar } from './gregorian.calendar';
-import { JulianCalendar } from './julian.calendar';
 import { IslamicCalendar } from './islamic.calendar';
+import { JulianCalendar } from './julian.calendar';
 
 describe('Calendar Library', () => {
   describe('createDate', () => {

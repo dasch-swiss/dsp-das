@@ -20,8 +20,8 @@
  * @module islamic.calendar
  */
 
-import { CalendarDate, CalendarOperations } from '../types/calendar.types';
 import { createDate } from '../factories/date.factory';
+import { CalendarDate, CalendarOperations } from '../types/calendar.types';
 import { JulianCalendar } from './julian.calendar';
 
 /**
@@ -176,6 +176,25 @@ function islamicFromJDN(jdn: number): CalendarDate {
 }
 
 /**
+ * Determine if a year is a leap year in the Islamic calendar.
+ *
+ * In a 30-year cycle, years 2, 5, 7, 10, 13, 16, 18, 21, 24, 26, and 29 are leap years.
+ *
+ * @param year - The Islamic year
+ * @returns True if leap year, false otherwise
+ *
+ * @example
+ * ```typescript
+ * islamicIsLeapYear(1445) // Returns true or false depending on cycle position
+ * ```
+ */
+function islamicIsLeapYear(year: number): boolean {
+  const yearInCycle = year % 30;
+  const leapYears = [2, 5, 7, 10, 13, 16, 18, 21, 24, 26, 29];
+  return leapYears.includes(yearInCycle);
+}
+
+/**
  * Calculate the number of days in a month for the Islamic calendar.
  *
  * The Islamic calendar alternates between 30 and 29 day months,
@@ -209,25 +228,6 @@ function islamicDaysInMonth(year: number, month: number): number {
     // Month 12: check if leap year
     return islamicIsLeapYear(year) ? 30 : 29;
   }
-}
-
-/**
- * Determine if a year is a leap year in the Islamic calendar.
- *
- * In a 30-year cycle, years 2, 5, 7, 10, 13, 16, 18, 21, 24, 26, and 29 are leap years.
- *
- * @param year - The Islamic year
- * @returns True if leap year, false otherwise
- *
- * @example
- * ```typescript
- * islamicIsLeapYear(1445) // Returns true or false depending on cycle position
- * ```
- */
-function islamicIsLeapYear(year: number): boolean {
-  const yearInCycle = year % 30;
-  const leapYears = [2, 5, 7, 10, 13, 16, 18, 21, 24, 26, 29];
-  return leapYears.includes(yearInCycle);
 }
 
 /**

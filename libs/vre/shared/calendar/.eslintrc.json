@@ -8,6 +8,10 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": ["libs/vre/shared/calendar/tsconfig.*?.json"]
+      },
       "rules": {}
     },
     {
@@ -17,14 +21,7 @@
     {
       "files": ["*.json"],
       "parser": "jsonc-eslint-parser",
-      "rules": {
-        "@nx/dependency-checks": [
-          "error",
-          {
-            "ignoredFiles": ["{projectRoot}/eslint.config.{js,cjs,mjs,ts,cts,mts}"]
-          }
-        ]
-      }
+      "rules": {}
     }
   ]
 }

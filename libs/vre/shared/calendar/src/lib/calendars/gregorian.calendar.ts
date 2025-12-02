@@ -18,8 +18,8 @@
  * @module gregorian.calendar
  */
 
-import { CalendarDate, CalendarOperations } from '../types/calendar.types';
 import { createDate } from '../factories/date.factory';
+import { CalendarDate, CalendarOperations } from '../types/calendar.types';
 
 /**
  * Helper function to truncate decimals (remove fractions).
@@ -60,8 +60,8 @@ function gregorianToJDN(date: CalendarDate): number {
   // Adjust year and month for the algorithm
   // (Treat January and February as months 13 and 14 of the previous year)
   if (month <= 2) {
-    year = year - 1;
-    month = month + 12;
+    year -= 1;
+    month += 12;
   }
 
   // Check if date is before October 15, 1582 (Gregorian calendar introduction)
@@ -133,37 +133,6 @@ function gregorianFromJDN(jdn: number): CalendarDate {
 }
 
 /**
- * Calculate the number of days in a month for the Gregorian calendar.
- *
- * @param year - The year (astronomical year, can be negative)
- * @param month - The month (1-12)
- * @returns Number of days in the month
- *
- * @example
- * ```typescript
- * gregorianDaysInMonth(2024, 2) // Returns 29 (leap year)
- * gregorianDaysInMonth(2023, 2) // Returns 28
- * gregorianDaysInMonth(2024, 1) // Returns 31
- * ```
- */
-function gregorianDaysInMonth(year: number, month: number): number {
-  const daysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-  if (month < 1 || month > 12) {
-    throw new Error(`Invalid month: ${month}. Month must be between 1 and 12.`);
-  }
-
-  let days = daysPerMonth[month - 1];
-
-  // Adjust for February in leap years
-  if (month === 2 && gregorianIsLeapYear(year)) {
-    days = 29;
-  }
-
-  return days;
-}
-
-/**
  * Determine if a year is a leap year in the Gregorian calendar.
  *
  * Gregorian leap year rules:
@@ -192,6 +161,37 @@ function gregorianIsLeapYear(year: number): boolean {
     return true;
   }
   return false;
+}
+
+/**
+ * Calculate the number of days in a month for the Gregorian calendar.
+ *
+ * @param year - The year (astronomical year, can be negative)
+ * @param month - The month (1-12)
+ * @returns Number of days in the month
+ *
+ * @example
+ * ```typescript
+ * gregorianDaysInMonth(2024, 2) // Returns 29 (leap year)
+ * gregorianDaysInMonth(2023, 2) // Returns 28
+ * gregorianDaysInMonth(2024, 1) // Returns 31
+ * ```
+ */
+function gregorianDaysInMonth(year: number, month: number): number {
+  const daysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  if (month < 1 || month > 12) {
+    throw new Error(`Invalid month: ${month}. Month must be between 1 and 12.`);
+  }
+
+  let days = daysPerMonth[month - 1];
+
+  // Adjust for February in leap years
+  if (month === 2 && gregorianIsLeapYear(year)) {
+    days = 29;
+  }
+
+  return days;
 }
 
 /**

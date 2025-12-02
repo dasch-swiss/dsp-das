@@ -74,14 +74,12 @@ export function createDate(
   let finalEra: Era;
   if (era !== undefined) {
     finalEra = era;
-  } else {
+  } else if (calendar === 'ISLAMIC') {
     // Islamic calendar has no era
-    if (calendar === 'ISLAMIC') {
-      finalEra = 'NONE';
-    } else {
-      // Default to CE for positive years, BCE for negative
-      finalEra = year >= 0 ? 'CE' : 'BCE';
-    }
+    finalEra = 'NONE';
+  } else {
+    // Default to CE for positive years, BCE for negative
+    finalEra = year >= 0 ? 'CE' : 'BCE';
   }
 
   // Validate era for Islamic calendar
@@ -247,9 +245,6 @@ export function isCalendarPeriod(value: unknown): value is CalendarPeriod {
   const period = value as Partial<CalendarPeriod>;
 
   return (
-    period.start !== undefined &&
-    isCalendarDate(period.start) &&
-    period.end !== undefined &&
-    isCalendarDate(period.end)
+    period.start !== undefined && isCalendarDate(period.start) && period.end !== undefined && isCalendarDate(period.end)
   );
 }

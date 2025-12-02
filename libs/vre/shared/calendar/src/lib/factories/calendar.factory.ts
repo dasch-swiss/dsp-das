@@ -6,10 +6,10 @@
  * @module calendar.factory
  */
 
-import { CalendarSystem, CalendarOperations } from '../types/calendar.types';
 import { GregorianCalendar } from '../calendars/gregorian.calendar';
-import { JulianCalendar } from '../calendars/julian.calendar';
 import { IslamicCalendar } from '../calendars/islamic.calendar';
+import { JulianCalendar } from '../calendars/julian.calendar';
+import { CalendarSystem, CalendarOperations } from '../types/calendar.types';
 
 /**
  * Gets calendar operations for a specific calendar system.

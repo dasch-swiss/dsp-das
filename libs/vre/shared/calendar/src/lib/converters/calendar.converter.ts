@@ -7,8 +7,8 @@
  * @module calendar.converter
  */
 
-import { CalendarDate, CalendarSystem, CalendarError } from '../types/calendar.types';
 import { getCalendar } from '../factories/calendar.factory';
+import { CalendarDate, CalendarSystem, CalendarError } from '../types/calendar.types';
 
 /**
  * Converts a date from one calendar system to another.
@@ -157,7 +157,9 @@ export function isEqual(a: CalendarDate, b: CalendarDate): boolean {
  */
 export function validatePeriod(start: CalendarDate, end: CalendarDate): void {
   if (start.calendar !== end.calendar) {
-    throw new CalendarError(`Period dates must be in the same calendar. Start: ${start.calendar}, End: ${end.calendar}`);
+    throw new CalendarError(
+      `Period dates must be in the same calendar. Start: ${start.calendar}, End: ${end.calendar}`
+    );
   }
 
   if (isAfter(start, end)) {

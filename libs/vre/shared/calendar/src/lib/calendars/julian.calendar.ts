@@ -14,8 +14,8 @@
  * @module julian.calendar
  */
 
-import { CalendarDate, CalendarOperations } from '../types/calendar.types';
 import { createDate } from '../factories/date.factory';
+import { CalendarDate, CalendarOperations } from '../types/calendar.types';
 
 /**
  * Helper function to truncate decimals (remove fractions).
@@ -44,8 +44,8 @@ function julianToJDN(date: CalendarDate): number {
 
   // Adjust year and month for the algorithm
   if (month <= 2) {
-    year = year - 1;
-    month = month + 12;
+    year -= 1;
+    month += 12;
   }
 
   // Correction for negative years (BCE)
@@ -106,6 +106,27 @@ function julianFromJDN(jdn: number): CalendarDate {
 }
 
 /**
+ * Determine if a year is a leap year in the Julian calendar.
+ *
+ * Julian leap year rule:
+ * - Every year divisible by 4 is a leap year
+ * - No exceptions (unlike Gregorian)
+ *
+ * @param year - The year (astronomical year, can be negative)
+ * @returns True if leap year, false otherwise
+ *
+ * @example
+ * ```typescript
+ * julianIsLeapYear(2024) // true
+ * julianIsLeapYear(1900) // true (unlike Gregorian)
+ * julianIsLeapYear(2023) // false
+ * ```
+ */
+function julianIsLeapYear(year: number): boolean {
+  return year % 4 === 0;
+}
+
+/**
  * Calculate the number of days in a month for the Julian calendar.
  *
  * @param year - The year (astronomical year, can be negative)
@@ -133,27 +154,6 @@ function julianDaysInMonth(year: number, month: number): number {
   }
 
   return days;
-}
-
-/**
- * Determine if a year is a leap year in the Julian calendar.
- *
- * Julian leap year rule:
- * - Every year divisible by 4 is a leap year
- * - No exceptions (unlike Gregorian)
- *
- * @param year - The year (astronomical year, can be negative)
- * @returns True if leap year, false otherwise
- *
- * @example
- * ```typescript
- * julianIsLeapYear(2024) // true
- * julianIsLeapYear(1900) // true (unlike Gregorian)
- * julianIsLeapYear(2023) // false
- * ```
- */
-function julianIsLeapYear(year: number): boolean {
-  return year % 4 === 0;
 }
 
 /**
