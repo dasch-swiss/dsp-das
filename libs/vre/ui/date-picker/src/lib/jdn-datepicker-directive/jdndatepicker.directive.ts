@@ -1,7 +1,7 @@
 import { Directive, Inject, InjectionToken, Input, OnChanges, OnDestroy } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { CalendarDateAdapter } from '../adapters/calendar-date.adapter';
 import { BehaviorSubject } from 'rxjs';
+import { CalendarDateAdapter } from '../adapters/calendar-date.adapter';
 
 export const ACTIVE_CALENDAR = new InjectionToken<BehaviorSubject<string>>('ACTIVE_CALENDAR');
 

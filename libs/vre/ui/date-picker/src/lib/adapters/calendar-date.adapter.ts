@@ -12,6 +12,7 @@ import { DateAdapter } from '@angular/material/core';
 import {
   CalendarDate,
   CalendarSystem,
+  convertCalendar,
   createDate,
   createToday,
   getCalendar,
@@ -179,7 +180,6 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
       return today;
     }
     // Convert to the current calendar system if different
-    const { convertCalendar } = require('@dasch-swiss/vre/shared/calendar');
     return convertCalendar(today, this._calendarSystem);
   }
 
@@ -201,7 +201,7 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
     const month = parseInt(parts[1], 10);
     const day = parseInt(parts[2], 10);
 
-    if (isNaN(year) || isNaN(month) || isNaN(day)) {
+    if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) {
       return null;
     }
 

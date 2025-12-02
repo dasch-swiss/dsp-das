@@ -265,10 +265,7 @@ describe('KnoraDate Adapter', () => {
     });
 
     it('should reject non-KnoraPeriod values', () => {
-      const calendarPeriod = createPeriod(
-        createDate('GREGORIAN', 2024, 1, 1),
-        createDate('GREGORIAN', 2024, 12, 31)
-      );
+      const calendarPeriod = createPeriod(createDate('GREGORIAN', 2024, 1, 1), createDate('GREGORIAN', 2024, 12, 31));
 
       expect(isKnoraPeriod(calendarPeriod)).toBe(false);
       expect(isKnoraPeriod(null)).toBe(false);

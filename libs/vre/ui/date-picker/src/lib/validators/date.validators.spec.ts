@@ -353,10 +353,12 @@ describe('Date Validators', () => {
       const minDate = createDate('GREGORIAN', 2024, 1, 1);
       const maxDate = createDate('GREGORIAN', 2024, 12, 31);
 
-      const control = new FormControl(
-        createDate('GREGORIAN', 2024, 6, 15),
-        [dateValidator(), dateRange(minDate, maxDate), minPrecision('DAY'), calendarSystem('GREGORIAN')]
-      );
+      const control = new FormControl(createDate('GREGORIAN', 2024, 6, 15), [
+        dateValidator(),
+        dateRange(minDate, maxDate),
+        minPrecision('DAY'),
+        calendarSystem('GREGORIAN'),
+      ]);
 
       expect(control.valid).toBe(true);
     });
@@ -366,10 +368,10 @@ describe('Date Validators', () => {
       const maxDate = createDate('GREGORIAN', 2024, 12, 31);
 
       // Date is outside range
-      const control = new FormControl(
-        createDate('GREGORIAN', 2025, 6, 15),
-        [dateValidator(), dateRange(minDate, maxDate)]
-      );
+      const control = new FormControl(createDate('GREGORIAN', 2025, 6, 15), [
+        dateValidator(),
+        dateRange(minDate, maxDate),
+      ]);
 
       expect(control.valid).toBe(false);
       expect(control.errors).toBeTruthy();

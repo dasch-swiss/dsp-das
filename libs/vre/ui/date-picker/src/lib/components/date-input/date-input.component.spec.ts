@@ -5,8 +5,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DateInputComponent } from './date-input.component';
 import { createDate } from '@dasch-swiss/vre/shared/calendar';
+import { DateInputComponent } from './date-input.component';
 
 describe('DateInputComponent', () => {
   let component: DateInputComponent;

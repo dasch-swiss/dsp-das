@@ -4,8 +4,8 @@
  * Verifies that CalendarDate works correctly with Angular Material datepicker.
  */
 
-import { CalendarDateAdapter } from './calendar-date.adapter';
 import { createDate } from '@dasch-swiss/vre/shared/calendar';
+import { CalendarDateAdapter } from './calendar-date.adapter';
 
 describe('CalendarDateAdapter', () => {
   let adapter: CalendarDateAdapter;

@@ -221,7 +221,7 @@ export function periodValidator(): ValidatorFn {
 /**
  * Validator that requires the date to have a minimum precision.
  *
- * @param minPrecision - Minimum required precision ('YEAR', 'MONTH', or 'DAY')
+ * @param requiredPrecision - Minimum required precision ('YEAR', 'MONTH', or 'DAY')
  *
  * @example
  * ```typescript
@@ -229,7 +229,7 @@ export function periodValidator(): ValidatorFn {
  * const control = new FormControl(null, [minPrecision('DAY')]);
  * ```
  */
-export function minPrecision(minPrecision: 'YEAR' | 'MONTH' | 'DAY'): ValidatorFn {
+export function minPrecision(requiredPrecision: 'YEAR' | 'MONTH' | 'DAY'): ValidatorFn {
   const precisionOrder = { YEAR: 1, MONTH: 2, DAY: 3 };
 
   return (control: AbstractControl): ValidationErrors | null => {
@@ -240,13 +240,13 @@ export function minPrecision(minPrecision: 'YEAR' | 'MONTH' | 'DAY'): ValidatorF
     }
 
     const valuePrecisionLevel = precisionOrder[value.precision];
-    const minPrecisionLevel = precisionOrder[minPrecision];
+    const minPrecisionLevel = precisionOrder[requiredPrecision];
 
     if (valuePrecisionLevel < minPrecisionLevel) {
       return {
         insufficientPrecision: {
           value: value.precision,
-          required: minPrecision,
+          required: requiredPrecision,
         },
       };
     }

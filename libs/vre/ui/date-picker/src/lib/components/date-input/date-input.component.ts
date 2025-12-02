@@ -16,8 +16,8 @@
  * ```
  */
 
-import { Component, Input, OnInit, forwardRef, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit, forwardRef, signal, computed, inject } from '@angular/core';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
@@ -27,20 +27,16 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
-import {
-  CalendarDate,
-  CalendarSystem,
-  isCalendarDate,
-} from '@dasch-swiss/vre/shared/calendar';
-import { CalendarDateAdapter } from '../../adapters/calendar-date.adapter';
+import { CalendarDate, CalendarSystem, isCalendarDate } from '@dasch-swiss/vre/shared/calendar';
 import { CALENDAR_DATE_FORMATS } from '../../adapters/calendar-date-formats';
+import { CalendarDateAdapter } from '../../adapters/calendar-date.adapter';
 
 @Component({
   selector: 'app-date-input',
@@ -88,29 +84,16 @@ import { CALENDAR_DATE_FORMATS } from '../../adapters/calendar-date-formats';
         [min]="minDate"
         [max]="maxDate"
         [disabled]="isDisabled()"
-        (dateChange)="onDateChange($event.value)"
-      />
+        (dateChange)="onDateChange($event.value)" />
 
       @if (!isDisabled()) {
-        <button
-          matSuffix
-          mat-icon-button
-          (click)="picker.open()"
-          [attr.aria-label]="'Open calendar'"
-          type="button"
-        >
+        <button matSuffix mat-icon-button (click)="picker.open()" [attr.aria-label]="'Open calendar'" type="button">
           <mat-icon>calendar_today</mat-icon>
         </button>
       }
 
       @if (dateControl.value && !isDisabled()) {
-        <button
-          matSuffix
-          mat-icon-button
-          (click)="clear()"
-          [attr.aria-label]="'Clear date'"
-          type="button"
-        >
+        <button matSuffix mat-icon-button (click)="clear()" [attr.aria-label]="'Clear date'" type="button">
           <mat-icon>clear</mat-icon>
         </button>
       }

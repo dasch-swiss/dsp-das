@@ -14,8 +14,8 @@
  * ```
  */
 
-import { Component, Input, forwardRef, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input, forwardRef, signal, computed, inject, OnInit } from '@angular/core';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
@@ -26,12 +26,12 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 import {
   CalendarDate,
@@ -42,8 +42,8 @@ import {
   isBefore,
   compareDates,
 } from '@dasch-swiss/vre/shared/calendar';
-import { CalendarDateAdapter } from '../../adapters/calendar-date.adapter';
 import { CALENDAR_DATE_FORMATS } from '../../adapters/calendar-date-formats';
+import { CalendarDateAdapter } from '../../adapters/calendar-date.adapter';
 
 @Component({
   selector: 'app-date-range-input',
@@ -94,16 +94,14 @@ import { CALENDAR_DATE_FORMATS } from '../../adapters/calendar-date-formats';
             [placeholder]="placeholder"
             [max]="endControl.value"
             [disabled]="isDisabled()"
-            (dateChange)="onDateChange()"
-          />
+            (dateChange)="onDateChange()" />
           <button
             matSuffix
             mat-icon-button
             (click)="startPicker.open()"
             [disabled]="isDisabled()"
             [attr.aria-label]="'Open start date calendar'"
-            type="button"
-          >
+            type="button">
             <mat-icon>calendar_today</mat-icon>
           </button>
           <mat-datepicker #startPicker></mat-datepicker>
@@ -121,16 +119,14 @@ import { CALENDAR_DATE_FORMATS } from '../../adapters/calendar-date-formats';
             [placeholder]="placeholder"
             [min]="startControl.value"
             [disabled]="isDisabled()"
-            (dateChange)="onDateChange()"
-          />
+            (dateChange)="onDateChange()" />
           <button
             matSuffix
             mat-icon-button
             (click)="endPicker.open()"
             [disabled]="isDisabled()"
             [attr.aria-label]="'Open end date calendar'"
-            type="button"
-          >
+            type="button">
             <mat-icon>calendar_today</mat-icon>
           </button>
           <mat-datepicker #endPicker></mat-datepicker>
@@ -142,8 +138,7 @@ import { CALENDAR_DATE_FORMATS } from '../../adapters/calendar-date-formats';
             (click)="clear()"
             class="clear-button"
             [attr.aria-label]="'Clear date range'"
-            type="button"
-          >
+            type="button">
             <mat-icon>clear</mat-icon>
           </button>
         }

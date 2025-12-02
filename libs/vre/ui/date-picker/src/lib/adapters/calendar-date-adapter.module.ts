@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { CalendarDateAdapter } from './calendar-date.adapter';
 import { CALENDAR_DATE_FORMATS } from './calendar-date-formats';
+import { CalendarDateAdapter } from './calendar-date.adapter';
 
 /**
  * Module that provides the CalendarDateAdapter to all Material datepickers.
