@@ -9,7 +9,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
+import { MatCalendarDateAdapterModule } from '@dasch-swiss/vre/ui/date-picker';
 import { GrafanaFaroService, PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import {
@@ -97,7 +97,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     HttpClientModule,
     IMaskModule,
     MaterialModule,
-    MatJDNConvertibleCalendarDateAdapterModule,
+    MatCalendarDateAdapterModule,
     MatRippleModule,
     MatStepperModule,
     NgxSkeletonLoaderModule,

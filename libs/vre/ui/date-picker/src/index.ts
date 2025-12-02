@@ -7,6 +7,7 @@ export * from './lib/jdn-datepicker-directive/jdndatepicker.directive';
 export * from './lib/adapters/knora-date.adapter';
 export * from './lib/adapters/calendar-date.adapter';
 export * from './lib/adapters/calendar-date-formats';
+export * from './lib/adapters/calendar-date-adapter.module';
 
 // Date validators
 export * from './lib/validators/date.validators';
