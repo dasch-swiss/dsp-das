@@ -13,3 +13,4 @@ export * from './lib/validators/date.validators';
 
 // New date components
 export * from './lib/components/date-input/date-input.component';
+export * from './lib/components/date-range-input/date-range-input.component';
