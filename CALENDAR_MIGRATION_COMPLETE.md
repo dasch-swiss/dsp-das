@@ -227,6 +227,7 @@ Successfully completed a comprehensive rewrite and migration of the calendar sys
 - ~~`libs/jdnconvertiblecalendardateadapter/`~~ - **Deleted**
 - Removed from `package.json` dependencies
 - Removed from `tsconfig.base.json` path mappings
+- Removed from `.github/workflows/main.yml` CI/CD pipeline (deleted test jobs and updated dependencies)
 
 ### dateAdapter Demo App - **DELETED** ✅
 - ~~`apps/dateAdapter/`~~ - **Deleted** (demo app for old libraries)
