@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, OnChanges } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { take } from 'rxjs';
 import { IriLabelPair, Predicate } from '../../../model';
 import { AdvancedSearchDataService } from '../../../service/advanced-search-data.service';
 
@@ -17,7 +18,7 @@ import { AdvancedSearchDataService } from '../../../service/advanced-search-data
         (selectionChange)="selectedPredicateChange.emit($event.value)"
         data-cy="predicate-select"
         [compareWith]="compareObjects">
-        @for (prop of properties$ | async; track prop.iri) {
+        @for (prop of properties; track prop.iri) {
           <mat-option [value]="prop" [attr.data-cy]="prop.label">{{ prop.label }}</mat-option>
         }
       </mat-select>
@@ -25,7 +26,7 @@ import { AdvancedSearchDataService } from '../../../service/advanced-search-data
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PredicateSelectComponent {
+export class PredicateSelectComponent implements OnChanges {
   @Input() subjectClass?: IriLabelPair;
   @Input() selectedPredicate?: Predicate;
 
@@ -33,7 +34,18 @@ export class PredicateSelectComponent {
 
   private _dataService = inject(AdvancedSearchDataService);
 
-  properties$ = this._dataService.availableProperties$; // TODO: GET DYNAMICALLY BASED ON SUBJECT CLASS
+  properties: Predicate[] = [];
+
+  ngOnChanges(): void {
+    console.log('PredicateSelectComponent detected changes, subjectClass:', this.subjectClass);
+    this._dataService
+      .getProperties$(this.subjectClass?.iri)
+      .pipe(take(1))
+      .subscribe(properties => {
+        console.log('PredicateSelectComponent loaded properties:', properties);
+        this.properties = properties;
+      });
+  }
 
   get label(): string {
     return this.subjectClass?.label ? `Select a property of ${this.subjectClass?.label}` : `Select property`;

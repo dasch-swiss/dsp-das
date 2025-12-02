@@ -96,19 +96,28 @@ export interface GravsearchStatement {
 
 export class StatementElement {
   readonly id = uuidv4();
+  private _selectedSubjectNode?: NodeValue;
   private _selectedPredicate?: Predicate;
   private _selectedOperator?: Operator;
   private _selectedObjectNode?: NodeValue | StringValue;
   listObject?: ListNodeV2;
   statementLevel = 0;
-  parentStatementObject?: NodeValue;
+
+  constructor(subjectNode?: NodeValue, statementLevel = 0) {
+    this._selectedSubjectNode = subjectNode;
+    this.statementLevel = statementLevel;
+  }
+
+  get selectedSubjectNode(): NodeValue | undefined {
+    return this._selectedSubjectNode;
+  }
+
+  set selectedSubjectNode(node: NodeValue) {
+    this._selectedSubjectNode = node;
+  }
 
   get selectedPredicate(): Predicate | undefined {
     return this._selectedPredicate;
-  }
-
-  get isChildProperty(): boolean {
-    return this.statementLevel > 0;
   }
 
   set selectedPredicate(prop: Predicate) {
@@ -150,11 +159,15 @@ export class StatementElement {
     this.listObject = undefined;
   }
 
+  get isPristine(): boolean {
+    return !this.selectedPredicate && !this.selectedOperator && !this.selectedObjectNode;
+  }
+
   get isValidAndComplete(): boolean {
     return (
       this.selectedOperator === Operator.Exists ||
       this.selectedOperator === Operator.NotExists ||
-      !!this.selectedObjectNode
+      !!this.selectedObjectNode?.writeValue()
     );
   }
 
@@ -182,6 +195,10 @@ export class StatementElement {
     }
     return PropertyObjectType.ValueObject;
   }
+
+  get isChildProperty(): boolean {
+    return this.statementLevel > 0;
+  }
 }
 
 export class OrderByItem {
@@ -204,6 +221,7 @@ export interface QueryObject {
 }
 
 export interface SearchFormsState {
+  stateId: string;
   selectedResourceClass: IriLabelPair | undefined;
   statementElements: StatementElement[];
   orderBy: OrderByItem[];

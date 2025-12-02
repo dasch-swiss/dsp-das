@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -28,10 +28,10 @@ import { StringValueComponent } from './object-values/string-value/string-value.
     StringValueComponent,
   ],
   template: ` @for (statementElement of statementElements; track statementElement.id; let isLast = $last) {
-    <div class="width-100-percent flex gap-05em">
+    <div class="width-100-percent flex gap-05em" [style.margin-left.em]="(statementElement.statementLevel + 1) * 2">
       <app-predicate-select
-        [selectedPredicate]="statementElement.selectedPredicate"
-        [subjectClass]="statementElement.parentStatementObject?.value"
+        [selectedPredicate]="statementElement?.selectedPredicate"
+        [subjectClass]="statementElement.selectedSubjectNode?.value"
         (selectedPredicateChange)="formManager.onPredicateSelectionChanged(statementElement, $event)" />
       <app-comparison-operator
         [operators]="statementElement.operators"
@@ -78,9 +78,14 @@ import { StringValueComponent } from './object-values/string-value/string-value.
   styleUrl: '../../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatementBuilderComponent {
+export class StatementBuilderComponent implements OnChanges {
   @Input({ required: true }) statementElements: StatementElement[] = [new StatementElement()];
 
-  public formManager = inject(PropertyFormManager);
+  formManager = inject(PropertyFormManager);
+
   protected readonly PROPERTY_OBJECT_TYPES = PropertyObjectType;
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('StatementBuilderComponent has statementElements', this.statementElements);
+  }
 }

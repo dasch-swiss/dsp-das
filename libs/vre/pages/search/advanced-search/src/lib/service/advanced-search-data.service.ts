@@ -20,8 +20,8 @@ export class AdvancedSearchDataService {
     isLinkProperty: false,
   } as const;
 
-  private readonly SEARCH_ALL_RESOURCE_CLASSES_OPTION: IriLabelPair = {
-    iri: 'all-resource-classes',
+  readonly SEARCH_ALL_RESOURCE_CLASSES_OPTION: IriLabelPair = {
+    iri: '?s',
     label: 'All resource classes',
   } as const;
 
@@ -63,13 +63,8 @@ export class AdvancedSearchDataService {
       next: ontology => {
         this._selectedOntology.next(ontology);
         this._ontologyLoading.next(false);
-        this.setSelectedResourceClass(resourceClass);
       },
     });
-  }
-
-  setSelectedResourceClass(resourceClass?: IriLabelPair) {
-    this._setAvailableProperties(resourceClass?.iri);
   }
 
   private _resourceClassDefinitions$ = this.selectedOntology$.pipe(
@@ -100,6 +95,7 @@ export class AdvancedSearchDataService {
       );
     }
     return combineLatest(this.resourceClasses$, this._propertyDefinitions$).pipe(
+      tap(([c, p]) => console.log('classes and props', c, p)),
       map(([resClasses, propDefs]) => {
         const propDef = propDefs.find(p => p.id === propertyIri);
         if (!propDef) {
@@ -132,23 +128,16 @@ export class AdvancedSearchDataService {
     )
   );
 
-  private _setAvailableProperties(classIri?: string): void {
-    const props$ =
-      !classIri || classIri === 'all-resource-classes'
-        ? this._propertyDefinitions$.pipe(
-            map(props => [this.ResourceLabelPropertyData, ...props.map(this._createPropertyData)])
-          )
-        : this.getPropertiesOfResourceClass$(classIri);
-    props$.subscribe(props => {
-      this._availableProperties.next(props);
-    });
-  }
+  getProperties$(classIri?: string): Observable<Predicate[]> {
+    if (!classIri) {
+      return this._propertyDefinitions$.pipe(map(props => props.map(this._createPropertyData)));
+    }
 
-  getPropertiesOfResourceClass$ = (classIri: string): Observable<Predicate[]> =>
-    combineLatest([this._getPropertyIrisForClass$(classIri), this._propertyDefinitions$]).pipe(
+    return combineLatest([this._getPropertyIrisForClass$(classIri), this._propertyDefinitions$]).pipe(
       // tap(([c, p]) => console.log('class properties', c, p)),
       map(([resProps, props]) => props.filter(p => resProps.includes(p.id)).map(this._createPropertyData))
     );
+  }
 
   private _getPropertyIrisForClass$ = (classIri: string): Observable<string[]> =>
     this._resourceClassDefinitions$.pipe(
@@ -166,7 +155,6 @@ export class AdvancedSearchDataService {
       objectValueType: propDef.objectType || '',
       isLinkProperty: propDef.isLinkProperty,
     };
-
     if (
       propDef.objectType === Constants.ListValue &&
       propDef.guiAttributes.length === 1 &&

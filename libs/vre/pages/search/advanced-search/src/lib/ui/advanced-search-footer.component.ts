@@ -17,7 +17,7 @@ import { OrderByComponent } from './order-by/order-by.component';
         mat-button
         mat-raised-button
         color="primary"
-        [disabled]="(searchState.isFormStateValid$ | async) === false"
+        [disabled]="(searchState.isFormStateValidAndComplete$ | async) === false"
         (click)="searchTriggered.emit()">
         Search
       </button>

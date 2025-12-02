@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
-import { map, startWith } from 'rxjs';
-import { QueryObject, IriLabelPair } from './model';
+import { map, tap } from 'rxjs';
+import { QueryObject } from './model';
 import { provideAdvancedSearch } from './providers';
 import { AdvancedSearchDataService } from './service/advanced-search-data.service';
 import { GravsearchService } from './service/gravsearch.service';
@@ -29,16 +29,17 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
   ],
   template: `
     <div class="width-90-percent max-width-100em">
+      @let ontologyLoading = ontologyLoading$ | async;
       <app-advanced-search-header class="flex-space-between margin-bottom-1em" />
       <app-advanced-search-ontology-form />
-      <app-resource-value
-        [selectedResource]="searchState.currentState.selectedResourceClass"
-        (selectedResourceChange)="formManager.updateSelectedResourceClass($event)" />
-      @if ((ontologyLoading$ | async) === true) {
+      @if (ontologyLoading) {
         <mat-progress-bar mode="query" />
       }
-      @if ((ontologyLoading$ | async) === false) {
-        <app-statement-builder [statementElements]="searchState.statementElements$ | async" />
+      @if (!ontologyLoading) {
+        <app-resource-value
+          [selectedResource]="selectedResourceClass$ | async"
+          (selectedResourceChange)="formManager.setMainResource($event)" />
+        <app-statement-builder [statementElements]="(searchState.statementElements$ | async) || []" />
         <app-advanced-search-footer
           class="flex-space-between margin-top-1em"
           (searchTriggered)="doSearch()"
@@ -62,6 +63,11 @@ export class AdvancedSearchComponent implements OnInit {
   private _previousSearchService: PreviousSearchService = inject(PreviousSearchService);
 
   ontologyLoading$ = this._dataService.ontologyLoading$;
+
+  selectedResourceClass$ = this.searchState.selectedResourceClass$.pipe(
+    map(selectedClass => selectedClass || this._dataService.SEARCH_ALL_RESOURCE_CLASSES_OPTION),
+    tap(selectedClass => console.log('AdvancedSearchComponent selectedResourceClass$', selectedClass))
+  );
 
   get projectIri() {
     return `http://rdfh.ch/projects/${this.projectUuid}`;

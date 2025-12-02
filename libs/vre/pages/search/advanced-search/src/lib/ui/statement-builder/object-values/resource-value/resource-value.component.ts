@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
 import { BehaviorSubject } from 'rxjs';
 import { IriLabelPair, Predicate } from '../../../../model';
@@ -28,7 +28,7 @@ import { AdvancedSearchDataService } from '../../../../service/advanced-search-d
   styleUrl: '../../../../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceValueComponent implements OnInit {
+export class ResourceValueComponent implements OnChanges {
   private _dataService = inject(AdvancedSearchDataService);
 
   @Input() selectedResource?: IriLabelPair;
@@ -38,13 +38,14 @@ export class ResourceValueComponent implements OnInit {
 
   availableResources$ = new BehaviorSubject<IriLabelPair[]>([]);
 
-  ngOnInit() {
+  ngOnChanges(): void {
+    console.log(
+      'ResourceValueComponent detected changes, selectedPredicate:',
+      this.selectedPredicate,
+      this.selectedResource
+    );
     this._dataService.getResourceClassObjectsForProperty$(this.selectedPredicate?.iri).subscribe(resources => {
       this.availableResources$.next(resources);
-      if (!this.selectedPredicate && !this.selectedResource && resources.length > 0) {
-        this.selectedResource = resources[0];
-        this.selectedResourceChange.emit(resources[0]);
-      }
     });
   }
 
