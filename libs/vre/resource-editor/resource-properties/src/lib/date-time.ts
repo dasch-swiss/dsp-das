@@ -1,8 +1,8 @@
-import { GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
+import { CalendarDate } from '@dasch-swiss/vre/shared/calendar';
 
 export class DateTime {
   constructor(
-    public date: GregorianCalendarDate,
+    public date: CalendarDate,
     public time: string
   ) {}
 }

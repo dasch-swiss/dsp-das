@@ -1,7 +1,9 @@
-import { Directive, Inject, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Directive, Inject, InjectionToken, Input, OnChanges, OnDestroy } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { ACTIVE_CALENDAR, JDNConvertibleCalendarDateAdapter } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
+import { CalendarDateAdapter } from '../adapters/calendar-date.adapter';
 import { BehaviorSubject } from 'rxjs';
+
+export const ACTIVE_CALENDAR = new InjectionToken<BehaviorSubject<string>>('ACTIVE_CALENDAR');
 
 export function makeCalendarToken() {
   return new BehaviorSubject('Gregorian');
@@ -13,8 +15,8 @@ export function makeCalendarToken() {
   providers: [
     {
       provide: DateAdapter,
-      useClass: JDNConvertibleCalendarDateAdapter,
-      deps: [MAT_DATE_LOCALE, ACTIVE_CALENDAR],
+      useClass: CalendarDateAdapter,
+      deps: [MAT_DATE_LOCALE],
     },
     { provide: ACTIVE_CALENDAR, useFactory: makeCalendarToken },
   ],
@@ -23,7 +25,7 @@ export function makeCalendarToken() {
 export class JDNDatepickerDirective implements OnChanges, OnDestroy {
   private _activeCalendar!: 'Gregorian' | 'Julian' | 'Islamic';
 
-  constructor(@Inject(ACTIVE_CALENDAR) private readonly _activeCalendarToken: any) {}
+  constructor(@Inject(ACTIVE_CALENDAR) private readonly _activeCalendarToken: BehaviorSubject<string>) {}
 
   get activeCalendar() {
     return this._activeCalendar;

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
+import { CalendarDate } from '@dasch-swiss/vre/shared/calendar';
 import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
 
 @Component({
@@ -47,7 +47,7 @@ export class TimeValueComponent {
     this.control.patchValue(newDate);
   }
 
-  editDate(event: { value: GregorianCalendarDate }) {
+  editDate(event: { value: CalendarDate }) {
     if (!this.control.value?.time) {
       this.control.patchValue(new DateTime(event.value, '00:00'));
       return;

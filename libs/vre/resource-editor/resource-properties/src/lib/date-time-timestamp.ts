@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
+import { CalendarDate, createDate } from '@dasch-swiss/vre/shared/calendar';
 import { DateTime } from './date-time';
 
 function userInputToTimestamp(userInput: DateTime): string {
@@ -7,9 +7,9 @@ function userInputToTimestamp(userInput: DateTime): string {
 
   // in a Javascript Date, the month is 0-based so we need to subtract 1
   const updateDate = new Date(
-    userInput.date.toCalendarPeriod().periodStart.year,
-    userInput.date.toCalendarPeriod().periodStart.month - 1,
-    userInput.date.toCalendarPeriod().periodStart.day,
+    userInput.date.year,
+    userInput.date.month! - 1,
+    userInput.date.day!,
     Number(splitTime[0]),
     Number(splitTime[1])
   );
@@ -17,19 +17,18 @@ function userInputToTimestamp(userInput: DateTime): string {
   return `${updateDate.toISOString().split('.')[0]}Z`;
 }
 
-export function dateTimeTimestamp(date: GregorianCalendarDate, time: string) {
+export function dateTimeTimestamp(date: CalendarDate, time: string) {
   const userInput = new DateTime(date, time);
   return userInputToTimestamp(userInput);
 }
 
 export function convertTimestampToDateTime(timestamp: string, datePipe: DatePipe): DateTime {
-  const calendarDate = new CalendarDate(
+  const date = createDate(
+    'GREGORIAN',
     Number(datePipe.transform(timestamp, 'y')),
     Number(datePipe.transform(timestamp, 'M')),
     Number(datePipe.transform(timestamp, 'd'))
   );
-
-  const date = new GregorianCalendarDate(new CalendarPeriod(calendarDate, calendarDate));
   const time = datePipe.transform(timestamp, 'HH:mm');
 
   return new DateTime(date, time!);
