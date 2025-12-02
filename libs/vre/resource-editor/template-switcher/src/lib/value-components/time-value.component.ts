@@ -1,14 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { provideCalendarDateAdapter } from '@dasch-swiss/vre/ui/date-picker';
 import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { CalendarDate } from '@dasch-swiss/vre/shared/calendar';
+import { provideCalendarDateAdapter } from '@dasch-swiss/vre/ui/date-picker';
 
 @Component({
   selector: 'app-time-value',
-  providers: [
-    provideCalendarDateAdapter(),
-  ],
+  providers: [provideCalendarDateAdapter()],
   template: `
     <div style="display: flex; gap: 8px">
       <mat-form-field>
