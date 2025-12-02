@@ -57,20 +57,26 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
    * Gets the year of the given date.
    */
   override getYear(date: CalendarDate): number {
+    if (!date) return 1;
     return date.year;
   }
 
   /**
-   * Gets the month of the given date (1-12).
+   * Gets the month of the given date (0-11 for Material DateAdapter).
+   * Note: Material expects 0-based months (0=January, 11=December)
+   * but CalendarDate uses 1-based months (1=January, 12=December).
    */
   override getMonth(date: CalendarDate): number {
-    return date.month ?? 1;
+    if (!date) return 0;
+    // Convert from 1-based (CalendarDate) to 0-based (Material)
+    return (date.month ?? 1) - 1;
   }
 
   /**
    * Gets the date of month of the given date (1-31).
    */
   override getDate(date: CalendarDate): number {
+    if (!date) return 1;
     return date.day ?? 1;
   }
 
@@ -78,6 +84,7 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
    * Gets the day of week of the given date (0 = Sunday).
    */
   override getDayOfWeek(date: CalendarDate): number {
+    if (!date) return 0;
     const calendar = getCalendar(date.calendar);
     return calendar.dayOfWeek(date);
   }
@@ -138,6 +145,7 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
    * Gets the name of the year for the given date.
    */
   override getYearName(date: CalendarDate): string {
+    if (!date) return '1';
     return String(date.year);
   }
 
@@ -152,6 +160,7 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
    * Gets the number of days in the month of the given date.
    */
   override getNumDaysInMonth(date: CalendarDate): number {
+    if (!date) return 31;
     const calendar = getCalendar(date.calendar);
     const month = date.month ?? 1;
     return calendar.daysInMonth(date.year, month);
@@ -161,13 +170,17 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
    * Clones the given date.
    */
   override clone(date: CalendarDate): CalendarDate {
+    if (!date) return createDate(this._calendarSystem, 1, 1, 1);
     return { ...date };
   }
 
   /**
    * Creates a date with the given year, month, and day.
+   * Note: Material passes 0-based months (0=January, 11=December)
+   * but CalendarDate needs 1-based months (1=January, 12=December).
    */
   override createDate(year: number, month: number, date: number): CalendarDate {
+    // Convert from 0-based (Material) to 1-based (CalendarDate)
     return createDate(this._calendarSystem, year, month + 1, date);
   }
 
@@ -216,6 +229,7 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
    * Formats a date to a string.
    */
   override format(date: CalendarDate, displayFormat: object): string {
+    if (!date) return '';
     // Simple format: YYYY-MM-DD
     const year = date.year;
     const month = date.month?.toString().padStart(2, '0') ?? '01';
@@ -228,6 +242,7 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
    * Adds the given number of years to the date.
    */
   override addCalendarYears(date: CalendarDate, years: number): CalendarDate {
+    if (!date) return createDate(this._calendarSystem, 1, 1, 1);
     return createDate(date.calendar, date.year + years, date.month, date.day, date.era);
   }
 
@@ -235,6 +250,7 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
    * Adds the given number of months to the date.
    */
   override addCalendarMonths(date: CalendarDate, months: number): CalendarDate {
+    if (!date) return createDate(this._calendarSystem, 1, 1, 1);
     const calendar = getCalendar(date.calendar);
     let year = date.year;
     let month = date.month ?? 1;
@@ -265,6 +281,7 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
    * Adds the given number of days to the date.
    */
   override addCalendarDays(date: CalendarDate, days: number): CalendarDate {
+    if (!date) return createDate(this._calendarSystem, 1, 1, 1);
     const calendar = getCalendar(date.calendar);
     const jdn = calendar.toJDN(date);
     const newJdn = jdn + days;
@@ -275,6 +292,7 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
    * Converts the date to ISO 8601 string format.
    */
   override toIso8601(date: CalendarDate): string {
+    if (!date) return '';
     return this.format(date, {});
   }
 

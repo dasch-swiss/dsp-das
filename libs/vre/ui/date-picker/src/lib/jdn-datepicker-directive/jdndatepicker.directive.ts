@@ -1,6 +1,7 @@
-import { Directive, Inject, InjectionToken, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Directive, Inject, InjectionToken, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { BehaviorSubject } from 'rxjs';
+import { CalendarDate, CalendarSystem } from '@dasch-swiss/vre/shared/calendar';
 import { CalendarDateAdapter } from '../adapters/calendar-date.adapter';
 
 export const ACTIVE_CALENDAR = new InjectionToken<BehaviorSubject<string>>('ACTIVE_CALENDAR');
@@ -22,10 +23,17 @@ export function makeCalendarToken() {
   ],
   standalone: true,
 })
-export class JDNDatepickerDirective implements OnChanges, OnDestroy {
-  private _activeCalendar!: 'Gregorian' | 'Julian' | 'Islamic';
+export class JDNDatepickerDirective implements OnInit, OnChanges, OnDestroy {
+  private _activeCalendar: 'Gregorian' | 'Julian' | 'Islamic' = 'Gregorian';
 
-  constructor(@Inject(ACTIVE_CALENDAR) private readonly _activeCalendarToken: BehaviorSubject<string>) {}
+  constructor(
+    @Inject(ACTIVE_CALENDAR) private readonly _activeCalendarToken: BehaviorSubject<string>,
+    private readonly _dateAdapter: DateAdapter<CalendarDate>
+  ) {
+    // Set initial calendar system immediately in constructor
+    // This must happen before Angular Material tries to use the adapter
+    this._updateAdapterCalendar();
+  }
 
   get activeCalendar(): 'Gregorian' | 'Julian' | 'Islamic' {
     return this._activeCalendar;
@@ -40,8 +48,22 @@ export class JDNDatepickerDirective implements OnChanges, OnDestroy {
     }
   }
 
+  ngOnInit(): void {
+    // Set initial calendar system on the adapter
+    this._updateAdapterCalendar();
+  }
+
   ngOnChanges(): void {
     this._activeCalendarToken.next(this.activeCalendar);
+    // Update the adapter whenever the calendar changes
+    this._updateAdapterCalendar();
+  }
+
+  private _updateAdapterCalendar(): void {
+    const calendarSystem = this._activeCalendar.toUpperCase() as CalendarSystem;
+    if (this._dateAdapter instanceof CalendarDateAdapter) {
+      this._dateAdapter.setCalendarSystem(calendarSystem);
+    }
   }
 
   ngOnDestroy(): void {

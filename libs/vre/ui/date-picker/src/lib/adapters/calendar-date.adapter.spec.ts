@@ -34,7 +34,8 @@ describe('CalendarDateAdapter', () => {
 
     it('should extract month from date', () => {
       const date = createDate('GREGORIAN', 2024, 3, 15);
-      expect(adapter.getMonth(date)).toBe(3);
+      // Adapter returns 0-based month for Material (March = 2)
+      expect(adapter.getMonth(date)).toBe(2);
     });
 
     it('should extract day from date', () => {
@@ -45,7 +46,8 @@ describe('CalendarDateAdapter', () => {
     it('should handle year-only precision', () => {
       const date = createDate('GREGORIAN', 2024);
       expect(adapter.getYear(date)).toBe(2024);
-      expect(adapter.getMonth(date)).toBe(1); // Default to January
+      // Adapter returns 0-based month for Material (January = 0)
+      expect(adapter.getMonth(date)).toBe(0); // Default to January (0-based)
       expect(adapter.getDate(date)).toBe(1); // Default to 1st
     });
 
