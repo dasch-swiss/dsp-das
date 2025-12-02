@@ -222,12 +222,19 @@ Successfully completed a comprehensive rewrite and migration of the calendar sys
 
 ## ⚠️ Known Considerations
 
-### Old Libraries Still Present
-- `libs/jdnconvertiblecalendar/` - Can be removed after production verification
-- `libs/jdnconvertiblecalendardateadapter/` - Can be removed after production verification
-- `apps/dateAdapter/` - Standalone app still using old system (consider migrating separately)
+### Old Libraries - **DELETED** ✅
+- ~~`libs/jdnconvertiblecalendar/`~~ - **Deleted**
+- ~~`libs/jdnconvertiblecalendardateadapter/`~~ - **Deleted**
+- Removed from `package.json` dependencies
+- Removed from `tsconfig.base.json` path mappings
 
-**Recommendation:** Keep old libraries for 1-2 release cycles as safety net, then remove after confirming stability.
+### dateAdapter App Broken ⚠️
+- `apps/dateAdapter/` - Standalone demo/test app **will be broken** after deletion
+- This is a separate test application, not part of the main dsp-app
+- Not used in production
+- Can be migrated separately if needed or deleted entirely
+
+**Note:** The old libraries were deleted because they are no longer used by the main application or any production code.
 
 ### No Changes Required To
 - End-user functionality (invisible to users)
