@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
+import { LogLevel } from '@grafana/faro-core';
 import { OtlpHttpTransport } from '@grafana/faro-transport-otlp-http';
 import { Faro, getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
-import { LogLevel } from '@grafana/faro-core';
 import { v5 as uuidv5 } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
