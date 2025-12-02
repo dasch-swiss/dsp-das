@@ -37,7 +37,7 @@ import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segme
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { MatCalendarDateAdapterModule, DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
+import { DatePickerComponents, provideCalendarDateAdapter } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import { StringLiteralComponents } from '@dasch-swiss/vre/ui/string-literal';
@@ -96,7 +96,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     HttpClientModule,
     IMaskModule,
     MaterialModule,
-    MatCalendarDateAdapterModule,
     MatRippleModule,
     MatStepperModule,
     NgxSkeletonLoaderModule,
@@ -179,6 +178,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       return initializerFn();
     }),
     LocalizationService,
+    ...provideCalendarDateAdapter(),
   ],
   bootstrap: [AppComponent],
 })
