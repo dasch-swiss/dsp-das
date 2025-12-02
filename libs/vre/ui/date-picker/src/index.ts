@@ -10,3 +10,6 @@ export * from './lib/adapters/calendar-date-formats';
 
 // Date validators
 export * from './lib/validators/date.validators';
+
+// New date components
+export * from './lib/components/date-input/date-input.component';
