@@ -72,9 +72,8 @@ export class PermissionInfoComponent implements OnInit {
   ];
 
   constructor(
-    private _scrollStrategyOptions: ScrollStrategyOptions,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection
+    private readonly _scrollStrategyOptions: ScrollStrategyOptions,
+    @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection
   ) {}
 
   ngOnInit() {

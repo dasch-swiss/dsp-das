@@ -44,11 +44,10 @@ export class AdvancedSearchResultsPageComponent {
   readonly noResultMessage = `We couldn't find any resources matching your search criteria. Try adjusting your search parameters.`;
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _titleService: Title,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _titleService: Title,
+    @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
     private _resourceResultService: ResourceResultService
   ) {
     this._titleService.setTitle(`Advanced search results`);

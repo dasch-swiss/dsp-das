@@ -19,9 +19,8 @@ export class PropertyValueUpdateComponent {
 
   constructor(
     public propertyValueService: PropertyValueService,
-    private _resourceFetcherService: ResourceFetcherService,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection
+    private readonly _resourceFetcherService: ResourceFetcherService,
+    @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection
   ) {}
 
   goToDisplayMode() {

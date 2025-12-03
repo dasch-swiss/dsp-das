@@ -39,7 +39,7 @@ export class ResourcesListFetcherComponent implements OnChanges {
 
   private _resources$!: Observable<ReadResource[]>;
 
-  private readonly _classParam$ = this._route.params.pipe(
+  private readonly _classParam$ = this.route.params.pipe(
     map(params => params[RouteConstants.classParameter] as string)
   );
 
@@ -53,12 +53,11 @@ export class ResourcesListFetcherComponent implements OnChanges {
       .pipe(map(response => response.numberOfResults));
 
   constructor(
-    protected _route: ActivatedRoute,
-    private _resourceResult: ResourceResultService,
-    private _ontologyService: OntologyService,
-    protected _router: Router,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
+    protected route: ActivatedRoute,
+    private readonly _resourceResult: ResourceResultService,
+    private readonly _ontologyService: OntologyService,
+    protected router: Router,
+    @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
     public projectPageService: ProjectPageService,
     private _multipleViewerService: MultipleViewerService,
     private _dataBrowserPageService: DataBrowserPageService
