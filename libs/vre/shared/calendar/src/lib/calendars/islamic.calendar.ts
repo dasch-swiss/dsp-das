@@ -162,15 +162,37 @@ function islamicFromJDN(jdn: number): CalendarDate {
     }
   }
 
-  const s = Math.floor((jj - 1) / 29.5);
+  // Calculate month and day from day-of-year (jj)
+  // Islamic months alternate between 30 and 29 days
+  let month = 1;
+  let remainingDays = jj;
 
-  let month = 1 + s;
-  let day = Math.floor(jj - 29.5 * s);
-
-  if (jj === 355) {
-    month = 12;
-    day = 30;
+  // Ensure we have at least 1 day
+  if (remainingDays < 1) {
+    remainingDays = 1;
   }
+
+  // Find which month we're in by subtracting month lengths
+  while (month <= 12) {
+    // Odd months (1,3,5,7,9,11) have 30 days
+    // Even months (2,4,6,8,10) have 29 days
+    // Month 12 has 30 days in leap years, 29 otherwise
+    let daysInCurrentMonth: number;
+    if (month < 12) {
+      daysInCurrentMonth = month % 2 === 1 ? 30 : 29;
+    } else {
+      daysInCurrentMonth = islamicIsLeapYear(h) ? 30 : 29;
+    }
+
+    if (remainingDays <= daysInCurrentMonth) {
+      break;
+    }
+
+    remainingDays -= daysInCurrentMonth;
+    month++;
+  }
+
+  const day = remainingDays;
 
   return createDate('ISLAMIC', h, month, day, 'NONE');
 }
