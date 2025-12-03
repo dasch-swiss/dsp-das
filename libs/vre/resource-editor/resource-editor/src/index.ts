@@ -1,5 +1,13 @@
-// Resource Editor Core
+// Component Arrays
 export * from './resource-page.components';
+export * from './properties-display.components';
+export * from './representations.components';
+export * from './resource-creator.components';
+export * from './resource-properties.components';
+export * from './segment-support.components';
+export * from './template-switcher.components';
+
+// Resource Editor Core
 export * from './lib/resource.component';
 export * from './lib/resource-header.component';
 export * from './lib/resource-legal.component';
