@@ -1,10 +1,10 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { PaginatedApiService } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 import { CreateResourceFormLegal } from '../representations';
-import { PaginatedApiService } from '../resource-properties';
 
 @Component({
   selector: 'app-create-resource-form-legal',

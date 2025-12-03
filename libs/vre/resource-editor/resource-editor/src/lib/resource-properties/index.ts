@@ -22,7 +22,6 @@ export * from './footnotes/footnote.directive';
 export * from './footnotes/footnote-parser.pipe';
 export * from './property-value-display-comment.component';
 export * from './property-value-basic-comment.component';
-export * from './paginated-api.service';
 export * from './date-time-timestamp';
 export * from './JsLibPotentialError';
 export * from './with-breaks.pipe';

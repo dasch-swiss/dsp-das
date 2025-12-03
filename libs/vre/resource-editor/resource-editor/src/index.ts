@@ -44,7 +44,6 @@ export * from './lib/resource-explorer-button.component';
 export * from './lib/closing-dialog.component';
 
 // Properties Display
-export * from './properties-display.components';
 export * from './lib/properties-display/properties-display.component';
 export * from './lib/properties-display/properties-toggle.component';
 export * from './lib/properties-display/annotation-toolbar.component';
@@ -56,7 +55,6 @@ export * from './lib/properties-display/delete-resource-dialog.component';
 export * from './lib/properties-display/incoming-link.interface';
 
 // Representations
-export * from './representations.components';
 export * from './lib/representations/add-region-form-dialog.component';
 export * from './lib/representations/archive/archive.component';
 export * from './lib/representations/audio/audio.component';
@@ -89,7 +87,6 @@ export * from './lib/representations/file-value-mapping';
 export * from './lib/representations/file-form.type';
 
 // Resource Creator
-export * from './resource-creator.components';
 export * from './lib/resource-creator/property-value-creator.component';
 export * from './lib/resource-creator/property-values-creator.component';
 export * from './lib/resource-creator/create-resource-form.component';
@@ -122,7 +119,6 @@ export * from './lib/resource-properties/property-value-display.component';
 export * from './lib/resource-properties/property-values.component';
 export * from './lib/resource-properties/resource-payloads-mapping';
 export * from './lib/resource-properties/sortByKeys';
-export * from './resource-properties.components';
 export * from './lib/resource-properties/footnotes/footnote.service';
 export * from './lib/resource-properties/footnotes/footnotes.component';
 export * from './lib/resource-properties/footnotes/footnote-tooltip.component';
@@ -130,13 +126,11 @@ export * from './lib/resource-properties/footnotes/footnote.directive';
 export * from './lib/resource-properties/footnotes/footnote-parser.pipe';
 export * from './lib/resource-properties/property-value-display-comment.component';
 export * from './lib/resource-properties/property-value-basic-comment.component';
-export * from './lib/resource-properties/paginated-api.service';
 export * from './lib/resource-properties/date-time-timestamp';
 export * from './lib/resource-properties/JsLibPotentialError';
 export * from './lib/resource-properties/with-breaks.pipe';
 
 // Segment Support
-export * from './segment-support.components';
 export * from './lib/segment-support/create-segment-dialog.component';
 export * from './lib/segment-support/segment.component';
 export * from './lib/segment-support/segments-display.component';
@@ -148,7 +142,6 @@ export * from './lib/segment-support/custom-tooltip.directive';
 export * from './lib/segment-support/segment-tooltip.component';
 
 // Template Switcher
-export * from './template-switcher.components';
 export * from './lib/template-switcher/viewer-components/date-viewer.component';
 export * from './lib/template-switcher/viewer-components/geoname-viewer.component';
 export * from './lib/template-switcher/viewer-components/interval-viewer.component';

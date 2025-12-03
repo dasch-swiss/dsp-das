@@ -3,10 +3,10 @@ import { ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit, ViewChi
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInput, MatChipInputEvent } from '@angular/material/chips';
+import { PaginatedApiService } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { PaginatedApiService } from '../resource-properties';
 
 @Component({
   selector: 'app-authorship-form-field',
