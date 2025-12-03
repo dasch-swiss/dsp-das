@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { Segment, SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { delay, Subscription } from 'rxjs';
+import { Segment, SegmentsService } from './segment-support';
 
 @Component({
   selector: 'app-segment-tab',
