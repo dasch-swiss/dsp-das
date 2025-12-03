@@ -199,6 +199,13 @@ export class StatementElement {
   get isChildProperty(): boolean {
     return this.statementLevel > 0;
   }
+
+  clearSelections(): void {
+    this._selectedPredicate = undefined;
+    this._selectedOperator = undefined;
+    this._selectedObjectNode = undefined;
+    this.listObject = undefined;
+  }
 }
 
 export class OrderByItem {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -66,7 +66,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
           <!-- No input needed -->
         }
       }
-      @if (!isLast && !!statementElement.selectedPredicate) {
+      @if (!statementElement.isPristine && !isLast) {
         <button
           mat-icon-button
           (click)="formManager.deleteStatement(statementElement)"
@@ -74,24 +74,28 @@ import { StringValueComponent } from './object-values/string-value/string-value.
           <mat-icon>remove_circle</mat-icon>
         </button>
       }
+      @if (!statementElement.isValidAndComplete && !statementElement.isPristine && isLast) {
+        <button
+          mat-icon-button
+          (click)="formManager.clearStatementElement(statementElement)"
+          matTooltip="Clear selection">
+          <mat-icon>replay</mat-icon>
+        </button>
+      }
       @if (statementElement.isValidAndComplete && statementElement.selectedOperator === Operator.Matches) {
-        <div>add chiuld statement here</div>
+        <div>add child statement here</div>
       }
     </div>
   }`,
   styleUrl: '../../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatementBuilderComponent implements OnChanges {
+export class StatementBuilderComponent {
   @Input({ required: true }) statementElements: StatementElement[] = [new StatementElement()];
 
   formManager = inject(PropertyFormManager);
 
   protected readonly PROPERTY_OBJECT_TYPES = PropertyObjectType;
-
-  ngOnChanges(changes: SimpleChanges) {
-    console.log('StatementBuilderComponent has statementElements', this.statementElements);
-  }
 
   protected readonly Operator = Operator;
 }

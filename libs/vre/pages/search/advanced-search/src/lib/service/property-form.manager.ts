@@ -35,6 +35,11 @@ export class PropertyFormManager implements OnDestroy {
     });
   }
 
+  clearStatementElement(statement: StatementElement): void {
+    statement.clearSelections();
+    this.searchStateService.updateStatement(statement);
+  }
+
   onPredicateSelectionChanged(statement: StatementElement, selectedProperty: Predicate): void {
     statement.selectedPredicate = selectedProperty;
     this.searchStateService.updateStatement(statement);
