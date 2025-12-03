@@ -1,12 +1,32 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  MatDateFormats,
+  NativeDateAdapter,
+} from '@angular/material/core';
 import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { CalendarDate } from '@dasch-swiss/vre/shared/calendar';
-import { provideCalendarDateAdapter } from '@dasch-swiss/vre/ui/date-picker';
+
+const NATIVE_DATE_FORMATS: MatDateFormats = {
+  parse: {
+    dateInput: 'L',
+  },
+  display: {
+    dateInput: 'L',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-time-value',
-  providers: [provideCalendarDateAdapter()],
+  providers: [
+    { provide: DateAdapter, useClass: NativeDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: NATIVE_DATE_FORMATS },
+  ],
   template: `
     <div style="display: flex; gap: 8px">
       <mat-form-field>
@@ -48,7 +68,11 @@ export class TimeValueComponent {
     this.control.patchValue(newDate);
   }
 
-  editDate(event: { value: CalendarDate }) {
+  editDate(event: { value: Date }) {
+    if (!event.value) {
+      return;
+    }
+
     if (!this.control.value?.time) {
       this.control.patchValue(new DateTime(event.value, '00:00'));
       return;
