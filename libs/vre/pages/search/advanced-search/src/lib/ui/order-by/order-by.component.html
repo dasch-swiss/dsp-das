@@ -1,10 +1,12 @@
+@let orderByItems = this.orderByItems$ | async;
+
 <button
   mat-button
   mat-stroked-button
   cdkOverlayOrigin
   #trigger="cdkOverlayOrigin"
   color="primary"
-  [disabled]="orderByDisabled$ | async"
+  [disabled]="orderByItems.length === 0"
   (click)="isOpen = !isOpen">
   <p class="label-icon-container">
     <span class="label">Order by</span>
@@ -23,12 +25,11 @@
         ]"
   (backdropClick)="isOpen = false">
   <mat-selection-list
-    #sortOrderSelectionList
     cdkDropList
     class="sort-list"
     (cdkDropListDropped)="drop($event)"
     (selectionChange)="onSelectionChange($event)">
-    @for (item of orderByItems$ | async; track item.id) {
+    @for (item of orderByItems; track item.id) {
     <mat-list-option
       class="sort-item"
       [selected]="item.orderBy"

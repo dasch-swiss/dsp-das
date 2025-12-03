@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, map, startWith, tap } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, startWith } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { StatementElement, OrderByItem, SearchFormsState, IriLabelPair, NodeValue } from '../model';
 import { Operator } from '../operators.config';
@@ -33,25 +33,25 @@ export class SearchStateService {
     startWith(this.INITIAL_FORMS_STATE.statementElements)
   );
 
-  nonEmptyStatementElements$ = this._state.pipe(
+  completeStatements$ = this._state.pipe(
     distinctUntilChanged(),
     map(state => state.statementElements),
-    map(elements => elements.filter(prop => !!prop.selectedPredicate)),
+    map(elements => elements.filter(prop => prop.isValidAndComplete)),
     distinctUntilChanged()
   );
 
   orderByItems$ = this._state.pipe(
     distinctUntilChanged(),
-    map(state => state.orderBy)
+    map(state => state.orderBy),
+    distinctUntilChanged()
   );
 
   isFormStateValidAndComplete$ = this._state.pipe(
     distinctUntilChanged(),
     map(state => state.statementElements),
     map(elements => {
-      return elements.every(statement => statement.isValidAndComplete);
+      return elements.length > 1 && elements.every(statement => statement.isValidAndComplete || statement.isPristine);
     }),
-    tap(isValid => console.log('Form state valid and complete:', isValid)),
     distinctUntilChanged()
   );
 
@@ -94,8 +94,8 @@ export class SearchStateService {
     });
   }
 
-  updateOrderBy(orderByList: OrderByItem[]): void {
-    this.patchState({ orderBy: orderByList }, false);
+  updateOrderBy(orderByItems: OrderByItem[]): void {
+    this.patchState({ orderBy: orderByItems });
   }
 
   private _pushToUndoStack(state: SearchFormsState): void {

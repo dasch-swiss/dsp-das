@@ -39,11 +39,6 @@ export class ResourceValueComponent implements OnChanges {
   availableResources$ = new BehaviorSubject<IriLabelPair[]>([]);
 
   ngOnChanges(): void {
-    console.log(
-      'ResourceValueComponent detected changes, selectedPredicate:',
-      this.selectedPredicate,
-      this.selectedResource
-    );
     this._dataService.getResourceClassObjectsForProperty$(this.selectedPredicate?.iri).subscribe(resources => {
       this.availableResources$.next(resources);
     });

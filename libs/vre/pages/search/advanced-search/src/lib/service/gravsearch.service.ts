@@ -78,31 +78,32 @@ export class GravsearchService {
     return gravSearch;
   }
 
-  private _propertyStringHelper(property: StatementElement, index: number): GravsearchStatement {
+  private _propertyStringHelper(statement: StatementElement, index: number): GravsearchStatement {
     let constructString = '';
     let whereString = '';
+    console.log('fuuuu');
 
     // not a linked resource, not a resource label
     if (
-      property.selectedPredicate?.objectValueType.includes(Constants.KnoraApiV2) &&
-      property.selectedPredicate?.objectValueType !== ResourceLabel
+      statement.selectedPredicate?.objectValueType.includes(Constants.KnoraApiV2) &&
+      statement.selectedPredicate?.objectValueType !== ResourceLabel
     ) {
-      constructString = `?mainRes <${property.selectedPredicate?.iri}> ?prop${index} .`;
+      constructString = `?mainRes <${statement.selectedPredicate?.iri}> ?prop${index} .`;
       whereString = constructString;
     }
 
     // linked resource
     if (
-      !property.selectedPredicate?.objectValueType.includes(Constants.KnoraApiV2) &&
-      property.selectedPredicate?.objectValueType !== ResourceLabel
+      !statement.selectedPredicate?.objectValueType.includes(Constants.KnoraApiV2) &&
+      statement.selectedPredicate?.objectValueType !== ResourceLabel
     ) {
-      if (property.selectedOperator !== Operator.NotEquals) {
-        constructString = `?mainRes <${property.selectedPredicate?.iri}> ?prop${index} .`;
+      if (statement.selectedOperator !== Operator.NotEquals) {
+        constructString = `?mainRes <${statement.selectedPredicate?.iri}> ?prop${index} .`;
         whereString = constructString;
       }
       // if search value is an array that means that it's a linked resource with child properties
-      if (Array.isArray(property.selectedObjectNode)) {
-        property.selectedObjectNode.forEach((value, i) => {
+      if (Array.isArray(statement.selectedObjectNode)) {
+        statement.selectedObjectNode.forEach((value, i) => {
           if (value.selectedPredicate?.objectType !== ResourceLabel) {
             if (value.selectedOperator === Operator.NotExists) {
               constructString += `\n?prop${index} <${value.selectedPredicate?.iri}> ?linkProp${index}${i} .`;
@@ -117,7 +118,7 @@ export class GravsearchService {
             ) {
               constructString += `\n?prop${index} <${value.selectedPredicate?.iri}> <${value.selectedObjectNode}> .`;
               whereString += `\n?prop${index} <${value.selectedPredicate?.iri}> <${value.selectedObjectNode}> .\n`;
-              whereString += `\n?prop${index} a <${property.selectedObjectNode?.writeValue}> .\n`;
+              whereString += `\n?prop${index} a <${statement.selectedObjectNode?.writeValue}> .\n`;
             } else if (
               // searching for a resource class
               value.selectedOperator === Operator.NotEquals &&
@@ -128,7 +129,7 @@ export class GravsearchService {
                 '\nFILTER NOT EXISTS { \n' +
                 `\n?prop${index} <${value.selectedPredicate?.iri}> <${value.selectedObjectNode}> .\n` +
                 '}\n';
-              whereString += `\n?prop${index} a <${property.selectedObjectNode?.writeValue}> .\n`;
+              whereString += `\n?prop${index} a <${statement.selectedObjectNode?.writeValue}> .\n`;
             } else {
               constructString += `\n?prop${index} <${value.selectedPredicate?.iri}> ?linkProp${index}${i} .`;
               whereString += `\n?prop${index} <${value.selectedPredicate?.iri}> ?linkProp${index}${i} .\n`;
@@ -138,9 +139,9 @@ export class GravsearchService {
       }
     }
 
-    if (!(property.selectedOperator === Operator.Exists || property.selectedOperator === Operator.NotExists)) {
-      whereString += `\n${this._valueStringHelper(property, index, '?prop', '?mainRes')}`;
-    } else if (property.selectedOperator === Operator.NotExists) {
+    if (!(statement.selectedOperator === Operator.Exists || statement.selectedOperator === Operator.NotExists)) {
+      whereString += `\n${this._valueStringHelper(statement, index, '?prop', '?mainRes')}`;
+    } else if (statement.selectedOperator === Operator.NotExists) {
       whereString = `FILTER NOT EXISTS { \n${whereString}\n}\n`;
     }
 
@@ -176,10 +177,10 @@ export class GravsearchService {
       let valueString = '';
       switch (property.selectedOperator) {
         case Operator.Equals:
-          return `?mainRes <${property.selectedPredicate?.iri}> <${property.selectedObjectNode}> .`;
+          return `?mainRes <${property.selectedPredicate?.iri}> <${property.selectedObjectNode?.writeValue}> .`;
         case Operator.NotEquals:
           // this looks wrong but it is correct
-          return `FILTER NOT EXISTS { \n?mainRes <${property.selectedPredicate?.iri}> <${property.selectedObjectNode}> . }`;
+          return `FILTER NOT EXISTS { \n?mainRes <${property.selectedPredicate?.iri}> <${property.selectedObjectNode?.writeValue}> . }`;
         case Operator.Matches:
           if (Array.isArray(property.selectedObjectNode)) {
             property.selectedObjectNode.forEach((value, i) => {
@@ -201,18 +202,18 @@ export class GravsearchService {
               return (
                 `${labelRes} rdfs:label ${labelVariableName} .\n` +
                 `FILTER (${labelVariableName} ${this._operatorToSymbol(property.selectedOperator)} "${
-                  property.selectedObjectNode
+                  property.selectedObjectNode?.writeValue
                 }") .`
               );
             case Operator.IsLike:
               return (
                 `${labelRes} rdfs:label ${labelVariableName} .\n` +
-                `FILTER regex(${labelVariableName}, "${property.selectedObjectNode}", "i") .`
+                `FILTER regex(${labelVariableName}, "${property.selectedObjectNode?.writeValue}", "i") .`
               );
             case Operator.Matches:
               return (
                 `${labelRes} rdfs:label ${labelVariableName} .\n` +
-                `FILTER knora-api:matchLabel(${labelRes}, "${property.selectedObjectNode}") .`
+                `FILTER knora-api:matchLabel(${labelRes}, "${property.selectedObjectNode?.writeValue}") .`
               );
             default:
               throw new Error('Invalid operator for resource label');
@@ -224,19 +225,19 @@ export class GravsearchService {
               return (
                 `${identifier}${index} <${Constants.ValueAsString}> ${identifier}${index}Literal .\n` +
                 `FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${
-                  property.selectedObjectNode
+                  property.selectedObjectNode?.writeValue
                 }"^^<${Constants.XsdString}>) .`
               );
             case Operator.IsLike:
               return (
                 `${identifier}${index} <${Constants.ValueAsString}> ${identifier}${index}Literal .\n` +
                 `FILTER ${this._operatorToSymbol(property.selectedOperator)}(${identifier}${index}Literal, "${
-                  property.selectedObjectNode
+                  property.selectedObjectNode?.writeValue
                 }"^^<${Constants.XsdString}>, "i") .`
               );
             case Operator.Matches:
               return `FILTER <${this._operatorToSymbol(property.selectedOperator)}>(${identifier}${index}, "${
-                property.selectedObjectNode
+                property.selectedObjectNode?.writeValue
               }"^^<${Constants.XsdString}>) .`;
             default:
               throw new Error('Invalid operator for text value');
@@ -245,27 +246,27 @@ export class GravsearchService {
           return (
             `${identifier}${index} <${Constants.IntValueAsInt}> ${identifier}${index}Literal .\n` +
             `FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${
-              property.selectedObjectNode
+              property.selectedObjectNode?.writeValue
             }"^^<${Constants.XsdInteger}>) .`
           );
         case Constants.DecimalValue:
           return (
             `${identifier}${index} <${Constants.DecimalValueAsDecimal}> ${identifier}${index}Literal .\n` +
             `FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${
-              property.selectedObjectNode
+              property.selectedObjectNode?.writeValue
             }"^^<${Constants.XsdDecimal}>) .`
           );
         case Constants.BooleanValue:
           return (
             `${identifier}${index} <${Constants.BooleanValueAsBoolean}> ${identifier}${index}Literal .\n` +
             `FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${
-              property.selectedObjectNode
+              property.selectedObjectNode?.writeValue
             }"^^<${Constants.XsdBoolean}>) .`
           );
         case Constants.DateValue:
           return `FILTER(knora-api:toSimpleDate(${identifier}${index}) ${this._operatorToSymbol(
             property.selectedOperator
-          )} "${property.selectedObjectNode}"^^<${Constants.KnoraApi}/ontology/knora-api/simple/v2${
+          )} "${property.selectedObjectNode?.writeValue}"^^<${Constants.KnoraApi}/ontology/knora-api/simple/v2${
             Constants.HashDelimiter
           }Date>) .`;
         case Constants.ListValue:
@@ -274,11 +275,11 @@ export class GravsearchService {
               const listValueAsListNode = Constants.ListValueAsListNode.split('#').pop();
               return (
                 `${identifier}${index} knora-api:${listValueAsListNode} ${identifier}${index}List .\n` +
-                `FILTER NOT EXISTS { ${identifier}${index} knora-api:${listValueAsListNode} <${property.selectedObjectNode}> . }`
+                `FILTER NOT EXISTS { ${identifier}${index} knora-api:${listValueAsListNode} <${property.selectedObjectNode?.writeValue}> . }`
               );
             }
             default:
-              return `${identifier}${index} <${Constants.ListValueAsListNode}> <${property.selectedObjectNode}> .\n`;
+              return `${identifier}${index} <${Constants.ListValueAsListNode}> <${property.selectedObjectNode?.writeValue}> .\n`;
           }
         case Constants.UriValue:
           return (

@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PropertyObjectType, StatementElement } from '../../model';
+import { Operator } from '../../operators.config';
 import { PropertyFormManager } from '../../service/property-form.manager';
 import { ComparisonOperatorComponent } from './assertions/comparison-operator.component';
 import { PredicateSelectComponent } from './assertions/predicate-select.component';
@@ -73,6 +74,9 @@ import { StringValueComponent } from './object-values/string-value/string-value.
           <mat-icon>remove_circle</mat-icon>
         </button>
       }
+      @if (statementElement.isValidAndComplete && statementElement.selectedOperator === Operator.Matches) {
+        <div>add chiuld statement here</div>
+      }
     </div>
   }`,
   styleUrl: '../../advanced-search.component.scss',
@@ -88,4 +92,6 @@ export class StatementBuilderComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     console.log('StatementBuilderComponent has statementElements', this.statementElements);
   }
+
+  protected readonly Operator = Operator;
 }

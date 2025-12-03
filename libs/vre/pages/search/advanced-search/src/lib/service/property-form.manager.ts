@@ -1,6 +1,6 @@
 import { Injectable, inject, OnDestroy } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
-import { StatementElement, Predicate, IriLabelPair, OrderByItem, NodeValue } from '../model';
+import { Subject } from 'rxjs';
+import { StatementElement, Predicate, IriLabelPair, NodeValue } from '../model';
 import { Operator } from '../operators.config';
 import { SearchStateService } from './search-state.service';
 
@@ -10,29 +10,6 @@ export class PropertyFormManager implements OnDestroy {
   private destroy$ = new Subject<void>();
 
   areFormsCompleteAndValid$ = this.searchStateService.isFormStateValidAndComplete$;
-
-  constructor() {
-    this.searchStateService.nonEmptyStatementElements$
-      .pipe(
-        takeUntil(this.destroy$),
-        map(forms => {
-          const distinctFormsById = new Map(
-            forms.map(({ selectedPredicate }) => [selectedPredicate!.iri, selectedPredicate!.label])
-          );
-
-          const toKeep = this.searchStateService.currentState.orderBy.filter(item => distinctFormsById.has(item.id));
-
-          const toAdd = [...distinctFormsById]
-            .filter(([id]) => !toKeep.some(i => i.id === id))
-            .map(([id, label]) => new OrderByItem(id, label));
-
-          return [...toKeep, ...toAdd];
-        })
-      )
-      .subscribe(orderByList => {
-        this.searchStateService.updateOrderBy(orderByList);
-      });
-  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -52,11 +29,9 @@ export class PropertyFormManager implements OnDestroy {
   deleteStatement(statement: StatementElement): void {
     const currentState = this.searchStateService.currentState;
     const updatedPropertyFormList = currentState.statementElements.filter(item => item !== statement);
-    const updatedOrderByList = currentState.orderBy.filter(item => item.id !== statement.id);
 
     this.searchStateService.patchState({
       statementElements: updatedPropertyFormList,
-      orderBy: updatedOrderByList,
     });
   }
 
@@ -68,7 +43,7 @@ export class PropertyFormManager implements OnDestroy {
   setSelectedOperator(statement: StatementElement, selectedOperator: Operator): void {
     statement.selectedOperator = selectedOperator;
     this.searchStateService.updateStatement(statement);
-    if (statement.isValidAndComplete && this._isLastForSameSubject(statement)) {
+    if (statement.isValidAndComplete && this._isLastOrLastForSameSubject(statement)) {
       this._addEmptyStatement(statement);
     }
   }
@@ -76,7 +51,7 @@ export class PropertyFormManager implements OnDestroy {
   setObjectValue(statement: StatementElement, searchValue: string | IriLabelPair): void {
     statement.selectedObjectValue = searchValue;
     this.searchStateService.updateStatement(statement);
-    if (statement.isValidAndComplete && this._isLastForSameSubject(statement)) {
+    if (statement.isValidAndComplete && this._isLastOrLastForSameSubject(statement)) {
       this._addEmptyStatement(statement);
     }
   }
@@ -93,7 +68,14 @@ export class PropertyFormManager implements OnDestroy {
     });
   }
 
-  private _isLastForSameSubject(statement: StatementElement): boolean {
+  private _isLastOrLastForSameSubject(statement: StatementElement): boolean {
+    const isLast =
+      this.searchStateService.currentState.statementElements[
+        this.searchStateService.currentState.statementElements.length - 1
+      ] === statement;
+    if (isLast) {
+      return true;
+    }
     const currentState = this.searchStateService.currentState;
     const statementsOfSameLevel = currentState.statementElements.filter(
       s =>

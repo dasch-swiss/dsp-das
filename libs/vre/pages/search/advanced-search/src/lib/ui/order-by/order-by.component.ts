@@ -1,13 +1,12 @@
 import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
+import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { combineLatest, distinctUntilChanged, map } from 'rxjs';
-import { SearchStateService } from '../../service/search-state.service';
+import { OrderByService } from '../../service/order-by.service';
 
 @Component({
   selector: 'app-order-by',
@@ -28,40 +27,27 @@ import { SearchStateService } from '../../service/search-state.service';
   standalone: true,
 })
 export class OrderByComponent {
-  private searchService: SearchStateService = inject(SearchStateService);
-
   readonly TOOLTIP_TEXT = 'Search cannot be ordered by a URI property or a property that links to a resource.';
+  private orderByService: OrderByService = inject(OrderByService);
 
-  @ViewChild('sortOrderSelectionList')
-  sortOrderSelectionList!: MatSelectionList;
-
-  orderByItems$ = this.searchService.orderByItems$.pipe(distinctUntilChanged());
-
-  orderByDisabled$ = combineLatest([this.searchService.statementElements$, this.searchService.orderByItems$]).pipe(
-    map(([statements, orderBylist]) => !orderBylist.length || !statements.length),
-    distinctUntilChanged()
-  );
+  orderByItems$ = this.orderByService.orderByItems$;
 
   isOpen = false;
 
   drop(event: CdkDragDrop<string[]>) {
-    const currentOrderByList = this.searchService.currentState.orderBy;
-    if (!currentOrderByList) return;
-
-    moveItemInArray(currentOrderByList, event.previousIndex, event.currentIndex);
-    this.searchService.updateOrderBy(currentOrderByList);
+    const orderBy = this.orderByService.currentOrderBy;
+    moveItemInArray(orderBy, event.previousIndex, event.currentIndex);
+    this.orderByService.updateOrderBy(orderBy);
   }
 
   onSelectionChange(event: MatSelectionListChange) {
-    const currentOrderByList = this.searchService.currentState.orderBy;
-    if (!currentOrderByList) return;
-
+    const currentOrderByList = this.orderByService.currentOrderBy;
     event.options.forEach(option => {
       const selectedItem = currentOrderByList.find(item => item.id === option.value);
       if (selectedItem) {
         selectedItem.orderBy = option.selected;
       }
     });
-    this.searchService.updateOrderBy(currentOrderByList);
+    this.orderByService.updateOrderBy(currentOrderByList);
   }
 }

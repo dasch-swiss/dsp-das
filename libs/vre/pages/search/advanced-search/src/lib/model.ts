@@ -17,7 +17,7 @@ export interface IriLabelPair {
 
 abstract class StatementValue {
   constructor(public statementId: string) {}
-  abstract writeValue(): string | undefined; // always a string
+  abstract get writeValue(): string | undefined; // always a string
 }
 
 export class NodeValue extends StatementValue {
@@ -40,7 +40,7 @@ export class NodeValue extends StatementValue {
     this._value = val;
   }
 
-  writeValue(): string | undefined {
+  get writeValue(): string | undefined {
     return this._value?.iri;
   }
 }
@@ -59,7 +59,7 @@ export class StringValue extends StatementValue {
     this._value = val;
   }
 
-  writeValue(): string | undefined {
+  get writeValue(): string | undefined {
     return this._value;
   }
 }
@@ -78,7 +78,7 @@ export class ListNodeValue extends StatementValue {
     this._value = val;
   }
 
-  writeValue(): string | undefined {
+  get writeValue(): string | undefined {
     return this._value?.id;
   }
 }
@@ -142,7 +142,7 @@ export class StatementElement {
   }
 
   get selectedObjectWriteValue(): string | undefined {
-    return this._selectedObjectNode?.writeValue();
+    return this._selectedObjectNode?.writeValue;
   }
 
   get operators(): Operator[] {
@@ -167,7 +167,7 @@ export class StatementElement {
     return (
       this.selectedOperator === Operator.Exists ||
       this.selectedOperator === Operator.NotExists ||
-      !!this.selectedObjectNode?.writeValue()
+      !!this.selectedObjectNode?.writeValue
     );
   }
 
@@ -208,11 +208,6 @@ export class OrderByItem {
     public label?: string,
     public disabled?: boolean
   ) {}
-}
-
-export interface SearchItem {
-  value: string;
-  objectType: string;
 }
 
 export interface QueryObject {
