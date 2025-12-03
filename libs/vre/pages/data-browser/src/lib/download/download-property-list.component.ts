@@ -73,6 +73,7 @@ export class DownloadPropertyListComponent implements OnInit {
       selected: true,
       property: p,
     }));
+    this.emitProperties();
   }
 
   selectAll(): void {
