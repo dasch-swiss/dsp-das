@@ -3,6 +3,7 @@ import { APIV3ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -30,7 +31,7 @@ import { finalize } from 'rxjs';
         appLoadingButton
         [isLoading]="isDownloading"
         (click)="downloadCsv()"
-        [disabled]="selectedPropertyIds.length === 0 || isDownloading">
+        [disabled]="isDownloading">
         {{ 'pages.dataBrowser.downloadDialog.downloadCsv' | translate }}
       </button>
     </div>
@@ -48,7 +49,8 @@ export class DownloadDialogResourcesTabComponent {
   constructor(
     private _v3: APIV3ApiService,
     private _notificationService: NotificationService,
-    private _localizationService: LocalizationService
+    private _localizationService: LocalizationService,
+    private _translateService: TranslateService
   ) {}
 
   downloadCsv(): void {
@@ -74,11 +76,15 @@ export class DownloadDialogResourcesTabComponent {
       .subscribe({
         next: csvText => {
           this._createBlob(csvText);
-          this._notificationService.openSnackBar('pages.dataBrowser.downloadDialog.downloadSuccess');
+          this._notificationService.openSnackBar(
+            this._translateService.instant('pages.dataBrowser.downloadDialog.downloadSuccess')
+          );
           this.afterClosed.emit();
         },
         error: e => {
-          this._notificationService.openSnackBar('pages.dataBrowser.downloadDialog.downloadError');
+          this._notificationService.openSnackBar(
+            this._translateService.instant('pages.dataBrowser.downloadDialog.downloadError')
+          );
         },
       });
   }
