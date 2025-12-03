@@ -199,6 +199,8 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
   /**
    * Parses a date from a string.
    * For now, this is a simple implementation that expects YYYY-MM-DD format.
+   * Note: Expects 1-based months in the string (e.g., "2024-01-15" for January)
+   * to match CalendarDate's internal 1-based month representation.
    */
   override parse(value: string): CalendarDate | null {
     if (!value) {
@@ -227,6 +229,8 @@ export class CalendarDateAdapter extends DateAdapter<CalendarDate> {
 
   /**
    * Formats a date to a string.
+   * Note: Outputs 1-based months in the string (e.g., "2024-01-15" for January)
+   * matching CalendarDate's internal 1-based month representation.
    */
   override format(date: CalendarDate, displayFormat: object): string {
     if (!date) return '';
