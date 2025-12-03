@@ -94,15 +94,15 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   );
 
   constructor(
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
     private readonly _cd: ChangeDetectorRef,
-    private readonly _ontologyService: OntologyService,
+    private readonly _dataBrowserPageService: DataBrowserPageService,
     private readonly _localizationService: LocalizationService,
-    private readonly _translateService: TranslateService,
-    @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-    private _projectPageService: ProjectPageService,
-    private _router: Router,
-    private _route: ActivatedRoute,
-    private _dataBrowserPageService: DataBrowserPageService
+    private readonly _ontologyService: OntologyService,
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _translateService: TranslateService
   ) {}
 
   selectResourceClass() {
