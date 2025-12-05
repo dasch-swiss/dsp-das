@@ -1,12 +1,13 @@
 import { HttpResponse } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { APIV3ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { DownloadDialogResourcesTabComponent } from './download-dialog-resources-tab.component';
 
@@ -16,6 +17,7 @@ describe('DownloadDialogResourcesTabComponent', () => {
   let mockV3ApiService: jest.Mocked<APIV3ApiService>;
   let mockNotificationService: jest.Mocked<NotificationService>;
   let mockLocalizationService: jest.Mocked<LocalizationService>;
+  let mockTranslateService: jest.Mocked<TranslateService>;
 
   // Mock DOM methods
   let createElementSpy: jest.SpyInstance;
@@ -52,6 +54,10 @@ describe('DownloadDialogResourcesTabComponent', () => {
       getCurrentLanguage: jest.fn().mockReturnValue('en'),
     } as any;
 
+    mockTranslateService = {
+      instant: jest.fn((key: string) => key),
+    } as any;
+
     // Mock DOM methods
     mockAnchorElement = {
       href: '',
@@ -62,26 +68,28 @@ describe('DownloadDialogResourcesTabComponent', () => {
     createElementSpy = jest.spyOn(document, 'createElement').mockReturnValue(mockAnchorElement);
     appendChildSpy = jest.spyOn(document.body, 'appendChild').mockImplementation();
     removeChildSpy = jest.spyOn(document.body, 'removeChild').mockImplementation();
+
+    // Mock URL methods that don't exist in jsdom
+    if (!window.URL.createObjectURL) {
+      window.URL.createObjectURL = jest.fn();
+    }
+    if (!window.URL.revokeObjectURL) {
+      window.URL.revokeObjectURL = jest.fn();
+    }
     createObjectURLSpy = jest.spyOn(window.URL, 'createObjectURL').mockReturnValue('blob:mock-url');
     revokeObjectURLSpy = jest.spyOn(window.URL, 'revokeObjectURL').mockImplementation();
 
     await TestBed.configureTestingModule({
       declarations: [DownloadDialogResourcesTabComponent],
-      imports: [TranslateModule.forRoot()],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      imports: [TranslateModule.forRoot(), FormsModule],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: APIV3ApiService, useValue: mockV3ApiService },
         { provide: NotificationService, useValue: mockNotificationService },
         { provide: LocalizationService, useValue: mockLocalizationService },
+        { provide: TranslateService, useValue: mockTranslateService },
       ],
-    })
-      .overrideComponent(DownloadDialogResourcesTabComponent, {
-        set: {
-          // Template is overridden to isolate unit test from template rendering
-          template: '<div>Mock Template</div>',
-        },
-      })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DownloadDialogResourcesTabComponent);
     component = fixture.componentInstance;

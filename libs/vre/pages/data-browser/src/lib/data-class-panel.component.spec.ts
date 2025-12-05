@@ -48,11 +48,18 @@ describe('DataClassPanelComponent', () => {
   };
 
   const createMockResource = (id: string): ReadResource => {
+    const mockResourceClass = {
+      getResourcePropertiesList: jest.fn().mockReturnValue([]),
+    };
+
     const resource = {
       id,
       type: 'http://api.knora.org/ontology/knora-api/v2#Resource',
       label: `Resource ${id}`,
       entityInfo: {
+        classes: {
+          'http://api.knora.org/ontology/knora-api/v2#Resource': mockResourceClass,
+        },
         getPropertyDefinitionsByType: jest.fn().mockReturnValue([]),
       },
       getPropertyByName: jest.fn().mockReturnValue({
