@@ -82,6 +82,25 @@ function islamicToJDN(date: CalendarDate): number {
 }
 
 /**
+ * Determine if a year is a leap year in the Islamic calendar.
+ *
+ * In a 30-year cycle, years 2, 5, 7, 10, 13, 16, 18, 21, 24, 26, and 29 are leap years.
+ *
+ * @param year - The Islamic year
+ * @returns True if leap year, false otherwise
+ *
+ * @example
+ * ```typescript
+ * islamicIsLeapYear(1445) // Returns true or false depending on cycle position
+ * ```
+ */
+function islamicIsLeapYear(year: number): boolean {
+  const yearInCycle = year % 30;
+  const leapYears = [2, 5, 7, 10, 13, 16, 18, 21, 24, 26, 29];
+  return leapYears.includes(yearInCycle);
+}
+
+/**
  * Converts a Julian Day Number (JDN) to an Islamic calendar date.
  *
  * This conversion first converts to Julian calendar, then to Islamic.
