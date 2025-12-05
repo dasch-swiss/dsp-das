@@ -3,8 +3,8 @@
  */
 
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { CALENDAR_DATE_FORMATS } from './calendar-date-formats';
 import { provideCalendarDateAdapter } from './calendar-date-adapter.providers';
+import { CALENDAR_DATE_FORMATS } from './calendar-date-formats';
 import { CalendarDateAdapter } from './calendar-date.adapter';
 
 describe('provideCalendarDateAdapter', () => {

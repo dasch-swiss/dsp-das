@@ -2,7 +2,11 @@
  * Unit tests for calendar date formats.
  */
 
-import { CALENDAR_DATE_FORMATS, CALENDAR_DATE_FORMATS_LONG, CALENDAR_DATE_FORMATS_SHORT } from './calendar-date-formats';
+import {
+  CALENDAR_DATE_FORMATS,
+  CALENDAR_DATE_FORMATS_LONG,
+  CALENDAR_DATE_FORMATS_SHORT,
+} from './calendar-date-formats';
 
 describe('CalendarDateFormats', () => {
   describe('CALENDAR_DATE_FORMATS', () => {
