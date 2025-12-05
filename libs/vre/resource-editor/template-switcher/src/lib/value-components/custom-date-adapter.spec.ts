@@ -2,13 +2,21 @@
  * Unit tests for CustomDateAdapter.
  */
 
+import { TestBed } from '@angular/core/testing';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { CustomDateAdapter } from './custom-date-adapter';
 
 describe('CustomDateAdapter', () => {
   let adapter: CustomDateAdapter;
 
   beforeEach(() => {
-    adapter = new CustomDateAdapter('en-US');
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: DateAdapter, useClass: CustomDateAdapter },
+        { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
+      ],
+    });
+    adapter = TestBed.inject(DateAdapter) as CustomDateAdapter;
   });
 
   describe('format', () => {

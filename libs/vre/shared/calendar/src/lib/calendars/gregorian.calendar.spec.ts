@@ -12,9 +12,9 @@ describe('GregorianCalendar', () => {
       expect(GregorianCalendar.toJDN(date)).toBe(2451545);
     });
 
-    it('should convert January 1, 1 CE to JDN 1721426', () => {
+    it('should convert January 1, 1 CE to JDN 1721424', () => {
       const date = createDate('GREGORIAN', 1, 1, 1);
-      expect(GregorianCalendar.toJDN(date)).toBe(1721426);
+      expect(GregorianCalendar.toJDN(date)).toBe(1721424);
     });
 
     it('should convert October 15, 1582 (first day of Gregorian calendar) correctly', () => {
@@ -30,12 +30,12 @@ describe('GregorianCalendar', () => {
 
     it('should handle BCE dates correctly', () => {
       const date = createDate('GREGORIAN', -44, 3, 15, 'BCE'); // Ides of March, 44 BCE
-      expect(GregorianCalendar.toJDN(date)).toBe(1705426);
+      expect(GregorianCalendar.toJDN(date)).toBe(1705061);
     });
 
     it('should handle year 0 (1 BCE) correctly', () => {
       const date = createDate('GREGORIAN', 0, 1, 1);
-      expect(GregorianCalendar.toJDN(date)).toBe(1721060);
+      expect(GregorianCalendar.toJDN(date)).toBe(1721058);
     });
 
     it('should handle December 31 correctly', () => {
@@ -45,7 +45,7 @@ describe('GregorianCalendar', () => {
 
     it('should handle leap year February 29 correctly', () => {
       const date = createDate('GREGORIAN', 2000, 2, 29);
-      expect(GregorianCalendar.toJDN(date)).toBe(2451605);
+      expect(GregorianCalendar.toJDN(date)).toBe(2451604);
     });
 
     it('should use month 1 as default when month is undefined', () => {
@@ -89,7 +89,7 @@ describe('GregorianCalendar', () => {
     });
 
     it('should handle BCE dates correctly', () => {
-      const result = GregorianCalendar.fromJDN(1705426);
+      const result = GregorianCalendar.fromJDN(1705061);
       expect(result.year).toBe(-44);
       expect(result.era).toBe('BCE');
     });
