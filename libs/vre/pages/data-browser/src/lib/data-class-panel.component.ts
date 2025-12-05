@@ -1,17 +1,15 @@
 import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ResourceClassDefinitionWithAllLanguages, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { ResourceFetcherDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
-import { filterUndefined, generateDspResource } from '@dasch-swiss/vre/shared/app-common';
+import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { combineLatest, first } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 import { MultipleViewerService } from './comparison/multiple-viewer.service';
 import { DataBrowserPageService } from './data-browser-page.service';
-import { DownloadDialogComponent } from './download/download-dialog.component';
 import { ResourceClassCountApi } from './resource-class-count.api';
 
 @Component({
@@ -47,14 +45,14 @@ export class DataClassPanelComponent {
   hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
 
   constructor(
-    private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef,
-    private _projectPageService: ProjectPageService,
+    private readonly _dialog: MatDialog,
+    private readonly _viewContainerRef: ViewContainerRef,
+    private readonly _projectPageService: ProjectPageService,
     private readonly _multipleViewerService: MultipleViewerService,
-    private _resClassCountApi: ResourceClassCountApi,
-    private _stringifyStringLiteralPipe: StringifyStringLiteralPipe,
-    private _notificationService: NotificationService,
-    private _dataBrowserPageService: DataBrowserPageService
+    private readonly _resClassCountApi: ResourceClassCountApi,
+    private readonly _stringifyStringLiteralPipe: StringifyStringLiteralPipe,
+    private readonly _notificationService: NotificationService,
+    private readonly _dataBrowserPageService: DataBrowserPageService
   ) {}
 
   goToAddClassInstance() {

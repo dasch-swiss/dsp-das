@@ -312,7 +312,7 @@
         "type": "Tipo di proprietà",
         "name": "Nome della proprietà",
         "labelPlaceholder": "Etichetta della proprietà",
-        "commentPlaceholder": "Commento",
+        "commentPlaceholder": "Descrizione",
         "selectResourceClass": "Seleziona classe di risorsa",
         "selectList": "Seleziona lista"
       },
@@ -685,6 +685,10 @@
         "date": "Data",
         "datePlaceholder": "Clicca per selezionare una data",
         "time": "Ora"
+      },
+      "geonameValue": {
+        "placeholder": "Cerca una località...",
+        "label": "Località"
       },
       "example": "es."
     }

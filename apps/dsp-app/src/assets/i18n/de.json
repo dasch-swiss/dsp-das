@@ -312,7 +312,7 @@
         "type": "Eigenschaftstyp",
         "name": "Eigenschaftsname",
         "labelPlaceholder": "Eigenschaftsbezeichnung",
-        "commentPlaceholder": "Kommentar",
+        "commentPlaceholder": "Beschreibung",
         "selectResourceClass": "Ressourcen-Klasse auswählen",
         "selectList": "Liste auswählen"
       },
@@ -685,6 +685,10 @@
         "date": "Datum",
         "datePlaceholder": "Klicken Sie, um ein Datum auszuwählen",
         "time": "Uhrzeit"
+      },
+      "geonameValue": {
+        "placeholder": "Ort suchen...",
+        "label": "Ort"
       },
       "example": "z.B."
     }
