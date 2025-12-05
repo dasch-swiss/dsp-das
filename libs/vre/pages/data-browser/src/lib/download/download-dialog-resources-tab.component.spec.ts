@@ -1,10 +1,7 @@
-import { HttpResponse } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
+import { Directive, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { HighContrastModeDetector } from '@angular/cdk/a11y';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { APIV3ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
@@ -95,12 +92,7 @@ describe('DownloadDialogResourcesTabComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [DownloadDialogResourcesTabComponent],
-      imports: [
-        TranslateModule.forRoot(),
-        FormsModule,
-        NoopAnimationsModule,
-        MockLoadingButtonDirective,
-      ],
+      imports: [TranslateModule.forRoot(), FormsModule, NoopAnimationsModule, MockLoadingButtonDirective],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: APIV3ApiService, useValue: mockV3ApiService },
