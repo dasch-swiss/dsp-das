@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReadResource, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,6 +26,7 @@ describe('DataClassPanelComponent', () => {
   let mockStringifyPipe: jest.Mocked<StringifyStringLiteralPipe>;
   let mockNotificationService: jest.Mocked<NotificationService>;
   let mockDataBrowserPageService: jest.Mocked<DataBrowserPageService>;
+  let mockLocalizationService: jest.Mocked<LocalizationService>;
 
   // Mock observables
   let selectedResourcesSubject: BehaviorSubject<ReadResource[]>;
@@ -32,8 +34,8 @@ describe('DataClassPanelComponent', () => {
   // Mock data
   const mockResClass = {
     id: 'http://example.org/ontology/ResourceClass',
-    labels: { en: 'Test Resource Class' },
-    comments: { en: 'A test resource class' },
+    labels: [{ language: 'en', value: 'Test Resource Class' }],
+    comments: [{ language: 'en', value: 'A test resource class' }],
     subClassOf: [],
     propertiesList: [],
     canBeInstantiated: true,
@@ -100,6 +102,11 @@ describe('DataClassPanelComponent', () => {
       reloadNavigation: jest.fn(),
     } as any;
 
+    mockLocalizationService = {
+      getCurrentLanguage: jest.fn().mockReturnValue('en'),
+      getLanguageFromBrowser: jest.fn().mockReturnValue('en'),
+    } as any;
+
     await TestBed.configureTestingModule({
       declarations: [DataClassPanelComponent],
       imports: [TranslateModule.forRoot()],
@@ -110,15 +117,16 @@ describe('DataClassPanelComponent', () => {
         { provide: ProjectPageService, useValue: mockProjectPageService },
         { provide: MultipleViewerService, useValue: mockMultipleViewerService },
         { provide: ResourceClassCountApi, useValue: mockResClassCountApi },
-        { provide: StringifyStringLiteralPipe, useValue: mockStringifyPipe },
         { provide: NotificationService, useValue: mockNotificationService },
         { provide: DataBrowserPageService, useValue: mockDataBrowserPageService },
+        { provide: LocalizationService, useValue: mockLocalizationService },
       ],
     })
       .overrideComponent(DataClassPanelComponent, {
         set: {
           // Template is overridden to isolate unit test from template rendering
           template: '<div>Mock Template</div>',
+          providers: [{ provide: StringifyStringLiteralPipe, useValue: mockStringifyPipe }],
         },
       })
       .compileComponents();

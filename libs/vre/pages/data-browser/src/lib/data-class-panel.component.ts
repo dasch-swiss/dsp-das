@@ -1,15 +1,17 @@
 import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { ResourceClassDefinitionWithAllLanguages, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { ResourceFetcherDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
-import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
+import { filterUndefined, generateDspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { combineLatest, first } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 import { MultipleViewerService } from './comparison/multiple-viewer.service';
 import { DataBrowserPageService } from './data-browser-page.service';
+import { DownloadDialogComponent } from './download/download-dialog.component';
 import { ResourceClassCountApi } from './resource-class-count.api';
 
 @Component({
