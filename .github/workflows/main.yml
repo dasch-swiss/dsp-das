@@ -5,7 +5,7 @@ on: [ push, fork ]
 jobs:
 
   lint:
-    name: Lint All Projects
+    name: DSP-APP Linting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -49,7 +49,7 @@ jobs:
           fail_ci_if_error: false
 
   dsp-app-e2e-tests:
-    name: DSP-APP E2E
+    name: DSP-APP E2E tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
