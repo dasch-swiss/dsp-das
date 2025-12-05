@@ -1,5 +1,32 @@
 # Changelog
 
+## [12.3.0](https://github.com/dasch-swiss/dsp-das/compare/v12.2.3...v12.3.0) (2025-12-05)
+
+
+### Enhancements
+
+* improve tooltip message on resource deletion ([#2711](https://github.com/dasch-swiss/dsp-das/issues/2711)) ([b19d9c7](https://github.com/dasch-swiss/dsp-das/commit/b19d9c7b2b621f4a1293c10297894e25a36c6e56))
+* update js lib version from 10.9.0 to 10.9.1 (DEV-5409) ([#2714](https://github.com/dasch-swiss/dsp-das/issues/2714)) ([e966f4b](https://github.com/dasch-swiss/dsp-das/commit/e966f4b1ce20e3fb1727145f161db8837839fe6a))
+
+
+### Bug Fixes
+
+* add translations for geoname placeholders ([#2710](https://github.com/dasch-swiss/dsp-das/issues/2710)) ([08eb3f3](https://github.com/dasch-swiss/dsp-das/commit/08eb3f3b3fdb3eba7b5c2543385e2a40ed07f978))
+* **Link Object:** use limitToProject instead on-site filtering ([#2718](https://github.com/dasch-swiss/dsp-das/issues/2718)) ([825f077](https://github.com/dasch-swiss/dsp-das/commit/825f077cfedffe5830366096d6603121312060e8))
+* rename property and class Comment to Description ([#2719](https://github.com/dasch-swiss/dsp-das/issues/2719)) ([ae88ad8](https://github.com/dasch-swiss/dsp-das/commit/ae88ad8ce7716f8c457aa539855a923f352925c3))
+
+
+### Maintenances
+
+* **deps-dev:** bump prettier from 3.6.2 to 3.7.3 in the prettier-deps group ([#2707](https://github.com/dasch-swiss/dsp-das/issues/2707)) ([2f9e41a](https://github.com/dasch-swiss/dsp-das/commit/2f9e41a0e2df841cae4870fc0dff85bc907ae730))
+* **deps:** bump core-js from 3.46.0 to 3.47.0 ([#2709](https://github.com/dasch-swiss/dsp-das/issues/2709)) ([2d51869](https://github.com/dasch-swiss/dsp-das/commit/2d518694fb0c62a0f87a8553c6ab14cf583a4dcf))
+* **deps:** bump express ([#2712](https://github.com/dasch-swiss/dsp-das/issues/2712)) ([75c3514](https://github.com/dasch-swiss/dsp-das/commit/75c3514b72b768db468d77f2491d2f9d9bbc77bf))
+* **deps:** bump node-forge from 1.3.1 to 1.3.2 ([#2698](https://github.com/dasch-swiss/dsp-das/issues/2698)) ([90e00b2](https://github.com/dasch-swiss/dsp-das/commit/90e00b278534db540435c4d227585fd24965fd59))
+* improve constructor dependency injections ([#2717](https://github.com/dasch-swiss/dsp-das/issues/2717)) ([251e256](https://github.com/dasch-swiss/dsp-das/commit/251e2567dc01b7c7713c3f32c7b13348aba8bf17))
+* rewrite JDN calendar libs  ([#2716](https://github.com/dasch-swiss/dsp-das/issues/2716)) ([1dc3c86](https://github.com/dasch-swiss/dsp-das/commit/1dc3c865aa659618519fc08b97592cf2de1081b0))
+* update grafana faro to v2 ([#2706](https://github.com/dasch-swiss/dsp-das/issues/2706)) ([aeafd67](https://github.com/dasch-swiss/dsp-das/commit/aeafd6718b8c5f798abc7562ed1f9f27f59e0589))
+* update openapi spec to v33.1.1-3-g3039ed2 ([#2715](https://github.com/dasch-swiss/dsp-das/issues/2715)) ([fbe2d31](https://github.com/dasch-swiss/dsp-das/commit/fbe2d317b72283593455d0491adbe6ff310df2d0))
+
 ## [12.2.3](https://github.com/dasch-swiss/dsp-das/compare/v12.2.2...v12.2.3) (2025-12-01)
 
 
