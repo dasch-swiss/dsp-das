@@ -12,11 +12,11 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponseError, Constants, ReadResource } from '@dasch-swiss/dsp-js';
-import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Subject, takeUntil } from 'rxjs';
+import { ResourceFetcherService, ResourceUtil } from './representations';
 
 type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
 

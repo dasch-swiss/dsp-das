@@ -1,5 +1,5 @@
 import { PermissionUtil, ReadResource } from '@dasch-swiss/dsp-js';
-import { Interaction } from '@dasch-swiss/vre/resource-editor/representations';
+import { Interaction } from '../representations';
 
 export type UserGroup = 'ProjectAdmin' | 'Creator' | 'ProjectMember' | 'KnownUser' | 'UnknownUser' | 'CustomGroup';
 
