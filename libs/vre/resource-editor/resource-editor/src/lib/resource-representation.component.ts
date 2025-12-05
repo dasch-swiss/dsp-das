@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadFileValue } from '@dasch-swiss/dsp-js';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { getFileValue, RepresentationConstants } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
@@ -53,6 +54,10 @@ export class ResourceRepresentationComponent implements OnChanges {
   protected readonly representationConstants = RepresentationConstants;
 
   ngOnChanges() {
-    this.fileValue = getFileValue(this.resource.res);
+    const fileValue = getFileValue(this.resource.res);
+    if (!fileValue) {
+      throw new AppError('FileValue is null');
+    }
+    this.fileValue = fileValue;
   }
 }
