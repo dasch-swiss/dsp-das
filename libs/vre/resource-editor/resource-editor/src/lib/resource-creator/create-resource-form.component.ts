@@ -15,8 +15,8 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
-import { CommonInputComponent, InvalidControlScrollDirective, LoadingButtonDirective } from '@dasch-swiss/vre/ui/ui';
+import { AppProgressIndicatorComponent, LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { CommonInputComponent, InvalidControlScrollDirective } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { finalize, switchMap, take } from 'rxjs';
 import { FileForm } from '../representations/file-form.type';

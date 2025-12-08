@@ -7,7 +7,8 @@ import { MatChipInput, MatChipInputEvent, MatChipsModule } from '@angular/materi
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { HumanReadableErrorPipe, PaginatedApiService } from '@dasch-swiss/vre/shared/app-common';
+import { PaginatedApiService } from '@dasch-swiss/vre/shared/app-common';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -74,6 +75,7 @@ import { finalize } from 'rxjs/operators';
     MatInputModule,
     ReactiveFormsModule,
     TranslateModule,
+    HumanReadableErrorPipe,
     HumanReadableErrorPipe,
   ],
 })

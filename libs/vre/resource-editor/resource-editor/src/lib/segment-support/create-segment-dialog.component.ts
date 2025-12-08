@@ -4,14 +4,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { TimeInputComponent } from '@dasch-swiss/vre/shared/app-representations';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
   ChipListInputComponent,
   CkEditorControlComponent,
   CommonInputComponent,
   DialogHeaderComponent,
-} from '@dasch-swiss/vre/shared';
-import { TimeInputComponent } from '@dasch-swiss/vre/shared/app-representations';
-import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/ui';
+} from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { SegmentApiService } from './segment-api.service';
 import { SegmentsService } from './segments.service';

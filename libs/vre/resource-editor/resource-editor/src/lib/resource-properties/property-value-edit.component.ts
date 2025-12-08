@@ -16,7 +16,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { ProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable, of, Subscription, switchMap } from 'rxjs';
 import { startWith, takeWhile } from 'rxjs/operators';
@@ -36,8 +36,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     MatTooltip,
     TemplateEditorSwitcherComponent,
     PropertyValueBasicCommentComponent,
-    ProgressIndicatorComponent,
     TranslateModule,
+    AppProgressIndicatorComponent,
   ],
   template: `
     <app-template-editor-switcher

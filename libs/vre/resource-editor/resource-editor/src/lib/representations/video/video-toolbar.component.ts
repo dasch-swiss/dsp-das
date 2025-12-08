@@ -8,7 +8,7 @@ import { MatTooltip, TooltipPosition } from '@angular/material/tooltip';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ReadMovingImageFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { AppTimePipe } from '@dasch-swiss/vre/shared/app-representations';
+import { TimePipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import {
@@ -29,8 +29,8 @@ import { VideoMoreButtonComponent } from './video-more-button.component';
     MatToolbarRow,
     MatTooltip,
     VideoMoreButtonComponent,
-    AppTimePipe,
     TranslateModule,
+    TimePipe,
   ],
   template: ` <mat-toolbar-row style="background: black; color: white; justify-content: space-between">
     <div>

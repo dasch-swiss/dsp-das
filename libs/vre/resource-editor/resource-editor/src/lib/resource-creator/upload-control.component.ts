@@ -1,7 +1,7 @@
 import { Component, Input, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { HumanReadableErrorPipe } from '@dasch-swiss/vre/shared/app-common';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { FileRepresentationType } from '../representations/file-representation.type';
 import { UploadedFileResponse } from '../representations/upload/upload-file-response.interface';
 import { UploadComponent } from './upload.component';
@@ -27,7 +27,7 @@ import { UploadedFileComponent } from './uploaded-file.component';
     }
   `,
   standalone: true,
-  imports: [UploadComponent, UploadedFileComponent, MatFormFieldModule, HumanReadableErrorPipe],
+  imports: [UploadComponent, UploadedFileComponent, MatFormFieldModule, HumanReadableErrorPipe, HumanReadableErrorPipe],
 })
 export class UploadControlComponent implements ControlValueAccessor {
   @Input({ required: true }) representation!: FileRepresentationType;

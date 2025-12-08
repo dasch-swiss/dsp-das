@@ -18,7 +18,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { Constants, ReadDocumentFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
-import { StatusComponent } from '@dasch-swiss/vre/shared';
+import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PdfViewerComponent, PdfViewerModule } from 'ng2-pdf-viewer';
 import {

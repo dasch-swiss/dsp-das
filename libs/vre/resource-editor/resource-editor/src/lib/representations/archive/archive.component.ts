@@ -6,7 +6,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { Constants, ReadArchiveFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { StatusComponent } from '@dasch-swiss/vre/shared';
+import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   ReplaceFileDialogComponent,

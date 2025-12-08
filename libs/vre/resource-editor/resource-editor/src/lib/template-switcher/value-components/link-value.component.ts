@@ -22,7 +22,7 @@ import {
   ResourceClassDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { ProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { EMPTY, expand, filter, finalize, Subject, switchMap, takeUntil } from 'rxjs';
@@ -39,10 +39,10 @@ import { LinkValueDataService } from './link-value-data.service';
     MatAutocompleteTrigger,
     MatAutocomplete,
     MatOption,
-    ProgressIndicatorComponent,
     MatHint,
     MatError,
     HumanReadableErrorPipe,
+    AppProgressIndicatorComponent,
   ],
   template: `
     <mat-form-field style="width: 100%">

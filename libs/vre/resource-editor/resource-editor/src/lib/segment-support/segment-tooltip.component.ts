@@ -1,9 +1,9 @@
 import { Component, EventEmitter, HostListener, Output } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { TimeFormatPipe } from '@dasch-swiss/vre/ui/ui';
 import { Segment } from './segment';
 import { SegmentsService } from './segments.service';
-import { TimeFormatPipe } from './time-format.pipe';
 
 @Component({
   selector: 'app-segment-tooltip',

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { Constants, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { map } from 'rxjs';
-import { StillImageComponent } from '../representations/still-image.component';
+import { StillImageComponent } from '../representations/still-image/still-image.component';
 import { ResourceLegalComponent } from '../resource-legal.component';
 import { CompoundService } from './compound.service';
 

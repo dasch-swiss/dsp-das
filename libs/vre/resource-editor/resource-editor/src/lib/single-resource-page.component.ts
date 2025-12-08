@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/layout';
+import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
 import { map } from 'rxjs';
 import { ResourceFetcherComponent } from './resource-fetcher.component';
 
