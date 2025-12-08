@@ -1,7 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadFileValue } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { getFileValue, RepresentationConstants } from './representations';
+import { getFileValue } from './representations/get-file-value';
+import { RepresentationConstants } from './representations/representation-constants';
 
 @Component({
   selector: 'app-resource-representation',

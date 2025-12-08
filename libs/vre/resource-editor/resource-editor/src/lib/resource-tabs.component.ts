@@ -3,8 +3,8 @@ import { Constants, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { Subject, takeUntil } from 'rxjs';
 import { CompoundService } from './compound/compound.service';
-import { RegionService } from './representations';
-import { SegmentsService } from './segment-support';
+import { RegionService } from './representations/region.service';
+import { SegmentsService } from './segment-support/segments.service';
 
 @Component({
   selector: 'app-resource-tabs',

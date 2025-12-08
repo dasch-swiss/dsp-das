@@ -5,9 +5,10 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/con
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { take } from 'rxjs';
 import { CompoundService } from './compound/compound.service';
-import { getFileValue, RegionService } from './representations';
-import { PropertiesDisplayService } from './resource-properties';
-import { SegmentsService } from './segment-support';
+import { getFileValue } from './representations/get-file-value';
+import { RegionService } from './representations/region.service';
+import { PropertiesDisplayService } from './resource-properties/properties-display.service';
+import { SegmentsService } from './segment-support/segments.service';
 
 @Component({
   selector: 'app-resource',

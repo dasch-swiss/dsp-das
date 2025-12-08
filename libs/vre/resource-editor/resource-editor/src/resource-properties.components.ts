@@ -9,16 +9,12 @@ import { PropertyRowComponent } from './lib/resource-properties/property-row.com
 import { PropertyValueActionBubbleComponent } from './lib/resource-properties/property-value-action-bubble.component';
 import { PropertyValueAddComponent } from './lib/resource-properties/property-value-add.component';
 import { PropertyValueBasicCommentComponent } from './lib/resource-properties/property-value-basic-comment.component';
-import {
-  PropertyValueDisplayCommentComponent
-} from './lib/resource-properties/property-value-display-comment.component';
+import { PropertyValueDisplayCommentComponent } from './lib/resource-properties/property-value-display-comment.component';
 import { PropertyValueDisplayComponent } from './lib/resource-properties/property-value-display.component';
 import { PropertyValueEditComponent } from './lib/resource-properties/property-value-edit.component';
 import { PropertyValueUpdateComponent } from './lib/resource-properties/property-value-update.component';
 import { PropertyValueComponent } from './lib/resource-properties/property-value.component';
-import {
-  PropertyValuesWithFootnotesComponent
-} from './lib/resource-properties/property-values-with-footnotes.component';
+import { PropertyValuesWithFootnotesComponent } from './lib/resource-properties/property-values-with-footnotes.component';
 import { PropertyValuesComponent } from './lib/resource-properties/property-values.component';
 import { WithBreaksPipe } from './lib/resource-properties/with-breaks.pipe';
 
