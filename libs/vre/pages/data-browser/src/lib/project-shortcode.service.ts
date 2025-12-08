@@ -11,7 +11,7 @@ export class ProjectShortcodeService {
   getProjectShortcode(projectIri: string): Observable<string> {
     if (!this._cache.has(projectIri)) {
       const shortcode$ = this._adminApiService.getAdminProjectsIriProjectiri(projectIri).pipe(
-        map(response => response.project.shortcode as unknown as string),
+        map(response => response.project.shortname as unknown as string),
         shareReplay({ bufferSize: 1, refCount: true })
       );
       this._cache.set(projectIri, shortcode$);
