@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { FileRepresentationType } from '../representations';
+import { FileRepresentationType } from '../representations/file-representation.type';
 
 @Component({
   selector: 'app-create-resource-form-representation',

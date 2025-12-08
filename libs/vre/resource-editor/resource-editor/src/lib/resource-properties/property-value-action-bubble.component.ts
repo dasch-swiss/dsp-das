@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
-import { ResourceFetcherService, ResourceUtil } from '../representations';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
+import { ResourceUtil } from '../representations/resource.util';
 import { PropertyValueService } from './property-value.service';
 
 @Component({

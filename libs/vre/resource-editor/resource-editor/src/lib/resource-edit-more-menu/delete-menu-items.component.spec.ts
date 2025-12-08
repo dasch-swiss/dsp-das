@@ -5,7 +5,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
-import { ResourceFetcherService } from '../representations';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 import { DeleteMenuItemsComponent } from './delete-menu-items.component';
 
 // Helper function to create CanDoResponse mocks

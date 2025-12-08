@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { ResourceUtil } from '../representations';
+import { ResourceUtil } from '../representations/resource.util';
 import { JsLibPotentialError } from './JsLibPotentialError';
 import { PropertyValueService } from './property-value.service';
 

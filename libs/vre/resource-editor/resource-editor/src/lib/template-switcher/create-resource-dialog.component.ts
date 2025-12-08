@@ -4,7 +4,7 @@ import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
-import { ResourceFetcherService } from '../representations';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 
 export interface CreateResourceDialogProps {
   resourceType: string;

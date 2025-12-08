@@ -5,7 +5,7 @@ import { KnoraApiConnection, ReadResource, UpdateResourceMetadata } from '@dasch
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { TranslateService } from '@ngx-translate/core';
 import { finalize, switchMap } from 'rxjs';
-import { ResourceFetcherService } from '../representations';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 
 @Component({
   selector: 'app-edit-resource-label-dialog',

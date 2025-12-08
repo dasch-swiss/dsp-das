@@ -3,7 +3,8 @@ import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { FormValueGroup, propertiesTypeMapping } from '../resource-properties';
+import { FormValueGroup } from '../resource-properties/form-value-array.type';
+import { propertiesTypeMapping } from '../resource-properties/resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-value-creator',

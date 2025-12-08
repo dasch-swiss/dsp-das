@@ -2,7 +2,8 @@ import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { FormValueArray, propertiesTypeMapping } from '../resource-properties';
+import { FormValueArray } from '../resource-properties/form-value-array.type';
+import { propertiesTypeMapping } from '../resource-properties/resource-payloads-mapping';
 
 @Component({
   selector: 'app-create-resource-form-properties',

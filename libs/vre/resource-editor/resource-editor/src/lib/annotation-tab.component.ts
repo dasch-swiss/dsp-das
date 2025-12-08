@@ -3,7 +3,7 @@ import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { Subject, takeUntil } from 'rxjs';
-import { RegionService } from './representations';
+import { RegionService } from './representations/region.service';
 
 @Component({
   selector: 'app-annotation-tab',

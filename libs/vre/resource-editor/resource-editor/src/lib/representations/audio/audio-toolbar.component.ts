@@ -5,7 +5,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { firstValueFrom } from 'rxjs';
-import { CreateSegmentDialogComponent, CreateSegmentDialogProps } from '../../segment-support';
+import {
+  CreateSegmentDialogComponent,
+  CreateSegmentDialogProps,
+} from '../../segment-support/create-segment-dialog.component';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { MediaPlayerService } from '../video/media-player.service';
 

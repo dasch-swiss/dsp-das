@@ -4,7 +4,7 @@ import { DeleteValue, KnoraApiConnection, ReadResource, UpdateResource } from '@
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { TranslateService } from '@ngx-translate/core';
 import { tap } from 'rxjs';
-import { ResourceFetcherService } from '../representations';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 import { PropertyValueService } from './property-value.service';
 
 export interface DeleteValueDialogProps {

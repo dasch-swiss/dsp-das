@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UploadedFileResponse, UploadFileService } from '../representations';
+import { UploadedFileResponse } from '../representations/upload/upload-file-response.interface';
+import { UploadFileService } from '../representations/upload/upload-file.service';
 
 @Component({
   selector: 'app-uploaded-file',

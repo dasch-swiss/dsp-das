@@ -4,7 +4,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
-import { ResourceFetcherService } from '../representations';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 import { FormValueGroup } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';

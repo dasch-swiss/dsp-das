@@ -16,7 +16,8 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Subject, takeUntil } from 'rxjs';
-import { ResourceFetcherService, ResourceUtil } from './representations';
+import { ResourceFetcherService } from './representations/resource-fetcher.service';
+import { ResourceUtil } from './representations/resource.util';
 
 type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
 

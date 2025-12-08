@@ -1,7 +1,7 @@
 import { Component, inject, Input, OnChanges } from '@angular/core';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateService } from '@ngx-translate/core';
-import { PropertiesDisplayService } from '../resource-properties';
+import { PropertiesDisplayService } from '../resource-properties/properties-display.service';
 
 @Component({
   selector: 'app-properties-toggle',

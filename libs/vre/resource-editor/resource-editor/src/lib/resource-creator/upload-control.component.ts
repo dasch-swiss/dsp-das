@@ -1,6 +1,7 @@
 import { Component, Input, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
-import { FileRepresentationType, UploadedFileResponse } from '../representations';
+import { FileRepresentationType } from '../representations/file-representation.type';
+import { UploadedFileResponse } from '../representations/upload/upload-file-response.interface';
 
 @Component({
   selector: 'app-upload-control',

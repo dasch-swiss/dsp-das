@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { Constants, ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { sortByKeys } from '../resource-properties';
+import { sortByKeys } from '../resource-properties/sortByKeys';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 
 @Component({

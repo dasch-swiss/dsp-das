@@ -13,7 +13,9 @@ import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
-import { FileRepresentationType, UploadedFileResponse, UploadFileService } from '../representations';
+import { FileRepresentationType } from '../representations/file-representation.type';
+import { UploadedFileResponse } from '../representations/upload/upload-file-response.interface';
+import { UploadFileService } from '../representations/upload/upload-file.service';
 
 @Component({
   selector: 'app-upload',

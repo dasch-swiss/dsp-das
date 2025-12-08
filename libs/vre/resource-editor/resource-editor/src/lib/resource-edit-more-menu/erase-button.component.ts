@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, ViewContainerRef } from '@angul
 import { MatDialog } from '@angular/material/dialog';
 import { CanDoResponse, ReadResource } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
-import { EraseResourceDialogComponent } from '../resource-properties';
+import { EraseResourceDialogComponent } from '../resource-properties/erase-resource-dialog.component';
 
 @Component({
   selector: 'app-erase-button',

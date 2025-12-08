@@ -5,7 +5,7 @@ import { DeleteResource, KnoraApiConnection, ReadResource } from '@dasch-swiss/d
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
-import { ResourceFetcherService } from '../representations';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 
 @Component({
   selector: 'app-erase-resource-dialog',

@@ -6,7 +6,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ReadMovingImageFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { firstValueFrom } from 'rxjs';
-import { CreateSegmentDialogComponent, CreateSegmentDialogProps } from '../../segment-support';
+import {
+  CreateSegmentDialogComponent,
+  CreateSegmentDialogProps,
+} from '../../segment-support/create-segment-dialog.component';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { MediaPlayerService } from './media-player.service';

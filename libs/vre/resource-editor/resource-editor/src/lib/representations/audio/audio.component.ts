@@ -13,7 +13,8 @@ import { ReadAudioFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
-import { MediaControlService, SegmentsService } from '../../segment-support';
+import { MediaControlService } from '../../segment-support/media-control.service';
+import { SegmentsService } from '../../segment-support/segments.service';
 import { RepresentationService } from '../representation.service';
 import { MediaPlayerService } from '../video/media-player.service';
 

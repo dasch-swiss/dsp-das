@@ -4,7 +4,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { filterNull, UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { combineLatest, filter, map, Observable } from 'rxjs';
-import { ResourceFetcherService } from '../representations';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 
 @Component({
   selector: 'app-delete-menu-items',

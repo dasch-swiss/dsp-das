@@ -3,7 +3,7 @@ import { KnoraApiConnection, ReadResource, ReadResourceSequence } from '@dasch-s
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { expand, map, Observable, of, reduce, takeWhile } from 'rxjs';
-import { sortByKeys } from '../resource-properties';
+import { sortByKeys } from '../resource-properties/sortByKeys';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 
 @Component({

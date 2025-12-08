@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { FileRepresentationType } from '../representations/file-representation.type';
 import {
-  FileRepresentationType,
   iiifUrlValidator,
   infoJsonUrlValidatorAsync,
   isExternalHostValidator,
   previewImageUrlValidatorAsync,
-} from '../representations';
+} from '../representations/third-party-iiif/iiif-url-validator';
 
 @Component({
   selector: 'app-create-resource-form-image',

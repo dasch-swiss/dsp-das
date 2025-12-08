@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats } from '@angular/material/core';
-import { DateTime } from '../../resource-properties';
+import { DateTime } from '../../resource-properties/date-time';
 import { CustomDateAdapter } from './custom-date-adapter';
 
 const NATIVE_DATE_FORMATS: MatDateFormats = {

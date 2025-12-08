@@ -5,7 +5,7 @@ import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { map, Observable } from 'rxjs';
-import { ResourceFetcherService } from './representations';
+import { ResourceFetcherService } from './representations/resource-fetcher.service';
 
 @Component({
   selector: 'app-resource-info-bar',

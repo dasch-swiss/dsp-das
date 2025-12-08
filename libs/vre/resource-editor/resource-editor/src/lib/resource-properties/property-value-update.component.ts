@@ -1,7 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
 import { KnoraApiConnection, UpdateResource, UpdateValue } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '../representations';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 import { FormValueGroup } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';

@@ -7,7 +7,7 @@ import {
   ReadTextValueAsXml,
   ReadValue,
 } from '@dasch-swiss/dsp-js';
-import { JsLibPotentialError } from '../resource-properties';
+import { JsLibPotentialError } from '../resource-properties/JsLibPotentialError';
 
 @Component({
   selector: 'app-template-editor-switcher',

@@ -15,8 +15,11 @@ import {
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { finalize, switchMap, take } from 'rxjs';
-import { FileForm, FileRepresentationType, fileValueMapping } from '../representations';
-import { FormValueGroup, propertiesTypeMapping } from '../resource-properties';
+import { FileForm } from '../representations/file-form.type';
+import { FileRepresentationType } from '../representations/file-representation.type';
+import { fileValueMapping } from '../representations/file-value-mapping';
+import { FormValueGroup } from '../resource-properties/form-value-array.type';
+import { propertiesTypeMapping } from '../resource-properties/resource-payloads-mapping';
 import { CreateResourceFormInterface } from './create-resource-form.interface';
 
 @Component({
