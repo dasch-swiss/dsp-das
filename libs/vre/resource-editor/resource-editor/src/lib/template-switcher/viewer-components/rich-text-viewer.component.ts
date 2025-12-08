@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
 import { AddTargetBlankPipe, InternalLinkReplacerPipe } from '@dasch-swiss/vre/ui/ui';
-import { FootnoteDirective } from '../../resource-properties/footnotes/footnote.directive';
 import { FootnoteParserPipe } from '../../resource-properties/footnotes/footnote-parser.pipe';
+import { FootnoteDirective } from '../../resource-properties/footnotes/footnote.directive';
 
 @Component({
   selector: 'app-rich-text-viewer',

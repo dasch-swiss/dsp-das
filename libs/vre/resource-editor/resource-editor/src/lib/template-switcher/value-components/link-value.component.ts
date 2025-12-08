@@ -22,8 +22,8 @@ import {
   ResourceClassDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { ProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { EMPTY, expand, filter, finalize, Subject, switchMap, takeUntil } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';

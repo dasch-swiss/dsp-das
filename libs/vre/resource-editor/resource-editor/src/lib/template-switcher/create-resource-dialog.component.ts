@@ -6,8 +6,8 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
-import { CreateResourceFormComponent } from '../resource-creator/create-resource-form.component';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
+import { CreateResourceFormComponent } from '../resource-creator/create-resource-form.component';
 
 export interface CreateResourceDialogProps {
   resourceType: string;

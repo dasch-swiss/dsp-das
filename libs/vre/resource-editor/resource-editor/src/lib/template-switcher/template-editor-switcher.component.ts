@@ -10,8 +10,7 @@ import {
   ReadTextValueAsXml,
   ReadValue,
 } from '@dasch-swiss/dsp-js';
-import { CommonInputComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { CkEditorComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { CommonInputComponent, CkEditorComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';

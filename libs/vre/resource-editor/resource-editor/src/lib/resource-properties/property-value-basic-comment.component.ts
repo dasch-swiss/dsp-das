@@ -8,7 +8,16 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-property-value-basic-comment',
-  imports: [MatFormField, MatLabel, MatIcon, MatPrefix, CdkTextareaAutosize, MatInput, ReactiveFormsModule, TranslateModule],
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatIcon,
+    MatPrefix,
+    CdkTextareaAutosize,
+    MatInput,
+    ReactiveFormsModule,
+    TranslateModule,
+  ],
   template: ` <mat-form-field style="flex: 1; width: 100%; margin: 10px 0" subscriptSizing="dynamic">
     <mat-label>{{ 'resourceEditor.resourceProperties.comment' | translate }}</mat-label>
     @if (control.disabled) {

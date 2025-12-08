@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatError } from '@angular/material/form-field';
-import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
-import { TimeInputComponent } from '@dasch-swiss/vre/ui/ui';
+import { HumanReadableErrorPipe, TimeInputComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { startWith } from 'rxjs/operators';
 

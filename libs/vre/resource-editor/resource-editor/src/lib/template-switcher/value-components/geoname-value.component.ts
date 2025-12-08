@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatOption } from '@angular/material/core';
 import { MatError, MatFormField, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatOption } from '@angular/material/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { TranslateModule } from '@ngx-translate/core';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
 import { debounceTime, switchMap, tap } from 'rxjs';
 import { GeonameService, SearchPlace } from '../geoname.service';
 

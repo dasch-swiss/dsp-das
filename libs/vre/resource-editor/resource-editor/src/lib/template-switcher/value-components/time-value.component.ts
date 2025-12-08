@@ -4,8 +4,8 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats } from '
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 import { MatError, MatFormField, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
 import { DateTime } from '../../resource-properties/date-time';
 import { CustomDateAdapter } from './custom-date-adapter';
 
