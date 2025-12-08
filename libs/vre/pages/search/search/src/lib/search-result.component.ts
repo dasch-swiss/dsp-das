@@ -19,7 +19,7 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
         <app-resource-browser
           [data]="{ resources: resources, selectFirstResource: true }"
           [searchKeyword]="query"
-          [showProjectShortcode]="showProjectShortcode" />
+          [showProjectShortname]="showProjectShortname" />
       }
     }
   `,
@@ -30,7 +30,7 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
 export class SearchResultComponent implements OnChanges {
   @Input({ required: true }) query!: string;
   @Input() projectId?: string;
-  @Input() showProjectShortcode = false;
+  @Input() showProjectShortname = false;
   loading = true;
 
   resources$!: Observable<ReadResource[]>;

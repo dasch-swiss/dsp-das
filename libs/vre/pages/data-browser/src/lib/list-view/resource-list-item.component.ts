@@ -3,7 +3,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { map, Observable } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
-import { ProjectShortcodeService } from '../project-shortcode.service';
+import { ProjectShortnameService } from '../project-shortname.service';
 
 @Component({
   selector: 'app-resource-list-item',
@@ -18,8 +18,8 @@ import { ProjectShortcodeService } from '../project-shortcode.service';
       <div style="display: flex; align-items: center; min-height: 40px">
         <div style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
           <div style="color: black">
-            @if (showProjectShortcode && (projectShortcode$ | async); as shortcode) {
-              <span style="font-weight: 500; color: #555;">[{{ shortcode }}]</span>
+            @if (showProjectShortname && (projectShortname$ | async); as shortname) {
+              <span style="font-weight: 500; color: #555;">[{{ shortname }}]</span>
             }
             {{ resource.label }}
           </div>
@@ -72,7 +72,7 @@ import { ProjectShortcodeService } from '../project-shortcode.service';
 })
 export class ResourceListItemComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;
-  @Input() showProjectShortcode = false;
+  @Input() showProjectShortname = false;
 
   showCheckbox = false;
   foundIn: string[] = [];
@@ -91,11 +91,11 @@ export class ResourceListItemComponent implements OnInit {
     map(resources => resources.map(r => r.id).includes(this.resource.id) && this.multipleViewerService.selectMode)
   );
 
-  projectShortcode$!: Observable<string>;
+  projectShortname$!: Observable<string>;
 
   constructor(
     public readonly multipleViewerService: MultipleViewerService,
-    private readonly _projectShortcodeService: ProjectShortcodeService
+    private readonly _projectShortnameService: ProjectShortnameService
   ) {}
 
   ngOnInit() {
@@ -105,7 +105,7 @@ export class ResourceListItemComponent implements OnInit {
       this._searchInResourceProperty(searchKeyword);
     }
 
-    this.projectShortcode$ = this._projectShortcodeService.getProjectShortcode(this.resource.attachedToProject);
+    this.projectShortname$ = this._projectShortnameService.getProjectShortname(this.resource.attachedToProject);
   }
 
   onCheckboxChanged(event: MatCheckboxChange) {

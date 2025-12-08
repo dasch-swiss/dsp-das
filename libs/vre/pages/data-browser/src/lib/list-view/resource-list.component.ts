@@ -7,7 +7,7 @@ import { ReadResource } from '@dasch-swiss/dsp-js';
     @for (resource of resources; track resource) {
       <app-resource-list-item
         [resource]="resource"
-        [showProjectShortcode]="showProjectShortcode"
+        [showProjectShortname]="showProjectShortname"
         data-cy="resource-list-item" />
     }
   `,
@@ -15,5 +15,5 @@ import { ReadResource } from '@dasch-swiss/dsp-js';
 })
 export class ResourceListComponent {
   @Input({ required: true }) resources: ReadResource[] = [];
-  @Input() showProjectShortcode = false;
+  @Input() showProjectShortname = false;
 }

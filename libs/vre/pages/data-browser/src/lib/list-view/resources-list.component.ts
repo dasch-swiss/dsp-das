@@ -20,7 +20,7 @@ import { ResourceResultService } from '../resource-result.service';
         [numberOfAllResults]="resourceResultService.numberOfResults" />
     }
 
-    <app-resource-list [resources]="resources" [showProjectShortcode]="showProjectShortcode" />`,
+    <app-resource-list [resources]="resources" [showProjectShortname]="showProjectShortname" />`,
   styles: [
     `
       app-pager {
@@ -33,7 +33,7 @@ import { ResourceResultService } from '../resource-result.service';
 export class ResourcesListComponent {
   @Input({ required: true }) resources!: ReadResource[];
   @Input({ required: true }) showBackToFormButton!: boolean;
-  @Input() showProjectShortcode = false;
+  @Input() showProjectShortname = false;
 
   constructor(
     public resourceResultService: ResourceResultService,

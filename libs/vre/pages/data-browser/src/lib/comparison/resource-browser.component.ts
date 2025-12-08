@@ -10,7 +10,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
         <app-resources-list
           [resources]="data.resources"
           [showBackToFormButton]="showBackToFormButton"
-          [showProjectShortcode]="showProjectShortcode" />
+          [showProjectShortname]="showProjectShortname" />
       </as-split-area>
       <as-split-area [size]="70" cdkScrollable>
         <app-multiple-viewer />
@@ -24,7 +24,7 @@ export class ResourceBrowserComponent implements OnInit, OnChanges {
   @Input({ required: true }) data!: { resources: ReadResource[]; selectFirstResource: boolean };
   @Input() showBackToFormButton = false;
   @Input() searchKeyword?: string;
-  @Input() showProjectShortcode = false;
+  @Input() showProjectShortname = false;
 
   constructor(private readonly _multipleViewerService: MultipleViewerService) {}
 
