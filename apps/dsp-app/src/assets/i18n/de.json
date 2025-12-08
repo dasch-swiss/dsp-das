@@ -361,7 +361,9 @@
       "resourceListSelection": {
         "resourcesSelected": "{{count}} Ressourcen ausgewählt",
         "createLinkObject": "Ein Link-Objekt erstellen",
-        "createLinkObjectTooltip": "Ein Link-Objekt kann nur zwischen Ressourcen erstellt werden, die zum selben Projekt gehören."
+        "createLinkObjectTooltip": "Ein Link-Objekt kann nur zwischen Ressourcen erstellt werden, die zum selben Projekt gehören.",
+        "noResourcesSelected": "Keine Ressourcen ausgewählt",
+        "resourcesMustBeSameProject": "Die Ressourcen müssen zum selben Projekt gehören"
       },
       "resourcesList": {
         "backToSearchForm": "Zurück zum Suchformular"
@@ -583,7 +585,8 @@
       "checkingPermissionErase": "Prüfen, ob die Ressource gelöscht werden kann...",
       "eraseResource": "Endgültig löschen",
       "eraseResourceTooltip": "Ressource endgültig löschen. Dies kann nicht rückgängig gemacht werden.",
-      "noPermission": "Sie haben keine Berechtigung, diese Ressource zu löschen."
+      "noPermission": "Sie haben keine Berechtigung, diese Ressource zu löschen.",
+      "cannotDeleteIncomingLinks": "Die Ressource kann nicht gelöscht werden, da sie eingehende Links hat (siehe unten)."
     },
     "infoBar": {
       "resourceOfProject": "Ressource des Projekts",
