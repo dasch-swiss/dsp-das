@@ -9,8 +9,8 @@ import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ResourceFetcherService } from './representations/resource-fetcher.service';
-import { EditResourceLabelDialogComponent } from './resource-properties/edit-resource-label-dialog.component';
 import { ResourceInfoBarComponent } from './resource-info-bar.component';
+import { EditResourceLabelDialogComponent } from './resource-properties/edit-resource-label-dialog.component';
 import { ResourceToolbarComponent } from './resource-toolbar.component';
 
 @Component({
@@ -90,7 +90,15 @@ import { ResourceToolbarComponent } from './resource-toolbar.component';
     `,
   ],
   standalone: true,
-  imports: [AsyncPipe, MatButtonModule, MatIconModule, MatTooltipModule, TranslateModule, ResourceInfoBarComponent, ResourceToolbarComponent],
+  imports: [
+    AsyncPipe,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    TranslateModule,
+    ResourceInfoBarComponent,
+    ResourceToolbarComponent,
+  ],
 })
 export class ResourceHeaderComponent {
   @Input({ required: true }) resource!: DspResource;

@@ -78,7 +78,16 @@ import { PermissionInfoComponent } from './permission-info/permission-info.compo
     `,
   ],
   standalone: true,
-  imports: [ClipboardModule, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, RouterLink, TranslateModule, PermissionInfoComponent],
+  imports: [
+    ClipboardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatTooltipModule,
+    RouterLink,
+    TranslateModule,
+    PermissionInfoComponent,
+  ],
 })
 export class ResourceActionsComponent {
   @Input({ required: true }) resource!: ReadResource;

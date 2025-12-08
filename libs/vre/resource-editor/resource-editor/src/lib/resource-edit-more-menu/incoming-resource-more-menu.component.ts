@@ -46,7 +46,16 @@ import { EditLabelMenuItemComponent } from './edit-label-menu-item.component';
     `,
   ],
   standalone: true,
-  imports: [AsyncPipe, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, TranslateModule, DeleteMenuItemsComponent, EditLabelMenuItemComponent],
+  imports: [
+    AsyncPipe,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatTooltipModule,
+    TranslateModule,
+    DeleteMenuItemsComponent,
+    EditLabelMenuItemComponent,
+  ],
 })
 export class IncomingResourceMoreMenuComponent {
   @Input({ required: true }) resource!: ReadResource;

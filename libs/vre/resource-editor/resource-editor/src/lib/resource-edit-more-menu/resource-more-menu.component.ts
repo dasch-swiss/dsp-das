@@ -40,7 +40,15 @@ import { DeleteMenuItemsComponent } from './delete-menu-items.component';
     `,
   ],
   standalone: true,
-  imports: [AsyncPipe, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, TranslateModule, DeleteMenuItemsComponent],
+  imports: [
+    AsyncPipe,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatTooltipModule,
+    TranslateModule,
+    DeleteMenuItemsComponent,
+  ],
 })
 export class ResourceMoreMenuComponent {
   @Input({ required: true }) resource!: ReadResource;

@@ -13,8 +13,8 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponseError, Constants, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { ProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { ProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { filter, Subject, takeUntil } from 'rxjs';
 import { ResourceFetcherService } from './representations/resource-fetcher.service';

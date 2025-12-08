@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import {
   Cardinality,
   Constants,
@@ -12,11 +13,10 @@ import {
   ResourceClassDefinitionWithPropertyDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { MatButtonModule } from '@angular/material/button';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { CommonInputComponent, InvalidControlScrollDirective, LoadingButtonDirective } from '@dasch-swiss/vre/ui/ui';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { CommonInputComponent, InvalidControlScrollDirective, LoadingButtonDirective } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { finalize, switchMap, take } from 'rxjs';
 import { FileForm } from '../representations/file-form.type';
@@ -24,10 +24,10 @@ import { FileRepresentationType } from '../representations/file-representation.t
 import { fileValueMapping } from '../representations/file-value-mapping';
 import { FormValueGroup } from '../resource-properties/form-value-array.type';
 import { propertiesTypeMapping } from '../resource-properties/resource-payloads-mapping';
-import { CreateResourceFormInterface } from './create-resource-form.interface';
 import { CreateResourceFormFileComponent } from './create-resource-form-file.component';
-import { CreateResourceFormRowComponent } from './create-resource-form-row.component';
 import { CreateResourceFormPropertiesComponent } from './create-resource-form-properties.component';
+import { CreateResourceFormRowComponent } from './create-resource-form-row.component';
+import { CreateResourceFormInterface } from './create-resource-form.interface';
 
 @Component({
   selector: 'app-create-resource-form',

@@ -10,8 +10,8 @@ import {
 } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, UpdateResourceMetadata } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { CommonInputComponent, DialogHeaderComponent } from '@dasch-swiss/vre/shared';
-import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/ui';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { CommonInputComponent, DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, switchMap } from 'rxjs';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';

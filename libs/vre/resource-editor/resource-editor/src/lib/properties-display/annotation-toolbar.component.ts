@@ -12,8 +12,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { PermissionInfoComponent } from '../permission-info/permission-info.component';
 import { RegionService } from '../representations/region.service';
-import { ColorViewerComponent } from '../representations/viewers/color-viewer.component';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
+import { ColorViewerComponent } from '../representations/viewers/color-viewer.component';
 import { IncomingResourceMoreMenuComponent } from '../resource-edit-more-menu/incoming-resource-more-menu.component';
 
 @Component({

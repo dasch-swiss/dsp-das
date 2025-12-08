@@ -5,9 +5,9 @@ import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { Subject, takeUntil } from 'rxjs';
-import { RegionService } from './representations/region.service';
 import { AnnotationToolbarComponent } from './properties-display/annotation-toolbar.component';
 import { PropertiesDisplayComponent } from './properties-display/properties-display.component';
+import { RegionService } from './representations/region.service';
 import { ResourceInfoBarComponent } from './resource-info-bar.component';
 
 @Component({
@@ -52,7 +52,13 @@ import { ResourceInfoBarComponent } from './resource-info-bar.component';
   styles: ['.active {border: 1px solid} app-resource-info-bar {display: flex; flex-direction: row-reverse}'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [AsyncPipe, MatExpansionModule, AnnotationToolbarComponent, PropertiesDisplayComponent, ResourceInfoBarComponent],
+  imports: [
+    AsyncPipe,
+    MatExpansionModule,
+    AnnotationToolbarComponent,
+    PropertiesDisplayComponent,
+    ResourceInfoBarComponent,
+  ],
 })
 export class AnnotationTabComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;

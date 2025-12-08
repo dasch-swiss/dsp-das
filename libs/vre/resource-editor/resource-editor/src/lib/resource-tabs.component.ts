@@ -6,13 +6,13 @@ import { Constants, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CompoundService } from './compound/compound.service';
-import { RegionService } from './representations/region.service';
-import { SegmentsService } from './segment-support/segments.service';
 import { AnnotationTabComponent } from './annotation-tab.component';
+import { CompoundService } from './compound/compound.service';
 import { IncomingResourceHeaderComponent } from './incoming-resource-header.component';
 import { PropertiesDisplayComponent } from './properties-display/properties-display.component';
 import { PropertiesToggleComponent } from './properties-display/properties-toggle.component';
+import { RegionService } from './representations/region.service';
+import { SegmentsService } from './segment-support/segments.service';
 import { SegmentTabComponent } from './segment-tab.component';
 
 @Component({
@@ -101,7 +101,18 @@ import { SegmentTabComponent } from './segment-tab.component';
     `,
   ],
   standalone: true,
-  imports: [AsyncPipe, NgClass, MatBadgeModule, MatTabsModule, TranslateModule, AnnotationTabComponent, IncomingResourceHeaderComponent, PropertiesDisplayComponent, PropertiesToggleComponent, SegmentTabComponent],
+  imports: [
+    AsyncPipe,
+    NgClass,
+    MatBadgeModule,
+    MatTabsModule,
+    TranslateModule,
+    AnnotationTabComponent,
+    IncomingResourceHeaderComponent,
+    PropertiesDisplayComponent,
+    PropertiesToggleComponent,
+    SegmentTabComponent,
+  ],
 })
 export class ResourceTabsComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resource!: DspResource;

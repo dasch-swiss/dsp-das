@@ -12,8 +12,8 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { DragDropDirective } from '@dasch-swiss/vre/ui/ui';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { DragDropDirective } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 import { FileRepresentationType } from '../representations/file-representation.type';

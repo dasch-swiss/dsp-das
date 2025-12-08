@@ -41,7 +41,15 @@ import { LoadingMenuItemComponent } from './loading-menu-item.component';
     }
   `,
   standalone: true,
-  imports: [AsyncPipe, MatButtonModule, MatMenuModule, MatIconModule, MatTooltipModule, TranslateModule, LoadingMenuItemComponent],
+  imports: [
+    AsyncPipe,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    MatTooltipModule,
+    TranslateModule,
+    LoadingMenuItemComponent,
+  ],
 })
 export class DeleteButtonComponent {
   @Input({ required: true }) resourceCanBeDeleted$!: Observable<CanDoResponse>;

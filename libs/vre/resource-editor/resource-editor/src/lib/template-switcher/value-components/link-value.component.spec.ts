@@ -101,8 +101,8 @@ describe('LinkValueComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      declarations: [LinkValueComponent],
       imports: [
+        LinkValueComponent,
         ReactiveFormsModule,
         MatAutocompleteModule,
         MatFormFieldModule,
