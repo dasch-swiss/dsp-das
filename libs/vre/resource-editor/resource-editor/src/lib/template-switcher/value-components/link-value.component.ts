@@ -8,9 +8,12 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatOption } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatError, MatFormField, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import {
   KnoraApiConnection,
   ReadLinkValue,
@@ -19,12 +22,28 @@ import {
   ResourceClassDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
+import { ProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslateModule } from '@ngx-translate/core';
 import { EMPTY, expand, filter, finalize, Subject, switchMap, takeUntil } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
 import { LinkValueDataService } from './link-value-data.service';
 
 @Component({
   selector: 'app-link-value',
+  imports: [
+    MatFormField,
+    MatInput,
+    ReactiveFormsModule,
+    TranslateModule,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    ProgressIndicatorComponent,
+    MatHint,
+    MatError,
+    HumanReadableErrorPipe,
+  ],
   template: `
     <mat-form-field style="width: 100%">
       <input
@@ -69,7 +88,7 @@ import { LinkValueDataService } from './link-value-data.service';
     </mat-form-field>
   `,
   providers: [LinkValueDataService],
-  standalone: false,
+  standalone: true,
 })
 export class LinkValueComponent implements OnInit {
   private cancelPreviousSearchRequest$ = new Subject<void>();
