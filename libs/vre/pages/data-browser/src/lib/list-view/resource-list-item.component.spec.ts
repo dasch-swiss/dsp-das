@@ -3,14 +3,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
+import { ProjectShortnameService } from '../project-shortname.service';
 import { ResourceListItemComponent } from './resource-list-item.component';
 
 describe('ResourceListItemComponent', () => {
   let component: ResourceListItemComponent;
   let fixture: ComponentFixture<ResourceListItemComponent>;
   let mockMultipleViewerService: jest.Mocked<MultipleViewerService>;
+  let mockProjectShortnameService: jest.Mocked<ProjectShortnameService>;
   let selectedResourcesSubject: BehaviorSubject<ReadResource[]>;
 
   let mockResource: ReadResource;
@@ -22,6 +24,7 @@ describe('ResourceListItemComponent', () => {
     mockResource = {
       id: 'http://example.org/resource-1',
       label: 'Test Resource Label',
+      attachedToProject: 'http://example.org/project-1',
       properties: {
         'http://example.org/property-1': [
           {
@@ -41,6 +44,7 @@ describe('ResourceListItemComponent', () => {
     mockResource2 = {
       id: 'http://example.org/resource-2',
       label: 'Second Resource',
+      attachedToProject: 'http://example.org/project-2',
       properties: {},
     } as unknown as ReadResource;
 
@@ -53,11 +57,18 @@ describe('ResourceListItemComponent', () => {
       removeResources: jest.fn(),
     } as any;
 
+    mockProjectShortnameService = {
+      getProjectShortname: jest.fn().mockReturnValue(of('TEST-SHORTNAME')),
+    } as any;
+
     await TestBed.configureTestingModule({
       declarations: [ResourceListItemComponent],
       imports: [TranslateModule.forRoot()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [{ provide: MultipleViewerService, useValue: mockMultipleViewerService }],
+      providers: [
+        { provide: MultipleViewerService, useValue: mockMultipleViewerService },
+        { provide: ProjectShortnameService, useValue: mockProjectShortnameService },
+      ],
     })
       .overrideComponent(ResourceListItemComponent, {
         set: {
