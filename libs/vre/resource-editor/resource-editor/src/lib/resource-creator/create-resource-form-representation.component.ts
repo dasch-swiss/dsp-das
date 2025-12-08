@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
 import { FileRepresentationType } from '../representations/file-representation.type';
@@ -27,7 +27,13 @@ import { UploadControlComponent } from './upload-control.component';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CreateResourceFormRowComponent, UploadControlComponent, CreateResourceFormImageComponent, TranslateModule],
+  imports: [
+    CreateResourceFormRowComponent,
+    UploadControlComponent,
+    CreateResourceFormImageComponent,
+    TranslateModule,
+    ReactiveFormsModule,
+  ],
 })
 export class CreateResourceFormRepresentationComponent {
   @Input({ required: true }) control!: FormControl<string | null>;

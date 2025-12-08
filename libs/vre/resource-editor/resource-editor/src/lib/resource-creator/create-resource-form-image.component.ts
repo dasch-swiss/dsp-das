@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DoubleChipSelectorComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { FileRepresentationType } from '../representations/file-representation.type';
@@ -48,6 +48,7 @@ import { UploadControlComponent } from './upload-control.component';
     UploadControlComponent,
     IiifControlComponent,
     TranslateModule,
+    ReactiveFormsModule,
   ],
 })
 export class CreateResourceFormImageComponent {

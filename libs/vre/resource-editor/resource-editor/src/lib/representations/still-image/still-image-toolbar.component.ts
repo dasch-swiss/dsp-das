@@ -1,7 +1,6 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, Inject, inject, Input, Output, ViewContainerRef } from '@angular/core';
-import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon, MatIconRegistry } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -71,7 +70,6 @@ import { OpenSeaDragonService } from './open-sea-dragon.service';
     AsyncPipe,
     CompoundNavigationComponent,
     MatMenu,
-    MatButton,
     MatMenuItem,
     ClipboardModule,
   ],

@@ -28,7 +28,7 @@ import { AdvancedSearchComponent } from '@dasch-swiss/vre/pages/search/advanced-
 import { SearchComponents } from '@dasch-swiss/vre/pages/search/search';
 import { SystemComponents } from '@dasch-swiss/vre/pages/system/system';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/pages/user-settings/user';
-import { ResourceFetcherComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
+import { ClosingDialogComponent, ResourceFetcherComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -104,6 +104,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     }),
     // Resource editor standalone refactor
     ResourceFetcherComponent,
+    ClosingDialogComponent,
   ],
   providers: [
     AppConfigService,

@@ -1,8 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatError } from '@angular/material/form-field';
-import { ColorPickerComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
+import { ColorPickerComponent, HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { NullableEditorComponent } from '../nullable-editor.component';
 
 @Component({
