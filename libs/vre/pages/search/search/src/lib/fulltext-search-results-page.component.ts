@@ -7,7 +7,7 @@ import { map } from 'rxjs';
   selector: 'app-fulltext-search-results-page',
   template: `@if (query$ | async; as query) {
     <div class="content">
-      <app-search-result [query]="query" />
+      <app-search-result [query]="query" [showProjectShortcode]="true" />
     </div>
   } `,
   standalone: false,

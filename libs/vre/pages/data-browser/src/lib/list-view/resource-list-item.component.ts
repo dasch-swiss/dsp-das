@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { map, shareReplay, switchMap } from 'rxjs';
+import { map, Observable, shareReplay } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 
 @Component({
@@ -18,7 +18,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
       <div style="display: flex; align-items: center; min-height: 40px">
         <div style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
           <div style="color: black">
-            @if (projectShortcode$ | async; as shortcode) {
+            @if (showProjectShortcode && (projectShortcode$ | async); as shortcode) {
               <span style="font-weight: 500; color: #555;">[{{ shortcode }}]</span>
             }
             {{ resource.label }}
@@ -72,6 +72,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 })
 export class ResourceListItemComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;
+  @Input() showProjectShortcode = false;
 
   showCheckbox = false;
   foundIn: string[] = [];
@@ -90,12 +91,7 @@ export class ResourceListItemComponent implements OnInit {
     map(resources => resources.map(r => r.id).includes(this.resource.id) && this.multipleViewerService.selectMode)
   );
 
-  projectShortcode$ = this._adminApiService
-    .getAdminProjectsIriProjectiri(this.resource.attachedToProject)
-    .pipe(
-      map(response => response.project.shortcode as unknown as string),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
+  projectShortcode$!: Observable<string>;
 
   constructor(
     public readonly multipleViewerService: MultipleViewerService,
@@ -108,6 +104,11 @@ export class ResourceListItemComponent implements OnInit {
       this._searchInResourceLabel(searchKeyword);
       this._searchInResourceProperty(searchKeyword);
     }
+
+    this.projectShortcode$ = this._adminApiService.getAdminProjectsIriProjectiri(this.resource.attachedToProject).pipe(
+      map(response => response.project.shortcode as unknown as string),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
   }
 
   onCheckboxChanged(event: MatCheckboxChange) {
