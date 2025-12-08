@@ -5,10 +5,16 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/con
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { take } from 'rxjs';
 import { CompoundService } from './compound/compound.service';
+import { CompoundViewerComponent } from './compound/compound-viewer.component';
 import { getFileValue } from './representations/get-file-value';
 import { RegionService } from './representations/region.service';
 import { PropertiesDisplayService } from './resource-properties/properties-display.service';
 import { SegmentsService } from './segment-support/segments.service';
+import { ResourceHeaderComponent } from './resource-header.component';
+import { ResourceLegalComponent } from './resource-legal.component';
+import { ResourceRepresentationComponent } from './resource-representation.component';
+import { ResourceRestrictionComponent } from './resource-restriction.component';
+import { ResourceTabsComponent } from './resource-tabs.component';
 
 @Component({
   selector: 'app-resource',
@@ -27,7 +33,8 @@ import { SegmentsService } from './segment-support/segments.service';
     <app-resource-tabs [resource]="resource" />
   `,
   providers: [CompoundService, PropertiesDisplayService, RegionService, SegmentsService],
-  standalone: false,
+  standalone: true,
+  imports: [CompoundViewerComponent, ResourceHeaderComponent, ResourceLegalComponent, ResourceRepresentationComponent, ResourceRestrictionComponent, ResourceTabsComponent],
 })
 export class ResourceComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

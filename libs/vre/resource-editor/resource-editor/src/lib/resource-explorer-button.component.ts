@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherDialogComponent } from './resource-fetcher-dialog.component';
 
@@ -15,7 +17,8 @@ import { ResourceFetcherDialogComponent } from './resource-fetcher-dialog.compon
     top: -15px;">
     <mat-icon>arrow_circle_right</mat-icon>
   </button>`,
-  standalone: false,
+  standalone: true,
+  imports: [MatButtonModule, MatIconModule],
   styles: [
     `
       :host {

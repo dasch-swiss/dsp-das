@@ -1,10 +1,14 @@
 import { ENTER, TAB } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInput, MatChipInputEvent } from '@angular/material/chips';
-import { PaginatedApiService } from '@dasch-swiss/vre/shared/app-common';
-import { TranslateService } from '@ngx-translate/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipInput, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { HumanReadableErrorPipe, PaginatedApiService } from '@dasch-swiss/vre/shared/app-common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -60,7 +64,18 @@ import { finalize } from 'rxjs/operators';
       }
     </mat-form-field>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatChipsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    HumanReadableErrorPipe,
+  ],
 })
 export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
   @Input() control!: FormControl<string[] | null>;
