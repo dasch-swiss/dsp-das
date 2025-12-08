@@ -36,7 +36,7 @@ export class UploadControlComponent implements ControlValueAccessor {
   loading = false;
 
   get control() {
-    return this.ngControl['form'] as FormControl<string>;
+    return this.ngControl.control as FormControl<string>;
   }
 
   onChange!: (value: any) => void;

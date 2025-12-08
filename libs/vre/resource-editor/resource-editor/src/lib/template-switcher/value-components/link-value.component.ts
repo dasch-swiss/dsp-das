@@ -25,8 +25,8 @@ import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/co
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
-import { EMPTY, expand, filter, finalize, Subject, switchMap, takeUntil } from 'rxjs';
-import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
+import { EMPTY, expand, filter, finalize, from, Subject, switchMap, takeUntil } from 'rxjs';
+import type { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
 import { LinkValueDataService } from './link-value-data.service';
 
 @Component({
@@ -140,20 +140,24 @@ export class LinkValueComponent implements OnInit {
   openCreateResourceDialog(event: any, resourceClassIri: string, resourceType: string) {
     let myResourceId: string;
     event.stopPropagation();
-    this._dialog
-      .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
-        ...DspDialogConfig.dialogDrawerConfig(
-          {
-            resourceType,
-            resourceClassIri,
-          },
-          true
-        ),
-        minWidth: 800,
-        viewContainerRef: this._viewContainerRef,
-      })
-      .afterClosed()
+
+    from(import('../create-resource-dialog.component').then(m => m.CreateResourceDialogComponent))
       .pipe(
+        switchMap(CreateResourceDialogComponent =>
+          this._dialog
+            .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
+              ...DspDialogConfig.dialogDrawerConfig(
+                {
+                  resourceType,
+                  resourceClassIri,
+                },
+                true
+              ),
+              minWidth: 800,
+              viewContainerRef: this._viewContainerRef,
+            })
+            .afterClosed()
+        ),
         filter(resourceId => {
           if (!resourceId) {
             this.control.reset();
