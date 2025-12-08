@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { map, Observable, shareReplay } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
+import { ProjectShortcodeService } from '../project-shortcode.service';
 
 @Component({
   selector: 'app-resource-list-item',
@@ -95,7 +95,7 @@ export class ResourceListItemComponent implements OnInit {
 
   constructor(
     public readonly multipleViewerService: MultipleViewerService,
-    private readonly _adminApiService: AdminAPIApiService
+    private readonly _projectShortcodeService: ProjectShortcodeService
   ) {}
 
   ngOnInit() {
@@ -105,10 +105,7 @@ export class ResourceListItemComponent implements OnInit {
       this._searchInResourceProperty(searchKeyword);
     }
 
-    this.projectShortcode$ = this._adminApiService.getAdminProjectsIriProjectiri(this.resource.attachedToProject).pipe(
-      map(response => response.project.shortcode as unknown as string),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
+    this.projectShortcode$ = this._projectShortcodeService.getProjectShortcode(this.resource.attachedToProject);
   }
 
   onCheckboxChanged(event: MatCheckboxChange) {
