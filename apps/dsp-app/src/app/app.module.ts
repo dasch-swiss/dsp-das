@@ -9,7 +9,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { GrafanaFaroService, PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import {
@@ -38,7 +37,7 @@ import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segme
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
+import { DatePickerComponents, provideCalendarDateAdapter } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import { StringLiteralComponents } from '@dasch-swiss/vre/ui/string-literal';
@@ -68,7 +67,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   declarations: [
     AppComponent,
     CookieBannerComponent,
-    ...CommonToMoveComponents,
     ...DataBrowserComponents,
     ...ListComponents,
     ...OntologyComponents,
@@ -80,9 +78,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...ResourcePropertiesComponents,
     ...SearchComponents,
     ...SegmentSupportComponents,
-    ...SystemComponents,
     ...TemplateSwitcherComponents,
-    ...UserComponents,
   ],
   imports: [
     AdvancedSearchComponent,
@@ -100,7 +96,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     HttpClientModule,
     IMaskModule,
     MaterialModule,
-    MatJDNConvertibleCalendarDateAdapterModule,
     MatRippleModule,
     MatStepperModule,
     NgxSkeletonLoaderModule,
@@ -109,6 +104,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...UiStandaloneComponents,
     ...DatePickerComponents,
     ...ProgressIndicatorComponents,
+    ...CommonToMoveComponents,
+    ...SystemComponents,
+    ...UserComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {
@@ -180,6 +178,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       return initializerFn();
     }),
     LocalizationService,
+    ...provideCalendarDateAdapter(),
   ],
   bootstrap: [AppComponent],
 })

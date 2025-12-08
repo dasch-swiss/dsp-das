@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
         [matTooltip]="
           resourceCanBeDeleted.canDo
             ? ('resourceEditor.moreMenu.moveToTrash' | translate)
-            : resourceCanBeDeleted.cannotDoReason || ('resourceEditor.moreMenu.checkingPermission' | translate)
+            : ('resourceEditor.moreMenu.cannotDeleteIncomingLinks' | translate)
         "
         matTooltipPosition="above"
         [disabled]="!resourceCanBeDeleted.canDo"
@@ -41,8 +41,8 @@ export class DeleteButtonComponent {
   @Output() deleted = new EventEmitter<void>();
 
   constructor(
-    private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef
+    private readonly _dialog: MatDialog,
+    private readonly _viewContainerRef: ViewContainerRef
   ) {}
 
   deleteResource() {

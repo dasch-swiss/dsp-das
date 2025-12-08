@@ -71,6 +71,13 @@ import { MediaPlayerService } from './media-player.service';
       </button>
     </div>
   </mat-toolbar-row>`,
+  styles: [
+    `
+      .mat-mdc-button-base .mat-icon {
+        min-height: 0;
+      }
+    `,
+  ],
   standalone: false,
 })
 export class VideoToolbarComponent {
@@ -88,12 +95,12 @@ export class VideoToolbarComponent {
   play = false;
 
   constructor(
-    private _dialog: MatDialog,
-    private _domSanitizer: DomSanitizer,
-    public mediaPlayer: MediaPlayerService,
-    private _matIconRegistry: MatIconRegistry,
-    private _viewContainerRef: ViewContainerRef,
-    public resourceFetcherService: ResourceFetcherService
+    private readonly _dialog: MatDialog,
+    private readonly _domSanitizer: DomSanitizer,
+    public readonly mediaPlayer: MediaPlayerService,
+    private readonly _matIconRegistry: MatIconRegistry,
+    private readonly _viewContainerRef: ViewContainerRef,
+    public readonly resourceFetcherService: ResourceFetcherService
   ) {
     this._setupCssMaterialIcon();
   }

@@ -312,7 +312,7 @@
         "type": "Property type",
         "name": "Property name",
         "labelPlaceholder": "Property label",
-        "commentPlaceholder": "Comment",
+        "commentPlaceholder": "Description",
         "selectResourceClass": "Select resource class",
         "selectList": "Select list"
       },
@@ -327,7 +327,7 @@
         "name": "Class name",
         "patternError": "This pattern is not supported",
         "labelPlaceholder": "Label",
-        "commentPlaceholder": "Comment"
+        "commentPlaceholder": "Description"
       },
       "service": {
         "classCreated": "Successfully created the class {{classLabel}}."
@@ -361,7 +361,9 @@
       "resourceListSelection": {
         "resourcesSelected": "{{count}} resources selected",
         "createLinkObject": "Create a link object",
-        "createLinkObjectTooltip": "A link object can be created only between resources belonging to the same project."
+        "createLinkObjectTooltip": "A link object can be created only between resources belonging to the same project.",
+        "noResourcesSelected": "No resources selected",
+        "resourcesMustBeSameProject": "Resources must be from the same project"
       },
       "resourcesList": {
         "backToSearchForm": "Back to search form"
@@ -414,7 +416,8 @@
       "checkingPermissionErase": "Checking if resource can be deleted...",
       "eraseResource": "Erase permanently",
       "eraseResourceTooltip": "Erase resource permanently. This cannot be undone.",
-      "noPermission": "You do not have permission to delete this resource."
+      "noPermission": "You do not have permission to delete this resource.",
+      "cannotDeleteIncomingLinks": "The resource cannot be deleted because it has incoming links (see below)."
     },
     "infoBar": {
       "resourceOfProject": "Resource of the project",
@@ -552,8 +555,8 @@
       "tooltip": "Resource permissions",
       "projectAdmin": "Project Admin",
       "projectMember": "Project Member",
-      "knownUser": "Known User",
-      "unknownUser": "Unknown User",
+      "knownUser": "Logged in",
+      "unknownUser": "Logged out",
       "usersPermissions": "Your permissions",
       "interactions": {
         "restrictedView": "Restricted view permission (RV)",
@@ -669,6 +672,10 @@
         "datePlaceholder": "Click to select a date",
         "time": "Time"
       },
+      "geonameValue": {
+        "placeholder": "Search for a location...",
+        "label": "Location"
+      },
       "example": "e.g."
     }
   },
@@ -699,7 +706,8 @@
         "description": "Description"
       },
       "errors": {
-        "crossProjectLink": "This field contains links to resources from other projects. Only links to resources within the current project are allowed."
+        "crossProjectLink": "This field contains links to resources from other projects. Only links to resources within the current project are allowed.",
+        "badLinks": "Bad links:"
       },
       "status": {
         "active": "Active",

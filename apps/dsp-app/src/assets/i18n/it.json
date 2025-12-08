@@ -175,7 +175,7 @@
         "sortProjectName": "Nome del progetto",
         "statusDeactivated": "Disattivato",
         "createNew": "Crea nuovo progetto",
-        "projectAdmin": "Amministratore del progetto",
+        "projectAdmin": "Responsabile amministrativo/a del progetto",
         "edit": "Modifica informazioni del progetto",
         "reactivate": "Riattiva il progetto",
         "deactivate": "Disattiva il progetto",
@@ -312,7 +312,7 @@
         "type": "Tipo di proprietà",
         "name": "Nome della proprietà",
         "labelPlaceholder": "Etichetta della proprietà",
-        "commentPlaceholder": "Commento",
+        "commentPlaceholder": "Descrizione",
         "selectResourceClass": "Seleziona classe di risorsa",
         "selectList": "Seleziona lista"
       },
@@ -361,7 +361,9 @@
       "resourceListSelection": {
         "resourcesSelected": "{{count}} risorse selezionate",
         "createLinkObject": "Crea un oggetto di collegamento",
-        "createLinkObjectTooltip": "Un oggetto di collegamento può essere creato solo tra risorse appartenenti allo stesso progetto."
+        "createLinkObjectTooltip": "Un oggetto di collegamento può essere creato solo tra risorse appartenenti allo stesso progetto.",
+        "noResourcesSelected": "Nessuna risorsa selezionata",
+        "resourcesMustBeSameProject": "Le risorse devono appartenere allo stesso progetto"
       },
       "resourcesList": {
         "backToSearchForm": "Torna al modulo di ricerca"
@@ -414,7 +416,8 @@
       "checkingPermissionErase": "Verifica se la risorsa può essere eliminata...",
       "eraseResource": "Elimina definitivamente",
       "eraseResourceTooltip": "Elimina definitivamente la risorsa. Questa azione non può essere annullata.",
-      "noPermission": "Non hai il permesso di eliminare questa risorsa."
+      "noPermission": "Non hai il permesso di eliminare questa risorsa.",
+      "cannotDeleteIncomingLinks": "La risorsa non può essere eliminata perché ha link in entrata (vedi sotto)."
     },
     "infoBar": {
       "resourceOfProject": "Risorsa del progetto",
@@ -550,10 +553,10 @@
     "permissionInfo": {
       "label": "Permessi",
       "tooltip": "Permessi della risorsa",
-      "projectAdmin": "Amministratore del progetto",
+      "projectAdmin": "Responsabile amministrativo/a del progetto",
       "projectMember": "Membro del progetto",
-      "knownUser": "Utente conosciuto",
-      "unknownUser": "Utente sconosciuto",
+      "knownUser": "Connesso",
+      "unknownUser": "Disconnesso",
       "usersPermissions": "I tuoi permessi",
       "interactions": {
         "restrictedView": "Permesso di visualizzazione limitata (RV)",
@@ -669,6 +672,10 @@
         "datePlaceholder": "Clicca per selezionare una data",
         "time": "Ora"
       },
+      "geonameValue": {
+        "placeholder": "Cerca una località...",
+        "label": "Località"
+      },
       "example": "es."
     }
   },
@@ -699,7 +706,8 @@
         "description": "Descrizione"
       },
       "errors": {
-        "crossProjectLink": "Questo campo contiene link a risorse di altri progetti. Sono consentiti solo link a risorse all'interno del progetto corrente."
+        "crossProjectLink": "Questo campo contiene link a risorse di altri progetti. Sono consentiti solo link a risorse all'interno del progetto corrente.",
+        "badLinks": "Link non validi:"
       },
       "status": {
         "active": "Attivo",
