@@ -79,7 +79,7 @@ export class ResourceActionsComponent {
 
   constructor(
     protected notification: NotificationService,
-    private _resourceService: ResourceService
+    private readonly _resourceService: ResourceService
   ) {}
 
   getResourceLink(): string[] {

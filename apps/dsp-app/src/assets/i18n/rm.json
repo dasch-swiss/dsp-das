@@ -312,7 +312,7 @@
         "type": "Property type",
         "name": "Property name",
         "labelPlaceholder": "Property label",
-        "commentPlaceholder": "Comment",
+        "commentPlaceholder": "Description",
         "selectResourceClass": "Select resource class",
         "selectList": "Select list"
       },
@@ -671,6 +671,10 @@
         "date": "Date",
         "datePlaceholder": "Click to select a date",
         "time": "Time"
+      },
+      "geonameValue": {
+        "placeholder": "Search for a location...",
+        "label": "Location"
       },
       "example": "e.g."
     }

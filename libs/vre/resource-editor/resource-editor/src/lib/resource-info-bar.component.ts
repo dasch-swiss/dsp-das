@@ -60,8 +60,8 @@ export class ResourceInfoBarComponent implements OnChanges {
   readonly RouteConstants = RouteConstants;
 
   constructor(
-    private _resourceFetcherService: ResourceFetcherService,
-    private _projectApiService: ProjectApiService
+    private readonly _resourceFetcherService: ResourceFetcherService,
+    private readonly _projectApiService: ProjectApiService
   ) {}
 
   ngOnChanges() {
