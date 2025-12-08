@@ -1,9 +1,13 @@
 import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { Segment } from './segment';
 import { SegmentsService } from './segments.service';
+import { TimeFormatPipe } from './time-format.pipe';
 
 @Component({
   selector: 'app-segment-tooltip',
+  imports: [MatIconButton, MatIcon, TimeFormatPipe],
   template: ` <div class="tooltip">
     <div class="mat-h5" style="margin-bottom: 0!important">
       <div>{{ segment.label }}</div>
@@ -25,7 +29,7 @@ import { SegmentsService } from './segments.service';
       }
     `,
   ],
-  standalone: false,
+  standalone: true,
 })
 export class SegmentTooltipComponent {
   segment!: Segment;
