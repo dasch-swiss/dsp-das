@@ -3,7 +3,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherDialogComponent } from './resource-fetcher-dialog.component';
+import { from } from 'rxjs';
+import type { ResourceFetcherDialogComponent } from './resource-fetcher-dialog.component';
 
 @Component({
   selector: 'app-resource-explorer-button',
@@ -32,9 +33,13 @@ export class ResourceExplorerButtonComponent {
   @Input({ required: true }) resourceIri!: string;
   constructor(private readonly _dialog: MatDialog) {}
   tryDialog() {
-    this._dialog.open(ResourceFetcherDialogComponent, {
-      ...DspDialogConfig.dialogDrawerConfig({ resourceIri: this.resourceIri }, true),
-      width: `${1200 - this._dialog.openDialogs.length * 40}px`,
-    });
+    from(import('./resource-fetcher-dialog.component').then(m => m.ResourceFetcherDialogComponent)).subscribe(
+      ResourceFetcherDialogComponent => {
+        this._dialog.open(ResourceFetcherDialogComponent, {
+          ...DspDialogConfig.dialogDrawerConfig({ resourceIri: this.resourceIri }, true),
+          width: `${1200 - this._dialog.openDialogs.length * 40}px`,
+        });
+      }
+    );
   }
 }
