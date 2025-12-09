@@ -3,16 +3,13 @@ import { Component, Inject, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import {
-  DataBrowserPageService,
-  MultipleViewerService,
-  ResourcesListComponent,
-} from '@dasch-swiss/vre/pages/data-browser';
+import { MultipleViewerService, ResourcesListComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { OntologyService, ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { CenteredMessageComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { combineLatest, first, map, Observable, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
+import { DataBrowserPageService } from '../../data-browser-page.service';
 import { ProjectPageService } from '../../project-page.service';
 
 @Component({

@@ -5,8 +5,8 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { DataBrowserPageService } from '@dasch-swiss/vre/pages/data-browser';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DataBrowserPageService } from '../../data-browser-page.service';
 import {
   combineLatest,
   filter,
