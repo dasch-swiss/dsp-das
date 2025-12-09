@@ -13,7 +13,13 @@ import { ProjectPageService } from '../project-page.service';
 @Component({
   selector: 'app-projects-sidenav-ontologies',
   standalone: true,
-  imports: [AsyncPipe, MatExpansionModule, MatTooltipModule, ResourceClassSidenavComponent, AppProgressIndicatorComponent],
+  imports: [
+    AsyncPipe,
+    MatExpansionModule,
+    MatTooltipModule,
+    ResourceClassSidenavComponent,
+    AppProgressIndicatorComponent,
+  ],
   template: `
     @if (projectOntologies$ | async; as projectOntologies) {
       @if (projectOntologies.length === 0) {
