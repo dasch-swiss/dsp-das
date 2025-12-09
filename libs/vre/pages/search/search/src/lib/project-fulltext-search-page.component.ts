@@ -9,9 +9,9 @@ import { MatFormField, MatSuffix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { SearchTipsComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { TranslateModule } from '@ngx-translate/core';
 import { map, startWith, Subject } from 'rxjs';
 import { SearchResultComponent } from './search-result.component';
 
