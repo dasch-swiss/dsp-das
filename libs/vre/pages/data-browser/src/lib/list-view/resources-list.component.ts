@@ -2,11 +2,11 @@ import { Component, Input } from '@angular/core';
 import { MatAnchor } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
 import { ResourceListComponent } from './resource-list.component';
 
 @Component({
