@@ -20,7 +20,6 @@ import {
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/core/config';
 import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
-import { DataBrowserComponents } from '@dasch-swiss/vre/pages/data-browser';
 import { ListComponents } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyComponents } from '@dasch-swiss/vre/pages/ontology/ontology';
 import { ProjectComponents } from '@dasch-swiss/vre/pages/project/project';
@@ -61,7 +60,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   declarations: [
     AppComponent,
     CookieBannerComponent,
-    ...DataBrowserComponents,
     ...ListComponents,
     ...OntologyComponents,
     ...ProjectComponents,

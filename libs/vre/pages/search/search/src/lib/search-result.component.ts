@@ -1,11 +1,17 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges } from '@angular/core';
 import { IFulltextSearchParams, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
+import { ResourceBrowserComponent, ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
+import { CenteredBoxComponent } from '@dasch-swiss/vre/ui/ui';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { combineLatest, map, Observable, switchMap } from 'rxjs';
+import { NoResultsFoundComponent } from './no-results-found.component';
 
 @Component({
   selector: 'app-search-result',
+  standalone: true,
+  imports: [AsyncPipe, CenteredBoxComponent, NoResultsFoundComponent, ResourceBrowserComponent, AppProgressIndicatorComponent],
   template: `
     @if (loading) {
       <app-progress-indicator />
@@ -20,7 +26,6 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
       }
     }
   `,
-  standalone: false,
   providers: [ResourceResultService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
