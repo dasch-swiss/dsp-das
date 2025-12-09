@@ -2,7 +2,6 @@ import { AsyncPipe } from '@angular/common';
 import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import {
@@ -12,6 +11,7 @@ import {
 } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { TranslateModule } from '@ngx-translate/core';
 import { DataBrowserPageService } from './data-browser-page.service';
 import { ProjectPageService } from './project-page.service';
 import { ResourcesListFetcherComponent } from './sidenav/resource-class-sidenav/resources-list-fetcher.component';

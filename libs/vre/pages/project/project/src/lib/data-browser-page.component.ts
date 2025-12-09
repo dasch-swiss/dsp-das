@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AngularSplitModule } from 'angular-split';
 import { MultipleViewerService } from '@dasch-swiss/vre/pages/data-browser';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { AngularSplitModule } from 'angular-split';
 import { DataBrowserPageService } from './data-browser-page.service';
 import { ProjectSidenavComponent } from './sidenav/project-sidenav.component';
 
