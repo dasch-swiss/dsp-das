@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminAPIApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateModule } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { LicensesEnabledTableComponent } from './licenses-enabled-table.component';
@@ -11,6 +12,7 @@ describe('LicensesEnabledTableComponent - Optimistic Updates', () => {
   let component: LicensesEnabledTableComponent;
   let fixture: ComponentFixture<LicensesEnabledTableComponent>;
   let mockAdminApiService: jest.Mocked<AdminAPIApiService>;
+  let mockNotificationService: jest.Mocked<NotificationService>;
 
   const mockProject = {
     shortcode: '0001',
@@ -39,10 +41,17 @@ describe('LicensesEnabledTableComponent - Optimistic Updates', () => {
       putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriDisable: jest.fn().mockReturnValue(of({})),
     } as any;
 
+    mockNotificationService = {
+      openSnackBar: jest.fn(),
+    } as any;
+
     await TestBed.configureTestingModule({
       declarations: [LicensesEnabledTableComponent],
       imports: [TranslateModule.forRoot()],
-      providers: [{ provide: AdminAPIApiService, useValue: mockAdminApiService }],
+      providers: [
+        { provide: AdminAPIApiService, useValue: mockAdminApiService },
+        { provide: NotificationService, useValue: mockNotificationService },
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
@@ -53,7 +62,8 @@ describe('LicensesEnabledTableComponent - Optimistic Updates', () => {
   });
 
   describe('onLicenseToggle', () => {
-    it('should immediately update local state when checkbox is checked', () => {
+    it('should create new license array without mutating input when checkbox is checked', () => {
+      const originalLicenses = component.licenses;
       const license = component.licenses[0];
       const event = {
         checked: true,
@@ -63,10 +73,17 @@ describe('LicensesEnabledTableComponent - Optimistic Updates', () => {
 
       component.onLicenseToggle(event, license.id);
 
-      expect(license.isEnabled).toBe(true);
+      // Should create new array reference
+      expect(component.licenses).not.toBe(originalLicenses);
+      // Updated license should have new state
+      const updatedLicense = component.licenses.find(l => l.id === license.id);
+      expect(updatedLicense?.isEnabled).toBe(true);
+      // Original license object should remain unchanged
+      expect(license.isEnabled).toBe(false);
     });
 
-    it('should immediately update local state when checkbox is unchecked', () => {
+    it('should create new license array without mutating input when checkbox is unchecked', () => {
+      const originalLicenses = component.licenses;
       const license = component.licenses[1];
       const event = {
         checked: false,
@@ -76,20 +93,30 @@ describe('LicensesEnabledTableComponent - Optimistic Updates', () => {
 
       component.onLicenseToggle(event, license.id);
 
-      expect(license.isEnabled).toBe(false);
+      // Should create new array reference
+      expect(component.licenses).not.toBe(originalLicenses);
+      // Updated license should have new state
+      const updatedLicense = component.licenses.find(l => l.id === license.id);
+      expect(updatedLicense?.isEnabled).toBe(false);
+      // Original license object should remain unchanged
+      expect(license.isEnabled).toBe(true);
+    });
+
+    it('should trigger change detection after optimistic update', () => {
+      const license = component.licenses[0];
+      const event = {
+        checked: true,
+      } as MatCheckboxChange;
+      const cdrSpy = jest.spyOn(component['_cdr'], 'markForCheck');
+
+      component.onLicenseToggle(event, license.id);
+
+      expect(cdrSpy).toHaveBeenCalled();
     });
   });
 
-  describe('enable', () => {
-    it('should not emit refresh on successful API call', () => {
-      const refreshSpy = jest.spyOn(component.refresh, 'emit');
-
-      component.enable('http://creativecommons.org/licenses/by/4.0/');
-
-      expect(refreshSpy).not.toHaveBeenCalled();
-    });
-
-    it('should emit refresh on API error to revert optimistic update', () => {
+  describe('error handling', () => {
+    it('should show notification and refresh on enable API error', () => {
       mockAdminApiService.putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriEnable.mockReturnValue(
         throwError(() => new Error('API Error'))
       );
@@ -97,12 +124,11 @@ describe('LicensesEnabledTableComponent - Optimistic Updates', () => {
 
       component.enable('http://creativecommons.org/licenses/by/4.0/');
 
+      expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith('Failed to enable license. Please try again.');
       expect(refreshSpy).toHaveBeenCalled();
     });
-  });
 
-  describe('disable', () => {
-    it('should emit refresh on API error to revert optimistic update', () => {
+    it('should show notification and refresh on disable API error', () => {
       mockAdminApiService.putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriDisable.mockReturnValue(
         throwError(() => new Error('API Error'))
       );
@@ -110,7 +136,17 @@ describe('LicensesEnabledTableComponent - Optimistic Updates', () => {
 
       component.disable('http://creativecommons.org/licenses/by-sa/4.0/');
 
+      expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith('Failed to disable license. Please try again.');
       expect(refreshSpy).toHaveBeenCalled();
+    });
+
+    it('should not emit refresh or show notification on successful API call', () => {
+      const refreshSpy = jest.spyOn(component.refresh, 'emit');
+
+      component.enable('http://creativecommons.org/licenses/by/4.0/');
+
+      expect(refreshSpy).not.toHaveBeenCalled();
+      expect(mockNotificationService.openSnackBar).not.toHaveBeenCalled();
     });
   });
 });
