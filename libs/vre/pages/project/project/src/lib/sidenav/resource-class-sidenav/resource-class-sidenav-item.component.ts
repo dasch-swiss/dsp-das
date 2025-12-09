@@ -5,7 +5,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { DataBrowserPageService } from '@dasch-swiss/vre/pages/data-browser';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   combineLatest,
@@ -20,7 +20,7 @@ import {
   switchMap,
   takeUntil,
 } from 'rxjs';
-import { DataBrowserPageService } from '../data-browser-page.service';
+import { ProjectPageService } from '../../project-page.service';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',

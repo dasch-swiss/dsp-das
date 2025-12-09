@@ -29,6 +29,9 @@ export * from './lib/sidenav/project-sidenav-links.component';
 export * from './lib/sidenav/project-sidenav-links-item.component';
 export * from './lib/sidenav/project-sidenav-ontologies.component';
 export * from './lib/sidenav/project-sidenav-collapse-button.component';
+export * from './lib/sidenav/resource-class-sidenav/resource-class-sidenav.component';
+export * from './lib/sidenav/resource-class-sidenav/resource-class-sidenav-item.component';
+export * from './lib/sidenav/resource-class-sidenav/resources-list-fetcher.component';
 
 export * from './lib/project-page-header.component';
 export * from './lib/project-navigation-tabs.component';

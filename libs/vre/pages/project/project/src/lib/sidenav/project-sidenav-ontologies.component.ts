@@ -4,7 +4,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ResourceClassSidenavComponent } from '@dasch-swiss/vre/pages/data-browser';
+import { ResourceClassSidenavComponent } from './resource-class-sidenav/resource-class-sidenav.component';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { combineLatest, first, shareReplay } from 'rxjs';

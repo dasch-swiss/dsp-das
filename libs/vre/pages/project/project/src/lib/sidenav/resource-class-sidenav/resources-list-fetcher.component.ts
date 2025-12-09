@@ -9,10 +9,7 @@ import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { CenteredMessageComponent } from '@dasch-swiss/vre/ui/ui';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { combineLatest, first, map, Observable, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
-import { ResourcesListComponent } from '../list-view/resources-list.component';
-import { MultipleViewerService } from '../comparison/multiple-viewer.service';
-import { DataBrowserPageService } from '../data-browser-page.service';
-import { ResourceResultService } from '../resource-result.service';
+import { ResourcesListComponent, MultipleViewerService, DataBrowserPageService, ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
 
 @Component({
   selector: 'app-resources-list-fetcher',

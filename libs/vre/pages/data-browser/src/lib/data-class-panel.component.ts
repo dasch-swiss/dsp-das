@@ -14,7 +14,7 @@ import {
 import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { DataBrowserPageService } from './data-browser-page.service';
-import { ResourcesListFetcherComponent } from './resource-class-sidenav/resources-list-fetcher.component';
+import { ResourcesListFetcherComponent } from '@dasch-swiss/vre/pages/project/project';
 
 @Component({
   selector: 'app-data-class-panel',
