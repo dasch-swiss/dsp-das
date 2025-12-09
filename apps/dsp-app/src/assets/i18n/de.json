@@ -361,7 +361,9 @@
       "resourceListSelection": {
         "resourcesSelected": "{{count}} Ressourcen ausgewählt",
         "createLinkObject": "Ein Link-Objekt erstellen",
-        "createLinkObjectTooltip": "Ein Link-Objekt kann nur zwischen Ressourcen erstellt werden, die zum selben Projekt gehören."
+        "createLinkObjectTooltip": "Ein Link-Objekt kann nur zwischen Ressourcen erstellt werden, die zum selben Projekt gehören.",
+        "noResourcesSelected": "Keine Ressourcen ausgewählt",
+        "resourcesMustBeSameProject": "Die Ressourcen müssen zum selben Projekt gehören"
       },
       "resourcesList": {
         "backToSearchForm": "Zurück zum Suchformular"
@@ -514,8 +516,8 @@
       "tooltip": "Ressourcenberechtigungen",
       "projectAdmin": "Projekt-Admin",
       "projectMember": "Projektmitglied",
-      "knownUser": "Bekannte:r Nutzer:in",
-      "unknownUser": "Unbekannte:r Nutzer:in",
+      "knownUser": "Angemeldet",
+      "unknownUser": "Abgemeldet",
       "usersPermissions": "Ihre Berechtigungen",
       "interactions": {
         "restrictedView": "Leseberechtigung mit Restriktion (RV)",
@@ -583,7 +585,8 @@
       "checkingPermissionErase": "Prüfen, ob die Ressource gelöscht werden kann...",
       "eraseResource": "Endgültig löschen",
       "eraseResourceTooltip": "Ressource endgültig löschen. Dies kann nicht rückgängig gemacht werden.",
-      "noPermission": "Sie haben keine Berechtigung, diese Ressource zu löschen."
+      "noPermission": "Sie haben keine Berechtigung, diese Ressource zu löschen.",
+      "cannotDeleteIncomingLinks": "Die Ressource kann nicht gelöscht werden, da sie eingehende Links hat (siehe unten)."
     },
     "infoBar": {
       "resourceOfProject": "Ressource des Projekts",
@@ -699,7 +702,8 @@
         "description": "Beschreibung"
       },
       "errors": {
-        "crossProjectLink": "Dieses Feld enthält Links zu Ressourcen aus anderen Projekten. Nur Links zu Ressourcen innerhalb des aktuellen Projekts sind erlaubt."
+        "crossProjectLink": "Dieses Feld enthält Links zu Ressourcen aus anderen Projekten. Nur Links zu Ressourcen innerhalb des aktuellen Projekts sind erlaubt.",
+        "badLinks": "Fehlerhafte Links:"
       },
       "status": {
         "active": "Aktiv",

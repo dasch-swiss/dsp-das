@@ -14,14 +14,30 @@ import { unescapeHtml } from './unescape-html';
 @Component({
   selector: 'app-ck-editor',
   styleUrl: './ck-editor.component.scss',
-  template: ` <ckeditor
+  template: `
+    <ckeditor
       [formControl]="footnoteControl"
       [config]="ckEditor.config"
       [editor]="editor"
       style="margin-bottom: 22px; display: block;" />
-    @if (control.touched && control.errors; as errors) {
-      <mat-error>{{ errors | humanReadableError: [crossProjectLinkError] | translate }}</mat-error>
-    }`,
+    @if (control.touched && control.errors?.['crossProjectLink']; as error) {
+      <mat-error>
+        <div>{{ crossProjectLinkError.message | translate }}</div>
+        @if (error.invalidLinks && error.invalidLinks.length > 0) {
+          <div style="margin-top: 8px;">
+            <strong>{{ badLinksError.message | translate }}</strong>
+            <ul style="margin: 4px 0; padding-left: 20px;">
+              @for (link of error.invalidLinks; track link.url) {
+                <li>{{ link.url }}</li>
+              }
+            </ul>
+          </div>
+        }
+      </mat-error>
+    } @else if (control.touched && control.errors; as errors) {
+      <mat-error>{{ errors | humanReadableError | translate }}</mat-error>
+    }
+  `,
   imports: [CKEditorModule, MatFormFieldModule, ReactiveFormsModule, TranslateModule, HumanReadableErrorPipe],
   standalone: true,
 })
@@ -34,6 +50,10 @@ export class CkEditorComponent implements OnInit, OnDestroy {
   readonly crossProjectLinkError = {
     errorKey: 'crossProjectLink',
     message: 'ui.common.errors.crossProjectLink',
+  };
+  readonly badLinksError = {
+    errorKey: 'badLinks',
+    message: 'ui.common.errors.badLinks',
   };
 
   protected readonly ckEditor = ckEditor;
@@ -71,6 +91,10 @@ export class CkEditorComponent implements OnInit, OnDestroy {
       this.control.patchValue(value ? this._parseFromFootnote(value) : '');
       updating = false;
     });
+
+    if (!this.control.touched) {
+      this.control.markAsTouched();
+    }
   }
 
   ngOnDestroy() {
