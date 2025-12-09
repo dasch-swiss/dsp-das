@@ -4,14 +4,14 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { MultipleViewerComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { AngularSplitModule } from 'angular-split';
 import { combineLatest, EMPTY, first, map } from 'rxjs';
 import { DataClassPanelComponent } from './data-class-panel.component';
-import { MultipleViewerComponent } from './comparison/multiple-viewer.component';
+import { ProjectPageService } from './project-page.service';
 
 @Component({
   selector: 'app-data-class-view',

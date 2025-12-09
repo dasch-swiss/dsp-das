@@ -37,3 +37,10 @@ export * from './lib/project-page-header.component';
 export * from './lib/project-navigation-tabs.component';
 export * from './lib/description/project-short-description.component';
 export * from './lib/project-page.guard';
+
+// Data browser page components (moved from data-browser library)
+export * from './lib/data-browser-page.component';
+export * from './lib/data-class-view.component';
+export * from './lib/data-overview.component';
+export * from './lib/data-class-panel.component';
+export * from './lib/data-browser-page.service';

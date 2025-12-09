@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AngularSplitModule } from 'angular-split';
-import { ProjectSidenavComponent } from '@dasch-swiss/vre/pages/project/project';
-import { MultipleViewerService } from './comparison/multiple-viewer.service';
-import { DataBrowserPageService } from './data-browser-page.service';
+import { MultipleViewerService } from '@dasch-swiss/vre/pages/data-browser';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DataBrowserPageService } from './data-browser-page.service';
+import { ProjectSidenavComponent } from './sidenav/project-sidenav.component';
 
 /**
  * Container component for the data browser page with split layout.

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ProjectShortDescriptionComponent } from '@dasch-swiss/vre/pages/project/project';
 import { CenteredBoxComponent } from '@dasch-swiss/vre/ui/ui';
+import { ProjectShortDescriptionComponent } from './description/project-short-description.component';
 
 @Component({
   selector: 'app-data-overview',
