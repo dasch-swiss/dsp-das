@@ -1,5 +1,3 @@
-export * from './data-browser.components';
-
 export * from './lib/resource-class-sidenav/resource-class-sidenav.component';
 export * from './lib/resource-class-sidenav/resource-class-sidenav-item.component';
 
