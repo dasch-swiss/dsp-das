@@ -2,11 +2,10 @@ import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DataBrowserPageService } from '../../data-browser-page.service';
+import { TranslateService } from '@ngx-translate/core';
 import {
   combineLatest,
   filter,
@@ -20,6 +19,7 @@ import {
   switchMap,
   takeUntil,
 } from 'rxjs';
+import { DataBrowserPageService } from '../../data-browser-page.service';
 import { ProjectPageService } from '../../project-page.service';
 
 @Component({

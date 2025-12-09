@@ -1,8 +1,8 @@
 import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
-import { TranslateModule } from '@ngx-translate/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { TranslateModule } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 

@@ -3,7 +3,6 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   Constants,
   CreateLinkValue,
@@ -15,10 +14,9 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { CkEditorControlComponent } from '@dasch-swiss/vre/ui/ui';
-import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
-import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { CkEditorControlComponent, CommonInputComponent, DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, Subject } from 'rxjs';
 
 export interface ResourceLinkDialogProps {
