@@ -1,10 +1,18 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { CenteredBoxComponent } from '@dasch-swiss/vre/ui/centered-box';
+import { NoResultsFoundComponent } from '@dasch-swiss/vre/ui/common';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { AngularSplitModule } from 'angular-split';
 import { combineLatest, EMPTY, first, map } from 'rxjs';
+import { DataClassPanelComponent } from './data-class-panel.component';
+import { MultipleViewerComponent } from './comparison/multiple-viewer.component';
 
 @Component({
   selector: 'app-data-class-view',
@@ -28,7 +36,17 @@ import { combineLatest, EMPTY, first, map } from 'rxjs';
       <app-progress-indicator />
     }
   `,
-  standalone: false,
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    TranslateModule,
+    AngularSplitModule,
+    CenteredBoxComponent,
+    NoResultsFoundComponent,
+    AppProgressIndicatorComponent,
+    DataClassPanelComponent,
+    MultipleViewerComponent,
+  ],
 })
 export class DataClassViewComponent {
   dataIsNotFound = false;

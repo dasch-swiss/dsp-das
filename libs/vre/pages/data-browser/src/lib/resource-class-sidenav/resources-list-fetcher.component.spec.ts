@@ -51,7 +51,7 @@ describe('ResourcesListFetcherComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [ResourcesListFetcherComponent],
+      imports: [ResourcesListFetcherComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: ActivatedRoute, useValue: { params: routeParamsSubject.asObservable() } },

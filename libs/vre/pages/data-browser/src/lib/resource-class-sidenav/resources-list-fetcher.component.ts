@@ -1,10 +1,15 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Inject, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { CenteredMessageComponent } from '@dasch-swiss/vre/ui/ui';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { combineLatest, first, map, Observable, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
+import { ResourcesListComponent } from '../list-view/resources-list.component';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { DataBrowserPageService } from '../data-browser-page.service';
 import { ResourceResultService } from '../resource-result.service';
@@ -30,7 +35,8 @@ import { ResourceResultService } from '../resource-result.service';
     }
   `,
   providers: [ResourceResultService],
-  standalone: false,
+  standalone: true,
+  imports: [AsyncPipe, TranslateModule, ResourcesListComponent, CenteredMessageComponent, AppProgressIndicatorComponent],
 })
 export class ResourcesListFetcherComponent implements OnChanges {
   @Input({ required: true }) ontologyLabel!: string;

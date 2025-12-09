@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { AngularSplitModule } from 'angular-split';
+import { ProjectSidenavComponent } from '@dasch-swiss/vre/pages/project/sidenav';
 import { MultipleViewerService } from './comparison/multiple-viewer.service';
 import { DataBrowserPageService } from './data-browser-page.service';
 import { ResourceResultService } from './resource-result.service';
@@ -21,6 +24,7 @@ import { ResourceResultService } from './resource-result.service';
     </as-split>
   </div> `,
   providers: [MultipleViewerService, ResourceResultService, DataBrowserPageService],
-  standalone: false,
+  standalone: true,
+  imports: [RouterOutlet, AngularSplitModule, ProjectSidenavComponent],
 })
 export class DataBrowserPageComponent {}

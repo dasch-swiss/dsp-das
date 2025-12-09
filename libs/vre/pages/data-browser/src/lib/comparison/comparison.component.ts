@@ -1,5 +1,10 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, Input, OnChanges, Optional } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { ResourceFetcherComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
+import { AngularSplitModule } from 'angular-split';
 import { first } from 'rxjs';
 import { MultipleViewerService } from './multiple-viewer.service';
 
@@ -42,7 +47,8 @@ import { MultipleViewerService } from './multiple-viewer.service';
         <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount()" />
       </div>
     </ng-template>`,
-  standalone: false,
+  standalone: true,
+  imports: [NgTemplateOutlet, MatIconButton, MatIcon, AngularSplitModule, ResourceFetcherComponent],
 })
 export class ComparisonComponent implements OnChanges {
   @Input({ required: true }) resourceIds!: string[];

@@ -1,5 +1,11 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { CenteredBoxComponent } from '@dasch-swiss/vre/ui/centered-box';
+import { CenteredMessageComponent } from '@dasch-swiss/vre/ui/centered-message';
 import { map } from 'rxjs';
+import { ResourceListSelectionComponent } from '../list-view/resource-list-selection.component';
+import { ComparisonComponent } from './comparison.component';
 import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
@@ -30,7 +36,15 @@ import { MultipleViewerService } from './multiple-viewer.service';
       }
     }
   `,
-  standalone: false,
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    TranslateModule,
+    CenteredBoxComponent,
+    CenteredMessageComponent,
+    ResourceListSelectionComponent,
+    ComparisonComponent,
+  ],
 })
 export class MultipleViewerComponent {
   readonly MAX_RESOURCES = 6;

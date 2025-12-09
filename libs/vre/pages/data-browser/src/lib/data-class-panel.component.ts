@@ -1,5 +1,8 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input, ViewContainerRef } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
@@ -11,6 +14,7 @@ import {
 import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { DataBrowserPageService } from './data-browser-page.service';
+import { ResourcesListFetcherComponent } from './resource-class-sidenav/resources-list-fetcher.component';
 
 @Component({
   selector: 'app-data-class-panel',
@@ -28,7 +32,8 @@ import { DataBrowserPageService } from './data-browser-page.service';
     </div>
     <app-resources-list-fetcher [ontologyLabel]="classSelected.ontologyLabel" [classLabel]="classSelected.classLabel" />
   `,
-  standalone: false,
+  standalone: true,
+  imports: [AsyncPipe, MatButton, TranslateModule, StringifyStringLiteralPipe, ResourcesListFetcherComponent],
   providers: [StringifyStringLiteralPipe],
 })
 export class DataClassPanelComponent {

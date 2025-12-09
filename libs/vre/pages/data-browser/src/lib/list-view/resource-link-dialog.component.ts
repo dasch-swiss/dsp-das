@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   Constants,
   CreateLinkValue,
@@ -13,7 +15,10 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { TranslateService } from '@ngx-translate/core';
+import { CkEditorControlComponent } from '@dasch-swiss/vre/ui/ui';
+import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { finalize, Subject } from 'rxjs';
 
 export interface ResourceLinkDialogProps {
@@ -63,7 +68,18 @@ export interface ResourceLinkDialogProps {
       </button>
     </mat-dialog-actions>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatButton,
+    MatDialogContent,
+    MatDialogActions,
+    TranslateModule,
+    DialogHeaderComponent,
+    CommonInputComponent,
+    CkEditorControlComponent,
+    LoadingButtonDirective,
+  ],
 })
 export class ResourceLinkDialogComponent implements OnDestroy {
   private _ngUnsubscribe = new Subject<void>();
