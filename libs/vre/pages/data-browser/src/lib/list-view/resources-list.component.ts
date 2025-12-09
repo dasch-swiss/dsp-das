@@ -6,7 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
-import { ResourceResultService } from '../resource-result.service';
+import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ResourceListComponent } from './resource-list.component';
 
 @Component({
