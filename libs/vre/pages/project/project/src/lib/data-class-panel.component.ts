@@ -54,12 +54,15 @@ export class DataClassPanelComponent {
   ) {}
 
   goToAddClassInstance() {
+    const project = this._projectPageService.currentProject;
     this._dialog
       .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
         ...DspDialogConfig.dialogDrawerConfig(
           {
             resourceType: this._stringifyStringLiteralPipe.transform(this.classSelected.resClass.labels),
             resourceClassIri: this.classSelected.resClass.id,
+            projectIri: project.id,
+            projectShortcode: project.shortcode,
           },
           true
         ),
