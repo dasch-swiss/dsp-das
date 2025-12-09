@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { PaginatedApiService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { BehaviorSubject, catchError, map, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, shareReplay, switchMap, tap, take } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 import { LicenseToggleEvent } from './licenses-enabled-table.component';
 
@@ -58,6 +58,7 @@ export class LegalSettingsLicensesComponent {
   onLicenseToggle(event: LicenseToggleEvent): void {
     this._projectPageService.currentProject$
       .pipe(
+        take(1),
         switchMap(project => {
           const apiCall = event.enabled
             ? this._adminApiService.putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriEnable(
