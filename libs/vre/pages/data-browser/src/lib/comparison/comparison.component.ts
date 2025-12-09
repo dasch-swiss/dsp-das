@@ -1,8 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, Input, OnChanges, Optional } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { ResourceFetcherComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { AngularSplitModule } from 'angular-split';
 import { first } from 'rxjs';
@@ -44,7 +43,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
             </button>
           </div>
         }
-        <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount()" />
+        <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="afterResourceDeleted.emit()" />
       </div>
     </ng-template>`,
   standalone: true,
@@ -52,6 +51,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
 })
 export class ComparisonComponent implements OnChanges {
   @Input({ required: true }) resourceIds!: string[];
+  @Output() afterResourceDeleted = new EventEmitter<void>();
 
   topRow: string[] = [];
   bottomRow: string[] = [];
@@ -60,10 +60,7 @@ export class ComparisonComponent implements OnChanges {
     return this.resourceIds.length;
   }
 
-  constructor(
-    @Optional() private _projectPageService: ProjectPageService,
-    public multipleViewerService: MultipleViewerService
-  ) {}
+  constructor(public multipleViewerService: MultipleViewerService) {}
 
   ngOnChanges(): void {
     const resourceIds = this.resourceIds;
@@ -83,9 +80,5 @@ export class ComparisonComponent implements OnChanges {
         this.multipleViewerService.removeResources([resource]);
       }
     });
-  }
-
-  updateResourceCount() {
-    this._projectPageService?.reloadProject();
   }
 }

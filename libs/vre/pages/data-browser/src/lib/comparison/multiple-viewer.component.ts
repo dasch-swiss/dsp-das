@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CenteredBoxComponent, CenteredMessageComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { map } from 'rxjs';
@@ -23,7 +23,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
           <app-resource-list-selection />
         }
         @if (selectedResourceIds.length <= MAX_RESOURCES) {
-          <app-comparison [resourceIds]="selectedResourceIds" />
+          <app-comparison [resourceIds]="selectedResourceIds" (afterResourceDeleted)="afterResourceDeleted.emit()" />
         } @else {
           <app-centered-box>
             <app-centered-message
@@ -46,6 +46,8 @@ import { MultipleViewerService } from './multiple-viewer.service';
   ],
 })
 export class MultipleViewerComponent {
+  @Output() afterResourceDeleted = new EventEmitter<void>();
+
   readonly MAX_RESOURCES = 6;
 
   selectedResourceIds$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.map(r => r.id)));

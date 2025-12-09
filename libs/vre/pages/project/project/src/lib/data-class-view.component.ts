@@ -27,7 +27,7 @@ import { ProjectPageService } from './project-page.service';
             <app-data-class-panel [classSelected]="classSelected" />
           </as-split-area>
           <as-split-area [size]="66">
-            <app-multiple-viewer />
+            <app-multiple-viewer (afterResourceDeleted)="onResourceDeleted()" />
           </as-split-area>
         </as-split>
       }
@@ -84,4 +84,8 @@ export class DataClassViewComponent {
     private readonly _route: ActivatedRoute,
     private readonly _ontologyService: OntologyService
   ) {}
+
+  onResourceDeleted() {
+    this._projectPageService.reloadProject();
+  }
 }
