@@ -1,8 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadProject } from '@dasch-swiss/dsp-js';
-import { AdminAPIApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+
+export interface LicenseToggleEvent {
+  licenseId: string;
+  enabled: boolean;
+}
 
 @Component({
   selector: 'app-licenses-enabled-table',
@@ -63,58 +67,16 @@ export class LicensesEnabledTableComponent {
   @Input({ required: true }) licenses!: ProjectLicenseDto[];
   @Input({ required: true }) project!: ReadProject;
   @Input({ required: true }) label!: string;
-  @Output() refresh = new EventEmitter<void>();
+  @Output() licenseToggle = new EventEmitter<LicenseToggleEvent>();
 
   get enabledLicensesNumber() {
     return this.licenses.filter(license => license.isEnabled).length;
   }
 
-  constructor(
-    private readonly _adminApiService: AdminAPIApiService,
-    private readonly _cdr: ChangeDetectorRef,
-    private readonly _notification: NotificationService
-  ) {}
-
-  enable(licenseIri: string) {
-    this._adminApiService
-      .putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriEnable(this.project.shortcode, licenseIri)
-      .subscribe({
-        error: () => {
-          this._notification.openSnackBar('Failed to enable license. Please try again.');
-          this.refresh.emit();
-        },
-      });
-  }
-
-  disable(licenseIri: string) {
-    this._adminApiService
-      .putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriDisable(this.project.shortcode, licenseIri)
-      .subscribe({
-        error: () => {
-          this._notification.openSnackBar('Failed to disable license. Please try again.');
-          this.refresh.emit();
-        },
-      });
-  }
-
-  onLicenseToggle(event: MatCheckboxChange, licenseId: string) {
-    const license = this.licenses.find(l => l.id === licenseId);
-    if (!license) {
-      return;
-    }
-
-    // Optimistic update: create new object to avoid input mutation
-    const updatedLicense = { ...license, isEnabled: event.checked };
-    const licenseIndex = this.licenses.indexOf(license);
-    this.licenses = [...this.licenses.slice(0, licenseIndex), updatedLicense, ...this.licenses.slice(licenseIndex + 1)];
-
-    // Trigger change detection
-    this._cdr.markForCheck();
-
-    if (event.checked) {
-      this.enable(licenseId);
-    } else {
-      this.disable(licenseId);
-    }
+  onLicenseToggle(event: MatCheckboxChange, licenseId: string): void {
+    this.licenseToggle.emit({
+      licenseId,
+      enabled: event.checked,
+    });
   }
 }
