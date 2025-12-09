@@ -4,10 +4,9 @@ import { IFulltextSearchParams, KnoraApiConnection, ReadResource } from '@dasch-
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { CenteredBoxComponent } from '@dasch-swiss/vre/ui/ui';
+import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { combineLatest, map, Observable, switchMap } from 'rxjs';
-import { NoResultsFoundComponent } from './no-results-found.component';
 
 @Component({
   selector: 'app-search-result',

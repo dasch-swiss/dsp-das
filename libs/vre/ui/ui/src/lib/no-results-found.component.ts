@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { CenteredMessageComponent } from '@dasch-swiss/vre/ui/ui';
+import { CenteredMessageComponent } from './centered-message.component';
 
 @Component({
   selector: 'app-no-results-found',

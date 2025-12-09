@@ -8,9 +8,8 @@ import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { CenteredBoxComponent } from '@dasch-swiss/vre/ui/ui';
+import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { combineLatest, map, switchMap } from 'rxjs';
-import { NoResultsFoundComponent } from './no-results-found.component';
 
 @Component({
   selector: 'app-advanced-search-results-page',
