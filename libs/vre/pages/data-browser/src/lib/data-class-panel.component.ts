@@ -58,6 +58,7 @@ export class DataClassPanelComponent {
           },
           true
         ),
+        minWidth: '70vw',
         maxWidth: '70vw',
         viewContainerRef: this._viewContainerRef,
       })
