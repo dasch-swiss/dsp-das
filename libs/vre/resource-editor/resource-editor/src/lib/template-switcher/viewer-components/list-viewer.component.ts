@@ -3,6 +3,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { KnoraApiConnection, ListNodeV2, ReadListValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
 import { ResourceFetcherService } from '../../representations/resource-fetcher.service';
 
@@ -60,7 +61,7 @@ export class ListViewerComponent implements OnInit {
 
   private _fetchSearchLink() {
     combineLatest([
-      this._resourceFetcher.resource$,
+      this._resourceFetcher.resource$.pipe(filterUndefined()),
       this._resourceFetcher.projectShortcode$,
       this._nodeIdSubject.asObservable(),
     ]).subscribe(([resource, projectShortcode, nodeId]) => {
