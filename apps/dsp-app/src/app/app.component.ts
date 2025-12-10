@@ -11,7 +11,6 @@ import { CookieBannerComponent } from './cookie-banner.component';
     <router-outlet />
     <app-cookie-banner />
   `,
-  standalone: true,
   imports: [RouterOutlet, CookieBannerComponent],
 })
 export class AppComponent {

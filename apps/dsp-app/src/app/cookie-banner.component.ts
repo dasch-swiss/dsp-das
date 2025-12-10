@@ -21,7 +21,6 @@ import { TranslateModule } from '@ngx-translate/core';
     </div>
   }`,
   styleUrls: [`./cookie-banner.component.scss`],
-  standalone: true,
   imports: [MatButtonModule, TranslateModule],
 })
 export class CookieBannerComponent implements OnInit {
