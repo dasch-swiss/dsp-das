@@ -29,7 +29,6 @@ export interface CreateResourceDialogProps {
         (createdResourceIri)="onCreatedResource($event)" />
     </div>
   `,
-  standalone: true,
 })
 export class CreateResourceDialogComponent {
   protected readonly _translateService = inject(TranslateService);

@@ -23,16 +23,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   templateUrl: './property-info.component.html',
   styleUrls: ['./property-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    AsyncPipe,
-    MatButton,
-    MatIcon,
-    MatTooltip,
-    NgClass,
-    SplitPipe,
-    StringifyStringLiteralPipe,
-    TranslateModule,
-  ],
+  imports: [AsyncPipe, MatButton, MatIcon, MatTooltip, NgClass, SplitPipe, StringifyStringLiteralPipe, TranslateModule],
 })
 export class PropertyInfoComponent {
   @Input({ required: true }) property!: PropertyInfo;

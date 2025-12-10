@@ -59,7 +59,6 @@ import { ProjectPageService } from '../../project-page.service';
       }
     `,
   ],
-  standalone: true,
   imports: [AsyncPipe, NgClass, MatIcon],
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {

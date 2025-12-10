@@ -35,7 +35,6 @@ interface CreateResourceDialogProps {
     </div>
     <app-resources-list-fetcher [ontologyLabel]="classSelected.ontologyLabel" [classLabel]="classSelected.classLabel" />
   `,
-  standalone: true,
   imports: [AsyncPipe, MatButton, TranslateModule, StringifyStringLiteralPipe, ResourcesListFetcherComponent],
   providers: [StringifyStringLiteralPipe],
 })
