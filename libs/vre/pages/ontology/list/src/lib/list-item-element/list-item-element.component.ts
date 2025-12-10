@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, forwardRef, Input, OnChanges } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ListNode } from '@dasch-swiss/dsp-js';
@@ -49,7 +49,7 @@ import { ListItemComponent } from '../list-item/list-item.component';
     MatIcon,
     MultiLanguageInputComponent,
     ActionBubbleComponent,
-    ListItemComponent,
+    forwardRef(() => ListItemComponent),
     StringifyStringLiteralPipe,
     TruncatePipe,
   ],
