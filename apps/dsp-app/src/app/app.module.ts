@@ -22,7 +22,6 @@ import {
 import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
 import { ListComponents } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyComponents } from '@dasch-swiss/vre/pages/ontology/ontology';
-import { ProjectComponents } from '@dasch-swiss/vre/pages/project/project';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/pages/search/advanced-search';
 import { SearchComponents } from '@dasch-swiss/vre/pages/search/search';
 import { SystemComponents } from '@dasch-swiss/vre/pages/system/system';
@@ -62,7 +61,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CookieBannerComponent,
     ...ListComponents,
     ...OntologyComponents,
-    ...ProjectComponents,
     ...SearchComponents,
   ],
   imports: [

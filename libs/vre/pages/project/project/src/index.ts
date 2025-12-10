@@ -1,4 +1,3 @@
-export * from './project.components';
 export * from './lib/reusable-project-form/create-project-form-page.component';
 export * from './lib/reusable-project-form/edit-project-form-page.component';
 export * from './lib/reusable-project-form/reusable-project-form.component';
