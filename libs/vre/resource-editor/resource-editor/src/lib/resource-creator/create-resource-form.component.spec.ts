@@ -36,8 +36,7 @@ describe('CreateResourceFormComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      declarations: [CreateResourceFormComponent],
-      imports: [TranslateModule.forRoot(), ReactiveFormsModule],
+      imports: [CreateResourceFormComponent, TranslateModule.forRoot(), ReactiveFormsModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [FormBuilder, { provide: DspApiConnectionToken, useValue: mockDspApiConnection }],
     }).compileComponents();

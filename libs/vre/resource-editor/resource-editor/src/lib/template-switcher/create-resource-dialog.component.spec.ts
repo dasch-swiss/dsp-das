@@ -32,8 +32,7 @@ describe('CreateResourceDialogComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      declarations: [CreateResourceDialogComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [CreateResourceDialogComponent, TranslateModule.forRoot()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: mockDialogData },

@@ -3,7 +3,8 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { KnoraApiConnection, ListNodeV2, ReadListValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { combineLatest, filter, map, Observable, Subject, switchMap } from 'rxjs';
 import { ResourceFetcherService } from '../../representations/resource-fetcher.service';
 
 @Component({
@@ -63,8 +64,10 @@ export class ListViewerComponent implements OnInit {
       this._resourceFetcher.resource$,
       this._resourceFetcher.projectShortcode$,
       this._nodeIdSubject.asObservable(),
-    ]).subscribe(([resource, projectShortcode, nodeId]) => {
-      const searchClassesQuery = `
+    ])
+      .pipe(filter((values): values is [DspResource, string, string] => !!values[0] && !!values[1] && !!values[2]))
+      .subscribe(([resource, projectShortcode, nodeId]) => {
+        const searchClassesQuery = `
    PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
 CONSTRUCT {
 ?mainRes knora-api:isMainResource true .
@@ -77,8 +80,8 @@ CONSTRUCT {
 }
 OFFSET 0`;
 
-      this.linkToSearchList = `/project/${projectShortcode}/advanced-search/gravsearch/${encodeURIComponent(searchClassesQuery)}`;
-    });
+        this.linkToSearchList = `/project/${projectShortcode}/advanced-search/gravsearch/${encodeURIComponent(searchClassesQuery)}`;
+      });
   }
 
   static lookFor(tree: ListNodeV2[], id: string): ListNodeV2[] | null {
