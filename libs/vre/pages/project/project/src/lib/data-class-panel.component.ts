@@ -4,17 +4,20 @@ import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import {
-  CreateResourceDialogComponent,
-  CreateResourceDialogProps,
-  ResourceFetcherDialogComponent,
-} from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { TranslateModule } from '@ngx-translate/core';
+import { from, switchMap } from 'rxjs';
 import { DataBrowserPageService } from './data-browser-page.service';
 import { ProjectPageService } from './project-page.service';
 import { ResourcesListFetcherComponent } from './sidenav/resource-class-sidenav/resources-list-fetcher.component';
+
+interface CreateResourceDialogProps {
+  resourceType: string;
+  resourceClassIri: string;
+  projectIri: string;
+  projectShortcode: string;
+}
 
 @Component({
   selector: 'app-data-class-panel',
@@ -55,23 +58,36 @@ export class DataClassPanelComponent {
 
   goToAddClassInstance() {
     const project = this._projectPageService.currentProject;
-    this._dialog
-      .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
-        ...DspDialogConfig.dialogDrawerConfig(
-          {
-            resourceType: this._stringifyStringLiteralPipe.transform(this.classSelected.resClass.labels),
-            resourceClassIri: this.classSelected.resClass.id,
-            projectIri: project.id,
-            projectShortcode: project.shortcode,
-          },
-          true
+    from(import('@dasch-swiss/vre/resource-editor/resource-editor').then(m => m.CreateResourceDialogComponent))
+      .pipe(
+        switchMap(CreateResourceDialogComponent =>
+          this._dialog
+            .open<any, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
+              ...DspDialogConfig.dialogDrawerConfig(
+                {
+                  resourceType: this._stringifyStringLiteralPipe.transform(this.classSelected.resClass.labels),
+                  resourceClassIri: this.classSelected.resClass.id,
+                  projectIri: project.id,
+                  projectShortcode: project.shortcode,
+                },
+                true
+              ),
+              minWidth: 800,
+              viewContainerRef: this._viewContainerRef,
+            })
+            .afterClosed()
         ),
-        minWidth: 800,
-        viewContainerRef: this._viewContainerRef,
-      })
-      .afterClosed()
-      .pipe(filterUndefined())
-      .subscribe(resourceIri => {
+        filterUndefined(),
+        switchMap(resourceIri =>
+          from(
+            import('@dasch-swiss/vre/resource-editor/resource-editor').then(m => ({
+              resourceIri,
+              ResourceFetcherDialogComponent: m.ResourceFetcherDialogComponent,
+            }))
+          )
+        )
+      )
+      .subscribe(({ resourceIri, ResourceFetcherDialogComponent }) => {
         this._dataBrowserPageService.reloadNavigation();
         this._dialog.open(ResourceFetcherDialogComponent, {
           ...DspDialogConfig.dialogDrawerConfig({ resourceIri }, true),

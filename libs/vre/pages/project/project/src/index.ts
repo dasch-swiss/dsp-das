@@ -41,5 +41,4 @@ export * from './lib/project-page.guard';
 export * from './lib/data-browser-page.component';
 export * from './lib/data-class-view.component';
 export * from './lib/data-overview.component';
-export * from './lib/data-class-panel.component';
 export * from './lib/data-browser-page.service';
