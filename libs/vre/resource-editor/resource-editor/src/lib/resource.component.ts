@@ -2,12 +2,19 @@ import { ChangeDetectorRef, Component, Inject, Input, OnChanges } from '@angular
 import { ActivatedRoute } from '@angular/router';
 import { Constants, CountQueryResponse, KnoraApiConnection, ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { getFileValue, RegionService } from '@dasch-swiss/vre/resource-editor/representations';
-import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { take } from 'rxjs';
+import { CompoundViewerComponent } from './compound/compound-viewer.component';
 import { CompoundService } from './compound/compound.service';
+import { getFileValue } from './representations/get-file-value';
+import { RegionService } from './representations/region.service';
+import { ResourceHeaderComponent } from './resource-header.component';
+import { ResourceLegalComponent } from './resource-legal.component';
+import { PropertiesDisplayService } from './resource-properties/properties-display.service';
+import { ResourceRepresentationComponent } from './resource-representation.component';
+import { ResourceRestrictionComponent } from './resource-restriction.component';
+import { ResourceTabsComponent } from './resource-tabs.component';
+import { SegmentsService } from './segment-support/segments.service';
 
 @Component({
   selector: 'app-resource',
@@ -26,7 +33,15 @@ import { CompoundService } from './compound/compound.service';
     <app-resource-tabs [resource]="resource" />
   `,
   providers: [CompoundService, PropertiesDisplayService, RegionService, SegmentsService],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CompoundViewerComponent,
+    ResourceHeaderComponent,
+    ResourceLegalComponent,
+    ResourceRepresentationComponent,
+    ResourceRestrictionComponent,
+    ResourceTabsComponent,
+  ],
 })
 export class ResourceComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

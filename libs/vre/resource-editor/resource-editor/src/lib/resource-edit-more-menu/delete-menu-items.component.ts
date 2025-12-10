@@ -1,10 +1,13 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { CanDoResponse, DeleteResource, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { filterNull, UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { combineLatest, filter, map, Observable } from 'rxjs';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
+import { DeleteButtonComponent } from './delete-button.component';
+import { EraseButtonComponent } from './erase-button.component';
 
 @Component({
   selector: 'app-delete-menu-items',
@@ -23,7 +26,8 @@ import { combineLatest, filter, map, Observable } from 'rxjs';
         (erased)="resourceErased.emit()" />
     }
   `,
-  standalone: false,
+  standalone: true,
+  imports: [AsyncPipe, DeleteButtonComponent, EraseButtonComponent],
 })
 export class DeleteMenuItemsComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;

@@ -1,7 +1,12 @@
 import { Component, EventEmitter, Input, Output, ViewContainerRef } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { EditResourceLabelDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { TranslateModule } from '@ngx-translate/core';
+import { EditResourceLabelDialogComponent } from '../resource-properties/edit-resource-label-dialog.component';
 
 @Component({
   selector: 'app-edit-label-menu-item',
@@ -16,7 +21,8 @@ import { EditResourceLabelDialogComponent } from '@dasch-swiss/vre/resource-edit
       {{ 'resourceEditor.moreMenu.editLabel' | translate }}
     </button>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, TranslateModule],
 })
 export class EditLabelMenuItemComponent {
   @Input({ required: true }) resource!: ReadResource;

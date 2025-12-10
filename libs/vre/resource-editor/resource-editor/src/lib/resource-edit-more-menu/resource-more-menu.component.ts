@@ -1,6 +1,13 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { TranslateModule } from '@ngx-translate/core';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
+import { DeleteMenuItemsComponent } from './delete-menu-items.component';
 
 @Component({
   selector: 'app-resource-more-menu',
@@ -32,7 +39,16 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
       }
     `,
   ],
-  standalone: false,
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatTooltipModule,
+    TranslateModule,
+    DeleteMenuItemsComponent,
+  ],
 })
 export class ResourceMoreMenuComponent {
   @Input({ required: true }) resource!: ReadResource;

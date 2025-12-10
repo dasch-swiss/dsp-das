@@ -9,7 +9,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { GrafanaFaroService, PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
+import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import {
   AppConfigService,
@@ -28,12 +28,7 @@ import { AdvancedSearchComponent } from '@dasch-swiss/vre/pages/search/advanced-
 import { SearchComponents } from '@dasch-swiss/vre/pages/search/search';
 import { SystemComponents } from '@dasch-swiss/vre/pages/system/system';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/pages/user-settings/user';
-import { PropertiesDisplayComponents } from '@dasch-swiss/vre/resource-editor/properties-display';
-import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/representations';
-import { ResourceCreatorComponents } from '@dasch-swiss/vre/resource-editor/resource-creator';
-import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
-import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
+import { ClosingDialogComponent, ResourceFetcherComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -50,7 +45,6 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerDirective } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { TemplateSwitcherComponents } from 'template-switcher';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CookieBannerComponent } from './cookie-banner.component';
@@ -71,14 +65,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...ListComponents,
     ...OntologyComponents,
     ...ProjectComponents,
-    ...PropertiesDisplayComponents,
-    ...RepresentationsComponents,
-    ...ResourceCreatorComponents,
-    ...ResourcePageComponents,
-    ...ResourcePropertiesComponents,
     ...SearchComponents,
-    ...SegmentSupportComponents,
-    ...TemplateSwitcherComponents,
   ],
   imports: [
     AdvancedSearchComponent,
@@ -115,10 +102,12 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         deps: [HttpClient],
       },
     }),
+    // Resource editor standalone refactor
+    ResourceFetcherComponent,
+    ClosingDialogComponent,
   ],
   providers: [
     AppConfigService,
-    PendoAnalyticsService,
     GrafanaFaroService,
     {
       provide: APP_INITIALIZER,

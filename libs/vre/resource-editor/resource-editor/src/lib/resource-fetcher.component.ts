@@ -12,11 +12,15 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponseError, Constants, ReadResource } from '@dasch-swiss/dsp-js';
-import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslateService } from '@ngx-translate/core';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { filter, Subject, takeUntil } from 'rxjs';
+import { ResourceFetcherService } from './representations/resource-fetcher.service';
+import { ResourceUtil } from './representations/resource.util';
+import { ResourceVersionWarningComponent } from './resource-version-warning.component';
+import { ResourceComponent } from './resource.component';
 
 type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
 
@@ -57,7 +61,8 @@ type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
     </div>
   `,
   providers: [ResourceFetcherService],
-  standalone: false,
+  standalone: true,
+  imports: [TranslateModule, ResourceVersionWarningComponent, ResourceComponent, AppProgressIndicatorComponent],
 })
 export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;

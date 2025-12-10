@@ -4,8 +4,8 @@ on: [ push, fork ]
 
 jobs:
 
-  test:
-    name: DSP-APP Unit tests
+  lint:
+    name: DSP-APP Linting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,6 +20,21 @@ jobs:
         run: npm install
       - name: Run linting
         run: npx nx run-many --all --target=lint --skip-nx-cache
+
+  test:
+    name: DSP-APP Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.12.0
+      - name: Install dependencies
+        run: npm install
       - name: Run tests with coverage
         run: npm run unit-test-coverage-ci
         env:
@@ -34,7 +49,7 @@ jobs:
           fail_ci_if_error: false
 
   dsp-app-e2e-tests:
-    name: DSP-APP E2E
+    name: DSP-APP E2E tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -76,20 +91,6 @@ jobs:
           docker ps
           docker ps -q | xargs -I {} docker logs {}
 
-  vre-shared-app-config-tests:
-    name: vre-core-config
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0 # gets additionally all tags which we need
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22.12.0
-      - run: npm install
-      - run: npx nx run vre-core-config:lint
-      - run: npx nx run vre-core-config:test:ci
-
   check-openapi-sync:
     name: Check OpenAPI Spec is Up-to-Date
     runs-on: ubuntu-latest
@@ -106,9 +107,9 @@ jobs:
   publish:
     name: Publish to Dockerhub only on main or tag (release) commits
     needs: [
-      # test,
-      # dsp-app-tests,
-      vre-shared-app-config-tests,
+      lint,
+      test,
+      dsp-app-e2e-tests,
       check-openapi-sync
     ]
     runs-on: ubuntu-latest

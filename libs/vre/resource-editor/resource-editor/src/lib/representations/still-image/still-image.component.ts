@@ -1,0 +1,125 @@
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
+import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { CompoundArrowNavigationComponent } from '../../compound/compound-arrow-navigation.component';
+import { CompoundSliderComponent } from '../../compound/compound-slider.component';
+import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
+import { OpenSeaDragonService } from './open-sea-dragon.service';
+import { OsdDrawerService } from './osd-drawer.service';
+import { StillImageHelper } from './still-image-helper';
+import { StillImageToolbarComponent } from './still-image-toolbar.component';
+
+@Component({
+  selector: 'app-still-image',
+  template: ` <div class="osd-container" [class.drawing]="isViewInitialized && osdService.drawing" #osdViewer>
+      @if (compoundMode) {
+        <div>
+          <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
+          <app-compound-arrow-navigation [forwardNavigation]="true" class="arrow" />
+        </div>
+      }
+    </div>
+    <div class="toolbar">
+      @if (compoundMode) {
+        <app-compound-slider />
+      }
+
+      @if (isViewInitialized) {
+        <app-still-image-toolbar
+          [resource]="resource"
+          [compoundMode]="compoundMode"
+          [isPng]="isPng"
+          (imageIsPng)="afterFormatChange($event)" />
+      }
+    </div>`,
+  styleUrls: ['./still-image.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [OsdDrawerService, OpenSeaDragonService],
+  standalone: true,
+  imports: [CompoundArrowNavigationComponent, CompoundSliderComponent, StillImageToolbarComponent],
+})
+export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy {
+  @Input({ required: true }) compoundMode!: boolean;
+  @Input({ required: true }) resource!: ReadResource;
+  @ViewChild('osdViewer') osdViewerElement!: ElementRef;
+
+  isViewInitialized = false;
+  isPng = false;
+
+  constructor(
+    private readonly _cdr: ChangeDetectorRef,
+    protected osdService: OpenSeaDragonService,
+    private readonly _osdDrawerService: OsdDrawerService
+  ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.isViewInitialized && changes['resource']) {
+      this._osdDrawerService.update(this.resource);
+      this._loadImage();
+    }
+  }
+
+  ngAfterViewInit() {
+    this.osdService.onInit(this.osdViewerElement.nativeElement);
+    this._osdDrawerService.onInit(this.resource);
+    this.isViewInitialized = true;
+    this._cdr.detectChanges();
+    this._loadImage();
+  }
+
+  afterFormatChange(value: boolean) {
+    this.isPng = value;
+    this._loadImage();
+  }
+
+  ngOnDestroy() {
+    this.osdService.viewer.destroy();
+  }
+
+  private _loadImage() {
+    const image = this.resource.properties[Constants.HasStillImageFileValue][0];
+
+    switch (image.type) {
+      case Constants.StillImageFileValue:
+        this._openInternalImage(image as ReadStillImageFileValue);
+        break;
+      case Constants.StillImageExternalFileValue:
+        this._openExternal3iFImage(image as ReadStillImageExternalFileValue);
+        break;
+      default:
+        throw new AppError('Unknown image type');
+    }
+  }
+
+  private _openInternalImage(image: ReadStillImageFileValue): void {
+    const tiles = StillImageHelper.prepareTileSourcesFromFileValues(
+      [image],
+      (this.osdService.viewer as any).ajaxHeaders,
+      this.isPng
+    );
+    (this.osdService.viewer as any).loadTilesWithAjax = true;
+    this.osdService.viewer.open(tiles);
+  }
+
+  private _openExternal3iFImage(image: ReadStillImageExternalFileValue) {
+    const i3f = IIIFUrl.createUrl(image.externalUrl);
+    if (!i3f) {
+      throw new AppError("Can't open external IIIF URL");
+    }
+
+    (this.osdService.viewer as any).loadTilesWithAjax = false;
+    this.osdService.viewer.open(i3f.infoJsonUrl);
+  }
+}
