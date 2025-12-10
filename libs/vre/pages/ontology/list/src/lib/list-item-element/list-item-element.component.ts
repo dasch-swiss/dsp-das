@@ -6,10 +6,10 @@ import { ensureWithDefaultLanguage } from '@dasch-swiss/vre/3rd-party-services/o
 import {
   DEFAULT_MULTILANGUAGE_FORM,
   MultiLanguageFormArray,
+  MultiLanguageInputComponent,
   StringifyStringLiteralPipe,
   TruncatePipe,
 } from '@dasch-swiss/vre/ui/string-literal';
-import { MultiLanguageInputComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateService } from '@ngx-translate/core';
 import { ActionBubbleComponent } from '../action-bubble/action-bubble.component';
 import { ListItemComponent } from '../list-item/list-item.component';

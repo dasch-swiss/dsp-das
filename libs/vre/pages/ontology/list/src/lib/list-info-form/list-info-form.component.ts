@@ -20,12 +20,12 @@ import { ensureWithDefaultLanguage } from '@dasch-swiss/vre/3rd-party-services/o
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
-import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
 import {
-  DialogHeaderComponent,
+  DEFAULT_MULTILANGUAGE_FORM,
   MultiLanguageInputComponent,
   MultiLanguageTextareaComponent,
-} from '@dasch-swiss/vre/ui/ui';
+} from '@dasch-swiss/vre/ui/string-literal';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ListInfoForm } from './list-info-form.type';
 

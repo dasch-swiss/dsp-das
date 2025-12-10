@@ -1,8 +1,13 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input, ViewContainerRef } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { SplitPipe, StringifyStringLiteralPipe } from '@dasch-swiss/vre/shared/app-common';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,7 +22,16 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   templateUrl: './property-info.component.html',
   styleUrls: ['./property-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    AsyncPipe,
+    MatButton,
+    MatIcon,
+    MatTooltip,
+    NgClass,
+    SplitPipe,
+    StringifyStringLiteralPipe,
+    TranslateService,
+  ],
 })
 export class PropertyInfoComponent {
   @Input({ required: true }) property!: PropertyInfo;

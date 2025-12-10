@@ -1,6 +1,14 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatOption } from '@angular/material/core';
+import { MatError, MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatSelect } from '@angular/material/select';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { HumanReadableErrorPipe, StringifyStringLiteralPipe } from '@dasch-swiss/vre/shared/app-common';
+import { TranslateModule } from '@ngx-translate/core';
 import { map, switchMap } from 'rxjs';
 import { PropertyForm } from './property-form.type';
 
@@ -25,7 +33,20 @@ import { PropertyForm } from './property-form.type';
     </mat-form-field>
   `,
   styles: ['.large-field {width: 100%}'],
-  standalone: false,
+  imports: [
+    AsyncPipe,
+    HumanReadableErrorPipe,
+    MatError,
+    MatFormField,
+    MatIcon,
+    MatLabel,
+    MatOption,
+    MatPrefix,
+    MatSelect,
+    ReactiveFormsModule,
+    StringifyStringLiteralPipe,
+    TranslateModule,
+  ],
 })
 export class GuiAttrListComponent {
   @Input({ required: true }) control!: PropertyForm['controls']['guiAttr'];
