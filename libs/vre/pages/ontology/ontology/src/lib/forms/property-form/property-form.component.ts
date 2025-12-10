@@ -8,12 +8,12 @@ import { Constants } from '@dasch-swiss/dsp-js';
 import { ensureWithDefaultLanguage } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { existingNamesAsyncValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { DefaultProperties, LocalizationService, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
-import { CommonInputComponent } from '@dasch-swiss/vre/ui/form-elements';
 import {
   MultiLanguageInputComponent,
   MultiLanguageTextareaComponent,
   DEFAULT_MULTILANGUAGE_FORM,
 } from '@dasch-swiss/vre/ui/string-literal';
+import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 import { GuiAttrLinkComponent } from './gui-attr-link.component';

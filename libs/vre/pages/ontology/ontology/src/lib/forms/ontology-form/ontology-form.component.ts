@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { CommonInputComponent } from '@dasch-swiss/vre/ui/form-elements';
+import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
 

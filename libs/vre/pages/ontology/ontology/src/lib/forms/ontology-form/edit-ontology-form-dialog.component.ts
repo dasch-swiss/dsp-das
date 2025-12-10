@@ -8,7 +8,8 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { OntologyMetadata } from '@dasch-swiss/dsp-js';
-import { DialogHeaderComponent, LoadingButtonDirective } from '@dasch-swiss/vre/ui/ui';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 import { OntologyEditService } from '../../services/ontology-edit.service';

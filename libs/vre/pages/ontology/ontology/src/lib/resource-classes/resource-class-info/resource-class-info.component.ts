@@ -22,10 +22,10 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { ApiResponseError, CanDoResponse, IHasProperty, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { StringifyStringLiteralPipe, TruncatePipe } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { DialogService, TruncatePipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription, switchMap, take } from 'rxjs';
 import {

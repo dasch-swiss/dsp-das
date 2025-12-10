@@ -6,8 +6,7 @@ import { ListNodeInfo } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
-import { MultiLanguageInputComponent } from '@dasch-swiss/vre/ui/ui';
+import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageInputComponent } from '@dasch-swiss/vre/ui/string-literal';
 import { TranslateService } from '@ngx-translate/core';
 import { ListItemService } from '../list-item/list-item.service';
 

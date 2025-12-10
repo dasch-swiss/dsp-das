@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } fro
 import { MatIcon } from '@angular/material/icon';
 import { Cardinality, Constants, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { ProgressIndicatorOverlayComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs';
@@ -31,7 +31,7 @@ export interface CardinalityInfo {
     <mat-dialog-content>
       <div class="cando-headline">
         @if (canSetCardinality === undefined) {
-          <app-progress-indicator class="floating-center" />
+          <app-progress-indicator-overlay class="floating-center" />
         }
         @if (canSetCardinality === false) {
           <div class="mat-headline-6">{{ 'pages.ontology.cardinalityDialog.notPossible' | translate }}</div>
@@ -93,7 +93,7 @@ export interface CardinalityInfo {
     MatDialogActions,
     MatDialogContent,
     MatIcon,
-    ProgressIndicatorComponent,
+    ProgressIndicatorOverlayComponent,
     TranslateModule,
   ],
 })

@@ -10,9 +10,9 @@ import { ListNodeInfo, ListResponse } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { ProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
-import { StringifyStringLiteralPipe, TruncatePipe } from '@dasch-swiss/vre/ui/string-literal';
-import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { ProgressIndicatorOverlayComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { DialogService, TruncatePipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, map, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { ListInfoFormComponent } from './list-info-form/list-info-form.component';
@@ -35,7 +35,7 @@ import { ListItemService } from './list-item/list-item.service';
     MatToolbarRow,
     MatTooltip,
     TranslateModule,
-    ProgressIndicatorComponent,
+    ProgressIndicatorOverlayComponent,
     ListItemComponent,
     StringifyStringLiteralPipe,
     TruncatePipe,

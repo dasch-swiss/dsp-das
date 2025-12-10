@@ -9,8 +9,9 @@ import {
 } from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { DialogHeaderComponent, LoadingButtonDirective } from '@dasch-swiss/vre/ui/ui';
-import { TranslateService } from '@ngx-translate/core';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 import { PropertyFormComponent } from './property-form.component';

@@ -10,7 +10,8 @@ import {
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DefaultClass } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DialogHeaderComponent, LoadingButtonDirective } from '@dasch-swiss/vre/ui/ui';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 import { ResourceClassFormComponent } from './resource-class-form.component';

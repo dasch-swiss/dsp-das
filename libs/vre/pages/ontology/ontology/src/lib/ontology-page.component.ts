@@ -6,7 +6,7 @@ import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { ProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { ProgressIndicatorOverlayComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { combineLatest, take } from 'rxjs';
 import { OntologyEditorHeaderComponent } from './ontology-editor-header.component';
 import { OntologyPageService } from './ontology-page.service';
@@ -20,7 +20,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
       <div class="ontology-editor">
         @if (isTransacting$ | async) {
           <div class="overlay-blocker">
-            <app-progress-indicator [size]="'large'" class="floating-center" />
+            <app-progress-indicator-overlay class="floating-center" />
           </div>
         }
         <mat-sidenav-container class="ontology-editor-container">
@@ -51,7 +51,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
     MatSidenavContent,
     OntologyEditorHeaderComponent,
     OntologySidenavComponent,
-    ProgressIndicatorComponent,
+    ProgressIndicatorOverlayComponent,
     RouterOutlet,
     StatusComponent,
   ],

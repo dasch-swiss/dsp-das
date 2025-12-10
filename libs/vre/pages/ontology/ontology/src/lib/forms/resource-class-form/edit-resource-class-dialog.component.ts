@@ -8,10 +8,10 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
-import { DialogHeaderComponent, LoadingButtonDirective } from '@dasch-swiss/vre/ui/ui';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { MultiLanguages, StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { OntologyEditService } from '../../services/ontology-edit.service';

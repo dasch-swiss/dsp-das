@@ -7,10 +7,11 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { SplitPipe, StringifyStringLiteralPipe } from '@dasch-swiss/vre/shared/app-common';
+import { SplitPipe } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
+import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, startWith, switchMap } from 'rxjs';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { EditPropertyDialogData } from '../../forms/property-form/property-form.type';
@@ -30,7 +31,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
     NgClass,
     SplitPipe,
     StringifyStringLiteralPipe,
-    TranslateService,
+    TranslateModule,
   ],
 })
 export class PropertyInfoComponent {

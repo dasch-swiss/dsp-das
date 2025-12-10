@@ -1,8 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
-import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
-import { MultiLanguageInputComponent, MultiLanguageTextareaComponent } from '@dasch-swiss/vre/ui/ui';
+import {
+  DEFAULT_MULTILANGUAGE_FORM,
+  MultiLanguageInputComponent,
+  MultiLanguageTextareaComponent,
+  MultiLanguages,
+} from '@dasch-swiss/vre/ui/string-literal';
 import { TranslateModule } from '@ngx-translate/core';
 import { ListItemForm } from './list-item-form.type';
 
