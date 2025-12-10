@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { PaginatedApiService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { BehaviorSubject, catchError, map, shareReplay, switchMap, tap, take } from 'rxjs';
+import { BehaviorSubject, catchError, map, shareReplay, switchMap, tap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 import { LicenseToggleEvent } from './licenses-enabled-table.component';
 
@@ -56,30 +56,27 @@ export class LegalSettingsLicensesComponent {
   ) {}
 
   onLicenseToggle(event: LicenseToggleEvent): void {
-    this._projectPageService.currentProject$
-      .pipe(
-        take(1),
-        switchMap(project => {
-          const apiCall = event.enabled
-            ? this._adminApiService.putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriEnable(
-                project.shortcode,
-                event.licenseId
-              )
-            : this._adminApiService.putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriDisable(
-                project.shortcode,
-                event.licenseId
-              );
+    const project = this._projectPageService.currentProject;
 
-          return apiCall.pipe(
-            tap(() => this._reloadSubject.next()),
-            catchError(error => {
-              this._notification.openSnackBar(
-                `Failed to ${event.enabled ? 'enable' : 'disable'} license. Please try again.`
-              );
-              this._reloadSubject.next();
-              throw error;
-            })
+    const apiCall = event.enabled
+      ? this._adminApiService.putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriEnable(
+          project.shortcode,
+          event.licenseId
+        )
+      : this._adminApiService.putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriDisable(
+          project.shortcode,
+          event.licenseId
+        );
+
+    apiCall
+      .pipe(
+        tap(() => this._reloadSubject.next()),
+        catchError(error => {
+          this._notification.openSnackBar(
+            `Failed to ${event.enabled ? 'enable' : 'disable'} license. Please try again.`
           );
+          this._reloadSubject.next();
+          throw error;
         })
       )
       .subscribe();

@@ -32,6 +32,7 @@ describe('LegalSettingsLicensesComponent - Business Logic', () => {
 
     mockProjectPageService = {
       currentProject$: of(mockProject),
+      currentProject: mockProject,
     } as any;
 
     mockNotificationService = {
