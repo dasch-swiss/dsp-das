@@ -1,7 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
@@ -27,10 +26,6 @@ describe('CreateResourceDialogComponent', () => {
       projectIri$: of('http://test.org/project/123'),
     } as any;
 
-    const mockProjectPageService = {
-      currentProject$: of({ shortcode: 'test', id: 'http://test.org/project/123' }),
-    } as any;
-
     await TestBed.configureTestingModule({
       imports: [CreateResourceDialogComponent, TranslateModule.forRoot()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -38,7 +33,6 @@ describe('CreateResourceDialogComponent', () => {
         { provide: MAT_DIALOG_DATA, useValue: mockDialogData },
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: ResourceFetcherService, useValue: mockResourceFetcherService },
-        { provide: ProjectPageService, useValue: mockProjectPageService },
         TranslateService,
       ],
     }).compileComponents();
