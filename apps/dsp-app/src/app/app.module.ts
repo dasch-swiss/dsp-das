@@ -36,8 +36,8 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import { StringLiteralComponents } from '@dasch-swiss/vre/ui/string-literal';
 import { UiStandaloneComponents } from '@dasch-swiss/vre/ui/ui';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular';
 import { IMaskModule } from 'angular-imask';
 import { AngularSplitModule } from 'angular-split';
@@ -50,11 +50,6 @@ import { CookieBannerComponent } from './cookie-banner.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-with-credentials.interceptor';
 import { MaterialModule } from './material-module';
-
-// translate: AoT requires an exported function for factories
-export function httpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
-}
 
 @NgModule({
   declarations: [
@@ -93,13 +88,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...SystemComponents,
     ...UserComponents,
     ReactiveFormsModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: httpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
+    TranslateModule.forRoot(),
     // Resource editor standalone refactor
     ResourceFetcherComponent,
     ClosingDialogComponent,
@@ -166,6 +155,10 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     }),
     LocalizationService,
     ...provideCalendarDateAdapter(),
+    ...provideTranslateHttpLoader({
+      prefix: 'assets/i18n/',
+      suffix: '.json',
+    }),
   ],
   bootstrap: [AppComponent],
 })
