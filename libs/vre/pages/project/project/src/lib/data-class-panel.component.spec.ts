@@ -86,6 +86,17 @@ describe('DataClassPanelComponent', () => {
 
     mockProjectPageService = {
       hasProjectMemberRights$: of(true),
+      currentProject: {
+        id: 'http://example.org/project/test-project',
+        shortcode: '0001',
+        shortname: 'test-project',
+        longname: 'Test Project',
+        description: [{ value: 'A test project', language: 'en' }],
+        keywords: [],
+        logo: null,
+        status: true,
+        selfjoin: false,
+      },
     } as any;
 
     mockMultipleViewerService = {
@@ -324,41 +335,57 @@ describe('DataClassPanelComponent', () => {
   });
 
   describe('goToAddClassInstance', () => {
-    it('should open create resource dialog', () => {
+    it('should open create resource dialog', done => {
       component.goToAddClassInstance();
 
-      expect(mockDialog.open).toHaveBeenCalled();
+      // Wait for dynamic import and observable chain to complete
+      setTimeout(() => {
+        expect(mockDialog.open).toHaveBeenCalled();
+        done();
+      }, 100);
     });
 
-    it('should use StringifyStringLiteralPipe to transform resource labels', () => {
+    it('should use StringifyStringLiteralPipe to transform resource labels', done => {
       component.goToAddClassInstance();
 
-      expect(mockStringifyPipe.transform).toHaveBeenCalledWith(mockResClass.labels);
+      setTimeout(() => {
+        expect(mockStringifyPipe.transform).toHaveBeenCalledWith(mockResClass.labels);
+        done();
+      }, 100);
     });
 
-    it('should pass resource class IRI to dialog', () => {
+    it('should pass resource class IRI to dialog', done => {
       component.goToAddClassInstance();
 
-      const callArgs = mockDialog.open.mock.calls[0];
-      const config = callArgs[1] as any;
-      expect(config.data.resourceClassIri).toBe(mockResClass.id);
+      setTimeout(() => {
+        const callArgs = mockDialog.open.mock.calls[0];
+        const config = callArgs[1] as any;
+        expect(config.data.resourceClassIri).toBe(mockResClass.id);
+        done();
+      }, 100);
     });
 
-    it('should set minWidth to 600', () => {
+    it('should set minWidth to 70vw', done => {
       component.goToAddClassInstance();
 
-      const callArgs = mockDialog.open.mock.calls[0];
-      const config = callArgs[1] as any;
-      expect(config.minWidth).toBe(600);
+      setTimeout(() => {
+        const callArgs = mockDialog.open.mock.calls[0];
+        const config = callArgs[1] as any;
+        expect(config.width).toBe('70vw');
+        done();
+      }, 100);
     });
 
-    it('should use viewContainerRef from constructor', () => {
+    it('should use viewContainerRef from constructor', done => {
       component.goToAddClassInstance();
 
-      const callArgs = mockDialog.open.mock.calls[0];
-      const config = callArgs[1] as any;
-      // Check that viewContainerRef is defined (toBe comparison fails with jest private member access)
-      expect(config.viewContainerRef).toBeDefined();
+      setTimeout(() => {
+        const callArgs = mockDialog.open.mock.calls[0];
+        const config = callArgs[1] as any;
+        // Check that viewContainerRef is defined (toBe comparison fails with jest private member access)
+        expect(config.viewContainerRef).toBeDefined();
+        done();
+      }, 100);
     });
   });
 
