@@ -172,24 +172,19 @@ export class DocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   private _setupResizeObserver() {
-    // Find the PDF container element
     const pdfContainer = this._elementRef.nativeElement.querySelector('.pdf-container');
     if (!pdfContainer) {
       return;
     }
 
-    // Create ResizeObserver to detect container size changes
     this._resizeObserver = new ResizeObserver(() => {
-      // When container resizes, trigger PDF viewer's updateSize method
       if (this._pdfComponent && this.isPdf && !this.failedToLoad) {
-        // Use setTimeout to avoid ResizeObserver loop errors and ensure the DOM has updated
         setTimeout(() => {
           this._pdfComponent.updateSize();
         }, 0);
       }
     });
 
-    // Start observing the container
     this._resizeObserver.observe(pdfContainer);
   }
 
