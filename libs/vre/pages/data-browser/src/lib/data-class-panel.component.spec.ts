@@ -346,12 +346,12 @@ describe('DataClassPanelComponent', () => {
       expect(config.data.resourceClassIri).toBe(mockResClass.id);
     });
 
-    it('should set minWidth to 800', () => {
+    it('should set minWidth to 600', () => {
       component.goToAddClassInstance();
 
       const callArgs = mockDialog.open.mock.calls[0];
       const config = callArgs[1] as any;
-      expect(config.minWidth).toBe(800);
+      expect(config.minWidth).toBe(600);
     });
 
     it('should use viewContainerRef from constructor', () => {
