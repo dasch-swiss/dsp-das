@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 import { ResourceClassDefinitionWithAllLanguages, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { MultipleViewerService, ResourceClassCountApi } from '@dasch-swiss/vre/pages/data-browser';
@@ -43,7 +44,7 @@ interface CreateResourceDialogProps {
     <app-resources-list-fetcher [ontologyLabel]="classSelected.ontologyLabel" [classLabel]="classSelected.classLabel" />
   `,
   standalone: true,
-  imports: [AsyncPipe, MatButton, TranslateModule, StringifyStringLiteralPipe, ResourcesListFetcherComponent],
+  imports: [AsyncPipe, MatButton, MatIcon, TranslateModule, StringifyStringLiteralPipe, ResourcesListFetcherComponent],
   providers: [StringifyStringLiteralPipe],
 })
 export class DataClassPanelComponent {
