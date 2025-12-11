@@ -4,13 +4,14 @@ import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ResourceClassDefinitionWithAllLanguages, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { MultipleViewerService, ResourceClassCountApi } from '@dasch-swiss/vre/pages/data-browser';
 import { filterUndefined, generateDspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { TranslateModule } from '@ngx-translate/core';
 import { from, switchMap, combineLatest, first } from 'rxjs';
-import { MultipleViewerService } from './comparison/multiple-viewer.service';
 import { DataBrowserPageService } from './data-browser-page.service';
+import { DownloadDialogComponent } from './download/download-dialog.component';
 import { ProjectPageService } from './project-page.service';
 import { ResourcesListFetcherComponent } from './sidenav/resource-class-sidenav/resources-list-fetcher.component';
 

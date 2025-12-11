@@ -42,3 +42,9 @@ export * from './lib/data-browser-page.component';
 export * from './lib/data-class-view.component';
 export * from './lib/data-overview.component';
 export * from './lib/data-browser-page.service';
+export * from './lib/data-class-panel.component';
+
+// Download dialog components
+export * from './lib/download/download-dialog.component';
+export * from './lib/download/download-property-list.component';
+export * from './lib/download/download-dialog-resources-tab.component';

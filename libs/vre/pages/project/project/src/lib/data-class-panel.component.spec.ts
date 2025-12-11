@@ -3,17 +3,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { MultipleViewerService, ResourceClassCountApi } from '@dasch-swiss/vre/pages/data-browser';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, of } from 'rxjs';
-import { MultipleViewerService } from './comparison/multiple-viewer.service';
 import { DataBrowserPageService } from './data-browser-page.service';
 import { DataClassPanelComponent } from './data-class-panel.component';
 import { DownloadDialogComponent } from './download/download-dialog.component';
-import { ResourceClassCountApi } from './resource-class-count.api';
+import { ProjectPageService } from './project-page.service';
 
 describe('DataClassPanelComponent', () => {
   let component: DataClassPanelComponent;
