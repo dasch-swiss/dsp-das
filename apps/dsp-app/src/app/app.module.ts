@@ -36,8 +36,8 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import { StringLiteralComponents } from '@dasch-swiss/vre/ui/string-literal';
 import { UiStandaloneComponents } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule } from '@ngx-translate/core';
-import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular';
 import { IMaskModule } from 'angular-imask';
 import { AngularSplitModule } from 'angular-split';
@@ -50,6 +50,11 @@ import { CookieBannerComponent } from './cookie-banner.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-with-credentials.interceptor';
 import { MaterialModule } from './material-module';
+
+// AoT requires an exported function for factories
+export function httpLoaderFactory(httpClient: HttpClient) {
+  return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -88,7 +93,13 @@ import { MaterialModule } from './material-module';
     ...SystemComponents,
     ...UserComponents,
     ReactiveFormsModule,
-    TranslateModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
     // Resource editor standalone refactor
     ResourceFetcherComponent,
     ClosingDialogComponent,
@@ -155,10 +166,6 @@ import { MaterialModule } from './material-module';
     }),
     LocalizationService,
     ...provideCalendarDateAdapter(),
-    ...provideTranslateHttpLoader({
-      prefix: 'assets/i18n/',
-      suffix: '.json',
-    }),
   ],
   bootstrap: [AppComponent],
 })
