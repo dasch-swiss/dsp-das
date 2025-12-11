@@ -114,8 +114,7 @@ describe('DataClassPanelComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      declarations: [DataClassPanelComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [DataClassPanelComponent, TranslateModule.forRoot()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: MatDialog, useValue: mockDialog },
