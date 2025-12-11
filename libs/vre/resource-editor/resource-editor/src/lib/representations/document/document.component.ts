@@ -1,10 +1,13 @@
 import { AsyncPipe } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   inject,
   Input,
   OnChanges,
+  OnDestroy,
   SimpleChanges,
   ViewChild,
   ViewContainerRef,
@@ -47,7 +50,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
   styleUrls: ['./document.component.scss'],
   standalone: true,
 })
-export class DocumentComponent implements OnChanges {
+export class DocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input({ required: true }) src!: ReadDocumentFileValue;
   @Input({ required: true }) parentResource!: ReadResource;
 
@@ -64,6 +67,7 @@ export class DocumentComponent implements OnChanges {
   pdfSrc: { url: string; httpHeaders?: { Authorization: string }; withCredentials: boolean } | null = null;
 
   private readonly _translateService = inject(TranslateService);
+  private _resizeObserver: ResizeObserver | null = null;
 
   get isPdf(): boolean {
     return this.src.filename.split('.').pop() === 'pdf';
@@ -73,6 +77,7 @@ export class DocumentComponent implements OnChanges {
     private readonly _accessTokenService: AccessTokenService,
     private readonly _cd: ChangeDetectorRef,
     private readonly _dialog: MatDialog,
+    private readonly _elementRef: ElementRef,
     private readonly _rs: RepresentationService,
     private readonly _viewContainerRef: ViewContainerRef,
     public resourceFetcherService: ResourceFetcherService
@@ -83,6 +88,16 @@ export class DocumentComponent implements OnChanges {
       this._setOriginalFilename();
       this._setPdfSrc();
     }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.isPdf) {
+      this._setupResizeObserver();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this._cleanupResizeObserver();
   }
 
   onInputChange(event: Event) {
@@ -153,6 +168,35 @@ export class DocumentComponent implements OnChanges {
         ...(headers && { httpHeaders: headers }),
         withCredentials: true,
       };
+    }
+  }
+
+  private _setupResizeObserver() {
+    // Find the PDF container element
+    const pdfContainer = this._elementRef.nativeElement.querySelector('.pdf-container');
+    if (!pdfContainer) {
+      return;
+    }
+
+    // Create ResizeObserver to detect container size changes
+    this._resizeObserver = new ResizeObserver(() => {
+      // When container resizes, trigger PDF viewer's updateSize method
+      if (this._pdfComponent && this.isPdf && !this.failedToLoad) {
+        // Use setTimeout to avoid ResizeObserver loop errors and ensure the DOM has updated
+        setTimeout(() => {
+          this._pdfComponent.updateSize();
+        }, 0);
+      }
+    });
+
+    // Start observing the container
+    this._resizeObserver.observe(pdfContainer);
+  }
+
+  private _cleanupResizeObserver() {
+    if (this._resizeObserver) {
+      this._resizeObserver.disconnect();
+      this._resizeObserver = null;
     }
   }
 }
