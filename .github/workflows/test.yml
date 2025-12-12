@@ -16,6 +16,15 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 22.12.0
+          cache: 'npm'
+      - name: Cache NX
+        uses: actions/cache@v4
+        with:
+          path: .nx/cache
+          key: nx-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/nx.json') }}
+          restore-keys: |
+            nx-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}-
+            nx-${{ runner.os }}-
       - name: Install dependencies
         run: npm install
       - name: Run tests with coverage
