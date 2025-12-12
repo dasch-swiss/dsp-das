@@ -216,7 +216,7 @@ describe('DocumentComponent', () => {
 
       it('should handle missing PDF container gracefully', () => {
         component.src = { ...mockDocumentFileValue, filename: 'test.pdf' } as ReadDocumentFileValue;
-        jest.spyOn(fixture.nativeElement, 'querySelector').mockReturnValue(null);
+        component['_pdfContainer'] = undefined;
 
         expect(() => component.ngAfterViewInit()).not.toThrow();
         expect(mockResizeObserver.observe).not.toHaveBeenCalled();

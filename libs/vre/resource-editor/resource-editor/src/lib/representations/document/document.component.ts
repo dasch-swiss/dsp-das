@@ -55,6 +55,7 @@ export class DocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input({ required: true }) parentResource!: ReadResource;
 
   @ViewChild(PdfViewerComponent) private _pdfComponent!: PdfViewerComponent;
+  @ViewChild('pdfContainer') private _pdfContainer?: ElementRef<HTMLDivElement>;
 
   originalFilename = '';
 
@@ -77,7 +78,6 @@ export class DocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
     private readonly _accessTokenService: AccessTokenService,
     private readonly _cd: ChangeDetectorRef,
     private readonly _dialog: MatDialog,
-    private readonly _elementRef: ElementRef,
     private readonly _rs: RepresentationService,
     private readonly _viewContainerRef: ViewContainerRef,
     public resourceFetcherService: ResourceFetcherService
@@ -172,8 +172,7 @@ export class DocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   private _setupResizeObserver() {
-    const pdfContainer = this._elementRef.nativeElement.querySelector('.pdf-container');
-    if (!pdfContainer) {
+    if (!this._pdfContainer) {
       return;
     }
 
@@ -185,7 +184,7 @@ export class DocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
       }
     });
 
-    this._resizeObserver.observe(pdfContainer);
+    this._resizeObserver.observe(this._pdfContainer.nativeElement);
   }
 
   private _cleanupResizeObserver() {
