@@ -1,0 +1,96 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["Lint", "Unit Tests", "E2E Tests", "OpenAPI Check"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+
+  check-all-workflows:
+    name: Check all quality workflows passed
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    outputs:
+      all_passed: ${{ steps.check.outputs.all_passed }}
+    steps:
+      - name: Check all workflows passed
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const requiredWorkflows = ['Lint', 'Unit Tests', 'E2E Tests', 'OpenAPI Check'];
+            const { data: runs } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: 'main',
+              event: 'push',
+              per_page: 100
+            });
+
+            // Get the commit SHA we're checking
+            const commitSha = context.payload.workflow_run.head_sha;
+
+            // Find all workflow runs for this commit
+            const commitRuns = runs.workflow_runs.filter(run => run.head_sha === commitSha);
+
+            // Check if all required workflows passed
+            const workflowStatuses = {};
+            for (const workflow of requiredWorkflows) {
+              const run = commitRuns.find(r => r.name === workflow);
+              workflowStatuses[workflow] = run ? run.conclusion : 'not_found';
+            }
+
+            console.log('Workflow statuses:', workflowStatuses);
+
+            const allPassed = requiredWorkflows.every(
+              workflow => workflowStatuses[workflow] === 'success'
+            );
+
+            core.setOutput('all_passed', allPassed);
+
+            if (!allPassed) {
+              core.setFailed('Not all required workflows passed');
+            }
+
+  publish:
+    name: Publish to Dockerhub
+    needs: check-all-workflows
+    if: needs.check-all-workflows.outputs.all_passed == 'true' && (github.ref_name == 'main' || startsWith(github.ref, 'refs/tags'))
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.output_docker_image_tag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # gets additionally all tags which we need
+      - name: Output docker image tag
+        id: output_docker_image_tag
+        run: echo "tag=$(make docker-image-tag | tr -d '\n')" >> "$GITHUB_OUTPUT"
+        shell: bash # Explicit for fail-fast behaviour
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22.12.0
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - run: make docker-publish
+
+  trigger-dev-deployment:
+    name: Trigger deployment to DEV
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
+      - name: Trigger deployment to DEV
+        env:
+          IMAGE_TAG: ${{ needs.publish.outputs.tag }}
+          JENKINS_BASIC_AUTH_USER: ${{ secrets.JENKINS_BASIC_AUTH_USER }}
+          JENKINS_BASIC_AUTH_PASS: ${{ secrets.JENKINS_BASIC_AUTH_PASS }}
+          JENKINS_DEV_WEBHOOK: ${{ secrets.JENKINS_DEV_WEBHOOK }}
+        run: |
+          curl -f -u "${JENKINS_BASIC_AUTH_USER}:${JENKINS_BASIC_AUTH_PASS}" \
+               -X POST "${JENKINS_DEV_WEBHOOK}" \
+               -d "Service=app&Version=${IMAGE_TAG}"
