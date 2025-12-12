@@ -7,3 +7,4 @@ export { MultipleViewerComponent } from './lib/comparison/multiple-viewer.compon
 
 // Service used by ResourceBrowserComponent
 export { MultipleViewerService } from './lib/comparison/multiple-viewer.service';
+export * from './lib/resource-class-count.api';
