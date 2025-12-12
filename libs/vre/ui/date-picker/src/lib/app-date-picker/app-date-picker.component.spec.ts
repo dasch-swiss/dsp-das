@@ -7,9 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslateService } from '@ngx-translate/core';
+import { of, Subject } from 'rxjs';
 import { AppDatePickerComponent } from './app-date-picker.component';
 
 describe('DatePickerComponent', () => {
@@ -20,7 +20,7 @@ describe('DatePickerComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         AppDatePickerComponent,
-        BrowserAnimationsModule,
+        NoopAnimationsModule,
         MatButtonModule,
         MatButtonToggleModule,
         MatFormFieldModule,
@@ -29,9 +29,21 @@ describe('DatePickerComponent', () => {
         MatMenuModule,
         MatSelectModule,
         ReactiveFormsModule,
-        TranslateModule.forRoot(),
       ],
-      providers: [Subject],
+      providers: [
+        Subject,
+        {
+          provide: TranslateService,
+          useValue: {
+            instant: jest.fn((key: string) => key),
+            get: jest.fn((key: string) => of(key)),
+            stream: jest.fn((key: string) => of(key)),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+          }
+        },
+      ],
     }).compileComponents();
   });
 

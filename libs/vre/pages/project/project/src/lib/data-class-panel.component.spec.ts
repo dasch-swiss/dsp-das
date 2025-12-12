@@ -7,8 +7,8 @@ import { MultipleViewerService, ResourceClassCountApi } from '@dasch-swiss/vre/p
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { TranslateModule } from '@ngx-translate/core';
-import { BehaviorSubject, of } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
 import { DataBrowserPageService } from './data-browser-page.service';
 import { DataClassPanelComponent } from './data-class-panel.component';
 import { DownloadDialogComponent } from './download/download-dialog.component';
@@ -125,9 +125,20 @@ describe('DataClassPanelComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [DataClassPanelComponent, TranslateModule.forRoot()],
+      imports: [DataClassPanelComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
+        {
+          provide: TranslateService,
+          useValue: {
+            instant: jest.fn((key: string) => key),
+            get: jest.fn((key: string) => of(key)),
+            stream: jest.fn((key: string) => of(key)),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+          }
+        },
         { provide: MatDialog, useValue: mockDialog },
         { provide: ViewContainerRef, useValue: mockViewContainerRef },
         { provide: ProjectPageService, useValue: mockProjectPageService },
@@ -182,104 +193,89 @@ describe('DataClassPanelComponent', () => {
       mockResClassCountApi.getResourceClassCount.mockReturnValue(of(10));
     });
 
-    it('should get resource class count', done => {
+    it('should get resource class count', async () => {
       component.openDownloadDialog();
-
-      setTimeout(() => {
-        expect(mockResClassCountApi.getResourceClassCount).toHaveBeenCalledWith(mockResClass.id);
-        done();
-      }, 0);
+      await fixture.whenStable();
+      expect(mockResClassCountApi.getResourceClassCount).toHaveBeenCalledWith(mockResClass.id);
     });
 
-    it('should show notification when resource count is 0', done => {
+    it('should show notification when resource count is 0', async () => {
       mockResClassCountApi.getResourceClassCount.mockReturnValue(of(0));
 
       component.openDownloadDialog();
+      await fixture.whenStable();
 
-      setTimeout(() => {
-        expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
-          'pages.dataBrowser.downloadDialog.noResources'
-        );
-        expect(mockDialog.open).not.toHaveBeenCalled();
-        done();
-      }, 0);
+      expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
+        'pages.dataBrowser.downloadDialog.noResources'
+      );
+      expect(mockDialog.open).not.toHaveBeenCalled();
     });
 
-    it('should show notification when no resources selected', done => {
+    it('should show notification when no resources selected', async () => {
       selectedResourcesSubject.next([]);
       mockResClassCountApi.getResourceClassCount.mockReturnValue(of(10));
 
       component.openDownloadDialog();
+      await fixture.whenStable();
 
-      setTimeout(() => {
-        expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
-          'pages.dataBrowser.downloadDialog.noResources'
-        );
-        expect(mockDialog.open).not.toHaveBeenCalled();
-        done();
-      }, 0);
+      expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
+        'pages.dataBrowser.downloadDialog.noResources'
+      );
+      expect(mockDialog.open).not.toHaveBeenCalled();
     });
 
-    it('should not open dialog when both count and resources are 0', done => {
+    it('should not open dialog when both count and resources are 0', async () => {
       selectedResourcesSubject.next([]);
       mockResClassCountApi.getResourceClassCount.mockReturnValue(of(0));
 
       component.openDownloadDialog();
+      await fixture.whenStable();
 
-      setTimeout(() => {
-        expect(mockDialog.open).not.toHaveBeenCalled();
-        done();
-      }, 0);
+      expect(mockDialog.open).not.toHaveBeenCalled();
     });
 
-    it('should open download dialog with correct data when resources exist', done => {
+    it('should open download dialog with correct data when resources exist', async () => {
       const mockResources = [mockResource1];
       selectedResourcesSubject.next(mockResources);
       mockResClassCountApi.getResourceClassCount.mockReturnValue(of(25));
 
       component.openDownloadDialog();
+      await fixture.whenStable();
 
-      setTimeout(() => {
-        expect(mockDialog.open).toHaveBeenCalledWith(
-          DownloadDialogComponent,
-          expect.objectContaining({
-            width: '500px',
-          })
-        );
-        done();
-      }, 0);
+      expect(mockDialog.open).toHaveBeenCalledWith(
+        DownloadDialogComponent,
+        expect.objectContaining({
+          width: '500px',
+        })
+      );
     });
 
-    it('should pass resource count to dialog', done => {
+    it('should pass resource count to dialog', async () => {
       const resourceCount = 42;
       selectedResourcesSubject.next([mockResource1]);
       mockResClassCountApi.getResourceClassCount.mockReturnValue(of(resourceCount));
 
       component.openDownloadDialog();
+      await fixture.whenStable();
 
-      setTimeout(() => {
-        const callArgs = mockDialog.open.mock.calls[0];
-        const config = callArgs[1] as any;
-        expect(config.data.resourceCount).toBe(resourceCount);
-        done();
-      }, 0);
+      const callArgs = mockDialog.open.mock.calls[0];
+      const config = callArgs[1] as any;
+      expect(config.data.resourceCount).toBe(resourceCount);
     });
 
-    it('should pass resource class to dialog', done => {
+    it('should pass resource class to dialog', async () => {
       selectedResourcesSubject.next([mockResource1]);
       mockResClassCountApi.getResourceClassCount.mockReturnValue(of(10));
 
       component.openDownloadDialog();
+      await fixture.whenStable();
 
-      setTimeout(() => {
-        const callArgs = mockDialog.open.mock.calls[0];
-        const config = callArgs[1] as any;
-        expect(config.data.resClass).toBe(mockResClass);
-        done();
-      }, 0);
+      const callArgs = mockDialog.open.mock.calls[0];
+      const config = callArgs[1] as any;
+      expect(config.data.resClass).toBe(mockResClass);
     });
 
-    it('should use DspDialogConfig for dialog configuration', done => {
+    it('should use DspDialogConfig for dialog configuration', async () => {
       selectedResourcesSubject.next([mockResource1]);
       mockResClassCountApi.getResourceClassCount.mockReturnValue(of(10));
 
@@ -287,127 +283,105 @@ describe('DataClassPanelComponent', () => {
       const dialogDrawerConfigSpy = jest.spyOn(DspDialogConfig, 'dialogDrawerConfig');
 
       component.openDownloadDialog();
+      await fixture.whenStable();
 
-      setTimeout(() => {
-        expect(dialogDrawerConfigSpy).toHaveBeenCalledWith(
-          expect.objectContaining({
-            resourceCount: 10,
-            resClass: mockResClass,
-          }),
-          true
-        );
-        done();
-      }, 0);
+      expect(dialogDrawerConfigSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          resourceCount: 10,
+          resClass: mockResClass,
+        }),
+        true
+      );
     });
 
-    it('should use first() operator on selectedResources$ to get single emission', done => {
+    it('should use first() operator on selectedResources$ to get single emission', async () => {
       selectedResourcesSubject.next([mockResource1]);
       mockResClassCountApi.getResourceClassCount.mockReturnValue(of(10));
 
       component.openDownloadDialog();
+      await fixture.whenStable();
 
-      setTimeout(() => {
-        // Change the subject after the subscription
-        selectedResourcesSubject.next([mockResource1, createMockResource('resource-2')]);
+      // Change the subject after the subscription
+      selectedResourcesSubject.next([mockResource1, createMockResource('resource-2')]);
 
-        // Dialog should still only be called once with the first value
-        expect(mockDialog.open).toHaveBeenCalledTimes(1);
-        done();
-      }, 10);
+      // Dialog should still only be called once with the first value
+      expect(mockDialog.open).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle multiple calls independently', done => {
+    it('should handle multiple calls independently', async () => {
       selectedResourcesSubject.next([mockResource1]);
       mockResClassCountApi.getResourceClassCount.mockReturnValue(of(5));
 
       component.openDownloadDialog();
+      await fixture.whenStable();
 
-      setTimeout(() => {
-        mockResClassCountApi.getResourceClassCount.mockReturnValue(of(10));
-        component.openDownloadDialog();
+      mockResClassCountApi.getResourceClassCount.mockReturnValue(of(10));
+      component.openDownloadDialog();
+      await fixture.whenStable();
 
-        setTimeout(() => {
-          expect(mockDialog.open).toHaveBeenCalledTimes(2);
-          done();
-        }, 10);
-      }, 10);
+      expect(mockDialog.open).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('goToAddClassInstance', () => {
-    it('should open create resource dialog', done => {
+    it('should open create resource dialog', async () => {
       component.goToAddClassInstance();
 
       // Wait for dynamic import and observable chain to complete
-      setTimeout(() => {
-        expect(mockDialog.open).toHaveBeenCalled();
-        done();
-      }, 100);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      expect(mockDialog.open).toHaveBeenCalled();
     });
 
-    it('should use StringifyStringLiteralPipe to transform resource labels', done => {
+    it('should use StringifyStringLiteralPipe to transform resource labels', async () => {
       component.goToAddClassInstance();
-
-      setTimeout(() => {
-        expect(mockStringifyPipe.transform).toHaveBeenCalledWith(mockResClass.labels);
-        done();
-      }, 100);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      expect(mockStringifyPipe.transform).toHaveBeenCalledWith(mockResClass.labels);
     });
 
-    it('should pass resource class IRI to dialog', done => {
+    it('should pass resource class IRI to dialog', async () => {
       component.goToAddClassInstance();
+      await new Promise(resolve => setTimeout(resolve, 100));
 
-      setTimeout(() => {
-        const callArgs = mockDialog.open.mock.calls[0];
-        const config = callArgs[1] as any;
-        expect(config.data.resourceClassIri).toBe(mockResClass.id);
-        done();
-      }, 100);
+      const callArgs = mockDialog.open.mock.calls[0];
+      const config = callArgs[1] as any;
+      expect(config.data.resourceClassIri).toBe(mockResClass.id);
     });
 
-    it('should set minWidth to 70vw', done => {
+    it('should set minWidth to 70vw', async () => {
       component.goToAddClassInstance();
+      await new Promise(resolve => setTimeout(resolve, 100));
 
-      setTimeout(() => {
-        const callArgs = mockDialog.open.mock.calls[0];
-        const config = callArgs[1] as any;
-        expect(config.width).toBe('70vw');
-        done();
-      }, 100);
+      const callArgs = mockDialog.open.mock.calls[0];
+      const config = callArgs[1] as any;
+      expect(config.width).toBe('70vw');
     });
 
-    it('should use viewContainerRef from constructor', done => {
+    it('should use viewContainerRef from constructor', async () => {
       component.goToAddClassInstance();
+      await new Promise(resolve => setTimeout(resolve, 100));
 
-      setTimeout(() => {
-        const callArgs = mockDialog.open.mock.calls[0];
-        const config = callArgs[1] as any;
-        // Check that viewContainerRef is defined (toBe comparison fails with jest private member access)
-        expect(config.viewContainerRef).toBeDefined();
-        done();
-      }, 100);
+      const callArgs = mockDialog.open.mock.calls[0];
+      const config = callArgs[1] as any;
+      // Check that viewContainerRef is defined (toBe comparison fails with jest private member access)
+      expect(config.viewContainerRef).toBeDefined();
     });
   });
 
   describe('hasProjectMemberRights$', () => {
-    it('should emit true when user has project member rights', done => {
+    it('should emit true when user has project member rights', async () => {
       mockProjectPageService.hasProjectMemberRights$ = of(true);
       component.hasProjectMemberRights$ = mockProjectPageService.hasProjectMemberRights$;
 
-      component.hasProjectMemberRights$.subscribe(hasRights => {
-        expect(hasRights).toBe(true);
-        done();
-      });
+      const hasRights = await firstValueFrom(component.hasProjectMemberRights$);
+      expect(hasRights).toBe(true);
     });
 
-    it('should emit false when user does not have project member rights', done => {
+    it('should emit false when user does not have project member rights', async () => {
       mockProjectPageService.hasProjectMemberRights$ = of(false);
       component.hasProjectMemberRights$ = mockProjectPageService.hasProjectMemberRights$;
 
-      component.hasProjectMemberRights$.subscribe(hasRights => {
-        expect(hasRights).toBe(false);
-        done();
-      });
+      const hasRights = await firstValueFrom(component.hasProjectMemberRights$);
+      expect(hasRights).toBe(false);
     });
   });
 });

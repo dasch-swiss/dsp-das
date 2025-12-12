@@ -4,7 +4,8 @@ import { Constants } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { of } from 'rxjs';
 import { ResourceActionsComponent } from './resource-actions.component';
 
 describe('ResourceActionsComponent', () => {
@@ -51,9 +52,20 @@ describe('ResourceActionsComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [ResourceActionsComponent, TranslateModule.forRoot()],
+      imports: [ResourceActionsComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
+        {
+          provide: TranslateService,
+          useValue: {
+            instant: jest.fn((key: string) => key),
+            get: jest.fn((key: string) => of(key)),
+            stream: jest.fn((key: string) => of(key)),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+          }
+        },
         { provide: NotificationService, useValue: mockNotificationService },
         { provide: ResourceService, useValue: mockResourceService },
       ],

@@ -1,6 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { of } from 'rxjs';
 import { LoadingMenuItemComponent } from './loading-menu-item.component';
 
 describe('LoadingMenuItemComponent', () => {
@@ -9,8 +10,21 @@ describe('LoadingMenuItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LoadingMenuItemComponent, TranslateModule.forRoot()],
+      imports: [LoadingMenuItemComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [
+        {
+          provide: TranslateService,
+          useValue: {
+            instant: jest.fn((key: string) => key),
+            get: jest.fn((key: string) => of(key)),
+            stream: jest.fn((key: string) => of(key)),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+          }
+        }
+      ],
     })
       .overrideComponent(LoadingMenuItemComponent, {
         set: {

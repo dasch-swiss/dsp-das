@@ -45,6 +45,17 @@ describe('CreateResourceDialogComponent', () => {
       imports: [CreateResourceDialogComponent, TranslateModule.forRoot()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
+        {
+          provide: TranslateService,
+          useValue: {
+            instant: jest.fn((key: string) => key),
+            get: jest.fn((key: string) => of(key)),
+            stream: jest.fn((key: string) => of(key)),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+          }
+        },
         { provide: MAT_DIALOG_DATA, useValue: mockDialogData },
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: ResourceFetcherService, useValue: mockResourceFetcherService },

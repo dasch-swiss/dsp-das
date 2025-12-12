@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserService } from '@dasch-swiss/vre/core/session';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, of } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource-link-dialog.component';
 import { ResourceListSelectionComponent } from './resource-list-selection.component';
@@ -89,9 +89,20 @@ describe('ResourceListSelectionComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [ResourceListSelectionComponent, TranslateModule.forRoot()],
+      imports: [ResourceListSelectionComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
+        {
+          provide: TranslateService,
+          useValue: {
+            instant: jest.fn((key: string) => key),
+            get: jest.fn((key: string) => of(key)),
+            stream: jest.fn((key: string) => of(key)),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+          }
+        },
         { provide: MultipleViewerService, useValue: mockMultipleViewerService },
         { provide: UserService, useValue: mockUserService },
         { provide: TranslateService, useValue: mockTranslateService },

@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KnoraApiConnection, ReadLinkValue, ReadResource, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { LinkValueDataService } from './link-value-data.service';
 import { LinkValueComponent } from './link-value.component';
@@ -115,9 +115,19 @@ describe('LinkValueComponent', () => {
         MatFormFieldModule,
         MatInputModule,
         NoopAnimationsModule,
-        TranslateModule.forRoot(),
       ],
       providers: [
+        {
+          provide: TranslateService,
+          useValue: {
+            instant: jest.fn((key: string) => key),
+            get: jest.fn((key: string) => of(key)),
+            stream: jest.fn((key: string) => of(key)),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+          }
+        },
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
         { provide: MatDialog, useValue: mockDialog },
         { provide: LinkValueDataService, useValue: mockLinkValueDataService },

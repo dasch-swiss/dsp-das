@@ -8,12 +8,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ReadUser, User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { UserForm } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { CreateUserDialogComponent } from './create-user-dialog.component';
 
@@ -44,11 +44,21 @@ describe('CreateUserDialogComponent', () => {
         MatInputModule,
         MatSelectModule,
         MatIconModule,
-        BrowserAnimationsModule,
-        TranslateModule.forRoot(),
-        HumanReadableErrorPipe,
+        NoopAnimationsModule,
+                HumanReadableErrorPipe,
       ],
       providers: [
+        {
+          provide: TranslateService,
+          useValue: {
+            instant: jest.fn((key: string) => key),
+            get: jest.fn((key: string) => of(key)),
+            stream: jest.fn((key: string) => of(key)),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+          }
+        },
         FormBuilder,
         { provide: MatDialogRef, useValue: dialogRefSpy },
         { provide: UserApiService, useValue: userApiServiceSpy },

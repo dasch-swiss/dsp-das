@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { EditLabelMenuItemComponent } from './edit-label-menu-item.component';
 
@@ -25,9 +25,20 @@ describe('EditLabelMenuItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditLabelMenuItemComponent, TranslateModule.forRoot()],
+      imports: [EditLabelMenuItemComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
+        {
+          provide: TranslateService,
+          useValue: {
+            instant: jest.fn((key: string) => key),
+            get: jest.fn((key: string) => of(key)),
+            stream: jest.fn((key: string) => of(key)),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+          }
+        },
         { provide: MatDialog, useValue: mockDialog },
         { provide: ViewContainerRef, useValue: {} },
       ],

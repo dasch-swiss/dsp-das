@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ApiResponseError, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AuthService } from '@dasch-swiss/vre/core/session';
@@ -60,13 +60,23 @@ describe('LoginFormComponent', () => {
         MatInputModule,
         MatIconModule,
         MatProgressSpinnerModule,
-        BrowserAnimationsModule,
-        TranslateModule.forRoot(),
-        CommonInputComponent,
+        NoopAnimationsModule,
+                CommonInputComponent,
         HumanReadableErrorPipe,
         LoadingButtonDirective,
       ],
       providers: [
+        {
+          provide: TranslateService,
+          useValue: {
+            instant: jest.fn((key: string) => key),
+            get: jest.fn((key: string) => of(key)),
+            stream: jest.fn((key: string) => of(key)),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+          }
+        },
         FormBuilder,
         { provide: AuthService, useValue: mockAuthService },
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
