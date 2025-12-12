@@ -101,7 +101,7 @@ describe('ResourceListSelectionComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
         { provide: MultipleViewerService, useValue: mockMultipleViewerService },
         { provide: UserService, useValue: mockUserService },

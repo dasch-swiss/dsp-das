@@ -34,8 +34,8 @@ describe('IncomingResourceMoreMenuComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
-        }
+          },
+        },
       ],
     })
       .overrideComponent(IncomingResourceMoreMenuComponent, {

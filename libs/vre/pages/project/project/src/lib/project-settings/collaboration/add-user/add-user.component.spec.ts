@@ -93,7 +93,7 @@ describe('AddUserComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
         { provide: AdminAPIApiService, useValue: {} },

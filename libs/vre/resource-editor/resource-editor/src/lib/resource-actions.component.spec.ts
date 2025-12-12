@@ -64,7 +64,7 @@ describe('ResourceActionsComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
         { provide: NotificationService, useValue: mockNotificationService },
         { provide: ResourceService, useValue: mockResourceService },

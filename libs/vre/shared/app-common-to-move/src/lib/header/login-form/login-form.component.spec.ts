@@ -61,7 +61,7 @@ describe('LoginFormComponent', () => {
         MatIconModule,
         MatProgressSpinnerModule,
         NoopAnimationsModule,
-                CommonInputComponent,
+        CommonInputComponent,
         HumanReadableErrorPipe,
         LoadingButtonDirective,
       ],
@@ -75,7 +75,7 @@ describe('LoginFormComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
         FormBuilder,
         { provide: AuthService, useValue: mockAuthService },

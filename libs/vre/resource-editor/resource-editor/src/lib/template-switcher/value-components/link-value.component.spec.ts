@@ -126,7 +126,7 @@ describe('LinkValueComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
         { provide: MatDialog, useValue: mockDialog },

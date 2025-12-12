@@ -23,8 +23,8 @@ describe('PasswordConfirmFormComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
-        }
+          },
+        },
       ],
     }).compileComponents();
 

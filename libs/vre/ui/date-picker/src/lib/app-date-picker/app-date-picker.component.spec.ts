@@ -41,7 +41,7 @@ describe('DatePickerComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
       ],
     }).compileComponents();

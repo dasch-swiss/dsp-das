@@ -37,7 +37,7 @@ describe('EditLabelMenuItemComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
         { provide: MatDialog, useValue: mockDialog },
         { provide: ViewContainerRef, useValue: {} },

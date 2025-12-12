@@ -46,8 +46,8 @@ describe('LicensesEnabledTableComponent - Event-Driven Architecture', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
-        }
+          },
+        },
       ],
     }).compileComponents();
 

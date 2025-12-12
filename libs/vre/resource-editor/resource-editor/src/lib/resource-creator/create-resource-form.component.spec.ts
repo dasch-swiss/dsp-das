@@ -50,8 +50,8 @@ describe('CreateResourceFormComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
-        }
+          },
+        },
       ],
     }).compileComponents();
 

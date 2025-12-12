@@ -58,7 +58,7 @@ describe('DocumentComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
         { provide: AccessTokenService, useValue: mockAccessTokenService },
         { provide: RepresentationService, useValue: mockRepresentationService },

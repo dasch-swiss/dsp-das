@@ -137,7 +137,7 @@ describe('DataClassPanelComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
         { provide: MatDialog, useValue: mockDialog },
         { provide: ViewContainerRef, useValue: mockViewContainerRef },
@@ -205,9 +205,7 @@ describe('DataClassPanelComponent', () => {
       component.openDownloadDialog();
       await fixture.whenStable();
 
-      expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
-        'pages.dataBrowser.downloadDialog.noResources'
-      );
+      expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith('pages.dataBrowser.downloadDialog.noResources');
       expect(mockDialog.open).not.toHaveBeenCalled();
     });
 
@@ -218,9 +216,7 @@ describe('DataClassPanelComponent', () => {
       component.openDownloadDialog();
       await fixture.whenStable();
 
-      expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
-        'pages.dataBrowser.downloadDialog.noResources'
-      );
+      expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith('pages.dataBrowser.downloadDialog.noResources');
       expect(mockDialog.open).not.toHaveBeenCalled();
     });
 

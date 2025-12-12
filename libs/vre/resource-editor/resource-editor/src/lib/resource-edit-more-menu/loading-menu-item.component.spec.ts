@@ -22,8 +22,8 @@ describe('LoadingMenuItemComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
-        }
+          },
+        },
       ],
     })
       .overrideComponent(LoadingMenuItemComponent, {

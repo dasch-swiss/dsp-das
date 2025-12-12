@@ -39,8 +39,8 @@ describe('DownloadPropertyListComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
-        }
+          },
+        },
       ],
     })
       .overrideComponent(DownloadPropertyListComponent, {

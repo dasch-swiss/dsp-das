@@ -53,7 +53,7 @@ describe('PropertyValueActionBubbleComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
         { provide: PropertyValueService, useValue: mockPropertyValueService },
         { provide: ResourceFetcherService, useValue: mockResourceFetcherService },

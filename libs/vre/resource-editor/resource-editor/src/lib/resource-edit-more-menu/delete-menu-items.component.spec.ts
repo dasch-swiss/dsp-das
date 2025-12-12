@@ -73,7 +73,7 @@ describe('DeleteMenuItemsComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
         { provide: ResourceFetcherService, useValue: mockResourceFetcher },

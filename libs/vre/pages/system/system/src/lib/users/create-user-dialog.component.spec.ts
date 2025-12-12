@@ -45,7 +45,7 @@ describe('CreateUserDialogComponent', () => {
         MatSelectModule,
         MatIconModule,
         NoopAnimationsModule,
-                HumanReadableErrorPipe,
+        HumanReadableErrorPipe,
       ],
       providers: [
         {
@@ -57,7 +57,7 @@ describe('CreateUserDialogComponent', () => {
             onLangChange: of(),
             onTranslationChange: of(),
             onDefaultLangChange: of(),
-          }
+          },
         },
         FormBuilder,
         { provide: MatDialogRef, useValue: dialogRefSpy },
