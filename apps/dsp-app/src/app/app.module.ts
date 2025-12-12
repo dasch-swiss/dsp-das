@@ -50,7 +50,7 @@ import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-with-credentials.interceptor';
 import { MaterialModule } from './material-module';
 
-// translate: AoT requires an exported function for factories
+// AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
 }
