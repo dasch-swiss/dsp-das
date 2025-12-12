@@ -56,13 +56,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    CookieBannerComponent,
-    ...ListComponents,
-    ...OntologyComponents,
-    ...SearchComponents,
-  ],
+  declarations: [AppComponent, CookieBannerComponent, ...ListComponents, ...OntologyComponents, ...SearchComponents],
   imports: [
     AdvancedSearchComponent,
     AngularSplitModule,
