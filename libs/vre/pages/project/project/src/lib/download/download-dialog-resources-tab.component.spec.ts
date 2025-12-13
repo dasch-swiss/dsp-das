@@ -91,15 +91,20 @@ describe('DownloadDialogResourcesTabComponent', () => {
     revokeObjectURLSpy = jest.spyOn(window.URL, 'revokeObjectURL').mockImplementation();
 
     await TestBed.configureTestingModule({
-      imports: [
-        DownloadDialogResourcesTabComponent,
-        TranslateModule.forRoot(),
-        FormsModule,
-        NoopAnimationsModule,
-        MockLoadingButtonDirective,
-      ],
+      imports: [DownloadDialogResourcesTabComponent, FormsModule, NoopAnimationsModule, MockLoadingButtonDirective],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
+        {
+          provide: TranslateService,
+          useValue: {
+            instant: jest.fn((key: string) => key),
+            get: jest.fn((key: string) => of(key)),
+            stream: jest.fn((key: string) => of(key)),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+          },
+        },
         { provide: APIV3ApiService, useValue: mockV3ApiService },
         { provide: NotificationService, useValue: mockNotificationService },
         { provide: LocalizationService, useValue: mockLocalizationService },

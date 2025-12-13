@@ -1,0 +1,17 @@
+name: OpenAPI Check
+
+on: [ push, fork ]
+
+jobs:
+
+  check-openapi-sync:
+    name: Check OpenAPI Spec is Up-to-Date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install yq for smart diff
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+      - name: Run OpenAPI sync check
+        run: ./scripts/check-openapi-sync.sh --verbose
