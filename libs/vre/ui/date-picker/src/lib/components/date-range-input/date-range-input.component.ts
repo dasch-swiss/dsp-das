@@ -47,12 +47,12 @@ import { CalendarDateAdapter } from '../../adapters/calendar-date.adapter';
 @Component({
   selector: 'app-date-range-input',
   imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
     MatButtonModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
+    ReactiveFormsModule,
   ],
   providers: [
     {
