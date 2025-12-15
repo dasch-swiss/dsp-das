@@ -33,13 +33,7 @@ import { ProjectPageService } from '../../project-page.service';
     }
   `,
   providers: [ResourceResultService],
-  imports: [
-    AsyncPipe,
-    TranslatePipe,
-    ResourcesListComponent,
-    CenteredMessageComponent,
-    AppProgressIndicatorComponent,
-  ],
+  imports: [AsyncPipe, TranslatePipe, ResourcesListComponent, CenteredMessageComponent, AppProgressIndicatorComponent],
 })
 export class ResourcesListFetcherComponent implements OnChanges {
   @Input({ required: true }) ontologyLabel!: string;

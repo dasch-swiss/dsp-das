@@ -19,16 +19,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
 
 @Component({
   selector: 'app-video-more-button',
-  imports: [
-    AsyncPipe,
-    CdkCopyToClipboard,
-    MatIconButton,
-    MatIcon,
-    MatMenu,
-    MatMenuItem,
-    MatMenuTrigger,
-    TranslatePipe,
-  ],
+  imports: [AsyncPipe, CdkCopyToClipboard, MatIconButton, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, TranslatePipe],
   template: ` <button mat-icon-button [matMenuTriggerFor]="more">
       <mat-icon>more_vert</mat-icon>
     </button>
