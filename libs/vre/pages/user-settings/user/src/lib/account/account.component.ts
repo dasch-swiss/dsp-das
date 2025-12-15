@@ -3,14 +3,14 @@ import { Component } from '@angular/core';
 import { MatCard } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatList, MatListItem, MatListItemIcon, MatListItemLine } from '@angular/material/list';
+import { MatList, MatListItem, MatListItemIcon } from '@angular/material/list';
 import { Title } from '@angular/platform-browser';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { AuthService, UserService } from '@dasch-swiss/vre/core/session';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { EditPasswordDialogComponent, EditPasswordDialogProps } from '../edit-password-dialog.component';
 import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/edit-user-dialog.component';
 
@@ -58,20 +58,19 @@ import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/
       }
     `,
   ],
-  standalone: true,
-  imports: [AsyncPipe, MatCard, MatList, MatListItem, MatIcon, MatListItemIcon, MatListItemLine, TranslateModule],
+  imports: [AsyncPipe, MatCard, MatList, MatListItem, MatIcon, MatListItemIcon, TranslatePipe],
 })
 export class AccountComponent {
   user$ = this._userService.user$;
 
   constructor(
-    private _userApiService: UserApiService,
-    private _dialog: DialogService,
-    private _matDialog: MatDialog,
-    private _titleService: Title,
-    private _userService: UserService,
-    private _authService: AuthService,
-    private _translateService: TranslateService
+    private readonly _userApiService: UserApiService,
+    private readonly _dialog: DialogService,
+    private readonly _matDialog: MatDialog,
+    private readonly _titleService: Title,
+    private readonly _userService: UserService,
+    private readonly _authService: AuthService,
+    private readonly _translateService: TranslateService
   ) {
     this._titleService.setTitle('Your account');
   }

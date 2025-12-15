@@ -1,9 +1,14 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
+import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { DoubleChipSelectorComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { map, tap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
+import { AddUserComponent } from './add-user/add-user.component';
 import { CollaborationPageService } from './collaboration-page.service';
+import { ProjectMembersComponent } from './project-members.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,14 +51,21 @@ import { CollaborationPageService } from './collaboration-page.service';
   `,
   styleUrls: ['./collaboration-page.component.scss'],
   providers: [CollaborationPageService],
-  standalone: false,
+  imports: [
+    AsyncPipe,
+    TranslatePipe,
+    DoubleChipSelectorComponent,
+    StatusComponent,
+    AddUserComponent,
+    ProjectMembersComponent,
+  ],
 })
 export class CollaborationPageComponent {
   private _translateService = inject(TranslateService);
 
   project$ = this._projectPageService.currentProject$.pipe(
     tap(project => {
-      this._titleService.setTitle(`Project ${project.shortname} | Collaboration`);
+      this.titleService.setTitle(`Project ${project.shortname} | Collaboration`);
     })
   );
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
@@ -72,8 +84,8 @@ export class CollaborationPageComponent {
   );
 
   constructor(
-    protected _titleService: Title,
+    protected titleService: Title,
     public collaborationPageService: CollaborationPageService,
-    private _projectPageService: ProjectPageService
+    private readonly _projectPageService: ProjectPageService
   ) {}
 }

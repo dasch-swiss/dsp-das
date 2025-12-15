@@ -1,5 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -11,14 +12,21 @@ import {
   OnInit,
   ViewContainerRef,
 } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatList } from '@angular/material/list';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ApiResponseError, CanDoResponse, IHasProperty, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { TranslateService } from '@ngx-translate/core';
+import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { DialogService, TruncatePipe } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription, switchMap, take } from 'rxjs';
 import {
   EditResourceClassDialogComponent,
@@ -27,13 +35,37 @@ import {
 import { OntologyPageService } from '../../ontology-page.service';
 import { ClassPropertyInfo, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
+import { AddPropertyMenuComponent } from './add-property-menu.component';
+import { PropertyItemComponent } from './property-item.component';
 
 @Component({
   selector: 'app-resource-class-info',
   templateUrl: './resource-class-info.component.html',
   styleUrls: ['./resource-class-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    AddPropertyMenuComponent,
+    AsyncPipe,
+    CdkDrag,
+    CdkDragHandle,
+    CdkDropList,
+    MatCard,
+    MatCardContent,
+    MatCardHeader,
+    MatCardSubtitle,
+    MatCardTitle,
+    MatIcon,
+    MatIconButton,
+    MatList,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    MatTooltip,
+    PropertyItemComponent,
+    StringifyStringLiteralPipe,
+    TranslatePipe,
+    TruncatePipe,
+  ],
 })
 export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resourceClass!: ResourceClassInfo;
@@ -54,17 +86,16 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   protected readonly _translate = inject(TranslateService);
 
   constructor(
-    public ops: OntologyPageService,
-    private _cd: ChangeDetectorRef,
-    private _clipboard: Clipboard,
-    private _dialog: MatDialog,
-    private _dialogService: DialogService,
-    private _notification: NotificationService,
-    private _oes: OntologyEditService,
-    private _projectPageService: ProjectPageService,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _viewContainerRef: ViewContainerRef
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
+    private _viewContainerRef: ViewContainerRef,
+    private readonly _cd: ChangeDetectorRef,
+    private readonly _clipboard: Clipboard,
+    private readonly _dialog: MatDialog,
+    private readonly _dialogService: DialogService,
+    private readonly _notification: NotificationService,
+    private readonly _oes: OntologyEditService,
+    private readonly _projectPageService: ProjectPageService,
+    public ops: OntologyPageService
   ) {}
 
   ngOnInit() {

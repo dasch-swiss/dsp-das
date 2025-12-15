@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
@@ -31,21 +30,19 @@ export interface QueryObject {
 @Component({
   selector: 'app-advanced-search',
   imports: [
-    CommonModule,
-    OrderByComponent,
-    OntologyResourceFormComponent,
-    PropertyFormComponent,
+    AsyncPipe,
     FormActionsComponent,
     MatButtonModule,
     MatIconModule,
+    OntologyResourceFormComponent,
+    OrderByComponent,
+    PropertyFormComponent,
     RouterModule,
-    TranslateModule,
   ],
   providers: [AdvancedSearchStoreService],
   templateUrl: './advanced-search.component.html',
   styleUrls: ['./advanced-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class AdvancedSearchComponent implements OnInit {
   // either the uuid of the project or the shortcode

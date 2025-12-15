@@ -1,8 +1,15 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output, ViewContainerRef } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CanDoResponse, ReadResource } from '@dasch-swiss/dsp-js';
-import { EraseResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { EraseResourceDialogComponent } from '../resource-properties/erase-resource-dialog.component';
+import { LoadingMenuItemComponent } from './loading-menu-item.component';
 
 @Component({
   selector: 'app-erase-button',
@@ -14,7 +21,7 @@ import { Observable } from 'rxjs';
         [matTooltip]="
           resourceCanBeDeleted.canDo
             ? ('resourceEditor.moreMenu.eraseResourceTooltip' | translate)
-            : resourceCanBeDeleted.cannotDoReason || ('resourceEditor.moreMenu.checkingPermissionErase' | translate)
+            : ('resourceEditor.moreMenu.cannotEraseIncomingLinks' | translate)
         "
         matTooltipPosition="above"
         [disabled]="!resourceCanBeDeleted.canDo"
@@ -33,7 +40,15 @@ import { Observable } from 'rxjs';
         labelKey="resourceEditor.moreMenu.eraseResource" />
     }
   `,
-  standalone: false,
+  imports: [
+    AsyncPipe,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatTooltipModule,
+    TranslatePipe,
+    LoadingMenuItemComponent,
+  ],
 })
 export class EraseButtonComponent {
   @Input({ required: true }) resourceCanBeDeleted$!: Observable<CanDoResponse>;
@@ -41,8 +56,8 @@ export class EraseButtonComponent {
   @Output() erased = new EventEmitter<void>();
 
   constructor(
-    private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef
+    private readonly _dialog: MatDialog,
+    private readonly _viewContainerRef: ViewContainerRef
   ) {}
 
   eraseResource() {

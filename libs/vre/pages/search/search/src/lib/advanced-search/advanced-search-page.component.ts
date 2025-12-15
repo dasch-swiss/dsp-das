@@ -2,7 +2,8 @@ import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { PropertyFormItem, QueryObject } from '@dasch-swiss/vre/pages/search/advanced-search';
+import { AdvancedSearchComponent, PropertyFormItem, QueryObject } from '@dasch-swiss/vre/pages/search/advanced-search';
+import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
 
 @Component({
   selector: 'app-advanced-search-page',
@@ -13,15 +14,15 @@ import { PropertyFormItem, QueryObject } from '@dasch-swiss/vre/pages/search/adv
       (emitBackButtonClicked)="onBackClicked()" />
   </app-centered-layout>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [CenteredLayoutComponent, AdvancedSearchComponent],
 })
 export class AdvancedSearchPageComponent implements OnInit {
   uuid: string;
 
   constructor(
-    private _router: Router,
-    private _route: ActivatedRoute,
-    private _location: Location
+    private readonly _router: Router,
+    private readonly _route: ActivatedRoute,
+    private readonly _location: Location
   ) {}
 
   ngOnInit(): void {

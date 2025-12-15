@@ -16,7 +16,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize, switchMap } from 'rxjs';
 
 export interface IEraseProjectDialogProps {
@@ -33,7 +33,6 @@ export interface IEraseProjectDialogProps {
     `,
   ],
   templateUrl: './erase-project-dialog.component.html',
-  standalone: true,
   imports: [
     DialogHeaderComponent,
     LoadingButtonDirective,
@@ -46,7 +45,7 @@ export interface IEraseProjectDialogProps {
     MatInput,
     MatLabel,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class EraseProjectDialogComponent {
@@ -58,11 +57,11 @@ export class EraseProjectDialogComponent {
   isLoading = false;
 
   constructor(
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
     @Inject(MAT_DIALOG_DATA) public data: IEraseProjectDialogProps,
-    private _dialogRef: MatDialogRef<EraseProjectDialogComponent>,
-    @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-    private _projectApiService: ProjectApiService,
-    private _userService: UserService
+    private readonly _dialogRef: MatDialogRef<EraseProjectDialogComponent>,
+    private readonly _projectApiService: ProjectApiService,
+    private readonly _userService: UserService
   ) {}
 
   submit() {

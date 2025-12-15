@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ProjectFulltextSearchPageComponent } from './project-fulltext-search-page.component';
 
 @Component({
   selector: 'app-project-search-page',
@@ -11,6 +12,6 @@ import { Component } from '@angular/core';
       }
     `,
   ],
-  standalone: false,
+  imports: [ProjectFulltextSearchPageComponent],
 })
 export class ProjectSearchPageComponent {}

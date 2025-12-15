@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { RouterOutlet } from '@angular/router';
 import { AutoLoginService, LocalStorageWatcherService } from '@dasch-swiss/vre/core/session';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { CookieBannerComponent } from './cookie-banner.component';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +11,14 @@ import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services
     <router-outlet />
     <app-cookie-banner />
   `,
-  standalone: false,
+  imports: [RouterOutlet, CookieBannerComponent],
 })
 export class AppComponent {
   constructor(
-    private _titleService: Title,
-    private _autoLoginService: AutoLoginService,
-    private _localStorageWatcher: LocalStorageWatcherService,
-    private _localizationService: LocalizationService
+    private readonly _titleService: Title,
+    private readonly _autoLoginService: AutoLoginService,
+    private readonly _localStorageWatcher: LocalStorageWatcherService,
+    private readonly _localizationService: LocalizationService
   ) {
     this._autoLoginService.setup();
     this._localStorageWatcher.watchAccessToken();

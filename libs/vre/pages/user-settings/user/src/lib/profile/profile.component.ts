@@ -5,7 +5,7 @@ import { MatIcon } from '@angular/material/icon';
 import { Title } from '@angular/platform-browser';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { AdminImageDirective } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject, takeUntil, takeWhile } from 'rxjs';
 
 @Component({
@@ -47,8 +47,7 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
       </div>
     }
   `,
-  standalone: true,
-  imports: [AsyncPipe, AdminImageDirective, MatChipSet, MatChip, MatIcon, MatChipAvatar, TranslateModule],
+  imports: [AsyncPipe, AdminImageDirective, MatChipSet, MatChip, MatIcon, MatChipAvatar, TranslatePipe],
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -57,8 +56,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   user$ = this._userService.user$;
 
   constructor(
-    private _userService: UserService,
-    private _titleService: Title
+    private readonly _userService: UserService,
+    private readonly _titleService: Title
   ) {}
 
   ngOnInit() {

@@ -1,4 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
+import { AlertInfoComponent } from './alert-info.component';
 
 @Component({
   selector: 'app-resource-version-warning',
@@ -14,7 +17,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
       </div>
     </app-alert-info>
   `,
-  standalone: false,
+  imports: [MatButtonModule, TranslatePipe, AlertInfoComponent],
 })
 export class ResourceVersionWarningComponent {
   @Input({ required: true }) resourceVersion!: string;

@@ -6,7 +6,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AuthService } from '@dasch-swiss/vre/core/session';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize, Subscription, switchMap } from 'rxjs';
 import { PasswordFormFieldComponent } from '../password-form/password-form-field.component';
 
@@ -49,14 +49,13 @@ import { PasswordFormFieldComponent } from '../password-form/password-form-field
       }
     `,
   ],
-  standalone: true,
   imports: [
     CommonInputComponent,
     LoadingButtonDirective,
     MatButton,
     PasswordFormFieldComponent,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class LoginFormComponent implements OnInit, OnDestroy {
@@ -71,11 +70,10 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   private formSubscription?: Subscription;
 
   constructor(
-    private _fb: FormBuilder,
-    private _authService: AuthService,
-    private _translateService: TranslateService,
-    @Inject(DspApiConnectionToken)
-    private readonly _dspApiConnection: KnoraApiConnection
+    private readonly _fb: FormBuilder,
+    private readonly _authService: AuthService,
+    private readonly _translateService: TranslateService,
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection
   ) {}
 
   ngOnInit(): void {

@@ -36,7 +36,6 @@ import { ProjectsListComponent } from './projects-list/projects-list.component';
       }
     </div>
   `,
-  standalone: true,
   imports: [AsyncPipe, ProjectsListComponent],
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
@@ -70,10 +69,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   );
 
   constructor(
-    private _userService: UserService,
-    private _allProjectsService: AllProjectsService,
-    private _titleService: Title,
-    private _translateService: TranslateService
+    private readonly _userService: UserService,
+    private readonly _allProjectsService: AllProjectsService,
+    private readonly _titleService: Title,
+    private readonly _translateService: TranslateService
   ) {}
 
   ngOnInit() {

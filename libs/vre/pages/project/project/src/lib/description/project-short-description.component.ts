@@ -1,6 +1,10 @@
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { ProjectImageCoverComponent } from '@dasch-swiss/vre/pages/user-settings/user';
+import { TranslatePipe } from '@ngx-translate/core';
 import { tap } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 import { LicenseCaptionsMapping } from './license-captions-mapping';
@@ -8,7 +12,7 @@ import { ProjectDescriptionPageComponent } from './project-description-page.comp
 
 @Component({
   selector: 'app-project-short-description',
-  standalone: false,
+  imports: [AsyncPipe, UpperCasePipe, TranslatePipe, MatButton, ProjectImageCoverComponent],
   template: `
     @if (readProject$ | async; as project) {
       @if (test) {
@@ -53,9 +57,9 @@ export class ProjectShortDescriptionComponent implements OnInit {
   test = false;
 
   constructor(
-    private _projectPageService: ProjectPageService,
-    private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _dialog: MatDialog,
+    private readonly _viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit() {

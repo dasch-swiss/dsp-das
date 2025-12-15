@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -7,22 +7,23 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
 
 @Component({
-  standalone: true,
   selector: 'app-property-form-list-value',
   imports: [
-    CommonModule,
+    AsyncPipe,
+    MatAutocompleteModule,
     MatFormFieldModule,
-    MatSelectModule,
+    MatInputModule,
     MatOptionModule,
+    MatSelectModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatInputModule,
-    TranslateModule,
+    TranslatePipe,
   ],
   template: `
     <mat-form-field appearance="fill" class="dropdown">

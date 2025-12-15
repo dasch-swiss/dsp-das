@@ -312,7 +312,7 @@
         "type": "Property type",
         "name": "Property name",
         "labelPlaceholder": "Property label",
-        "commentPlaceholder": "Comment",
+        "commentPlaceholder": "Description",
         "selectResourceClass": "Select resource class",
         "selectList": "Select list"
       },
@@ -384,6 +384,20 @@
       },
       "resourceListItem": {
         "foundIn": "Found in: "
+      },
+      "downloadDialog": {
+        "title": "Download",
+        "resourcesAvailable": "{{count}} resources available",
+        "noResources": "There are no resources to download.",
+        "properties": "Properties",
+        "selectAll": "Select All",
+        "selectNone": "Select None",
+        "selectedCount": "{{count}} of {{total}} properties selected",
+        "includeIrisLabel": "Include Resource IRIs for reference properties",
+        "includeIrisExplanation": "When enabled, reference properties export both human-readable values (e.g., 'Alice') and Resource IRIs for proper data referencing.",
+        "downloadCsv": "Download CSV",
+        "downloadSuccess": "CSV downloaded successfully.",
+        "downloadError": "Failed to download CSV. Please try again."
       }
     }
   },
@@ -417,7 +431,8 @@
       "eraseResource": "Erase resource",
       "eraseResourceTooltip": "Erase resource forever. This cannot be undone.",
       "noPermission": "You do not have permission to delete this resource.",
-      "cannotDeleteIncomingLinks": "The resource cannot be deleted because it has incoming links (see below)."
+      "cannotDeleteIncomingLinks": "The resource cannot be deleted because it has incoming links (see below).",
+      "cannotEraseIncomingLinks": "The resource cannot be erased because it has incoming links (see below)."
     },
     "infoBar": {
       "resourceOfProject": "Resource of the project",
@@ -671,6 +686,10 @@
         "date": "Date",
         "datePlaceholder": "Click to select a date",
         "time": "Time"
+      },
+      "geonameValue": {
+        "placeholder": "Search for a location...",
+        "label": "Location"
       },
       "example": "e.g."
     }
