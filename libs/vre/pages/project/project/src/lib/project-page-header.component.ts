@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
 import { HeaderLogoComponent, HeaderUserActionsComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { map } from 'rxjs';
 import { ProjectNavigationTabsComponent } from './project-navigation-tabs.component';
 import { ProjectPageService } from './project-page.service';
@@ -50,7 +51,9 @@ import { ProjectPageService } from './project-page.service';
 })
 export class ProjectPageHeaderComponent {
   currentProjectName$ = this._projectService.currentProject$.pipe(map(project => project.longname));
-  projectLink$ = this._projectService.currentProject$.pipe(map(project => ['/project', project.id]));
+  projectLink$ = this._projectService.currentProject$.pipe(
+    map(project => ['/project', ProjectService.IriToUuid(project.id)])
+  );
 
   constructor(private readonly _projectService: ProjectPageService) {}
 }
