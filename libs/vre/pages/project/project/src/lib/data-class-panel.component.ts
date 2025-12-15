@@ -63,7 +63,8 @@ export class DataClassPanelComponent {
     private readonly _resClassCountApi: ResourceClassCountApi,
     private readonly _stringifyStringLiteralPipe: StringifyStringLiteralPipe,
     private readonly _notificationService: NotificationService,
-    private readonly _dataBrowserPageService: DataBrowserPageService
+    private readonly _dataBrowserPageService: DataBrowserPageService,
+    private readonly _translateService: TranslateService
   ) {}
 
   goToAddClassInstance() {
@@ -112,7 +113,9 @@ export class DataClassPanelComponent {
       this._multipleViewerService.selectedResources$.pipe(first()),
     ]).subscribe(([resClassCount, resources]) => {
       if (resClassCount === 0 || resources.length === 0) {
-        this._notificationService.openSnackBar('pages.dataBrowser.downloadDialog.noResources');
+        this._notificationService.openSnackBar(
+          this._translateService.instant('pages.dataBrowser.downloadDialog.noResources')
+        );
         return;
       }
 
