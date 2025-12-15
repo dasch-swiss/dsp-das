@@ -60,6 +60,10 @@ export class SearchStateService {
     const newState: SearchFormsState = {
       ...this._state.value,
       ...state,
+      // Force new array reference for statementElements if provided
+      ...(state.statementElements && {
+        statementElements: [...state.statementElements],
+      }),
     };
     this._state.next(newState);
   }

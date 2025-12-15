@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -90,17 +90,10 @@ import { StringValueComponent } from './object-values/string-value/string-value.
   styleUrl: '../../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatementBuilderComponent implements OnChanges {
+export class StatementBuilderComponent {
   @Input({ required: true }) statementElements: StatementElement[] = [new StatementElement()];
 
   formManager = inject(PropertyFormManager);
 
   protected readonly PROPERTY_OBJECT_TYPES = PropertyObjectType;
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['statementElements']) {
-      console.log('changes statementElements');
-      console.log(this.statementElements);
-    }
-  }
 }

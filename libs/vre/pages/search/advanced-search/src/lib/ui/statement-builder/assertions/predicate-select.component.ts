@@ -46,7 +46,6 @@ export class PredicateSelectComponent implements OnChanges {
   properties: Predicate[] = [];
 
   ngOnChanges(): void {
-    console.log('ngOnChanges selectedPredicate=', this.selectedPredicate);
     this._dataService
       .getProperties$(this.subjectClass?.iri)
       .pipe(take(1))

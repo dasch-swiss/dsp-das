@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
-import { map, tap } from 'rxjs';
+import { map } from 'rxjs';
 import { QueryObject } from './model';
 import { provideAdvancedSearch } from './providers';
 import { AdvancedSearchDataService } from './service/advanced-search-data.service';
