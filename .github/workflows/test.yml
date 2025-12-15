@@ -31,6 +31,7 @@ jobs:
         run: npm run unit-test-coverage-ci
         env:
           TZ: Europe/Zurich
+          NX_PARALLEL: 10
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
