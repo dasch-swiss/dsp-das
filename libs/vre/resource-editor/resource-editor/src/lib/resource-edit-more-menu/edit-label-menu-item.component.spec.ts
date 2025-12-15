@@ -30,7 +30,7 @@ describe('EditLabelMenuItemComponent', () => {
       providers: [
         { provide: MatDialog, useValue: mockDialog },
         { provide: ViewContainerRef, useValue: {} },
-      provideTranslateService(),
+        provideTranslateService(),
         TranslateService,
       ],
     })

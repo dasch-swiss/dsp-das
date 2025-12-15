@@ -67,7 +67,7 @@ describe('DeleteMenuItemsComponent', () => {
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
         { provide: ResourceFetcherService, useValue: mockResourceFetcher },
         { provide: UserService, useValue: mockUserService },
-      provideTranslateService(),
+        provideTranslateService(),
         TranslateService,
       ],
     })

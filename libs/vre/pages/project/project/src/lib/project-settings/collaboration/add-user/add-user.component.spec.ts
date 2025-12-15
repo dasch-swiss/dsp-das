@@ -90,7 +90,7 @@ describe('AddUserComponent', () => {
         { provide: ProjectService, useValue: mockProjectService },
         { provide: UserApiService, useValue: mockUserApiService },
         { provide: CollaborationPageService, useValue: mockCollaborationPageService },
-      provideTranslateService(),
+        provideTranslateService(),
         TranslateService,
       ],
     })

@@ -56,7 +56,7 @@ describe('ResourceActionsComponent', () => {
       providers: [
         { provide: NotificationService, useValue: mockNotificationService },
         { provide: ResourceService, useValue: mockResourceService },
-      provideTranslateService(),
+        provideTranslateService(),
         TranslateService,
       ],
     })

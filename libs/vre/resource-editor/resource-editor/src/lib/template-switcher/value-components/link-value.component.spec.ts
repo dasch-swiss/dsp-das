@@ -115,13 +115,12 @@ describe('LinkValueComponent', () => {
         MatFormFieldModule,
         MatInputModule,
         NoopAnimationsModule,
-        
       ],
       providers: [
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
         { provide: MatDialog, useValue: mockDialog },
         { provide: LinkValueDataService, useValue: mockLinkValueDataService },
-      provideTranslateService(),
+        provideTranslateService(),
         TranslateService,
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

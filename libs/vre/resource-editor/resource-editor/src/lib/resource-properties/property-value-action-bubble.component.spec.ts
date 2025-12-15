@@ -46,7 +46,7 @@ describe('PropertyValueActionBubbleComponent', () => {
       providers: [
         { provide: PropertyValueService, useValue: mockPropertyValueService },
         { provide: ResourceFetcherService, useValue: mockResourceFetcherService },
-      provideTranslateService(),
+        provideTranslateService(),
         TranslateService,
       ],
     })

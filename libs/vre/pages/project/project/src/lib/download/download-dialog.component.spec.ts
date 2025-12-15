@@ -49,7 +49,7 @@ describe('DownloadDialogComponent', () => {
       providers: [
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: MAT_DIALOG_DATA, useValue: mockDialogData },
-      provideTranslateService(),
+        provideTranslateService(),
         TranslateService,
       ],
     })

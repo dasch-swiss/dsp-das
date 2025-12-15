@@ -45,14 +45,14 @@ describe('CreateUserDialogComponent', () => {
         MatSelectModule,
         MatIconModule,
         BrowserAnimationsModule,
-        
+
         HumanReadableErrorPipe,
       ],
       providers: [
         FormBuilder,
         { provide: MatDialogRef, useValue: dialogRefSpy },
         { provide: UserApiService, useValue: userApiServiceSpy },
-      provideTranslateService(),
+        provideTranslateService(),
         TranslateService,
       ],
     }).compileComponents();

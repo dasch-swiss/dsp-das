@@ -36,7 +36,7 @@ describe('EraseButtonComponent', () => {
       providers: [
         { provide: MatDialog, useValue: mockDialog },
         { provide: ViewContainerRef, useValue: mockViewContainerRef },
-      provideTranslateService(),
+        provideTranslateService(),
         TranslateService,
       ],
     })

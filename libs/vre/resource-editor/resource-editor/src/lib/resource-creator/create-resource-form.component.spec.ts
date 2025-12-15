@@ -36,7 +36,7 @@ describe('CreateResourceFormComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [CreateResourceFormComponent,  ReactiveFormsModule],
+      imports: [CreateResourceFormComponent, ReactiveFormsModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         FormBuilder,

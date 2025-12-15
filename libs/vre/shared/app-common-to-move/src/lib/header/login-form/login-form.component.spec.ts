@@ -61,7 +61,7 @@ describe('LoginFormComponent', () => {
         MatIconModule,
         MatProgressSpinnerModule,
         BrowserAnimationsModule,
-        
+
         CommonInputComponent,
         HumanReadableErrorPipe,
         LoadingButtonDirective,
