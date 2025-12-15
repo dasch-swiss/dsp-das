@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CdkDrag, CdkDragHandle, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -227,7 +227,6 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
     MatMenuTrigger,
     MatRipple,
     MatTooltip,
-    NgClass,
     SplitPipe,
     StringifyStringLiteralPipe,
     TranslateModule,

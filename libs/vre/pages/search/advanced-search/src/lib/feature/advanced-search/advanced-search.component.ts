@@ -39,7 +39,6 @@ export interface QueryObject {
     OrderByComponent,
     PropertyFormComponent,
     RouterModule,
-    TranslateModule,
   ],
   providers: [AdvancedSearchStoreService],
   templateUrl: './advanced-search.component.html',

@@ -12,7 +12,7 @@ import {
   OnInit,
   ViewContainerRef,
 } from '@angular/core';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
@@ -49,7 +49,6 @@ import { PropertyItemComponent } from './property-item.component';
     CdkDrag,
     CdkDragHandle,
     CdkDropList,
-    MatButton,
     MatCard,
     MatCardContent,
     MatCardHeader,
