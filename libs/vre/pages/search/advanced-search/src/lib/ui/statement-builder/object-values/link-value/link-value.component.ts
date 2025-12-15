@@ -6,11 +6,20 @@ import {
   EventEmitter,
   inject,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidatorFn,
+  AbstractControl,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
@@ -52,7 +61,8 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
         placeholder="Search for a resource"
         aria-label="Search for a resource by name"
         [matAutocomplete]="auto"
-        [formControl]="inputControl" />
+        [formControl]="inputControl"
+        required />
       <mat-autocomplete
         #autoComplete
         #auto="matAutocomplete"
@@ -87,9 +97,18 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
       </mat-autocomplete>
     </mat-form-field>
   `,
+  styles: `
+    :host {
+      display: block;
+    }
+    mat-form-field {
+      width: 100%;
+    }
+  `,
+  styleUrl: '../../../../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
+export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   private _dataService = inject(DynamicFormsDataService);
   private destroy$ = new Subject<void>();
 
@@ -102,13 +121,21 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
   loading$ = new BehaviorSubject<boolean>(false);
   lastSearchString$ = new BehaviorSubject<string | null>(null);
 
-  inputControl = new FormControl<string | null>(null);
+  inputControl = new FormControl<string | null>(null, [Validators.required, this.resourceSelectedValidator()]);
+
+  private resourceSelectedValidator(): ValidatorFn {
+    return (_control: AbstractControl): ValidationErrors | null => {
+      // If control is empty, Validators.required will handle it
+      // This validator checks if user typed text without selecting from autocomplete
+      if (!_control.value) {
+        return null;
+      }
+      // If there's text but no selectedResource, it means user didn't select from autocomplete
+      return !this.selectedResource ? { resourceNotSelected: true } : null;
+    };
+  }
 
   ngOnInit() {
-    if (!this.resourceClass) {
-      return;
-    }
-
     this.inputControl.valueChanges
       .pipe(
         debounceTime(300),
@@ -116,20 +143,18 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
         tap(searchString => this.lastSearchString$.next(searchString)),
         filter(searchString => searchString !== null && searchString.length > 2),
         tap(() => this.loading$.next(true)),
-        switchMap(searchString =>
-          this._dataService.searchResourcesByLabel$(searchString!, this.resourceClass!, 0).pipe(
-            catchError(error => {
-              console.error('LinkValue search error:', error);
-              return of([]);
-            })
-          )
-        ),
+        switchMap(searchString => this._dataService.searchResourcesByLabel$(searchString!, this.resourceClass!, 0)),
         tap(() => this.loading$.next(false)),
         takeUntil(this.destroy$)
       )
       .subscribe(results => {
         this.linkValueObjects$.next(results);
       });
+  }
+
+  ngOnChanges(): void {
+    // Re-validate when selectedResource input changes
+    this.inputControl.updateValueAndValidity();
   }
 
   ngAfterViewInit(): void {
@@ -140,9 +165,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onResourceSelected(event: MatAutocompleteSelectedEvent) {
     const data = event.option.value as IriLabelPair;
-    // Set the label in the input (string only)
     this.inputControl.setValue(data.label, { emitEvent: false });
-    // Emit the full object to parent
     this.emitResourceSelected.emit(data);
   }
 
@@ -169,10 +192,6 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  /**
-   * Display function for MatAutocomplete to show the label.
-   * Since we store only strings in FormControl, this just returns the value.
-   */
   displayLabel = (value: string | null): string => value ?? '';
 
   ngOnDestroy(): void {

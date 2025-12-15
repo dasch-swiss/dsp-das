@@ -19,7 +19,6 @@ export class PreviousSearchService {
 
   storeSearchSnapshot(projectIri: string, ontology: IriLabelPair, state: SearchFormsState): void {
     const snapshot: AdvancedSearchStateSnapshot = {
-      selectedProject: projectIri,
       selectedOntology: ontology,
       selectedResourceClass: state.selectedResourceClass,
       statementElements: state.statementElements,
@@ -27,10 +26,8 @@ export class PreviousSearchService {
     };
 
     const storedSearch = localStorage.getItem(this.STORAGE_KEY);
-    const projectPreviousSearch: Record<string, AdvancedSearchStateSnapshot> = storedSearch
-      ? JSON.parse(storedSearch)
-      : {};
-    projectPreviousSearch[snapshot.selectedProject] = snapshot;
+    const projectPreviousSearch: Record<string, SearchFormsState> = storedSearch ? JSON.parse(storedSearch) : {};
+    projectPreviousSearch[projectIri] = snapshot;
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(projectPreviousSearch));
   }
 

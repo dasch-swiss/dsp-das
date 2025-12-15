@@ -20,8 +20,24 @@
   max-width: 100em;
 }
 
+.min-width-20em {
+  min-width: 20em;
+}
+
+.min-width-25em {
+  min-width: 25em;
+}
+
+.min-width-30em {
+  min-width: 30em;
+}
+
 .width-100-percent {
   width: 100%;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
 }
 
 .flex {
@@ -34,4 +50,16 @@
 
 .gap-05em {
   gap: 0.5em;
+}
+
+.width-30-percent {
+  width: 30%;
+}
+
+.width-40-percent {
+  width: 40%;
+}
+
+.width-100-percent-standalone {
+  width: 100%;
 }

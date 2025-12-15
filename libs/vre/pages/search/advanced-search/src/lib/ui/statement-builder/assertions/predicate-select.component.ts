@@ -11,7 +11,7 @@ import { AdvancedSearchDataService } from '../../../service/advanced-search-data
   standalone: true,
   imports: [CommonModule, MatInputModule, MatSelectModule],
   template: `
-    <mat-form-field class="adv-statement-form">
+    <mat-form-field>
       <mat-label>{{ label }}</mat-label>
       <mat-select
         [value]="selectedPredicate"
@@ -24,6 +24,15 @@ import { AdvancedSearchDataService } from '../../../service/advanced-search-data
       </mat-select>
     </mat-form-field>
   `,
+  styles: `
+    :host {
+      display: block;
+    }
+    mat-form-field {
+      width: 100%;
+    }
+  `,
+  styleUrl: '../../../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PredicateSelectComponent implements OnChanges {
@@ -37,12 +46,11 @@ export class PredicateSelectComponent implements OnChanges {
   properties: Predicate[] = [];
 
   ngOnChanges(): void {
-    console.log('PredicateSelectComponent detected changes, subjectClass:', this.subjectClass);
+    console.log('ngOnChanges selectedPredicate=', this.selectedPredicate);
     this._dataService
       .getProperties$(this.subjectClass?.iri)
       .pipe(take(1))
       .subscribe(properties => {
-        console.log('PredicateSelectComponent loaded properties:', properties);
         this.properties = properties;
       });
   }

@@ -12,7 +12,6 @@ import { ResourceLabel } from '../../../../constants';
 
 class CustomRegex {
   public static readonly INT_REGEX = /^-?\d+$/;
-
   public static readonly DECIMAL_REGEX = /^[-+]?[0-9]*\.?[0-9]*$/;
 
   public static readonly URI_REGEX =
@@ -41,6 +40,15 @@ class ValueErrorStateMatcher implements ErrorStateMatcher {
     ReactiveFormsModule,
   ],
   templateUrl: './string-value.component.html',
+  styles: `
+    :host {
+      display: block;
+    }
+    mat-form-field {
+      width: 100%;
+    }
+  `,
+  styleUrl: '../../../../advanced-search.component.scss',
 })
 export class StringValueComponent implements OnInit, AfterViewInit {
   @Input({ required: true }) valueType!: string;
@@ -63,7 +71,7 @@ export class StringValueComponent implements OnInit, AfterViewInit {
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe(value => this._emitValueChanged(value));
 
-    this.inputControl.setValidators(this._getValidators(this.valueType));
+    this.inputControl.setValidators([Validators.required, ...this._getValidators(this.valueType)]);
   }
 
   ngAfterViewInit(): void {

@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
+import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
 import { ReplaySubject } from 'rxjs';
 import { NodeValue } from '../../../../model';
+import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.service';
 
 @Component({
   standalone: true,
@@ -25,14 +26,15 @@ import { NodeValue } from '../../../../model';
     TranslateModule,
   ],
   template: `
-    <mat-form-field appearance="fill" class="dropdown">
+    <mat-form-field appearance="fill">
       <mat-label>{{ 'pages.search.propertyFormListValue' | translate }}</mat-label>
       <input
         matInput
         [formControl]="valueFilterCtrl"
         type="text"
         aria-label="property-form-list-value"
-        [matAutocomplete]="auto" />
+        [matAutocomplete]="auto"
+        required />
       <mat-autocomplete
         #auto="matAutocomplete"
         [displayWith]="displayNode"
@@ -40,7 +42,6 @@ import { NodeValue } from '../../../../model';
         @for (node of filteredList$ | async; track trackByFn($index, node)) {
           <ng-container *ngTemplateOutlet="renderNode; context: { node: node, depth: 0 }" />
         }
-
         <ng-template #renderNode let-node="node" let-depth="depth">
           <mat-option [value]="node">
             <span [style.padding-left.px]="depth * 15">{{ node.label }}</span>
@@ -55,41 +56,47 @@ import { NodeValue } from '../../../../model';
     </mat-form-field>
   `,
   styles: `
-    .dropdown {
-      width: 44.2%;
-      cursor: pointer;
-      color: #737373;
+    :host {
+      display: block;
+    }
+    mat-form-field {
+      width: 100%;
     }
   `,
+  styleUrl: '../../../../advanced-search.component.scss',
 })
-export class ListValueComponent implements OnInit {
-  @Input({ required: true }) rootListNode!: ListNodeV2;
+export class ListValueComponent implements OnChanges {
+  @Input({ required: true }) rootListNodeIri!: string;
+  rootListNode?: ListNodeV2;
   @Input() selectedListNode?: NodeValue | undefined;
 
   @Output() emitValueChanged = new EventEmitter<string>();
 
-  valueFilterCtrl: FormControl<string | null> = new FormControl<string | null>(null);
+  private _dataService = inject(DynamicFormsDataService);
 
-  constants = Constants;
+  valueFilterCtrl: FormControl<string | null> = new FormControl<string | null>(null, [Validators.required]);
 
   filteredList$: ReplaySubject<ListNodeV2[]> = new ReplaySubject<ListNodeV2[]>(1);
 
-  get sortedLabelList(): ListNodeV2[] {
+  private get sortedLabelList(): ListNodeV2[] {
     return this.rootListNode ? [...this.rootListNode.children].sort((a, b) => a.label.localeCompare(b.label)) : [];
   }
 
-  ngOnInit(): void {
-    const list = [...(this.sortedLabelList || [])];
-    this.filteredList$.next(list);
-    this.valueFilterCtrl.valueChanges.subscribe((value: any) => {
-      let filtered = [];
-      if (value) {
-        const label = typeof value === 'object' ? value.label : value.toLowerCase();
-        filtered = this._filterItems(this.sortedLabelList || [], label);
-      } else {
-        filtered = [...(this.sortedLabelList || [])];
-      }
-      this.filteredList$.next(filtered);
+  ngOnChanges(): void {
+    this._dataService.getList$(this.rootListNodeIri).subscribe(rootListNode => {
+      this.rootListNode = rootListNode;
+      const list = [...(this.sortedLabelList || [])];
+      this.filteredList$.next(list);
+      this.valueFilterCtrl.valueChanges.subscribe((value: any) => {
+        let filtered = [];
+        if (value) {
+          const label = typeof value === 'object' ? value.label : value.toLowerCase();
+          filtered = this._filterItems(this.sortedLabelList || [], label);
+        } else {
+          filtered = [...(this.sortedLabelList || [])];
+        }
+        this.filteredList$.next(filtered);
+      });
     });
   }
 
@@ -102,6 +109,7 @@ export class ListValueComponent implements OnInit {
   onSelectionChange(node: ListNodeV2) {
     this.emitValueChanged.emit(node.id);
   }
+
   private _filterItems(nodes: ListNodeV2[], searchText: string): ListNodeV2[] {
     return nodes
       .map(node => {

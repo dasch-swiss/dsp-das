@@ -58,17 +58,36 @@ export class PropertyFormManager implements OnDestroy {
     this.searchStateService.updateStatement(statement);
     if (statement.isValidAndComplete && this._isLastOrLastForSameSubject(statement)) {
       this._addEmptyStatement(statement);
+      if (statement.selectedOperator === Operator.Matches) {
+        this._addChildStatement(statement);
+      }
     }
   }
 
-  addChildStatement(parentStatement: StatementElement): void {}
+  private _addChildStatement(parentStatement: StatementElement): void {
+    const currentState = this.searchStateService.currentState;
+    const parentIndex = currentState.statementElements.findIndex(se => se === parentStatement);
+    const statementsBeforeParent = currentState.statementElements.slice(0, parentIndex + 1);
+    const statementsAfterParent = currentState.statementElements.slice(parentIndex + 1);
+    this.searchStateService.patchState({
+      statementElements: [
+        ...statementsBeforeParent,
+        new StatementElement(parentStatement.selectedObjectNode as NodeValue, parentStatement.statementLevel + 1),
+        ...statementsAfterParent,
+      ],
+    });
+  }
 
   private _addEmptyStatement(currentStatement: StatementElement): void {
     const currentState = this.searchStateService.currentState;
+    const currentIndex = currentState.statementElements.findIndex(se => se === currentStatement);
+    const statementsBefore = currentState.statementElements.slice(0, currentIndex + 1);
+    const statementsAfter = currentState.statementElements.slice(currentIndex + 1);
     this.searchStateService.patchState({
       statementElements: [
-        ...currentState.statementElements,
+        ...statementsBefore,
         new StatementElement(currentStatement.selectedSubjectNode!, currentStatement.statementLevel),
+        ...statementsAfter,
       ],
     });
   }

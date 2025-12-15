@@ -37,6 +37,7 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
       }
       @if (!ontologyLoading) {
         <app-resource-value
+          class="width-100-percent-standalone"
           [selectedResource]="selectedResourceClass$ | async"
           (selectedResourceChange)="formManager.setMainResource($event)" />
         <app-statement-builder [statementElements]="(searchState.statementElements$ | async) || []" />
@@ -65,8 +66,7 @@ export class AdvancedSearchComponent implements OnInit {
   ontologyLoading$ = this._dataService.ontologyLoading$;
 
   selectedResourceClass$ = this.searchState.selectedResourceClass$.pipe(
-    map(selectedClass => selectedClass || this._dataService.SEARCH_ALL_RESOURCE_CLASSES_OPTION),
-    tap(selectedClass => console.log('AdvancedSearchComponent selectedResourceClass$', selectedClass))
+    map(selectedClass => selectedClass || this._dataService.SEARCH_ALL_RESOURCE_CLASSES_OPTION)
   );
 
   get projectIri() {

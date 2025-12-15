@@ -10,13 +10,14 @@ import { AdvancedSearchDataService } from '../../../../service/advanced-search-d
   standalone: true,
   imports: [CommonModule, MatSelectModule],
   template: `
-    <mat-form-field class="width-100-percent">
+    <mat-form-field>
       <mat-label>Resource Class</mat-label>
       <mat-select
         [value]="selectedResource"
         (selectionChange)="selectedResourceChange.emit($event.value)"
         data-cy="resource-class-select"
-        [compareWith]="compareObjects">
+        [compareWith]="compareObjects"
+        required>
         @for (resClass of availableResources$ | async; track resClass.iri) {
           <mat-option [attr.data-cy]="resClass.label" [value]="resClass">
             {{ resClass.label }}
@@ -24,6 +25,14 @@ import { AdvancedSearchDataService } from '../../../../service/advanced-search-d
         }
       </mat-select>
     </mat-form-field>
+  `,
+  styles: `
+    :host {
+      display: block;
+    }
+    mat-form-field {
+      width: 100%;
+    }
   `,
   styleUrl: '../../../../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

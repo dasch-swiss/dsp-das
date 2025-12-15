@@ -52,9 +52,11 @@ export class StringValue extends StatementValue {
   ) {
     super(statementId);
   }
+
   get value(): string | undefined {
     return this._value;
   }
+
   set value(val: string) {
     this._value = val;
   }
@@ -71,9 +73,11 @@ export class ListNodeValue extends StatementValue {
   ) {
     super(statementId);
   }
+
   get value(): ListNodeV2 | undefined {
     return this._value;
   }
+
   set value(val: ListNodeV2) {
     this._value = val;
   }
@@ -86,7 +90,7 @@ export class ListNodeValue extends StatementValue {
 export interface Predicate extends IriLabelPair {
   objectValueType: string;
   isLinkProperty: boolean;
-  listIri?: string; // only for list values
+  listObjectIri?: string; // only for list values
 }
 
 export interface GravsearchStatement {
@@ -223,16 +227,11 @@ export interface QueryObject {
 }
 
 export interface SearchFormsState {
-  stateId: string;
   selectedResourceClass: IriLabelPair | undefined;
   statementElements: StatementElement[];
   orderBy: OrderByItem[];
 }
 
-export type AdvancedSearchStateSnapshot = Pick<
-  SearchFormsState,
-  'selectedResourceClass' | 'statementElements' | 'orderBy'
-> & {
-  selectedProject: string;
+export type AdvancedSearchStateSnapshot = SearchFormsState & {
   selectedOntology: IriLabelPair | undefined;
 };

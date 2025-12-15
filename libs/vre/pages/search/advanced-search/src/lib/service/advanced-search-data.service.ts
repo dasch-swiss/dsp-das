@@ -34,15 +34,12 @@ export class AdvancedSearchDataService {
   private _ontologyLoading = new BehaviorSubject<boolean>(true);
   ontologyLoading$ = this._ontologyLoading.asObservable();
 
-  private _availableProperties = new BehaviorSubject<Predicate[]>([]);
-  availableProperties$ = this._availableProperties.asObservable();
-
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection
   ) {}
 
-  init(projectIri: string, ontology?: IriLabelPair, resourceClass?: IriLabelPair) {
+  init(projectIri: string, ontology?: IriLabelPair) {
     this._dspApiConnection.v2.onto
       .getOntologiesByProjectIri(projectIri)
       .pipe(map(r => r.ontologies.map(o => ({ iri: o.id, label: o.label }))))
@@ -51,13 +48,13 @@ export class AdvancedSearchDataService {
           this._ontologies.next(ontologies);
           if (ontologies.length > 0) {
             const selectedIri = ontology?.iri || ontologies[0].iri;
-            this.setOntology(selectedIri, resourceClass);
+            this.setOntology(selectedIri);
           }
         },
       });
   }
 
-  setOntology(ontologyIri: string, resourceClass?: IriLabelPair) {
+  setOntology(ontologyIri: string) {
     this._ontologyLoading.next(true);
     this._dspApiConnection.v2.onto.getOntology(ontologyIri, true).subscribe({
       next: ontology => {
@@ -161,7 +158,7 @@ export class AdvancedSearchDataService {
       propDef.guiAttributes[0].startsWith('hlist=')
     ) {
       const listNodeIri = propDef.guiAttributes[0].substring(7, propDef.guiAttributes[0].length - 1);
-      propertyData.listIri = listNodeIri;
+      propertyData.listObjectIri = listNodeIri;
     }
     return propertyData;
   }

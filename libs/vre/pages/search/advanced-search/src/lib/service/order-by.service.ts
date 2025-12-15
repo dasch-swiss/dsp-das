@@ -29,7 +29,7 @@ export class OrderByService implements OnDestroy {
         const nextOrderBy = this._computeNextOrderBy(availablePredicates);
 
         if (!this._orderByArraysEqual(this.currentOrderBy, nextOrderBy)) {
-          this._searchStateService.patchState({ orderBy: nextOrderBy }, false);
+          this._searchStateService.patchState({ orderBy: nextOrderBy });
         }
       });
   }
