@@ -1,4 +1,4 @@
-import { CommonModule, UpperCasePipe } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import { Component, Inject, inject, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,14 +23,14 @@ export interface StatusMsg {
 @Component({
   selector: 'app-status',
   imports: [
-    CommonModule,
     RouterModule,
     TranslatePipe,
+    AppProgressIndicatorComponent,
+    LinkifyPipe,
     MatButtonModule,
     MatIconModule,
-    LinkifyPipe,
+    RouterModule,
     UpperCasePipe,
-    AppProgressIndicatorComponent,
   ],
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.scss'],
