@@ -5,7 +5,6 @@ import { FootnoteService } from './footnote.service';
 
 @Pipe({
   name: 'footnoteParser',
-  standalone: false,
 })
 export class FootnoteParserPipe implements PipeTransform {
   private readonly _footnoteRegExp = /<footnote content="([^>]+)"\/>/g;

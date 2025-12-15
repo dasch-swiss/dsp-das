@@ -16,7 +16,7 @@ import { UserService } from '@dasch-swiss/vre/core/session';
 import { PasswordConfirmFormComponent, PasswordFormFieldComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
 export interface EditPasswordDialogProps {
@@ -74,10 +74,9 @@ export interface EditPasswordDialogProps {
       }
     `,
   ],
-  standalone: true,
   imports: [
     DialogHeaderComponent,
-    TranslateModule,
+    TranslatePipe,
     MatDialogContent,
     MatStepper,
     MatStep,

@@ -1,8 +1,13 @@
 import { Component, Inject, inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { DeleteResource, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { TranslateService } from '@ngx-translate/core';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 
 @Component({
@@ -36,7 +41,15 @@ import { ResourceFetcherService } from '../representations/resource-fetcher.serv
         {{ 'resourceEditor.propertiesDisplay.deleteResource.yesDelete' | translate }}
       </button>
     </mat-dialog-actions>`,
-  standalone: false,
+  imports: [
+    DialogHeaderComponent,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
+    TranslatePipe,
+  ],
 })
 export class DeleteResourceDialogComponent {
   comment: string | undefined;

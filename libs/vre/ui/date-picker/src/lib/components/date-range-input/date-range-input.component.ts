@@ -14,7 +14,6 @@
  * ```
  */
 
-import { CommonModule } from '@angular/common';
 import { Component, Input, forwardRef, signal, computed, inject, OnInit } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -47,15 +46,13 @@ import { CalendarDateAdapter } from '../../adapters/calendar-date.adapter';
 
 @Component({
   selector: 'app-date-range-input',
-  standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
     MatButtonModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
+    ReactiveFormsModule,
   ],
   providers: [
     {

@@ -1,11 +1,15 @@
+import { AsyncPipe, NgStyle } from '@angular/common';
 import { Component, Inject, Input, OnInit } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { KnoraApiConnection, ListNodeV2, ReadListValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
 import { ResourceFetcherService } from '../../representations/resource-fetcher.service';
 
 @Component({
   selector: 'app-list-viewer',
+  imports: [AsyncPipe, NgStyle, MatIconModule],
   template: `
     <div
       data-cy="list-switch"
@@ -25,7 +29,6 @@ import { ResourceFetcherService } from '../../representations/resource-fetcher.s
       }
     </div>
   `,
-  standalone: false,
 })
 export class ListViewerComponent implements OnInit {
   @Input() value!: ReadListValue;
@@ -57,10 +60,13 @@ export class ListViewerComponent implements OnInit {
 
   private _fetchSearchLink() {
     combineLatest([
-      this._resourceFetcher.resource$,
+      this._resourceFetcher.resource$.pipe(filterUndefined()),
       this._resourceFetcher.projectShortcode$,
       this._nodeIdSubject.asObservable(),
     ]).subscribe(([resource, projectShortcode, nodeId]) => {
+      if (!resource) {
+        return;
+      }
       const searchClassesQuery = `
    PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
 CONSTRUCT {

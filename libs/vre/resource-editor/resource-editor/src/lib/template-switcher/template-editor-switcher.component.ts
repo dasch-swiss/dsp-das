@@ -1,4 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import {
   Constants,
   PropertyDefinition,
@@ -7,10 +10,38 @@ import {
   ReadTextValueAsXml,
   ReadValue,
 } from '@dasch-swiss/dsp-js';
+import { DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
+import { CkEditorComponent, CommonInputComponent, HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { JsLibPotentialError } from '../resource-properties/JsLibPotentialError';
+import { BooleanValueComponent } from './value-components/boolean-value.component';
+import { ColorValueComponent } from './value-components/color-value.component';
+import { GeonameValueComponent } from './value-components/geoname-value.component';
+import { IntervalValueComponent } from './value-components/interval-value.component';
+import { LinkValueComponent } from './value-components/link-value.component';
+import { ListValueComponent } from './value-components/list-value.component';
+import { TimeValueComponent } from './value-components/time-value.component';
 
 @Component({
   selector: 'app-template-editor-switcher',
+  imports: [
+    MatFormField,
+    MatInput,
+    ReactiveFormsModule,
+    TranslatePipe,
+    MatError,
+    HumanReadableErrorPipe,
+    BooleanValueComponent,
+    ListValueComponent,
+    ColorValueComponent,
+    CkEditorComponent,
+    CommonInputComponent,
+    DateValueHandlerComponent,
+    TimeValueComponent,
+    IntervalValueComponent,
+    GeonameValueComponent,
+    LinkValueComponent,
+  ],
   template: `
     <ng-template #intEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
@@ -111,7 +142,8 @@ import { JsLibPotentialError } from '../resource-properties/JsLibPotentialError'
         [defaultValue]="value"
         [propIri]="myPropertyDefinition.id"
         [resourceClassIri]="resourceClassIri"
-        [projectIri]="projectIri" />
+        [projectIri]="projectIri"
+        [projectShortcode]="projectShortcode!" />
     </ng-template>
 
     <ng-template #uriEditorTpl let-item="item">
@@ -122,13 +154,12 @@ import { JsLibPotentialError } from '../resource-properties/JsLibPotentialError'
         [validatorErrors]="[{ errorKey: 'pattern', message: 'This is not a valid link.' }]" />
     </ng-template>
   `,
-  standalone: false,
 })
 export class TemplateEditorSwitcherComponent implements AfterViewInit {
   @Input({ required: true }) myPropertyDefinition!: PropertyDefinition;
   @Input({ required: true }) resourceClassIri!: string;
   @Input({ required: true }) projectIri!: string;
-  @Input() projectShortcode?: string;
+  @Input({ required: true }) projectShortcode!: string;
   @Input() value?: ReadValue;
   @Output() templateFound = new EventEmitter<TemplateRef<any>>();
 

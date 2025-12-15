@@ -1,9 +1,12 @@
+import { NgStyle } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { CustomTooltipDirective } from './custom-tooltip.directive';
 import { MediaControlService } from './media-control.service';
 import { Segment } from './segment';
 
 @Component({
   selector: 'app-segment',
+  imports: [NgStyle, CustomTooltipDirective],
   template: `
     <div
       class="segment"
@@ -12,7 +15,6 @@ import { Segment } from './segment';
       (click)="playMedia()"></div>
   `,
   styleUrls: ['./segment.component.scss'],
-  standalone: false,
 })
 export class SegmentComponent implements OnInit {
   @Input({ required: true }) segment!: Segment;

@@ -4,6 +4,8 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { FormValueArray } from '../resource-properties/form-value-array.type';
 import { propertiesTypeMapping } from '../resource-properties/resource-payloads-mapping';
+import { CreateResourceFormRowComponent } from './create-resource-form-row.component';
+import { PropertyValuesCreatorComponent } from './property-values-creator.component';
 
 @Component({
   selector: 'app-create-resource-form-properties',
@@ -21,7 +23,8 @@ import { propertiesTypeMapping } from '../resource-properties/resource-payloads-
             [attr.data-cy]="'creator-row-' + prop.propDef.label"
             [formArray]="formGroup.controls[prop.propDef.id]"
             [resourceClassIri]="resourceClassIri"
-            [projectIri]="projectIri" />
+            [projectIri]="projectIri"
+            [projectShortcode]="projectShortcode" />
         </app-create-resource-form-row>
       </div>
     }
@@ -34,11 +37,12 @@ import { propertiesTypeMapping } from '../resource-properties/resource-payloads-
       }
     `,
   ],
-  standalone: false,
+  imports: [CreateResourceFormRowComponent, PropertyValuesCreatorComponent],
 })
 export class CreateResourceFormPropertiesComponent {
   @Input({ required: true }) resourceClassIri!: string;
   @Input({ required: true }) projectIri!: string;
+  @Input({ required: true }) projectShortcode!: string;
   @Input({ required: true }) formGroup!: FormGroup<{ [key: string]: FormValueArray }>;
   @Input({ required: true }) properties!: PropertyInfoValues[];
 

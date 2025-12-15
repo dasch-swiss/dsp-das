@@ -1,6 +1,8 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { TranslatePipe } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ProjectShortnameService } from '../project-shortname.service';
@@ -68,7 +70,7 @@ import { ProjectShortnameService } from '../project-shortname.service';
       }
     `,
   ],
-  standalone: false,
+  imports: [AsyncPipe, NgClass, MatCheckbox, TranslatePipe],
 })
 export class ResourceListItemComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;

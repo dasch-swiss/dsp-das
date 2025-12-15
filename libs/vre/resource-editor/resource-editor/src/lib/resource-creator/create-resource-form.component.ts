@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import {
   Cardinality,
   Constants,
@@ -14,12 +15,18 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { AppProgressIndicatorComponent, LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { CommonInputComponent, InvalidControlScrollDirective } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize, switchMap, take } from 'rxjs';
 import { FileForm } from '../representations/file-form.type';
 import { FileRepresentationType } from '../representations/file-representation.type';
 import { fileValueMapping } from '../representations/file-value-mapping';
 import { FormValueGroup } from '../resource-properties/form-value-array.type';
 import { propertiesTypeMapping } from '../resource-properties/resource-payloads-mapping';
+import { CreateResourceFormFileComponent } from './create-resource-form-file.component';
+import { CreateResourceFormPropertiesComponent } from './create-resource-form-properties.component';
+import { CreateResourceFormRowComponent } from './create-resource-form-row.component';
 import { CreateResourceFormInterface } from './create-resource-form.interface';
 
 @Component({
@@ -49,10 +56,14 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
           <app-create-resource-form-properties
             [resourceClassIri]="resourceClassIri"
             [projectIri]="projectIri"
+            [projectShortcode]="projectShortcode"
             [properties]="properties"
             [formGroup]="form.controls.properties" />
         }
-        <div style="display: flex; justify-content: end">
+        <div class="form-actions">
+          <button mat-raised-button type="button" data-cy="cancel-button" (click)="onCancel()">
+            {{ 'ui.common.actions.cancel' | translate }}
+          </button>
           <button
             mat-raised-button
             type="submit"
@@ -73,8 +84,20 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
     '.row { display: flex; padding: 16px 0;}',
     '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
     '.form { display: block; margin-right: 100px;}',
+    '.form-actions { display: flex; justify-content: end; gap: 8px; margin-top: 16px; }',
   ],
-  standalone: false,
+  imports: [
+    ReactiveFormsModule,
+    InvalidControlScrollDirective,
+    CreateResourceFormFileComponent,
+    CreateResourceFormRowComponent,
+    CommonInputComponent,
+    CreateResourceFormPropertiesComponent,
+    MatButtonModule,
+    LoadingButtonDirective,
+    TranslatePipe,
+    AppProgressIndicatorComponent,
+  ],
 })
 export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri!: string;
@@ -82,6 +105,7 @@ export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) projectShortcode!: string;
 
   @Output() createdResourceIri = new EventEmitter<string>();
+  @Output() cancelled = new EventEmitter<void>();
 
   form: FormGroup<CreateResourceFormInterface> = this._fb.group({
     label: this._fb.control('', { nonNullable: true, validators: [Validators.required] }),
@@ -141,6 +165,10 @@ export class CreateResourceFormComponent implements OnInit {
       .subscribe(res => {
         this.createdResourceIri.emit(res.id);
       });
+  }
+
+  onCancel() {
+    this.cancelled.emit();
   }
 
   private _getResourceProperties() {

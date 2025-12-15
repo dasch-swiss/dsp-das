@@ -3,7 +3,6 @@ import { MathJaxService } from './math-jax.service';
 
 @Directive({
   selector: '[appMathjax]',
-  standalone: false,
 })
 export class MathJaxDirective implements OnInit {
   constructor(

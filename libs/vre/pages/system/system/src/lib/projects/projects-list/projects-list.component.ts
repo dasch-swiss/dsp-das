@@ -15,7 +15,7 @@ import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { filter, map, Observable, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { SortButtonComponent, SortProp } from '../../sort-button/sort-button.component';
 import {
@@ -28,7 +28,6 @@ import {
   selector: 'app-projects-list',
   templateUrl: './projects-list.component.html',
   styleUrls: ['./projects-list.component.scss'],
-  standalone: true,
   imports: [
     AsyncPipe,
     I18nPluralPipe,
@@ -41,7 +40,7 @@ import {
     MatMenuItem,
     MatMenuTrigger,
     SortButtonComponent,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class ProjectsListComponent implements OnInit, OnDestroy {

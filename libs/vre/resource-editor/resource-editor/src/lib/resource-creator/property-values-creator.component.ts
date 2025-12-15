@@ -1,9 +1,15 @@
 import { ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormValueArray } from '../resource-properties/form-value-array.type';
 import { propertiesTypeMapping } from '../resource-properties/resource-payloads-mapping';
+import { TemplateEditorSwitcherComponent } from '../template-switcher/template-editor-switcher.component';
+import { PropertyValueCreatorComponent } from './property-value-creator.component';
 
 @Component({
   selector: 'app-property-values-creator',
@@ -12,6 +18,7 @@ import { propertiesTypeMapping } from '../resource-properties/resource-payloads-
       [myPropertyDefinition]="myProperty.propDef"
       [resourceClassIri]="resourceClassIri"
       [projectIri]="projectIri"
+      [projectShortcode]="projectShortcode"
       (templateFound)="templateFound($event)" />
 
     @for (control of formArray.controls; track control; let index = $index) {
@@ -39,13 +46,21 @@ import { propertiesTypeMapping } from '../resource-properties/resource-payloads-
       </button>
     }
   `,
-  standalone: false,
+  imports: [
+    TemplateEditorSwitcherComponent,
+    PropertyValueCreatorComponent,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    TranslatePipe,
+  ],
 })
 export class PropertyValuesCreatorComponent {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
   @Input({ required: true }) formArray!: FormValueArray;
   @Input({ required: true }) resourceClassIri!: string;
   @Input({ required: true }) projectIri!: string;
+  @Input({ required: true }) projectShortcode!: string;
 
   template!: TemplateRef<any>;
   Cardinality = Cardinality;
@@ -65,7 +80,7 @@ export class PropertyValuesCreatorComponent {
 
     const formGroup = this._fb.group({
       item: propertyType.control(propertyType.newValue) as AbstractControl,
-      comment: this._fb.control(null),
+      comment: this._fb.control<string | null>(null),
     });
 
     this.formArray.push(formGroup);

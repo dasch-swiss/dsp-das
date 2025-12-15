@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadDocumentFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
@@ -47,13 +47,14 @@ describe('DocumentComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      declarations: [DocumentComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [DocumentComponent],
       providers: [
         { provide: AccessTokenService, useValue: mockAccessTokenService },
         { provide: RepresentationService, useValue: mockRepresentationService },
         { provide: ResourceFetcherService, useValue: mockResourceFetcherService },
         { provide: MatDialog, useValue: mockMatDialog },
+        provideTranslateService(),
+        TranslateService,
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
@@ -174,6 +175,132 @@ describe('DocumentComponent', () => {
       component.zoom(-1);
 
       expect(component.zoomFactor).toBe(0.2);
+    });
+  });
+
+  describe('ResizeObserver', () => {
+    let mockResizeObserver: { observe: jest.Mock; disconnect: jest.Mock };
+
+    beforeEach(() => {
+      mockResizeObserver = {
+        observe: jest.fn(),
+        disconnect: jest.fn(),
+      };
+      global.ResizeObserver = jest.fn().mockImplementation(callback => {
+        (mockResizeObserver as any).callback = callback;
+        return mockResizeObserver;
+      }) as any;
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    describe('_setupResizeObserver', () => {
+      it('should create and start observing the PDF container for PDF files', () => {
+        mockRepresentationService.getFileInfo.mockReturnValue(of({ originalFilename: 'test.pdf' }));
+
+        component.src = { ...mockDocumentFileValue, filename: 'test.pdf' } as ReadDocumentFileValue;
+        fixture.detectChanges();
+        component.ngAfterViewInit();
+
+        expect(global.ResizeObserver).toHaveBeenCalled();
+        expect(mockResizeObserver.observe).toHaveBeenCalled();
+      });
+
+      it('should not create ResizeObserver for non-PDF files', () => {
+        component.src = { ...mockDocumentFileValue, filename: 'test.docx' } as ReadDocumentFileValue;
+        fixture.detectChanges();
+        component.ngAfterViewInit();
+
+        expect(global.ResizeObserver).not.toHaveBeenCalled();
+      });
+
+      it('should handle missing PDF container gracefully', () => {
+        component.src = { ...mockDocumentFileValue, filename: 'test.pdf' } as ReadDocumentFileValue;
+        component['_pdfContainer'] = undefined;
+
+        expect(() => component.ngAfterViewInit()).not.toThrow();
+        expect(mockResizeObserver.observe).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('ResizeObserver callback', () => {
+      it('should call updateSize on PDF component when container resizes', done => {
+        mockRepresentationService.getFileInfo.mockReturnValue(of({ originalFilename: 'test.pdf' }));
+
+        component.src = { ...mockDocumentFileValue, filename: 'test.pdf' } as ReadDocumentFileValue;
+        fixture.detectChanges();
+
+        const mockPdfComponent = { updateSize: jest.fn() };
+        component['_pdfComponent'] = mockPdfComponent as any;
+        component.ngAfterViewInit();
+
+        const callback = (mockResizeObserver as any).callback;
+        callback();
+
+        setTimeout(() => {
+          expect(mockPdfComponent.updateSize).toHaveBeenCalled();
+          done();
+        }, 10);
+      });
+
+      it('should not call updateSize if PDF failed to load', done => {
+        mockRepresentationService.getFileInfo.mockReturnValue(of({ originalFilename: 'test.pdf' }));
+
+        component.src = { ...mockDocumentFileValue, filename: 'test.pdf' } as ReadDocumentFileValue;
+        fixture.detectChanges();
+
+        const mockPdfComponent = { updateSize: jest.fn() };
+        component['_pdfComponent'] = mockPdfComponent as any;
+        component.failedToLoad = true;
+        component.ngAfterViewInit();
+
+        const callback = (mockResizeObserver as any).callback;
+        callback();
+
+        setTimeout(() => {
+          expect(mockPdfComponent.updateSize).not.toHaveBeenCalled();
+          done();
+        }, 10);
+      });
+
+      it('should not call updateSize if PDF component is not initialized', done => {
+        mockRepresentationService.getFileInfo.mockReturnValue(of({ originalFilename: 'test.pdf' }));
+
+        component.src = { ...mockDocumentFileValue, filename: 'test.pdf' } as ReadDocumentFileValue;
+        fixture.detectChanges();
+        component.ngAfterViewInit();
+
+        const callback = (mockResizeObserver as any).callback;
+        callback();
+
+        setTimeout(() => {
+          done();
+        }, 10);
+      });
+    });
+
+    describe('_cleanupResizeObserver', () => {
+      it('should disconnect observer and set reference to null on destroy', () => {
+        mockRepresentationService.getFileInfo.mockReturnValue(of({ originalFilename: 'test.pdf' }));
+
+        component.src = { ...mockDocumentFileValue, filename: 'test.pdf' } as ReadDocumentFileValue;
+        fixture.detectChanges();
+        component.ngAfterViewInit();
+        component.ngOnDestroy();
+
+        expect(mockResizeObserver.disconnect).toHaveBeenCalled();
+        expect(component['_resizeObserver']).toBeNull();
+      });
+
+      it('should handle destroy when observer was not created', () => {
+        component.src = { ...mockDocumentFileValue, filename: 'test.docx' } as ReadDocumentFileValue;
+        fixture.detectChanges();
+
+        expect(() => component.ngOnDestroy()).not.toThrow();
+        expect(mockResizeObserver.disconnect).not.toHaveBeenCalled();
+      });
     });
   });
 });

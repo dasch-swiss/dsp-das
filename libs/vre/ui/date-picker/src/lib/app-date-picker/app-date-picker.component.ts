@@ -38,7 +38,7 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { KnoraDate } from '@dasch-swiss/dsp-js';
 import { getCalendar } from '@dasch-swiss/vre/shared/calendar';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 
 /** error when invalid control is dirty, touched, or submitted. */
@@ -74,9 +74,8 @@ interface ValidationMessages {
     MatButtonModule,
     MatButtonToggleModule,
     MatSelectModule,
-    TranslateModule,
+    TranslatePipe,
   ],
-  standalone: true,
 })
 export class AppDatePickerComponent
   implements ControlValueAccessor, MatFormFieldControl<KnoraDate>, OnChanges, DoCheck, OnDestroy

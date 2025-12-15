@@ -7,14 +7,13 @@ import { RouterLink } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AuthService, UserService } from '@dasch-swiss/vre/core/session';
 import { AdminImageDirective } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { LoginFormComponent } from '../login-form/login-form.component';
 
 @Component({
   selector: 'app-user-menu',
   templateUrl: './user-menu.component.html',
   styleUrls: ['./user-menu.component.scss'],
-  standalone: true,
   imports: [
     AdminImageDirective,
     AsyncPipe,
@@ -25,7 +24,7 @@ import { LoginFormComponent } from '../login-form/login-form.component';
     MatMenuItem,
     MatMenuTrigger,
     RouterLink,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class UserMenuComponent {
