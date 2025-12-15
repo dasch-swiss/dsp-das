@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { CanDoResponse } from '@dasch-swiss/dsp-js';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, of } from 'rxjs';
 import { EraseButtonComponent } from './erase-button.component';
 
@@ -31,7 +31,7 @@ describe('EraseButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EraseButtonComponent, TranslateModule.forRoot()],
+      imports: [EraseButtonComponent, TranslatePipe],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: MatDialog, useValue: mockDialog },

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { CreateResourceFormComponent } from './create-resource-form.component';
 
@@ -36,7 +36,7 @@ describe('CreateResourceFormComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [CreateResourceFormComponent, TranslateModule.forRoot(), ReactiveFormsModule],
+      imports: [CreateResourceFormComponent, TranslatePipe, ReactiveFormsModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [FormBuilder, { provide: DspApiConnectionToken, useValue: mockDspApiConnection }],
     }).compileComponents();

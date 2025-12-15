@@ -7,7 +7,7 @@ import { MultipleViewerService, ResourceClassCountApi } from '@dasch-swiss/vre/p
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, of } from 'rxjs';
 import { DataBrowserPageService } from './data-browser-page.service';
 import { DataClassPanelComponent } from './data-class-panel.component';
@@ -125,7 +125,7 @@ describe('DataClassPanelComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [DataClassPanelComponent, TranslateModule.forRoot()],
+      imports: [DataClassPanelComponent, TranslatePipe],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: MatDialog, useValue: mockDialog },

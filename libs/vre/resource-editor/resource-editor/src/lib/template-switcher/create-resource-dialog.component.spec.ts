@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from './create-resource-dialog.component';
@@ -42,7 +42,7 @@ describe('CreateResourceDialogComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [CreateResourceDialogComponent, TranslateModule.forRoot()],
+      imports: [CreateResourceDialogComponent, TranslatePipe],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: mockDialogData },

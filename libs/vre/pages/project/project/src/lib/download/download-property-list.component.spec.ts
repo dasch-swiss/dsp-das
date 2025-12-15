@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { DownloadPropertyListComponent } from './download-property-list.component';
 
 describe('DownloadPropertyListComponent', () => {
@@ -26,7 +26,7 @@ describe('DownloadPropertyListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DownloadPropertyListComponent, TranslateModule.forRoot()],
+      imports: [DownloadPropertyListComponent, TranslatePipe],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
       .overrideComponent(DownloadPropertyListComponent, {

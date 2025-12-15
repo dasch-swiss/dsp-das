@@ -7,7 +7,7 @@ import { APIV3ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Observable, Observer, of, throwError } from 'rxjs';
 import { DownloadDialogResourcesTabComponent } from './download-dialog-resources-tab.component';
 
@@ -93,7 +93,7 @@ describe('DownloadDialogResourcesTabComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         DownloadDialogResourcesTabComponent,
-        TranslateModule.forRoot(),
+        TranslatePipe,
         FormsModule,
         NoopAnimationsModule,
         MockLoadingButtonDirective,

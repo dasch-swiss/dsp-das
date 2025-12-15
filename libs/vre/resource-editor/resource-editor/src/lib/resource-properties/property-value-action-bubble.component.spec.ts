@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 import { PropertyValueActionBubbleComponent } from './property-value-action-bubble.component';
@@ -41,7 +41,7 @@ describe('PropertyValueActionBubbleComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [PropertyValueActionBubbleComponent, TranslateModule.forRoot()],
+      imports: [PropertyValueActionBubbleComponent, TranslatePipe],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: PropertyValueService, useValue: mockPropertyValueService },

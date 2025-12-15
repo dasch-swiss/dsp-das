@@ -26,7 +26,7 @@ import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService, TruncatePipe } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription, switchMap, take } from 'rxjs';
 import {
   EditResourceClassDialogComponent,
@@ -64,7 +64,7 @@ import { PropertyItemComponent } from './property-item.component';
     MatTooltip,
     PropertyItemComponent,
     StringifyStringLiteralPipe,
-    TranslateModule,
+    TranslatePipe,
     TruncatePipe,
   ],
 })

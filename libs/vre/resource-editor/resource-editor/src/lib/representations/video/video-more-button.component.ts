@@ -8,7 +8,7 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { Constants, ReadMovingImageFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import {
   ReplaceFileDialogComponent,
@@ -27,7 +27,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,
-    TranslateModule,
+    TranslatePipe,
   ],
   template: ` <button mat-icon-button [matMenuTriggerFor]="more">
       <mat-icon>more_vert</mat-icon>

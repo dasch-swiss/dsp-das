@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadDocumentFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
@@ -47,7 +47,7 @@ describe('DocumentComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [DocumentComponent, TranslateModule.forRoot()],
+      imports: [DocumentComponent, TranslatePipe],
       providers: [
         { provide: AccessTokenService, useValue: mockAccessTokenService },
         { provide: RepresentationService, useValue: mockRepresentationService },
