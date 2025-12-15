@@ -28,4 +28,4 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run linting
-        run: npx nx run-many --all --target=lint --skip-nx-cache
+        run: npx nx run-many --all --target=lint
