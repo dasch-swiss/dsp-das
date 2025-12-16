@@ -1,4 +1,4 @@
-import { CommonModule, UpperCasePipe } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import { Component, Inject, inject, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,7 +9,7 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/con
 import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { LinkifyPipe } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 export interface StatusMsg {
   status: number;
@@ -23,14 +23,14 @@ export interface StatusMsg {
 @Component({
   selector: 'app-status',
   imports: [
-    CommonModule,
     RouterModule,
-    TranslateModule,
+    TranslatePipe,
+    AppProgressIndicatorComponent,
+    LinkifyPipe,
     MatButtonModule,
     MatIconModule,
-    LinkifyPipe,
+    RouterModule,
     UpperCasePipe,
-    AppProgressIndicatorComponent,
   ],
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.scss'],
