@@ -4,7 +4,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { take } from 'rxjs';
 import { IriLabelPair, Predicate } from '../../../model';
-import { AdvancedSearchDataService } from '../../../service/advanced-search-data.service';
+import { OntologyDataService } from '../../../service/ontology-data.service';
 
 @Component({
   selector: 'app-predicate-select',
@@ -41,7 +41,7 @@ export class PredicateSelectComponent implements OnChanges {
 
   @Output() selectedPredicateChange = new EventEmitter<Predicate>();
 
-  private _dataService = inject(AdvancedSearchDataService);
+  private _dataService = inject(OntologyDataService);
 
   properties: Predicate[] = [];
 

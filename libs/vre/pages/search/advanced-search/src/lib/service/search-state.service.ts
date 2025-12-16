@@ -1,7 +1,6 @@
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, filter, map, startWith } from 'rxjs';
-import { StatementElement, OrderByItem, SearchFormsState, IriLabelPair } from '../model';
-import { AdvancedSearchDataService } from './advanced-search-data.service';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, distinctUntilChanged, map, startWith } from 'rxjs';
+import { StatementElement, OrderByItem, SearchFormsState } from '../model';
 
 @Injectable()
 export class SearchStateService {
@@ -10,8 +9,6 @@ export class SearchStateService {
     statementElements: [new StatementElement(undefined, 0)],
     orderBy: [],
   } as const;
-
-  private _dataService = inject(AdvancedSearchDataService);
 
   private _state = new BehaviorSubject<SearchFormsState>(this.INITIAL_FORMS_STATE);
 
@@ -56,7 +53,7 @@ export class SearchStateService {
     return this._state.value.statementElements.filter(statement => statement.isValidAndComplete);
   }
 
-  patchState(state: Partial<SearchFormsState>): void {
+  patchState(state: Partial<SearchFormsState>) {
     const newState: SearchFormsState = {
       ...this._state.value,
       ...state,
@@ -68,17 +65,17 @@ export class SearchStateService {
     this._state.next(newState);
   }
 
-  clearAllSelections(): void {
+  clearAllSelections() {
     this.patchState(this.INITIAL_FORMS_STATE);
   }
 
-  updateStatement(statement: StatementElement): void {
+  updateStatement(statement: StatementElement) {
     this.patchState({
       statementElements: this._state.value.statementElements.map(p => (p.id === statement.id ? statement : p)),
     });
   }
 
-  updateOrderBy(orderByItems: OrderByItem[]): void {
+  updateOrderBy(orderByItems: OrderByItem[]) {
     this.patchState({ orderBy: orderByItems });
   }
 }

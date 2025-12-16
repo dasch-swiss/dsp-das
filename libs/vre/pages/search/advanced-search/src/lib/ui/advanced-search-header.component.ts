@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 import { filter, take } from 'rxjs';
-import { AdvancedSearchDataService } from '../service/advanced-search-data.service';
+import { OntologyDataService } from '../service/ontology-data.service';
 import { PreviousSearchService } from '../service/previous-search.service';
 import { SearchStateService } from '../service/search-state.service';
 
@@ -16,7 +16,7 @@ import { SearchStateService } from '../service/search-state.service';
   template: `
     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
       <div style="display: flex; align-items: center; gap: 1em;">
-        <h2>{{ 'pages.search.advancedSearch.title' | translate }}</h2>
+        <h2>Use previous search</h2>
         <button
           [disabled]="!previousSearchService.hasPreviousSearch()"
           mat-stroked-button
@@ -31,28 +31,22 @@ import { SearchStateService } from '../service/search-state.service';
 })
 export class AdvancedSearchHeaderComponent {
   previousSearchService = inject(PreviousSearchService);
-  private _dataService = inject(AdvancedSearchDataService);
+  private _dataService = inject(OntologyDataService);
   protected _searchState = inject(SearchStateService);
 
   loadPreviousSearch(): void {
     const previousSearch = this.previousSearchService.previousSearchObject;
+    if (!previousSearch) {
+      return;
+    }
+    this._dataService.setOntology(previousSearch.selectedOntology!.iri);
 
-    // First, set the ontology (triggers loading)
-    this._dataService.setOntology(previousSearch.selectedOntology?.iri || '');
-
-    // Then, wait for ontology to finish loading before updating state
     this._dataService.ontologyLoading$
       .pipe(
-        filter(loading => !loading), // if completed
-        take(1) // Take first 'false' value
+        filter(loading => !loading),
+        take(1)
       )
       .subscribe(() => {
-        if (previousSearch.selectedResourceClass) {
-          console.log('Loading previous search, setting resource class to:', previousSearch.selectedResourceClass);
-          console.log('Previous search object:', previousSearch);
-        }
-
-        // Now that ontology is loaded, update the state
         this._searchState.patchState({
           ...previousSearch,
         });

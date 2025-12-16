@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnChan
 import { MatSelectModule } from '@angular/material/select';
 import { BehaviorSubject } from 'rxjs';
 import { IriLabelPair, Predicate } from '../../../../model';
-import { AdvancedSearchDataService } from '../../../../service/advanced-search-data.service';
+import { OntologyDataService } from '../../../../service/ontology-data.service';
 
 @Component({
   selector: 'app-resource-value',
@@ -38,7 +38,7 @@ import { AdvancedSearchDataService } from '../../../../service/advanced-search-d
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceValueComponent implements OnChanges {
-  private _dataService = inject(AdvancedSearchDataService);
+  private _dataService = inject(OntologyDataService);
 
   @Input() selectedResource?: IriLabelPair;
   @Input() selectedPredicate?: Predicate;

@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { filter, map } from 'rxjs';
 import { IriLabelPair } from '../model';
-import { AdvancedSearchDataService } from '../service/advanced-search-data.service';
+import { OntologyDataService } from '../service/ontology-data.service';
 import { SearchStateService } from '../service/search-state.service';
 
 @Component({
@@ -27,7 +27,7 @@ import { SearchStateService } from '../service/search-state.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdvancedSearchOntologySelectComponent {
-  private dataService = inject(AdvancedSearchDataService);
+  private dataService = inject(OntologyDataService);
   private searchStateService = inject(SearchStateService);
 
   ontologies$ = this.dataService.ontologies$;

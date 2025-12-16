@@ -4,8 +4,8 @@ import { MatProgressBar } from '@angular/material/progress-bar';
 import { map } from 'rxjs';
 import { QueryObject } from './model';
 import { provideAdvancedSearch } from './providers';
-import { AdvancedSearchDataService } from './service/advanced-search-data.service';
 import { GravsearchService } from './service/gravsearch.service';
+import { OntologyDataService } from './service/ontology-data.service';
 import { PreviousSearchService } from './service/previous-search.service';
 import { PropertyFormManager } from './service/property-form.manager';
 import { SearchStateService } from './service/search-state.service';
@@ -59,7 +59,7 @@ export class AdvancedSearchComponent implements OnInit {
   searchState: SearchStateService = inject(SearchStateService);
   formManager: PropertyFormManager = inject(PropertyFormManager);
 
-  private _dataService: AdvancedSearchDataService = inject(AdvancedSearchDataService);
+  private _dataService: OntologyDataService = inject(OntologyDataService);
   private _gravsearchService: GravsearchService = inject(GravsearchService);
   private _previousSearchService: PreviousSearchService = inject(PreviousSearchService);
 

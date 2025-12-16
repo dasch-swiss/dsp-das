@@ -104,7 +104,6 @@ export class StatementElement {
   private _selectedPredicate?: Predicate;
   private _selectedOperator?: Operator;
   private _selectedObjectNode?: NodeValue | StringValue;
-  listObject?: ListNodeV2;
   statementLevel = 0;
 
   constructor(subjectNode?: NodeValue, statementLevel = 0) {
@@ -114,10 +113,6 @@ export class StatementElement {
 
   get selectedSubjectNode(): NodeValue | undefined {
     return this._selectedSubjectNode;
-  }
-
-  set selectedSubjectNode(node: NodeValue) {
-    this._selectedSubjectNode = node;
   }
 
   get selectedPredicate(): Predicate | undefined {
@@ -160,7 +155,6 @@ export class StatementElement {
   set selectedOperator(operator: Operator) {
     this._selectedOperator = operator;
     this.selectedObjectNode = undefined;
-    this.listObject = undefined;
   }
 
   get isPristine(): boolean {
@@ -204,11 +198,10 @@ export class StatementElement {
     return this.statementLevel > 0;
   }
 
-  clearSelections(): void {
+  clearSelections() {
     this._selectedPredicate = undefined;
     this._selectedOperator = undefined;
     this._selectedObjectNode = undefined;
-    this.listObject = undefined;
   }
 }
 

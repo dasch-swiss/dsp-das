@@ -16,24 +16,19 @@ export class DynamicFormsDataService {
 
   getResourcesListCount$(searchValue: string, resourceClassIri: string): Observable<number> {
     this.cancelPreviousCountRequest$.next();
-
-    if (!searchValue || searchValue.length <= 2 || typeof searchValue !== 'string') return of(0);
+    if (!searchValue || searchValue.length <= 2) return of(0);
 
     return this._dspApiConnection.v2.search
       .doSearchByLabelCountQuery(searchValue, {
         limitToResourceClass: resourceClassIri,
       })
       .pipe(
-        takeUntil(this.cancelPreviousCountRequest$), // Cancel previous request
-        map(response => response.numberOfResults),
-        catchError(err => {
-          return of(0); // return 0 on error
-        })
+        takeUntil(this.cancelPreviousCountRequest$),
+        map(response => response.numberOfResults)
       );
   }
 
   searchResourcesByLabel$(searchValue: string, resourceClassIri: string, offset = 0): Observable<IriLabelPair[]> {
-    // Cancel the previous search request
     this.cancelPreviousSearchRequest$.next();
 
     if (!searchValue || searchValue.length <= 2) return of([]);
@@ -43,7 +38,7 @@ export class DynamicFormsDataService {
         limitToResourceClass: resourceClassIri,
       })
       .pipe(
-        takeUntil(this.cancelPreviousSearchRequest$), // Cancel previous request
+        takeUntil(this.cancelPreviousSearchRequest$),
         map(response =>
           response.resources.map(res => ({
             iri: res.id,

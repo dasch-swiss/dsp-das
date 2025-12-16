@@ -3,11 +3,11 @@ import { Constants } from '@dasch-swiss/dsp-js';
 import { ResourceLabel } from '../constants';
 import { GravsearchStatement, OrderByItem, StatementElement } from '../model';
 import { Operator } from '../operators.config';
-import { AdvancedSearchDataService } from './advanced-search-data.service';
+import { OntologyDataService } from './ontology-data.service';
 
 @Injectable()
 export class GravsearchService {
-  private dataService: AdvancedSearchDataService = inject(AdvancedSearchDataService);
+  private dataService: OntologyDataService = inject(OntologyDataService);
 
   generateGravSearchQuery(
     resourceClassIri: string | undefined,

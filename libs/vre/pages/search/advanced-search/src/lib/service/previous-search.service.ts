@@ -47,7 +47,6 @@ export class PreviousSearchService {
       element.selectedPredicate = obj._selectedPredicate;
       element.selectedOperator = obj._selectedOperator;
       element.selectedObjectNode = this.reconstructObjectNode(obj._selectedObjectNode);
-      element.listObject = obj.listObject;
 
       return element;
     });

@@ -26,13 +26,10 @@ import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/a
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
   BehaviorSubject,
-  catchError,
   debounceTime,
   distinctUntilChanged,
   filter,
   finalize,
-  map,
-  of,
   Subject,
   switchMap,
   take,
@@ -81,7 +78,9 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
           }
         }
         @if (linkObjects?.length && !loading) {
-          <mat-option [disabled]="true"> {{ linkObjects.length }} results found </mat-option>
+          <mat-option [disabled]="true">
+            Showing {{ linkObjects.length }} results of {{ resultCount$ | async }}
+          </mat-option>
         }
         @for (obj of linkObjects; track obj.iri ?? obj) {
           <mat-option [value]="obj">{{ obj?.label }}</mat-option>
@@ -120,6 +119,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnD
   linkValueObjects$ = new BehaviorSubject<IriLabelPair[]>([]);
   loading$ = new BehaviorSubject<boolean>(false);
   lastSearchString$ = new BehaviorSubject<string | null>(null);
+  resultCount$ = new BehaviorSubject<number>(0);
 
   inputControl = new FormControl<string | null>(null, [Validators.required, this.resourceSelectedValidator()]);
 
@@ -140,6 +140,12 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnD
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
+        tap(searchString =>
+          this._dataService
+            .getResourcesListCount$(searchString!, this.resourceClass!)
+            .pipe(take(1))
+            .subscribe(r => this.resultCount$.next(r))
+        ),
         tap(searchString => this.lastSearchString$.next(searchString)),
         filter(searchString => searchString !== null && searchString.length > 2),
         tap(() => this.loading$.next(true)),
@@ -153,7 +159,6 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   ngOnChanges(): void {
-    // Re-validate when selectedResource input changes
     this.inputControl.updateValueAndValidity();
   }
 
@@ -174,7 +179,13 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnD
     const currentLoading = this.loading$.value;
     const currentResults = this.linkValueObjects$.value;
 
-    if (currentLoading || !lastSearch || lastSearch.length <= 2 || currentResults.length < 25) {
+    if (
+      currentLoading ||
+      !lastSearch ||
+      lastSearch.length <= 2 ||
+      currentResults.length < 25 ||
+      currentResults.length < this.resultCount$.value
+    ) {
       return;
     }
 

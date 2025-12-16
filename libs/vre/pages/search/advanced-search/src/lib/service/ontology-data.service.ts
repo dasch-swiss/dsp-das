@@ -12,7 +12,7 @@ import { ResourceLabel } from '../constants';
 import { IriLabelPair, Predicate } from '../model';
 
 @Injectable()
-export class AdvancedSearchDataService {
+export class OntologyDataService {
   private readonly ResourceLabelPropertyData: Predicate = {
     iri: ResourceLabel,
     label: 'Resource Label',
@@ -47,8 +47,7 @@ export class AdvancedSearchDataService {
         next: ontologies => {
           this._ontologies.next(ontologies);
           if (ontologies.length > 0) {
-            const selectedIri = ontology?.iri || ontologies[0].iri;
-            this.setOntology(selectedIri);
+            this.setOntology(ontology?.iri || ontologies[0].iri);
           }
         },
       });
@@ -76,7 +75,6 @@ export class AdvancedSearchDataService {
 
   resourceClasses$: Observable<IriLabelPair[]> = this._resourceClassDefinitions$.pipe(
     startWith([]),
-    // tap(resClasses => console.log('resource classes', resClasses)),
     map(resClasses =>
       resClasses.map((resClassDef: ResourceClassDefinitionWithAllLanguages) => {
         return { iri: resClassDef.id, label: resClassDef.label || '' };
@@ -126,17 +124,16 @@ export class AdvancedSearchDataService {
   );
 
   getProperties$(classIri?: string): Observable<Predicate[]> {
+    const withResourceLabel = (preds: Predicate[]) => [this.ResourceLabelPropertyData, ...preds];
     if (!classIri) {
-      return this._propertyDefinitions$.pipe(map(props => props.map(this._createPropertyData)));
+      return this._propertyDefinitions$.pipe(map(props => withResourceLabel(props.map(this._toPredicate))));
     }
-
-    return combineLatest([this._getPropertyIrisForClass$(classIri), this._propertyDefinitions$]).pipe(
-      // tap(([c, p]) => console.log('class properties', c, p)),
-      map(([resProps, props]) => props.filter(p => resProps.includes(p.id)).map(this._createPropertyData))
+    return combineLatest([this._getPropertyIrisOfClass$(classIri), this._propertyDefinitions$]).pipe(
+      map(([resProps, props]) => withResourceLabel(props.filter(p => resProps.includes(p.id)).map(this._toPredicate)))
     );
   }
 
-  private _getPropertyIrisForClass$ = (classIri: string): Observable<string[]> =>
+  private _getPropertyIrisOfClass$ = (classIri: string): Observable<string[]> =>
     this._resourceClassDefinitions$.pipe(
       map(resClasses => resClasses.find(r => r.id === classIri)),
       filter((resClass): resClass is ResourceClassDefinitionWithAllLanguages => resClass !== undefined),
@@ -145,8 +142,8 @@ export class AdvancedSearchDataService {
       )
     );
 
-  private _createPropertyData(propDef: ResourcePropertyDefinition): Predicate {
-    const propertyData: Predicate = {
+  private _toPredicate(propDef: ResourcePropertyDefinition): Predicate {
+    const predicate: Predicate = {
       iri: propDef.id,
       label: propDef.label || '',
       objectValueType: propDef.objectType || '',
@@ -158,9 +155,9 @@ export class AdvancedSearchDataService {
       propDef.guiAttributes[0].startsWith('hlist=')
     ) {
       const listNodeIri = propDef.guiAttributes[0].substring(7, propDef.guiAttributes[0].length - 1);
-      propertyData.listObjectIri = listNodeIri;
+      predicate.listObjectIri = listNodeIri;
     }
-    return propertyData;
+    return predicate;
   }
 
   get selectedOntology(): IriLabelPair {
