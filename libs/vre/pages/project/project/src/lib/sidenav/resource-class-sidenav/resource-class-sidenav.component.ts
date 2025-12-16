@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { OntologyAndResourceClasses } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceClassSidenavItemComponent } from './resource-class-sidenav-item.component';
 
@@ -9,11 +9,16 @@ import { ResourceClassSidenavItemComponent } from './resource-class-sidenav-item
       <app-resource-class-sidenav-item
         [count]="classToDisplay.itemCount"
         [label]="classToDisplay.resourceClass.label!"
-        [iri]="classToDisplay.resourceClass.iri" />
+        [iri]="classToDisplay.resourceClass.iri"
+        [representationClass]="classToDisplay.resourceClass.representationClass" />
     }
   `,
   imports: [ResourceClassSidenavItemComponent],
 })
-export class ResourceClassSidenavComponent {
+export class ResourceClassSidenavComponent implements OnInit {
   @Input({ required: true }) ontology!: OntologyAndResourceClasses;
+
+  ngOnInit() {
+    console.log('aaa', this);
+  }
 }
