@@ -69,7 +69,7 @@ export class ProjectSidenavOntologiesComponent implements OnInit {
     private readonly _projectPageService: ProjectPageService,
     private readonly _route: ActivatedRoute,
     private readonly _ontologyService: OntologyService,
-    private _v3: APIV3ApiService
+    private readonly _v3: APIV3ApiService
   ) {}
 
   ngOnInit() {

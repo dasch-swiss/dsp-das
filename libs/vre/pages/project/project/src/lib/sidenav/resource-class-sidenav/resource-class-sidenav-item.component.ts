@@ -96,10 +96,10 @@ export class ResourceClassSidenavItemComponent {
   );
 
   constructor(
-    private _ontologyService: OntologyService,
-    private _projectPageService: ProjectPageService,
-    private _router: Router,
-    private _route: ActivatedRoute
+    private readonly _ontologyService: OntologyService,
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _router: Router,
+    private readonly _route: ActivatedRoute
   ) {}
 
   selectResourceClass() {
