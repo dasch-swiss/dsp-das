@@ -1,12 +1,12 @@
 import { AsyncPipe, NgClass } from '@angular/common';
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { LanguageStringDto, RepresentationClass } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { combineLatest, filter, first, map, of, startWith, Subject, switchMap } from 'rxjs';
+import { combineLatest, filter, first, map, of, startWith, switchMap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 
 @Component({
@@ -48,7 +48,7 @@ import { ProjectPageService } from '../../project-page.service';
   ],
   imports: [AsyncPipe, NgClass, MatIcon, StringifyStringLiteralPipe],
 })
-export class ResourceClassSidenavItemComponent implements OnDestroy {
+export class ResourceClassSidenavItemComponent {
   @Input({ required: true }) iri!: string;
   @Input({ required: true }) count!: number;
   @Input({ required: true }) label!: LanguageStringDto[];
@@ -73,9 +73,6 @@ export class ResourceClassSidenavItemComponent implements OnDestroy {
         return 'insert_drive_file';
     }
   }
-
-  destroyed = new Subject<void>();
-  loading = true;
 
   isSelected$ = this._router.events.pipe(
     filter(event => event instanceof NavigationEnd),
@@ -110,10 +107,5 @@ export class ResourceClassSidenavItemComponent implements OnDestroy {
     const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
 
     this._router.navigate([ontologyName, className], { relativeTo: this._route });
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed.next();
-    this.destroyed.complete();
   }
 }
