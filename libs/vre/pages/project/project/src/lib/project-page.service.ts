@@ -5,7 +5,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { filterNull, UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { BehaviorSubject, combineLatest, map, of, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, of, switchMap, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectPageService {
@@ -33,8 +33,7 @@ export class ProjectPageService {
     map(response => response.project),
     tap((project: ReadProject) => {
       this._currentProject = project;
-    }),
-    shareReplay(1)
+    })
   );
 
   private _user$ = this._userService.user$.pipe(filterNull());
