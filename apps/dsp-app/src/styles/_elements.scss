@@ -9,33 +9,8 @@
   flex: 1 1 auto;
 }
 
-.space-reducer {
-  max-height: 14px;
-}
-
-.empty-space {
-  display: block;
-  width: 48px;
-}
-
 // --------------------------------------
 
-//
-// images, logos, avatars
-.avatar-image {
-  border-radius: 50%;
-  height: 36px;
-  width: 36px;
-  margin-right: 12px;
-
-  &.square {
-    border-radius: 6px;
-  }
-}
-
-// --------------------------------------
-
-//
 // toolbar for content title, subtitle etc.
 .app-toolbar {
   background: whitesmoke;
@@ -90,54 +65,10 @@
 // Link
 a {
   color: $primary;
-}
-
-.external-link-dark-bg {
-  color: $white !important;
-}
-
-.external-link-light-bg {
-  color: $primary_400 !important;
-}
-
-a,
-.link,
-.external-link {
-  cursor: pointer;
   text-decoration: none;
 }
 
 // --------------------------------------
-
-//
-// logo, action button
-.logo,
-.action {
-  .main-toolbar-button {
-    height: $header-height;
-    border-radius: 0;
-  }
-}
-
-// --------------------------------------
-
-//
-// margin element
-.more-space-top {
-  margin-top: 32px !important;
-}
-
-.more-space-bottom {
-  margin-bottom: 24px !important;
-
-  &.table {
-    margin-bottom: 32px !important;
-  }
-}
-
-// --------------------------------------
-
-//
 // menu
 .menu-content,
 .menu-action,
@@ -157,16 +88,8 @@ a,
   }
 }
 
-.border-top {
-  border-top: 1px solid rgba($primary, 0.1);
-}
-
 .border-bottom {
   border-bottom: 1px solid rgba($primary, 0.1);
-}
-
-.mat-mdc-menu-content {
-  padding: 0 !important;
 }
 
 // --------------------------------------
@@ -373,10 +296,6 @@ a,
   &.deactivated .mat-icon {
     color: rgba(0, 0, 0, 0.38);
 
-    .avatar-image {
-      opacity: 0.3;
-    }
-
     &:hover {
       color: rgba(0, 0, 0, 0.62);
     }
@@ -432,13 +351,6 @@ a,
 }
 
 // --------------------------------------
-
-// form
-//
-$form-width: 472px;
-// golden cut (gc) calculation
-$gc-large: decimal-floor(math.div($form-width, 1.618), 0) - 2;
-$gc-small: $form-width - $gc-large - 4;
 
 .overlay-blocker {
   position: fixed;
@@ -507,10 +419,6 @@ nav.mat-mdc-tab-nav-bar,
   --mat-snackbar-container-color: rgba(251, 191, 36, 0.9) !important;
   --mat-snackbar-supporting-text-color: rgb(255, 255, 255) !important;
   --mat-snack-bar-button-color: rgb(255, 255, 255) !important;
-}
-
-simple-snack-bar .mdc-button__label {
-  color: rgb(255, 255, 255);
 }
 
 // --------------------------------------
