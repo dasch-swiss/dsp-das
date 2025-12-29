@@ -189,10 +189,6 @@ a {
       color: $red !important;
     }
   }
-
-  // .pdfViewer {
-  //   margin-bottom: 64px;
-  // }
 }
 
 // file representation menu styling
@@ -204,39 +200,6 @@ a {
     color: $white;
   }
 }
-
-.no-results {
-  margin: 64px;
-  min-width: 400px;
-  line-height: 1.5;
-}
-
-// --------------------------------------
-
-//
-// list
-.simple-list {
-  padding: 16px;
-
-  .mat-mdc-list-item {
-    .list-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      padding: 4px;
-      position: absolute;
-      left: 0;
-    }
-  }
-}
-
-.mat-mdc-list.without-padding {
-  .mat-mdc-list-item {
-    padding: 0 !important;
-  }
-}
-
-// --------------------------------------
 
 // --------------------------------------
 
