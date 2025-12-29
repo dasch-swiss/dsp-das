@@ -8,7 +8,6 @@
 @use "styles/search";
 @use "styles/typography" as t;
 @use "styles/viewer";
-@use "styles/ontology";
 
 @include mat.elevation-classes();
 @include mat.app-background();
