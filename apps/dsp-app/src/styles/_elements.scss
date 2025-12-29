@@ -92,16 +92,6 @@ a {
   border-bottom: 1px solid rgba($primary, 0.1);
 }
 
-//
-// danger zone
-.app-danger-zone {
-  border: 1px solid $red;
-  border-radius: $border-radius;
-}
-
-// --------------------------------------
-
-//
 // resource
 
 .dsp-representation:has(.toolbar .compoundNavigation) {
@@ -383,24 +373,6 @@ nav.mat-mdc-tab-nav-bar,
   --mat-snackbar-supporting-text-color: rgb(255, 255, 255) !important;
   --mat-snack-bar-button-color: rgb(255, 255, 255) !important;
 }
-
-// --------------------------------------
-
-//
-// mat tab
-
-.mat-mdc-tab-header {
-  background: $white;
-  position: sticky !important;
-  z-index: 1;
-}
-
-@media (max-width: 599px) {
-  .mat-mdc-tab-header {
-    top: 56px;
-  }
-}
-
 
 // action bubble
 .action-bubble {
