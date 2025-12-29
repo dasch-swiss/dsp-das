@@ -15,7 +15,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     <div class="content large middle">
       @if (isSysAdmin$ | async) {
         <div>
-          <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="navigation tab-bar margin-from-top">
+          <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="navigation margin-from-top">
             <mat-tab-nav-panel #tabPanel />
             @for (link of links; track link) {
               <a
