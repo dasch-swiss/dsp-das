@@ -78,3 +78,8 @@ body {
 .mat-mdc-dialog-content { //prevent horizontal scrollbar in dialog
   overflow-x: hidden !important;
 }
+
+.mat-mdc-menu-panel.res-share-menu {
+  max-width: 360px !important;
+  padding: 6px !important;
+}

@@ -704,9 +704,6 @@ simple-snack-bar .mdc-button__label {
   font-size: 11px;
 }
 
-.wide-tooltip {
-  max-width: unset !important;
-}
 
 .annotation-tooltip {
   display: none;
@@ -730,40 +727,6 @@ simple-snack-bar .mdc-button__label {
   p {
     white-space: normal;
     text-overflow: ellipsis;
-  }
-}
-
-// --------------------------------------
-
-//
-// nested mat-menu switch arrow to the left in case the menu position is on the right hand side
-.switch-nested-menu {
-  width: 180px;
-
-  button[mat-menu-item] {
-    padding-left: 32px;
-
-    &.mat-mdc-menu-item-submenu-trigger {
-      &::after {
-        border-width: 5px 5px 5px 0;
-        border-color: transparent currentColor transparent transparent;
-        right: 0;
-        left: 16px;
-      }
-    }
-  }
-}
-
-.switch-nested-sub-menu {
-  width: 180px;
-  margin-left: -360px !important;
-}
-
-.switch-nested-sub-menu,
-.default-nested-sub-menu {
-  &.mat-mdc-menu-panel {
-    margin-top: 8px;
-    min-height: 48px !important;
   }
 }
 
