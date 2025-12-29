@@ -92,43 +92,6 @@ a {
   border-bottom: 1px solid rgba($primary, 0.1);
 }
 
-// --------------------------------------
-
-//
-// card
-.mat-mdc-card {
-  .mat-mdc-card-title,
-  .mat-mdc-card-subtitle {
-    display: flex;
-  }
-
-  &.no-shadow {
-    box-shadow: none !important;
-  }
-
-  .mat-mdc-card-actions {
-    text-align: right;
-  }
-}
-
-// --------------------------------------
-
-//
-// status class alone is only for colorized text
-.status.text-only {
-  color: $red;
-
-  &.active {
-    color: $green;
-  }
-
-  &.warning {
-    color: $yellow_500;
-  }
-}
-
-// --------------------------------------
-
 //
 // danger zone
 .app-danger-zone {
