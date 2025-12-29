@@ -8,6 +8,12 @@
   max-width: unset !important;
 }
 
+.multi-line-tooltip {
+  white-space: pre-line;
+  line-height: 1.5;
+  font-size: 11px;
+}
+
 .property-info {
   padding: 16px;
 }

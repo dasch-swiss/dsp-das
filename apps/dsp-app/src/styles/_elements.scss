@@ -569,26 +569,6 @@ nav.mat-mdc-tab-nav-bar,
 
 // --------------------------------------
 
-// notes and messages
-.note {
-  padding: 12px;
-
-  &.developer {
-    background-color: rgba(248, 166, 90, 0.5);
-  }
-
-  &.warning {
-    background-color: $yellow_100;
-  }
-
-  &.error {
-    background-color: rgba($red, 0.5);
-  }
-
-  &.success {
-    background-color: rgba($green, 0.5);
-  }
-}
 
 // Angular Material v18 snack-bar styles - Using correct CSS custom properties
 .mat-mdc-snack-bar-container.success {
@@ -694,17 +674,6 @@ simple-snack-bar .mdc-button__label {
 }
 
 // --------------------------------------
-
-//
-// tooltip configuration
-
-.multi-line-tooltip {
-  white-space: pre-line;
-  line-height: 1.5;
-  font-size: 11px;
-}
-
-
 .annotation-tooltip {
   display: none;
   position: fixed;
