@@ -111,28 +111,6 @@ $grid-breakpoints: (
     }
   }
 
-  .form-content {
-    width: 100% !important;
-
-    .large-field {
-      min-width: 100% !important;
-    }
-
-    .medium-field {
-      width: 100% !important;
-      min-width: 100%;
-    }
-
-    .small-field {
-      width: 100% !important;
-      min-width: 100%;
-    }
-
-    .form-panel {
-      width: 100% !important;
-    }
-  }
-
   .cdk-overlay-pane {
     overflow-y: auto !important;
     max-height: 500px !important;
