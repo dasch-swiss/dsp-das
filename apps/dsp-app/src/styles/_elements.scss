@@ -492,33 +492,6 @@ $gc-small: $form-width - $gc-large - 4;
   }
 }
 
-.string-literal-error {
-  font-size: 75%;
-  color: $red;
-  top: -14px;
-  position: relative;
-  text-align: left;
-  left: 64px;
-  display: block;
-}
-
-// progress indicator icon on next and submit buttons
-.progress-button-content {
-  display: flex;
-  align-items: center;
-}
-
-.next-progress,
-.submit-progress {
-  display: inline-block;
-  margin-right: 6px;
-  vertical-align: middle;
-}
-
-// --------------------------------------
-
-//
-// progress-indicator without default color
 
 .overlay-blocker {
   position: fixed;
