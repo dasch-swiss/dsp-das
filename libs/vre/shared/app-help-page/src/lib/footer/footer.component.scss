@@ -1,11 +1,22 @@
 @use "config" as *;
 
 footer {
-  padding: 16px;
+  padding: 32px 0;
   background: $primary_900;
   color: $white;
 }
 
 a {
-  color: inherit;
+  color: $white !important;
+  font-weight: bold;
+}
+
+.block {
+  flex: 1;
+  padding: 0 32px;
+}
+
+.center-block a {
+  display: block;
+  margin-bottom: 16px;
 }

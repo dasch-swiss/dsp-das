@@ -1,9 +1,9 @@
 <!-- footer with contact, copyright and technology -->
 <footer>
   <!-- three boxes with technology and support info, contact and social media / code -->
-  <div>
-    <div>
-      <p>
+  <div class="panel">
+    <div class="box about">
+      <p class="mat-body">
         DSP-APP is built with
         <a href="https://angular.io" target="_blank">Angular</a>, styled with
         <a href="https://material.angular.io" target="_blank">Material</a>
@@ -20,7 +20,7 @@
         <a href="http://snf.ch" target="_blank">Swiss National Science Foundation</a>.
       </p>
     </div>
-    <div>
+    <div class="box contact">
       <a mat-button href="https://dasch.swiss" target="_blank">
         DaSCH - Swiss National Data and Service Center for the Humanities
       </a>
@@ -32,7 +32,7 @@
       </a>
       <a mat-button href="tel:+41-61-207-64-00"> <mat-icon>phone</mat-icon> +41 61 207 64 00 </a>
     </div>
-    <div>
+    <div class="box social-media">
       <a mat-button href="https://www.github.com/dasch-swiss" target="_blank">
         <mat-icon>
           <svg role="img" viewBox="0 0 18 18" width="18" xmlns="http://www.w3.org/2000/svg">
@@ -64,8 +64,8 @@
   </div>
 
   <!-- copyright info -->
-  <div>
-    <p>
+  <div class="panel no-padding">
+    <p class="mat-caption">
       <a href="https://dasch.swiss" target="_blank">DaSCH</a> &#64;
       <a href="https://unibas.ch" target="_blank">University of Basel</a>
       &copy; 2017 - {{ currentYear.getFullYear() }}
