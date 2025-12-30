@@ -16,38 +16,29 @@ import { VideoComponent } from './representations/video/video.component';
   template: ` <div class="representation-container center">
     @switch (fileValue.type) {
       @case (representationConstants.stillImage) {
-        <app-still-image
-          #stillImage
-          class="dsp-representation stillimage"
-          [compoundMode]="false"
-          [resource]="resource.res" />
+        <app-still-image #stillImage [compoundMode]="false" [resource]="resource.res" />
       }
       @case (representationConstants.externalStillImage) {
-        <app-still-image
-          #stillImage
-          [compoundMode]="false"
-          class="dsp-representation stillimage"
-          [resource]="resource.res" />
+        <app-still-image #stillImage [compoundMode]="false" [resource]="resource.res" />
       }
       @case (representationConstants.document) {
         <app-document
           #document
-          class="dsp-representation document"
           [class.pdf]="fileValue.filename.split('.').pop() === 'pdf'"
           [src]="fileValue"
           [parentResource]="resource.res" />
       }
       @case (representationConstants.audio) {
-        <app-audio #audio class="dsp-representation audio" [src]="fileValue" [parentResource]="resource.res" />
+        <app-audio #audio [src]="fileValue" [parentResource]="resource.res" />
       }
       @case (representationConstants.movingImage) {
-        <app-video #video class="dsp-representation video" [src]="fileValue" [parentResource]="resource.res" />
+        <app-video #video [src]="fileValue" [parentResource]="resource.res" />
       }
       @case (representationConstants.archive) {
-        <app-archive #archive class="dsp-representation archive" [src]="fileValue" [parentResource]="resource.res" />
+        <app-archive #archive [src]="fileValue" [parentResource]="resource.res" />
       }
       @case (representationConstants.text) {
-        <app-text #text class="dsp-representation text" [src]="fileValue" [parentResource]="resource.res" />
+        <app-text #text [src]="fileValue" [parentResource]="resource.res" />
       }
     }
   </div>`,
