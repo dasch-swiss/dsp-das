@@ -15,35 +15,47 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
 @Component({
   selector: 'app-resource-representation',
   template: `
-    <app-resource-representation-container>
-      @switch (fileValue.type) {
-        @case (representationConstants.stillImage) {
+    @switch (fileValue.type) {
+      @case (representationConstants.stillImage) {
+        <app-resource-representation-container>
           <app-still-image #stillImage [compoundMode]="false" [resource]="resource.res" />
-        }
-        @case (representationConstants.externalStillImage) {
+        </app-resource-representation-container>
+      }
+      @case (representationConstants.externalStillImage) {
+        <app-resource-representation-container>
           <app-still-image #stillImage [compoundMode]="false" [resource]="resource.res" />
-        }
-        @case (representationConstants.document) {
+        </app-resource-representation-container>
+      }
+      @case (representationConstants.document) {
+        <app-resource-representation-container>
           <app-document
             #document
             [class.pdf]="fileValue.filename.split('.').pop() === 'pdf'"
             [src]="fileValue"
             [parentResource]="resource.res" />
-        }
-        @case (representationConstants.audio) {
-          <app-audio #audio [src]="fileValue" [parentResource]="resource.res" />
-        }
-        @case (representationConstants.movingImage) {
-          <app-video #video [src]="fileValue" [parentResource]="resource.res" />
-        }
-        @case (representationConstants.archive) {
-          <app-archive #archive [src]="fileValue" [parentResource]="resource.res" />
-        }
-        @case (representationConstants.text) {
-          <app-text #text [src]="fileValue" [parentResource]="resource.res" />
-        }
+        </app-resource-representation-container>
       }
-    </app-resource-representation-container>
+      @case (representationConstants.audio) {
+        <app-resource-representation-container>
+          <app-audio #audio [src]="fileValue" [parentResource]="resource.res" />
+        </app-resource-representation-container>
+      }
+      @case (representationConstants.movingImage) {
+        <app-resource-representation-container>
+          <app-video #video [src]="fileValue" [parentResource]="resource.res" />
+        </app-resource-representation-container>
+      }
+      @case (representationConstants.archive) {
+        <app-resource-representation-container [small]="true">
+          <app-archive #archive [src]="fileValue" [parentResource]="resource.res" />
+        </app-resource-representation-container>
+      }
+      @case (representationConstants.text) {
+        <app-resource-representation-container [small]="true">
+          <app-text #text [src]="fileValue" [parentResource]="resource.res" />
+        </app-resource-representation-container>
+      }
+    }
   `,
   imports: [
     ArchiveComponent,

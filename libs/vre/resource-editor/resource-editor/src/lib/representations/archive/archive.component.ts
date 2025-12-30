@@ -1,38 +1,58 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, Input, OnChanges, SimpleChanges, ViewContainerRef } from '@angular/core';
-import { MatIconButton } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
-import { MatIcon } from '@angular/material/icon';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { Component, Input, OnChanges, SimpleChanges, ViewContainerRef } from '@angular/core';
 import { Constants, ReadArchiveFileValue, ReadResource } from '@dasch-swiss/dsp-js';
-import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-  ReplaceFileDialogComponent,
-  ReplaceFileDialogProps,
-} from '../replace-file-dialog/replace-file-dialog.component';
+import { CenteredMessageComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
+import { DownloadMenuItemComponent } from '../download-menu-item.component';
+import { ReplaceFileMenuItemComponent } from '../replace-file-menu-item.component';
+import { RepresentationErrorMessageComponent } from '../representation-error-message.component';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 @Component({
   selector: 'app-archive',
-  imports: [AsyncPipe, MatIconButton, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, StatusComponent, TranslatePipe],
-  templateUrl: './archive.component.html',
+  imports: [
+    AsyncPipe,
+    TranslatePipe,
+    DownloadMenuItemComponent,
+    ReplaceFileMenuItemComponent,
+    RepresentationErrorMessageComponent,
+    CenteredMessageComponent,
+  ],
+  template: `
+    @if (failedToLoad) {
+      <app-representation-error-message />
+    } @else {
+      <div style="padding-top: 20px">
+        <app-centered-message [icon]="'description'" [message]="originalFilename" [color]="'white'" />
+
+        <div style="display: flex; justify-content: center; gap: 16px">
+          <app-download-menu-item [src]="src" [parentResource]="parentResource" />
+
+          @if (resourceFetcherService.userCanEdit$ | async) {
+            <app-replace-file-menu-item
+              [title]="'resourceEditor.representations.archive.title' | translate"
+              [subtitle]="'resourceEditor.representations.archive.updateFile' | translate"
+              [representation]="representation"
+              [parentResource]="parentResource"
+              [viewContainerRef]="viewContainerRef" />
+          }
+        </div>
+      </div>
+    }
+  `,
 })
 export class ArchiveComponent implements OnChanges {
   @Input({ required: true }) src!: ReadArchiveFileValue;
   @Input({ required: true }) parentResource!: ReadResource;
   originalFilename?: string;
 
+  readonly representation = Constants.HasArchiveFileValue;
   failedToLoad = false;
 
-  private readonly _translateService = inject(TranslateService);
-
   constructor(
-    private readonly _dialog: MatDialog,
     private readonly _rs: RepresentationService,
-    private readonly _viewContainerRef: ViewContainerRef,
+    public readonly viewContainerRef: ViewContainerRef,
     public resourceFetcherService: ResourceFetcherService
   ) {}
 
@@ -47,21 +67,5 @@ export class ArchiveComponent implements OnChanges {
         }
       );
     }
-  }
-
-  download() {
-    this._rs.downloadProjectFile(this.src, this.parentResource);
-  }
-
-  openReplaceFileDialog() {
-    this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
-      ...DspDialogConfig.mediumDialog({
-        title: this._translateService.instant('resourceEditor.representations.archive.title'),
-        subtitle: this._translateService.instant('resourceEditor.representations.archive.updateFile'),
-        representation: Constants.HasArchiveFileValue,
-        resource: this.parentResource,
-      }),
-      viewContainerRef: this._viewContainerRef,
-    });
   }
 }
