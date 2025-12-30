@@ -41,6 +41,16 @@ import {
     SortButtonComponent,
     TranslatePipe,
   ],
+  styles: [
+    `
+      table {
+        border-spacing: 0;
+      }
+      tr:hover {
+        background-color: #d6e0e8;
+      }
+    `,
+  ],
 })
 export class ProjectsListComponent implements OnInit, OnDestroy {
   private _ngUnsubscribe = new Subject<void>();

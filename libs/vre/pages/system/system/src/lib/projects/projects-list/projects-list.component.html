@@ -2,7 +2,7 @@
 <div>
   <!-- header toolbar -->
   <div style="display: flex; align-items: center; padding: 16px; background-color: #f5f5f5">
-    <span class="mat-subtitle-1" style="flex: 1; margin-bottom: 0">
+    <span class="mat-headline-6" style="flex: 1; margin-bottom: 0">
       {{ projectsList.length | i18nPlural : itemPluralMapping['project'] }}
     </span>
 
@@ -32,10 +32,13 @@
           }
         </mat-icon>
       </td>
-      <td style="width: 100%">
-        <!-- Longname hidden on phone devices -->
-        <h5 (click)="openProjectPage(project.id)">{{ project.longname }}</h5>
-        <p (click)="openProjectPage(project.id)">{{ project.shortcode }} | {{ project.shortname }}</p>
+      <td style="width: 100%; padding: 16px 0; cursor: pointer">
+        <div class="mat-subtitle-1" style="margin-bottom: 0" (click)="openProjectPage(project.id)">
+          {{ project.longname }}
+        </div>
+        <div class="mat-subtitle-2" (click)="openProjectPage(project.id)">
+          {{ project.shortcode }} | {{ project.shortname }}
+        </div>
       </td>
       <td>
         @if (userIsProjectAdmin$(project.id) | async) {
