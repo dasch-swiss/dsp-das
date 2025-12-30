@@ -4,16 +4,8 @@
   @if (failedToLoad) {
   <app-status [status]="404" [url]="src.fileUrl" [representation]="'archive'" />
   }
-  <div class="file-representation">
-    <div class="container">
-      <div class="contents">
-        <div class="icon">
           <mat-icon> description</mat-icon>
-        </div>
-        <div class="file">
           <p data-cy="original-file-name">{{ originalFilename }}</p>
-        </div>
-      </div>
     </div>
     <div class="toolbar">
       <!-- toolbar -->

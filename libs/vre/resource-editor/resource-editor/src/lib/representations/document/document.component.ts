@@ -47,7 +47,6 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
     TranslatePipe,
   ],
   templateUrl: './document.component.html',
-  styleUrls: ['./document.component.scss'],
 })
 export class DocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input({ required: true }) src!: ReadDocumentFileValue;

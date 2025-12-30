@@ -3,7 +3,7 @@
   @if (failedToLoad) {
   <div>{{ 'resourceEditor.representations.audio.browserNotSupported' | translate }}</div>
   } @if (audioFileUrl) {
-  <div class="audio-player">
+  <div>
     <audio id="audio" preload="auto" (loadedmetadata)="onAudioPlayerReady()">
       <source [src]="audioFileUrl" type="audio/mpeg" />
     </audio>
