@@ -92,8 +92,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     private readonly _projectApiService: ProjectApiService,
     private readonly _router: Router,
     private readonly _userService: UserService,
-    private readonly _translateService: TranslateService,
-    private readonly _projectService: ProjectService
+    private readonly _translateService: TranslateService
   ) {}
 
   ngOnInit() {
