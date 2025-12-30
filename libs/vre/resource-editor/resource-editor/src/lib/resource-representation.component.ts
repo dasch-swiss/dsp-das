@@ -8,7 +8,6 @@ import { DocumentComponent } from './representations/document/document.component
 import { getFileValue } from './representations/get-file-value';
 import { RepresentationConstants } from './representations/representation-constants';
 import { StillImageComponent } from './representations/still-image/still-image.component';
-import { TextComponent } from './representations/text/text.component';
 import { VideoComponent } from './representations/video/video.component';
 import { ResourceRepresentationContainerComponent } from './resource-representation-container.component';
 
@@ -52,7 +51,7 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
       }
       @case (representationConstants.text) {
         <app-resource-representation-container [small]="true">
-          <app-text #text [src]="fileValue" [parentResource]="resource.res" />
+          <app-archive #text [src]="fileValue" [parentResource]="resource.res" />
         </app-resource-representation-container>
       }
     }
@@ -62,7 +61,6 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
     AudioComponent,
     DocumentComponent,
     StillImageComponent,
-    TextComponent,
     VideoComponent,
     ResourceRepresentationContainerComponent,
   ],
