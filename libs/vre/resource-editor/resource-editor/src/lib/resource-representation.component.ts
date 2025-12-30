@@ -35,7 +35,7 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
         </app-resource-representation-container>
       }
       @case (representationConstants.audio) {
-        <app-resource-representation-container>
+        <app-resource-representation-container [small]="true">
           <app-audio #audio [src]="fileValue" [parentResource]="resource.res" />
         </app-resource-representation-container>
       }
