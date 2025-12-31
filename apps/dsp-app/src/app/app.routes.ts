@@ -16,6 +16,7 @@ import {
   EditProjectFormPageComponent,
   ImageSettingsComponent,
   LegalSettingsComponent,
+  ProjectAdminGuard,
   ProjectPageComponent,
   ProjectPageGuard,
   ResourceMetadataComponent,
@@ -93,7 +94,7 @@ export const routes: Routes = [
       {
         path: RouteConstants.settings,
         component: SettingsPageComponent,
-        canActivate: [AuthGuard],
+        canActivate: [ProjectAdminGuard],
         children: [
           {
             path: RouteConstants.home,
