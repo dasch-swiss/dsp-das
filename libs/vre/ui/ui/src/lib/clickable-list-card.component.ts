@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { MatCard } from '@angular/material/card';
 import { MatList } from '@angular/material/list';
 
 @Component({
   selector: 'app-clickable-list-card',
+  encapsulation: ViewEncapsulation.None,
   template: `
     <mat-card appearance="outlined" style="margin: 16px 0">
       <mat-list style="padding: 0">
@@ -13,7 +14,7 @@ import { MatList } from '@angular/material/list';
   `,
   styles: [
     `
-      :host ::ng-deep .mat-mdc-list-item {
+      app-clickable-list-card .mat-mdc-list-item {
         border-radius: 8px;
         transition: background-color 0.2s;
         &:hover {
