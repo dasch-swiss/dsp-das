@@ -1,8 +1,10 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
 import { MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
+import { MatList, MatListItem, MatListItemIcon } from '@angular/material/list';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, OntologyMetadata } from '@dasch-swiss/dsp-js';
@@ -30,6 +32,10 @@ import { CreateOntologyFormDialogComponent } from '../forms/ontology-form/create
     MatTooltip,
     StringifyStringLiteralPipe,
     TranslatePipe,
+    MatCard,
+    MatList,
+    MatListItem,
+    MatListItemIcon,
   ],
 })
 export class DataModelsPageComponent {
