@@ -69,28 +69,7 @@ a {
 }
 
 // --------------------------------------
-// menu
-.menu-content,
-.menu-action,
-.menu-content {
-  .mat-grid-tile button {
-    border-radius: $border-radius;
-    font-size: 11px;
-    height: 84px;
-    padding: 6px;
-    width: 84px;
 
-    .mat-icon {
-      font-size: 36px;
-      height: 36px;
-      width: 36px;
-    }
-  }
-}
-
-.border-bottom {
-  border-bottom: 1px solid rgba($primary, 0.1);
-}
 
 // resource
 
