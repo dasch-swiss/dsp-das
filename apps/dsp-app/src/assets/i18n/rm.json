@@ -333,6 +333,10 @@
         "classCreated": "Successfully created the class {{classLabel}}."
       }
     },
+    "notAllowed": {
+      "title": "Access Denied",
+      "message": "You are not allowed to see this page."
+    },
     "search": {
       "propertyFormListValue": "Select an item",
       "fullTextSearch": {

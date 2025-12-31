@@ -333,6 +333,10 @@
         "classCreated": "Die Klasse {{classLabel}} wurde erfolgreich erstellt."
       }
     },
+    "notAllowed": {
+      "title": "Zugriff verweigert",
+      "message": "Sie dürfen diese Seite nicht sehen."
+    },
     "search": {
       "propertyFormListValue": "Wählen Sie eine Option",
       "fullTextSearch": {

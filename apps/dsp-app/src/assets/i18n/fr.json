@@ -333,6 +333,10 @@
         "classCreated": "La classe {{classLabel}} a été créée avec succès."
       }
     },
+    "notAllowed": {
+      "title": "Accès refusé",
+      "message": "Vous n'êtes pas autorisé à voir cette page."
+    },
     "search": {
       "propertyFormListValue": "Sélectionner un élément",
       "fullTextSearch": {

@@ -17,16 +17,20 @@ export class ProjectAdminGuard implements CanActivate {
     return this._userService.isLoggedIn$.pipe(
       tap(isLoggedIn => {
         if (!isLoggedIn) {
-          this._router.navigate([RouteConstants.home]);
+          this._navigateToNotAllowedPage();
         }
       }),
       filter(isLoggedIn => isLoggedIn === true),
       switchMap(() => this._projectPageService.hasProjectAdminRights$),
       tap(hasProjectAdminRights => {
         if (!hasProjectAdminRights) {
-          this._router.navigate([RouteConstants.home]);
+          this._navigateToNotAllowedPage();
         }
       })
     );
+  }
+
+  private _navigateToNotAllowedPage(): void {
+    this._router.navigate([RouteConstants.notAllowed]);
   }
 }

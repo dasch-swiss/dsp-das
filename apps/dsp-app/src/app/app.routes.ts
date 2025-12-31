@@ -37,8 +37,8 @@ import {
 } from '@dasch-swiss/vre/pages/system/system';
 import { AccountComponent, ProjectOverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { SingleResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
-import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
+import { NoResultsFoundComponent, NoResultsFoundPageComponent, NotAllowedPageComponent } from '@dasch-swiss/vre/ui/ui';
 import { AuthGuard } from './main/guard/auth.guard';
 import { SysAdminGuard } from './main/guard/sys-admin.guard';
 
@@ -132,11 +132,6 @@ export const routes: Routes = [
         component: AdvancedSearchResultsPageComponent,
       },
       { path: RouteConstants.advancedSearch, component: AdvancedSearchPageComponent },
-      {
-        path: RouteConstants.notFoundWildcard,
-        component: StatusComponent,
-        data: { status: RouteConstants.notFound },
-      },
     ],
   },
   {
@@ -201,14 +196,16 @@ export const routes: Routes = [
         component: CookiePolicyComponent,
       },
       {
+        path: RouteConstants.notAllowed,
+        component: NotAllowedPageComponent,
+      },
+      {
         path: RouteConstants.notFound,
-        component: StatusComponent,
-        data: { status: RouteConstants.notFound },
+        component: NoResultsFoundPageComponent,
       },
       {
         path: RouteConstants.notFoundWildcard,
-        component: StatusComponent,
-        data: { status: RouteConstants.notFound },
+        component: NoResultsFoundComponent,
       },
     ],
   },
