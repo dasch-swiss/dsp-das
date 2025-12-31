@@ -49,7 +49,6 @@ import { ProjectMembersComponent } from './project-members.component';
       <app-status [status]="403" />
     }
   `,
-  styleUrls: ['./collaboration-page.component.scss'],
   providers: [CollaborationPageService],
   imports: [
     AsyncPipe,
