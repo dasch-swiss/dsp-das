@@ -59,12 +59,4 @@
   }
 }
 
-// mobile device: phone
-@media (max-width: map.get($grid-breakpoints, phone)) {
-  .image {
-    display: none;
-  }
-  .status-page .container {
-    padding-top: 30px;
-  }
-}
+
