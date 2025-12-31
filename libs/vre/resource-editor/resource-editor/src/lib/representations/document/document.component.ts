@@ -21,13 +21,13 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { Constants, ReadDocumentFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
-import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PdfViewerComponent, PdfViewerModule } from 'ng2-pdf-viewer';
 import {
   ReplaceFileDialogComponent,
   ReplaceFileDialogProps,
 } from '../replace-file-dialog/replace-file-dialog.component';
+import { RepresentationErrorMessageComponent } from '../representation-error-message.component';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
@@ -43,8 +43,8 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
     MatMenuTrigger,
     MatTooltip,
     PdfViewerModule,
-    StatusComponent,
     TranslatePipe,
+    RepresentationErrorMessageComponent,
   ],
   templateUrl: './document.component.html',
 })

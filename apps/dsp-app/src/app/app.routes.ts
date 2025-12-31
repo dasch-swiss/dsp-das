@@ -39,6 +39,7 @@ import { SingleResourcePageComponent } from '@dasch-swiss/vre/resource-editor/re
 import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { AuthGuard } from './main/guard/auth.guard';
+import { SysAdminGuard } from './main/guard/sys-admin.guard';
 
 export const routes: Routes = [
   {
@@ -173,7 +174,7 @@ export const routes: Routes = [
       {
         path: RouteConstants.system,
         component: SystemPageComponent,
-        canActivate: [AuthGuard],
+        canActivate: [SysAdminGuard],
         children: [
           {
             path: '',

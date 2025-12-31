@@ -2,7 +2,7 @@
 <div #pdfContainer class="pdf-container">
   <!-- in case of an error -->
   @if (failedToLoad) {
-  <app-status [status]="404" [url]="src.fileUrl" [representation]="'document'" />
+  <app-representation-error-message />
   } @if (pdfSrc) {
   <pdf-viewer
     class="pdf-viewer"

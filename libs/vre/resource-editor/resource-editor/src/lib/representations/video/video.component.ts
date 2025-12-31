@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadMovingImageFileValue, ReadResource } from '@dasch-swiss/dsp-js';
-import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,6 +21,7 @@ import { SegmentsDisplayComponent } from '../../segment-support/segments-display
 import { SegmentsService } from '../../segment-support/segments.service';
 import { MediaSliderComponent } from '../audio/media-slider.component';
 import { MovingImageSidecar } from '../moving-image-sidecar';
+import { RepresentationErrorMessageComponent } from '../representation-error-message.component';
 import { RepresentationService } from '../representation.service';
 import { DisableContextMenuDirective } from './disable-context-menu.directive';
 import { MediaPlayerService } from './media-player.service';
@@ -34,12 +34,12 @@ import { VideoToolbarComponent } from './video-toolbar.component';
   providers: [MediaControlService, MediaPlayerService],
   imports: [
     DisableContextMenuDirective,
-    StatusComponent,
     AppProgressIndicatorComponent,
     VideoOverlayComponent,
     MediaSliderComponent,
     SegmentsDisplayComponent,
     VideoToolbarComponent,
+    RepresentationErrorMessageComponent,
   ],
 })
 export class VideoComponent implements OnChanges, OnDestroy {
