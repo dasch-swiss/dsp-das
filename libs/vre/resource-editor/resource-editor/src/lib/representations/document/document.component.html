@@ -23,11 +23,11 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #more="matMenu" class="representation-menu">
-          <button class="menu-content" mat-menu-item (click)="download()">
+          <button mat-menu-item (click)="download()">
             {{ 'resourceEditor.representations.downloadFile' | translate }}
           </button>
           @if (resourceFetcherService.userCanEdit$ | async) {
-          <button class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">
+          <button mat-menu-item (click)="openReplaceFileDialog()">
             {{ 'resourceEditor.representations.replaceFile' | translate }}
           </button>
           }
@@ -113,11 +113,11 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #more="matMenu" class="mat-menu-custom-black">
-        <button class="menu-content" mat-menu-item (click)="download()" [disabled]="failedToLoad">
+        <button mat-menu-item (click)="download()" [disabled]="failedToLoad">
           {{ 'resourceEditor.representations.downloadFile' | translate }}
         </button>
         @if (resourceFetcherService.userCanEdit$ | async) {
-        <button class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">
+        <button mat-menu-item (click)="openReplaceFileDialog()">
           {{ 'resourceEditor.representations.replaceFile' | translate }}
         </button>
         }
