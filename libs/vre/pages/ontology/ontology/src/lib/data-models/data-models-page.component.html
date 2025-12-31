@@ -30,19 +30,15 @@
   </div>
 
   @if (ontologiesMetadata$ | async) {
-  <div>
-    <mat-card appearance="outlined" style="margin: 16px 0">
-      <mat-list style="padding: 0">
-        @for (onto of ontologiesMetadata$ | async; track trackByOntologyMetaFn($index, onto)) {
-        <mat-list-item (click)="navigateToOntology(onto.id)">
-          <mat-icon matListItemIcon>bubble_chart</mat-icon>
-          <div matLine>{{ onto.label }}</div>
-        </mat-list-item>
+  <app-clickable-list-card>
+    @for (onto of ontologiesMetadata$ | async; track trackByOntologyMetaFn($index, onto)) {
+    <mat-list-item (click)="navigateToOntology(onto.id)">
+      <mat-icon matListItemIcon>bubble_chart</mat-icon>
+      <div matLine>{{ onto.label }}</div>
+    </mat-list-item>
 
-        }
-      </mat-list>
-    </mat-card>
-  </div>
+    }
+  </app-clickable-list-card>
   }
 
   <div style="margin-top: 80px; display: flex; justify-content: space-between">
@@ -65,15 +61,13 @@
     }
   </div>
 
-  <mat-card appearance="outlined" style="margin: 16px 0">
-    <mat-list style="padding: 0">
-      @for (list of (listsInProject$ | async); track trackByFn($index, list)) {
-      <mat-list-item (click)="navigateToList(list.id)">
-        <mat-icon matListItemIcon>list</mat-icon>
-        <div matLine>{{ list.labels | appStringifyStringLiteral }}</div>
-      </mat-list-item>
+  <app-clickable-list-card>
+    @for (list of (listsInProject$ | async); track trackByFn($index, list)) {
+    <mat-list-item (click)="navigateToList(list.id)">
+      <mat-icon matListItemIcon>list</mat-icon>
+      <div matLine>{{ list.labels | appStringifyStringLiteral }}</div>
+    </mat-list-item>
 
-      }
-    </mat-list>
-  </mat-card>
+    }
+  </app-clickable-list-card>
 </app-centered-layout>

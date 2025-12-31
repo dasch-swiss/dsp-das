@@ -14,7 +14,7 @@ import { ListInfoFormComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
+import { CenteredLayoutComponent, ClickableListCardComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import { map, switchMap } from 'rxjs';
 import { CreateOntologyFormDialogComponent } from '../forms/ontology-form/create-ontology-form-dialog.component';
@@ -27,13 +27,12 @@ import { CreateOntologyFormDialogComponent } from '../forms/ontology-form/create
   imports: [
     AsyncPipe,
     CenteredLayoutComponent,
+    ClickableListCardComponent,
     MatButton,
     MatIcon,
     MatTooltip,
     StringifyStringLiteralPipe,
     TranslatePipe,
-    MatCard,
-    MatList,
     MatListItem,
     MatListItemIcon,
   ],
