@@ -79,18 +79,13 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   doSearch(): void {
-    const state = this.searchState.currentState;
     this._previousSearchService.storeSearchSnapshot(
       this.projectIri,
       this._dataService.selectedOntology,
       this.searchState.currentState
     );
 
-    const query = this._gravsearchService.generateGravSearchQuery(
-      state.selectedResourceClass?.iri,
-      this.searchState.validStatementElements,
-      state.orderBy
-    );
+    const query = this._gravsearchService.generateGravSearchQuery(this.searchState.validStatementElements);
 
     const queryObject: QueryObject = {
       query,

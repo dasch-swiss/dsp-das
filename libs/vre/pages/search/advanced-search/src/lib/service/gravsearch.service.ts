@@ -1,87 +1,181 @@
 import { inject, Injectable } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ResourceLabel } from '../constants';
-import { GravsearchStatement, OrderByItem, StatementElement } from '../model';
+import { GravsearchStatement, GravsearchWriter, StatementElement } from '../model';
 import { Operator } from '../operators.config';
 import { OntologyDataService } from './ontology-data.service';
+import { SearchStateService } from './search-state.service';
 
 @Injectable()
 export class GravsearchService {
   private dataService: OntologyDataService = inject(OntologyDataService);
+  private _searchStateService = inject(SearchStateService);
 
-  generateGravSearchQuery(
-    resourceClassIri: string | undefined,
-    properties: StatementElement[],
-    orderByList: OrderByItem[]
-  ): string {
-    // class restriction for the resource searched for
-    let restrictToResourceClass = '';
+  get ontoIri(): string {
+    return this.dataService.selectedOntology.iri;
+  }
 
-    // Safety check for ontoIri
-    const ontoIri = this.dataService.selectedOntology?.iri;
-    const resourceClasses = this.dataService.classIris;
-
-    const ontoShortCodeMatch = ontoIri.match(/\/([^/]+)\/v2$/);
+  get ontoShortCode(): string {
+    const ontoShortCodeMatch = this.ontoIri.match(/\/([^/]+)\/v2$/);
     if (!ontoShortCodeMatch) {
-      throw new Error(`Invalid ontology IRI format: ${ontoIri}`);
+      throw new Error(`Invalid ontology IRI format: ${this.ontoIri}`);
     }
-    const ontoShortCode = ontoShortCodeMatch[1];
+    return ontoShortCodeMatch[1];
+  }
 
-    // if given, create the class restriction for the main resource
-    restrictToResourceClass =
-      resourceClassIri !== undefined
-        ? `?mainRes a <${resourceClassIri}> .`
-        : resourceClasses
-            .map(resourceClass => `{ ?mainRes a ${ontoShortCode}:${resourceClass.split('#').pop()} . }`)
-            .join(' UNION ');
-
-    const propertyStrings: GravsearchStatement[] = properties.map((prop, index) =>
-      this._propertyStringHelper(prop, index)
+  generateGravSearchQuery(statements: StatementElement[]): string {
+    const propertyStrings: GravsearchStatement[] = statements.map((stm, index) =>
+      this._propertyStringHelper(stm, index)
     );
 
-    let orderByString = '';
-    const orderByProps: string[] = [];
+    const constructStatements = this._buildConstructStatements(statements);
+    const whereClause = this._buildWhereClause(statements);
 
-    // use the id in the orderByList to loop through properties to find the index of the property in the properties list
-    // then add the string with the index to orderByProps
-    orderByList
-      .filter(orderByItem => orderByItem.orderBy === true)
-      .forEach(orderByItem => {
-        const index = properties.findIndex(prop => prop.id === orderByItem.id);
-        if (index > -1) {
-          if (properties[index].selectedPredicate?.objectValueType === ResourceLabel) {
-            // add first 8 characters of the property id to create unique identifier for the variable name when searching for a resource label
-            // it's sliced because gravsearch doesn't allow minus signs in variable names
-            orderByProps.push(`?label${properties[index].id.slice(0, 8)}`);
-          } else {
-            orderByProps.push(`?prop${index}`);
-          }
-        }
-      });
+    const gravSearch2 =
+      'PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>\n' +
+      `PREFIX ${this.ontoShortCode}: <${this.ontoIri}#>\n` +
+      'CONSTRUCT {\n' +
+      '?mainRes knora-api:isMainResource true .\n' +
+      `${constructStatements}\n` +
+      '} WHERE {\n' +
+      '?mainRes a knora-api:Resource .\n' +
+      `${this._restrictToResourceClassStatement()}\n` +
+      `${whereClause}\n` +
+      '}\n' +
+      `${this._getOrderByString(statements)}\n` +
+      'OFFSET 0';
 
-    orderByString = orderByProps.length ? `ORDER BY ${orderByProps.join(' ')}` : '';
+    return gravSearch2;
 
     const gravSearch =
       'PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>\n' +
-      `PREFIX ${ontoShortCode}: <${ontoIri}#>\n` +
+      `PREFIX ${this.ontoShortCode}: <${this.ontoIri}#>\n` +
       'CONSTRUCT {\n' +
       '?mainRes knora-api:isMainResource true .\n' +
       `${propertyStrings.map(prop => prop.constructString).join('\n')}\n` +
       '} WHERE {\n' +
       '?mainRes a knora-api:Resource .\n' +
-      `${restrictToResourceClass}\n` +
+      `${this._restrictToResourceClassStatement()}\n` +
       `${propertyStrings.map(prop => prop.whereString).join('\n')}\n` +
       '}\n' +
-      `${orderByString}\n` +
+      `${this._getOrderByString(statements)}\n` +
       'OFFSET 0';
 
     return gravSearch;
   }
 
+  private _buildConstructStatements(statements: StatementElement[]): string {
+    const writer = new GravsearchWriter(statements);
+    return statements.map((_, i) => writer.at(i).constructStatement).join('\n');
+  }
+
+  private _getConstructStatement(statement: StatementElement, index: number): string {
+    const s = this._getSubjectIdentifier(statement);
+    const o = this._getConstructObject(statement, index);
+    return `${s} <${statement.selectedPredicate?.iri}> ${o} .`;
+  }
+
+  private _getSubjectIdentifier(statement: StatementElement): string {
+    if (!statement.isChildProperty) {
+      return '?mainRes';
+    }
+    const subjectId = statement.parentId || statement.id;
+    const subjectWriteIndex = this._searchStateService.validStatementElements.findIndex(stm => stm.id === subjectId);
+    return `?res${subjectWriteIndex}`;
+  }
+
+  private _getConstructObject(statement: StatementElement, index: number): string {
+    if (!statement.isChildProperty) {
+      return `?res${index}`;
+    }
+    if (
+      (statement.selectedOperator === Operator.Equals || statement.selectedOperator === Operator.NotEquals) &&
+      !statement.selectedPredicate?.objectValueType.includes(Constants.KnoraApiV2)
+    ) {
+      return `<${statement.selectedObjectNode?.writeValue}>`;
+    }
+  }
+
+  /// if (
+  //       statement.objectType === PropertyObjectType.ValueObject &&
+  //       statement.selectedPredicate?.objectValueType === ResourceLabel
+  //     ) {
+  //       console.log('adding regex for resource label');
+  //       let s = `${this._getSubjectIdentifier(statement)} rdfs:label ?label${statement.id.slice(0, 8)} .`;
+  //       s += `\nFILTER regex(?label${statement.id.slice(0, 8)}, "${statement.selectedObjectNode?.writeValue}", "i") .\n`;
+  //       return s;
+  //     }
+  //
+
+  private _buildWhereClause(statements: StatementElement[]): string {
+    const writer = new GravsearchWriter(statements);
+    return statements.map((_, i) => writer.at(i).whereStatement).join('\n');
+  }
+
+  private _buildWhereStatementForLabelComparison(statement: StatementElement, index: number): string {
+    let s = `${this._getSubjectIdentifier(statement)} rdfs:label ?label${statement.id.slice(0, 8)} .`;
+    switch (statement.selectedOperator) {
+      case Operator.Equals: // FILTER (?labelc71f50d2 = "G1512_H.") .
+        s += `\nFILTER (?label${statement.id.slice(0, 8)} = "${statement.selectedObjectNode?.writeValue}") .\n`;
+        return s;
+      case Operator.NotEquals: // FILTER (?labelc71f50d2 != "G1512_H.") .
+        s += `\nFILTER (?label${statement.id.slice(0, 8)} != "${statement.selectedObjectNode?.writeValue}") .\n`;
+        return s;
+      case Operator.Matches:
+        s += `\nFILTER knora-api:matchLabel(${this._getSubjectIdentifier(
+          statement
+        )}, "${statement.selectedObjectNode?.writeValue}") .\n`;
+        return s;
+      case Operator.IsLike:
+        s += `\nFILTER regex(?label${statement.id.slice(0, 8)}, "${statement.selectedObjectNode?.writeValue}", "i") .\n`;
+        return s;
+      default:
+        return '';
+    }
+  }
+
+  _buildWhereStatementForListObjectComparison(statement: StatementElement, index: number): string {
+    let whereStm = this._getConstructStatement(statement, index);
+    const o = this._getConstructObject(statement, index);
+
+    const listValueAsListNode = Constants.ListValueAsListNode.split('#').pop();
+
+    if (statement.selectedOperator === Operator.NotEquals) {
+      whereStm += `\nFILTER NOT EXISTS { ${o} knora-api:${listValueAsListNode} <${statement.selectedObjectNode?.writeValue}> . }`;
+    }
+    if (statement.selectedOperator === Operator.Equals || statement.selectedOperator === Operator.Matches) {
+      whereStm += `\n${o} knora-api:${listValueAsListNode} <${statement.selectedObjectNode?.writeValue}> .`;
+    }
+
+    if (statement.selectedOperator === Operator.NotExists) {
+      whereStm = `FILTER NOT EXISTS { \n${whereStm}\n}\n`;
+    }
+    return whereStm;
+  }
+
+  private _buildWhereStatement(statement: StatementElement, index: number): string {
+    let whereStm = this._getConstructStatement(statement, index);
+    console.log(statement);
+    if (
+      (statement.selectedOperator === Operator.Equals || statement.selectedOperator === Operator.NotEquals) &&
+      !statement.selectedPredicate?.isKnoraValueType
+    ) {
+      // add the statement for the resource class
+      const s = this._getSubjectIdentifier(statement);
+      whereStm += `\n?${s} a <${statement.selectedObjectNode?.writeValue}> .\n`;
+    }
+
+    if (statement.selectedOperator === Operator.NotExists || statement.selectedOperator === Operator.NotEquals) {
+      // simply wrap everything into FILTER NOT EXISTS
+      whereStm = `FILTER NOT EXISTS { \n${whereStm}\n}\n`;
+    }
+
+    return whereStm;
+  }
+
   private _propertyStringHelper(statement: StatementElement, index: number): GravsearchStatement {
     let constructString = '';
     let whereString = '';
-    console.log('fuuuu');
 
     // not a linked resource, not a resource label
     if (
@@ -102,6 +196,7 @@ export class GravsearchService {
         whereString = constructString;
       }
       // if search value is an array that means that it's a linked resource with child properties
+      //  TODO: CHANGE
       if (Array.isArray(statement.selectedObjectNode)) {
         statement.selectedObjectNode.forEach((value, i) => {
           if (value.selectedPredicate?.objectType !== ResourceLabel) {
@@ -162,7 +257,6 @@ export class GravsearchService {
   private _valueStringHelper(property: StatementElement, index: number, identifier: string, labelRes: string): string {
     // if the property is a child property, a linked resource, and the operator is equals or not equals, return an empty string
     if (
-      property.isChildProperty &&
       !property.selectedPredicate?.objectValueType.includes(Constants.KnoraApiV2) &&
       (property.selectedOperator === Operator.Equals || property.selectedOperator === Operator.NotEquals)
     )
@@ -174,7 +268,6 @@ export class GravsearchService {
 
     // linked resource
     if (!property.selectedPredicate?.objectValueType.includes(Constants.KnoraApiV2)) {
-      let valueString = '';
       switch (property.selectedOperator) {
         case Operator.Equals:
           return `?mainRes <${property.selectedPredicate?.iri}> <${property.selectedObjectNode?.writeValue}> .`;
@@ -182,19 +275,13 @@ export class GravsearchService {
           // this looks wrong but it is correct
           return `FILTER NOT EXISTS { \n?mainRes <${property.selectedPredicate?.iri}> <${property.selectedObjectNode?.writeValue}> . }`;
         case Operator.Matches:
-          if (Array.isArray(property.selectedObjectNode)) {
-            property.selectedObjectNode.forEach((value, i) => {
-              if (value.selectedOperator !== Operator.Exists && value.selectedOperator !== Operator.NotExists) {
-                valueString += this._valueStringHelper(value, i, `?linkProp${index}`, `?prop${index}`);
-              }
-            });
-          }
-          return valueString;
+          return '';
         default:
           throw new Error('Invalid operator for linked resource');
       }
     } else {
       switch (property.selectedPredicate?.objectValueType) {
+        // RESOURCE LABEL
         case ResourceLabel:
           switch (property.selectedOperator) {
             case Operator.Equals:
@@ -269,6 +356,7 @@ export class GravsearchService {
           )} "${property.selectedObjectNode?.writeValue}"^^<${Constants.KnoraApi}/ontology/knora-api/simple/v2${
             Constants.HashDelimiter
           }Date>) .`;
+
         case Constants.ListValue:
           switch (property.selectedOperator) {
             case Operator.NotEquals: {
@@ -292,6 +380,37 @@ export class GravsearchService {
           throw new Error('Invalid object type');
       }
     }
+  }
+
+  private _restrictToResourceClassStatement() {
+    return this._searchStateService.currentState.selectedResourceClass?.iri
+      ? `?mainRes a <${this._searchStateService.currentState.selectedResourceClass?.iri}> .`
+      : this.dataService.classIris
+          .map(resourceClass => `{ ?mainRes a ${this.ontoShortCode}:${resourceClass.split('#').pop()} . }`)
+          .join(' UNION ');
+  }
+
+  private _getOrderByString(statements: StatementElement[]): string {
+    const orderByProps: string[] = [];
+
+    // use the id in the orderByList to loop through properties to find the index of the property in the properties list
+    // then add the string with the index to orderByProps
+    this._searchStateService.currentState.orderBy
+      .filter(orderByItem => orderByItem.orderBy === true)
+      .forEach(orderByItem => {
+        const index = statements.findIndex(stm => stm.id === orderByItem.id);
+        if (index > -1) {
+          if (statements[index].selectedPredicate?.objectValueType === ResourceLabel) {
+            // add first 8 characters of the property id to create unique identifier for the variable name when searching for a resource label
+            // it's sliced because gravsearch doesn't allow minus signs in variable names
+            orderByProps.push(`?label${statements[index].id.slice(0, 8)}`);
+          } else {
+            orderByProps.push(`?prop${index}`);
+          }
+        }
+      });
+
+    return orderByProps.length ? `ORDER BY ${orderByProps.join(' ')}` : '';
   }
 
   private _operatorToSymbol(operator: string | undefined): string {

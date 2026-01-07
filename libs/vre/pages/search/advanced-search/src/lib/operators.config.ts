@@ -28,7 +28,7 @@ const EXISTENCE_OPS = [Operator.Exists, Operator.NotExists];
 const LINKED_RESOURCE_OPS = [...BASIC_OPS, Operator.Matches];
 
 const SPECIAL_VALUE_OPERATORS = {
-  [ResourceLabel]: TEXT_OPS,
+  [ResourceLabel]: [Operator.Equals, Operator.NotEquals, Operator.IsLike, Operator.Matches],
   [Constants.TextValue]: TEXT_OPS,
 
   [Constants.IntValue]: NUMERIC_OPS,

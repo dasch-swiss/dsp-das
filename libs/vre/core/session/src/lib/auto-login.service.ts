@@ -32,6 +32,7 @@ export class AutoLoginService {
 
     if (!this._accessTokenService.isValidToken()) {
       this._accessTokenService.removeTokens();
+      // delete cookie
       this.hasCheckedCredentials$.next(true);
       return;
     }

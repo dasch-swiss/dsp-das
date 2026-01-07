@@ -32,7 +32,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
       <app-predicate-select
         [style.width]="'calc(30% - ' + (statementElement.statementLevel + 1) * 2 + 'em)'"
         [selectedPredicate]="statementElement?.selectedPredicate"
-        [subjectClass]="statementElement.selectedSubjectNode?.value"
+        [subjectClass]="statementElement.subjectNode?.value"
         (selectedPredicateChange)="formManager.onPredicateSelectionChanged(statementElement, $event)" />
       <app-comparison-operator
         [operators]="statementElement.operators"
@@ -43,7 +43,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
           <app-resource-value
             class="width-40-percent"
             [selectedPredicate]="statementElement.selectedPredicate"
-            [selectedResource]="statementElement.selectedObjectNode?.value"
+            [selectedResource]="statementElement.subjectNode?.value"
             (selectedResourceChange)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.ValueObject) {

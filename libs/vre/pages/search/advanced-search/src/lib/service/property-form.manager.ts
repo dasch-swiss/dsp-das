@@ -9,8 +9,6 @@ export class PropertyFormManager implements OnDestroy {
   private searchStateService = inject(SearchStateService);
   private destroy$ = new Subject<void>();
 
-  areFormsCompleteAndValid$ = this.searchStateService.isFormStateValidAndComplete$;
-
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -72,7 +70,11 @@ export class PropertyFormManager implements OnDestroy {
     this.searchStateService.patchState({
       statementElements: [
         ...statementsBeforeParent,
-        new StatementElement(parentStatement.selectedObjectNode as NodeValue, parentStatement.statementLevel + 1),
+        new StatementElement(
+          parentStatement.selectedObjectNode as NodeValue,
+          parentStatement.statementLevel + 1,
+          parentStatement
+        ),
         ...statementsAfterParent,
       ],
     });
@@ -86,7 +88,7 @@ export class PropertyFormManager implements OnDestroy {
     this.searchStateService.patchState({
       statementElements: [
         ...statementsBefore,
-        new StatementElement(currentStatement.selectedSubjectNode!, currentStatement.statementLevel),
+        new StatementElement(currentStatement.subjectNode!, currentStatement.statementLevel),
         ...statementsAfter,
       ],
     });
@@ -104,9 +106,11 @@ export class PropertyFormManager implements OnDestroy {
     const statementsOfSameLevel = currentState.statementElements.filter(
       s =>
         s.statementLevel === statement.statementLevel &&
-        s.selectedSubjectNode?.value &&
-        s.selectedSubjectNode.value.iri === statement.selectedSubjectNode?.value?.iri
+        s.subjectNode?.value &&
+        s.subjectNode.value.iri === statement.subjectNode?.value?.iri
     );
-    return statementsOfSameLevel[statementsOfSameLevel.length - 1] === statement;
+    return (
+      !!statementsOfSameLevel.length && statementsOfSameLevel[statementsOfSameLevel.length - 1]?.id === statement.id
+    );
   }
 }

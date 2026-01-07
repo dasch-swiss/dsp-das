@@ -35,15 +35,12 @@ export class PreviousSearchService {
     }
 
     return plainObjects.map(obj => {
-      // Reconstruct NodeValue for subject if it exists
       let subjectNode: NodeValue | undefined;
       if (obj._selectedSubjectNode) {
         subjectNode = new NodeValue(obj.id, obj._selectedSubjectNode._value);
       }
 
       const element = new StatementElement(subjectNode, obj.statementLevel);
-
-      // Restore all properties using setters to maintain class behavior
       element.selectedPredicate = obj._selectedPredicate;
       element.selectedOperator = obj._selectedOperator;
       element.selectedObjectNode = this.reconstructObjectNode(obj._selectedObjectNode);

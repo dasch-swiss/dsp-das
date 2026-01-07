@@ -8,20 +8,15 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { BehaviorSubject, combineLatest, filter, map, Observable, startWith, tap } from 'rxjs';
-import { ResourceLabel } from '../constants';
+import { RDFS_LABEL, ResourceLabel } from '../constants';
 import { IriLabelPair, Predicate } from '../model';
 
 @Injectable()
 export class OntologyDataService {
-  private readonly ResourceLabelPropertyData: Predicate = {
-    iri: ResourceLabel,
-    label: 'Resource Label',
-    objectValueType: ResourceLabel,
-    isLinkProperty: false,
-  } as const;
+  private readonly ResourceLabelPropertyData = new Predicate(RDFS_LABEL, 'Resource Label', ResourceLabel, false);
 
   readonly SEARCH_ALL_RESOURCE_CLASSES_OPTION: IriLabelPair = {
-    iri: '?s',
+    iri: '',
     label: 'All resource classes',
   } as const;
 
@@ -90,7 +85,6 @@ export class OntologyDataService {
       );
     }
     return combineLatest(this.resourceClasses$, this._propertyDefinitions$).pipe(
-      tap(([c, p]) => console.log('classes and props', c, p)),
       map(([resClasses, propDefs]) => {
         const propDef = propDefs.find(p => p.id === propertyIri);
         if (!propDef) {
@@ -143,19 +137,13 @@ export class OntologyDataService {
     );
 
   private _toPredicate(propDef: ResourcePropertyDefinition): Predicate {
-    const predicate: Predicate = {
-      iri: propDef.id,
-      label: propDef.label || '',
-      objectValueType: propDef.objectType || '',
-      isLinkProperty: propDef.isLinkProperty,
-    };
+    const predicate = new Predicate(propDef.id, propDef.label || '', propDef.objectType || '', propDef.isLinkProperty);
     if (
       propDef.objectType === Constants.ListValue &&
       propDef.guiAttributes.length === 1 &&
       propDef.guiAttributes[0].startsWith('hlist=')
     ) {
-      const listNodeIri = propDef.guiAttributes[0].substring(7, propDef.guiAttributes[0].length - 1);
-      predicate.listObjectIri = listNodeIri;
+      predicate.listObjectIri = propDef.guiAttributes[0].substring(7, propDef.guiAttributes[0].length - 1);
     }
     return predicate;
   }
