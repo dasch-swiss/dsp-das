@@ -18,7 +18,7 @@ import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Observable, of, Subscription, switchMap, tap } from 'rxjs';
+import { Observable, of, Subscription, switchMap } from 'rxjs';
 import { startWith, takeWhile } from 'rxjs/operators';
 import { TemplateEditorSwitcherComponent } from '../template-switcher/template-editor-switcher.component';
 import { FormValueGroup } from './form-value-array.type';
