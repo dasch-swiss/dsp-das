@@ -18,7 +18,7 @@ import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Observable, of, Subscription, switchMap } from 'rxjs';
+import { Observable, of, Subscription, switchMap, tap } from 'rxjs';
 import { startWith, takeWhile } from 'rxjs/operators';
 import { TemplateEditorSwitcherComponent } from '../template-switcher/template-editor-switcher.component';
 import { FormValueGroup } from './form-value-array.type';
@@ -129,7 +129,8 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
       item: propertyType.control(this.readValue ?? propertyType.newValue),
       comment: new FormControl(this.readValue?.valueHasComment || null),
     });
-    this.hasValidValue$ = this.group.controls.item.valueChanges.pipe(
+
+    this.hasValidValue$ = this.group.valueChanges.pipe(
       switchMap(() => of(this.group.controls.item.valid && !!this.group.controls.item.value))
     );
 
