@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { first } from 'rxjs';
 import { ProjectPageHeaderComponent } from './project-page-header.component';
 import { ProjectPageService } from './project-page.service';
 
@@ -17,7 +16,7 @@ import { ProjectPageService } from './project-page.service';
   styleUrls: ['./project-page.component.scss'],
   imports: [ProjectPageHeaderComponent, RouterOutlet],
 })
-export class ProjectPageComponent implements OnInit {
+export class ProjectPageComponent {
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
 
   protected readonly RouteConstants = RouteConstants;
@@ -26,10 +25,8 @@ export class ProjectPageComponent implements OnInit {
     protected route: ActivatedRoute,
     private readonly _titleService: Title,
     private readonly _projectPageService: ProjectPageService
-  ) {}
-
-  ngOnInit() {
-    this._projectPageService.currentProject$.pipe(first()).subscribe(project => {
+  ) {
+    this._projectPageService.currentProject$.subscribe(project => {
       this._titleService.setTitle(project.shortname);
     });
   }
