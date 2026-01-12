@@ -6,6 +6,8 @@ on:
       - main
   pull_request:
 
+# Prevent wasting resources by canceling in-progress runs when a new run is triggered
+# on the same PR or branch
 concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -108,7 +110,6 @@ jobs:
           docker compose -f docker-compose.yml up -d sipi ingest api
           ./webapi/scripts/wait-for-api.sh
       - name: Run e2e tests in CI
-        if: github.event_name == 'push'
         run: |
           cd ../dsp-das
           npm run e2e-ci
