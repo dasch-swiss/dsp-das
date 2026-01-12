@@ -27,7 +27,7 @@ export class ProjectPageComponent implements OnInit {
     private readonly _projectPageService: ProjectPageService
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this._projectPageService.currentProject$.subscribe(project => {
       this._titleService.setTitle(project.shortname);
     });
