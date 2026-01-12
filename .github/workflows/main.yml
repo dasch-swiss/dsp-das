@@ -69,14 +69,17 @@ jobs:
       (github.event.head_commit == null ||
        github.event.head_commit.author.username != 'daschbot')
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0 # gets additionally all tags which we need
-      - uses: actions/setup-node@v6
+      - name: Set up Node
+        uses: actions/setup-node@v6
         with:
           node-version: 22.12.0
           cache: 'npm'
-      - run: npm ci --prefer-offline --no-audit
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
       - name: Install Cypress dependencies
         run: |
           cd ../dsp-das/apps/dsp-app/cypress
@@ -118,7 +121,8 @@ jobs:
       (github.event.head_commit == null ||
        github.event.head_commit.author.username != 'daschbot')
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
       - name: Install yq for smart diff
         run: |
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
@@ -146,23 +150,28 @@ jobs:
     outputs:
       tag: ${{ steps.output_docker_image_tag.outputs.tag }}
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0 # gets additionally all tags which we need
       - name: Output docker image tag
         id: output_docker_image_tag
         run: echo "tag=$(make docker-image-tag | tr -d '\n')" >> "$GITHUB_OUTPUT"
         shell: bash # Explicit for fail-fast behaviour
-      - uses: actions/setup-node@v6
+      - name: Set up Node
+        uses: actions/setup-node@v6
         with:
           node-version: 22.12.0
           cache: 'npm'
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      - run: make docker-publish
+      - name: Build and publish Docker image
+        run: make docker-publish
 
   trigger-dev-deployment:
     name: Trigger deployment to DEV
@@ -212,15 +221,19 @@ jobs:
       (github.event.head_commit == null ||
        github.event.head_commit.author.username != 'daschbot')
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
           python-version: 3.11
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r docs/requirements.txt
-      - run: make docs-lint
-      - run: make docs-build
+      - name: Lint documentation
+        run: make docs-lint
+      - name: Build documentation
+        run: make docs-build
