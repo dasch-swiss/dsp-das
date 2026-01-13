@@ -1,11 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, inject, Injectable, NgZone } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
-import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
-import * as Sentry from '@sentry/angular';
 import { AjaxError } from 'rxjs/ajax';
 import { UserFeedbackError } from './user-feedback-error';
 
@@ -18,8 +16,7 @@ export class AppErrorHandler implements ErrorHandler {
   constructor(
     private readonly _notification: NotificationService,
     private readonly _appConfig: AppConfigService,
-    private readonly _ngZone: NgZone,
-    private readonly _faroService: GrafanaFaroService
+    private readonly _ngZone: NgZone
   ) {}
 
   badRequestRegexMatch = /dsp\.errors\.BadRequestException:(.*)$/;
@@ -106,13 +103,35 @@ export class AppErrorHandler implements ErrorHandler {
     }
   }
 
-  private sendErrorToSentry(error: any) {
-    Sentry.captureException(error);
+  /**
+   * Send error to Sentry (lazy loaded)
+   * Sentry is only loaded in production environments
+   */
+  private async sendErrorToSentry(error: any): Promise<void> {
+    try {
+      // Check if Sentry is available in the global window object
+      // It will be loaded by main.ts if the environment requires it
+      const Sentry = (window as any).Sentry;
+      if (Sentry && typeof Sentry.captureException === 'function') {
+        Sentry.captureException(error);
+      }
+    } catch (sentryError) {
+      console.error('Failed to send error to Sentry:', sentryError);
+    }
   }
 
+  /**
+   * Send error to Grafana Faro (lazy loaded)
+   * Faro is only loaded when enabled in configuration
+   */
   private _sendErrorToFaro(error: any): void {
     try {
-      this._faroService.trackError(error);
+      // Check if Faro is available in the global window object
+      // It will be loaded by GrafanaFaroService if enabled
+      const faro = (window as any).__FARO__;
+      if (faro && typeof faro.api?.pushError === 'function') {
+        faro.api.pushError(error);
+      }
     } catch (faroError) {
       console.error('Failed to send error to Faro:', faroError);
     }
