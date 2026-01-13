@@ -7,9 +7,12 @@ const mockInitializeFaro = jest.fn();
 const mockGetWebInstrumentations = jest.fn(() => []);
 const mockTracingInstrumentation = jest.fn();
 const mockOtlpHttpTransport = jest.fn();
-const mockUuidv5 = Object.assign(jest.fn((str: string) => `hashed-${str}`), {
-  URL: 'url-namespace',
-});
+const mockUuidv5 = Object.assign(
+  jest.fn((str: string) => `hashed-${str}`),
+  {
+    URL: 'url-namespace',
+  }
+);
 
 // Mock the dynamic imports
 jest.mock('@grafana/faro-web-sdk', () => ({
