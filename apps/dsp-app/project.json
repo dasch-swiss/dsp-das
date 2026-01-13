@@ -74,7 +74,12 @@
               "inline": true
             }
           },
-          "sourceMap": true
+          "sourceMap": {
+            "scripts": true,
+            "styles": false,
+            "hidden": true,
+            "vendor": false
+          }
         },
         "development": {
           "buildOptimizer": false,
