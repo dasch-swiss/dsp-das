@@ -65,7 +65,6 @@
     "core-js": "^3.47.0",
     "json2typescript": "^1.6.1",
     "jwt-decode": "^3.1.2",
-    "moment": "^2.29.4",
     "ng2-pdf-viewer": "^10.4.0",
     "ngx-color-picker": "^20.1.1",
     "ngx-skeleton-loader": "^7.0.0",
