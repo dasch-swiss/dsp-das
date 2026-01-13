@@ -50,7 +50,7 @@ async function initSentry(environmentName: string): Promise<void> {
     });
 
     // Expose Sentry globally for error handler
-    (window as any).Sentry = Sentry;
+    window.Sentry = Sentry;
   } catch (error) {
     console.error('Failed to load Sentry:', error);
   }

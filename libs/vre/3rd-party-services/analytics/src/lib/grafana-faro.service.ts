@@ -1,3 +1,5 @@
+/// <reference types="window" />
+
 import { inject, Injectable } from '@angular/core';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
 
@@ -87,7 +89,7 @@ export class GrafanaFaroService {
       }
 
       // Expose Faro instance globally for error handler
-      (window as any).__FARO__ = this._faroInstance;
+      window.__FARO__ = this._faroInstance;
     } catch (error) {
       // Fail silently - don't break the app if Faro fails to initialize
       console.error('Faro initialization failed:', error);

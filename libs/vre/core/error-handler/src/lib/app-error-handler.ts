@@ -1,3 +1,5 @@
+/// <reference types="window" />
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, inject, Injectable, NgZone } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
@@ -34,7 +36,7 @@ export class AppErrorHandler implements ErrorHandler {
       if (this._appConfig.dspInstrumentationConfig.environment !== 'prod') {
         console.error(error);
       }
-      this.sendErrorToSentry(error);
+      this._sendErrorToSentry(error);
       this._sendErrorToFaro(error);
     }
   }
@@ -107,13 +109,12 @@ export class AppErrorHandler implements ErrorHandler {
    * Send error to Sentry (lazy loaded)
    * Sentry is only loaded in production environments
    */
-  private async sendErrorToSentry(error: any): Promise<void> {
+  private async _sendErrorToSentry(error: any): Promise<void> {
     try {
       // Check if Sentry is available in the global window object
       // It will be loaded by main.ts if the environment requires it
-      const Sentry = (window as any).Sentry;
-      if (Sentry && typeof Sentry.captureException === 'function') {
-        Sentry.captureException(error);
+      if (window.Sentry && typeof window.Sentry.captureException === 'function') {
+        window.Sentry.captureException(error);
       }
     } catch (sentryError) {
       console.error('Failed to send error to Sentry:', sentryError);
@@ -128,9 +129,8 @@ export class AppErrorHandler implements ErrorHandler {
     try {
       // Check if Faro is available in the global window object
       // It will be loaded by GrafanaFaroService if enabled
-      const faro = (window as any).__FARO__;
-      if (faro && typeof faro.api?.pushError === 'function') {
-        faro.api.pushError(error);
+      if (window.__FARO__ && typeof window.__FARO__.api?.pushError === 'function') {
+        window.__FARO__.api.pushError(error);
       }
     } catch (faroError) {
       console.error('Failed to send error to Faro:', faroError);
