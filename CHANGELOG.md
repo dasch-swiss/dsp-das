@@ -1,5 +1,47 @@
 # Changelog
 
+## [12.4.2](https://github.com/dasch-swiss/dsp-das/compare/v12.4.1...v12.4.2) (2026-01-12)
+
+
+### Bug Fixes
+
+* fix delete resource form width ([#2775](https://github.com/dasch-swiss/dsp-das/issues/2775)) ([a55a042](https://github.com/dasch-swiss/dsp-das/commit/a55a042f9cb55fdda8367f266edce8ff07fa4793))
+* fix project shortname display on the browser tab ([#2774](https://github.com/dasch-swiss/dsp-das/issues/2774)) ([2be75a0](https://github.com/dasch-swiss/dsp-das/commit/2be75a0a79dcb94167d3b1cf1e70924f1e895651))
+* include comments value changes by using the whole groups changes… ([#2770](https://github.com/dasch-swiss/dsp-das/issues/2770)) ([1ea83aa](https://github.com/dasch-swiss/dsp-das/commit/1ea83aa29e3bade840b0e2f4c45a734b21d349f2))
+* set geoname value after resolving ([#2771](https://github.com/dasch-swiss/dsp-das/issues/2771)) ([25399e6](https://github.com/dasch-swiss/dsp-das/commit/25399e6acc0ae0f7f40b4ce93595d8c383892110))
+
+
+### Maintenances
+
+* **deps-dev:** bump autoprefixer from 10.4.22 to 10.4.23 ([#2755](https://github.com/dasch-swiss/dsp-das/issues/2755)) ([0e42759](https://github.com/dasch-swiss/dsp-das/commit/0e427590f94fa3f4dc4333a01930772d9a6d3cbd))
+* **deps-dev:** bump the swc-deps group across 1 directory with 2 updates ([#2768](https://github.com/dasch-swiss/dsp-das/issues/2768)) ([c2a4b30](https://github.com/dasch-swiss/dsp-das/commit/c2a4b30ab7102404b4529222f089e6aff4b93cbf))
+* **deps:** bump actions/upload-artifact from 5 to 6 ([#2756](https://github.com/dasch-swiss/dsp-das/issues/2756)) ([21805dd](https://github.com/dasch-swiss/dsp-das/commit/21805ddd773257f472f74345129d62485dee5471))
+* **deps:** bump node-forge from 1.3.1 to 1.3.3 ([#2761](https://github.com/dasch-swiss/dsp-das/issues/2761)) ([325470f](https://github.com/dasch-swiss/dsp-das/commit/325470fbcdb173e89ab2a98a12ed56dffa57c547))
+* **deps:** bump the grafana-deps group with 3 updates ([#2767](https://github.com/dasch-swiss/dsp-das/issues/2767)) ([e1fa0c2](https://github.com/dasch-swiss/dsp-das/commit/e1fa0c2505d5d1f1532267e3239ed1208aa66f0f))
+* **deps:** bump the sentry-deps group with 2 updates ([#2754](https://github.com/dasch-swiss/dsp-das/issues/2754)) ([7adca8e](https://github.com/dasch-swiss/dsp-das/commit/7adca8eeede1317467e62e3b9b53921cbcd161aa))
+* update dsp-api to v34.1.0-1-g91df139 ([#2772](https://github.com/dasch-swiss/dsp-das/issues/2772)) ([0ef67d8](https://github.com/dasch-swiss/dsp-das/commit/0ef67d8d4dd816a22fc53f4829b62ffc337d5013))
+
+## [12.4.1](https://github.com/dasch-swiss/dsp-das/compare/v12.4.0...v12.4.1) (2025-12-18)
+
+
+### Bug Fixes
+
+* new image for alice in daschland project ([#2757](https://github.com/dasch-swiss/dsp-das/issues/2757)) ([211e201](https://github.com/dasch-swiss/dsp-das/commit/211e201175e4106c40dbf97c11e3489d2ee2332b))
+* translation issue in video player ([#2758](https://github.com/dasch-swiss/dsp-das/issues/2758)) ([625a844](https://github.com/dasch-swiss/dsp-das/commit/625a844dc19087a61618ebaef58f1b61d30da3b5))
+
+
+### Maintenances
+
+* fix npm error code 135 ([#2765](https://github.com/dasch-swiss/dsp-das/issues/2765)) ([6fd3ad2](https://github.com/dasch-swiss/dsp-das/commit/6fd3ad24dcc5cc4e2445bdda614818922ab48a62))
+* remove unused code ([#2766](https://github.com/dasch-swiss/dsp-das/issues/2766)) ([231751e](https://github.com/dasch-swiss/dsp-das/commit/231751e71ab9467fb59f01fb24a656911ce97389))
+* skip unnecessary jobs in release PRs ([#2763](https://github.com/dasch-swiss/dsp-das/issues/2763)) ([f020fed](https://github.com/dasch-swiss/dsp-das/commit/f020fede564c90015273e0834751b461660707c8))
+* update dsp-api to v34.0.0-4-gf2567e6 ([#2764](https://github.com/dasch-swiss/dsp-das/issues/2764)) ([8aa51a1](https://github.com/dasch-swiss/dsp-das/commit/8aa51a1b82fcdac64bf5357797e9fe3442186c03))
+
+
+### Tests
+
+* fix randomly failing e2e test ([#2759](https://github.com/dasch-swiss/dsp-das/issues/2759)) ([5551b44](https://github.com/dasch-swiss/dsp-das/commit/5551b44dc7aa8a819cc88253fd8595348cc0bfaa))
+
 ## [12.4.0](https://github.com/dasch-swiss/dsp-das/compare/v12.3.0...v12.4.0) (2025-12-15)
 
 
