@@ -1,19 +1,13 @@
 import { Component, Input } from '@angular/core';
+import { MatDialogTitle } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog-header',
   template: `
-    <div class="app-toolbar transparent">
-      <div class="app-toolbar-row">
-        <h3 class="mat-body subtitle">{{ subtitle }}</h3>
-      </div>
-      <div class="app-toolbar-row">
-        <h2 class="mat-headline-6">{{ title }}</h2>
-        <span class="fill-remaining-space"></span>
-        <span class="app-toolbar-action"></span>
-      </div>
-    </div>
+    <h2 matDialogTitle>{{ title }}</h2>
+    <p>{{ subtitle }}</p>
   `,
+  imports: [MatDialogTitle],
 })
 export class DialogHeaderComponent {
   @Input({ required: true }) title!: string;
