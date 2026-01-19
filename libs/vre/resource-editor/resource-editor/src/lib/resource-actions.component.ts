@@ -17,7 +17,7 @@ import { PermissionInfoComponent } from './permission-info/permission-info.compo
   template: `
     <span class="action">
       <a
-        mat-icon-button
+        matIconButton
         [matTooltip]="'resourceEditor.toolbar.openInNewTab' | translate"
         color="primary"
         data-cy="open-in-new-window-button"
@@ -29,7 +29,7 @@ import { PermissionInfoComponent } from './permission-info/permission-info.compo
       </a>
       <button
         color="primary"
-        mat-icon-button
+        matIconButton
         data-cy="share-button"
         [matTooltip]="
           _translateService.instant('resourceEditor.toolbar.shareResource', { arkUrl: resource.versionArkUrl })

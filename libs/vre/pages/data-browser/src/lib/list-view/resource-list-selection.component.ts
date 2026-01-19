@@ -29,7 +29,7 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
               "
               [matTooltipDisabled]="!disabledState.disabled">
               <button
-                mat-flat-button
+                matButton="filled"
                 (click)="openCreateLinkDialog(selectedResources)"
                 [disabled]="disabledState.disabled">
                 {{ 'pages.dataBrowser.resourceListSelection.createLinkObject' | translate }}
@@ -38,7 +38,7 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
           }
         }
       </div>
-      <button mat-icon-button (click)="reset()"><mat-icon>close</mat-icon></button>
+      <button matIconButton (click)="reset()"><mat-icon>close</mat-icon></button>
     </div>
   `,
   styles: ['button[disabled] { background-color: #fff; color: #b8b8b8 }'],

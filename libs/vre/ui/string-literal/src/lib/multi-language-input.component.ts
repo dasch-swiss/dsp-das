@@ -29,7 +29,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     <mat-form-field style="width: 100%">
       <mat-label>{{ placeholder }}</mat-label>
       <button
-        mat-button
+        matButton
         type="button"
         matPrefix
         tabIndex="-1"

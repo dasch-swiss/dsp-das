@@ -24,7 +24,7 @@ import { LegalSettingsLicensesComponent } from './legal-settings-licenses.compon
     <section class="section">
       <h2>
         {{ 'pages.project.legalSettings.copyrightHolders' | translate }}
-        <button color="primary" mat-raised-button (click)="addCopyrightHolder()">
+        <button color="primary" matButton="elevated" (click)="addCopyrightHolder()">
           {{ 'pages.project.legalSettings.add' | translate }}
         </button>
       </h2>

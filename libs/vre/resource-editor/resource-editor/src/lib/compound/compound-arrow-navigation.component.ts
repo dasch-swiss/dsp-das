@@ -9,7 +9,7 @@ import { CompoundService } from './compound.service';
   template: `
     <div style="height: 100%; display:flex; align-items: center; cursor: pointer">
       <button
-        mat-button
+        matButton
         [disabled]="forwardNavigation ? compoundNavigation?.isLastPage : compoundNavigation.page <= 1"
         (click)="compoundService.openPage(compoundNavigation.page + (forwardNavigation ? 1 : -1))"
         style="height: 100%; color: white">

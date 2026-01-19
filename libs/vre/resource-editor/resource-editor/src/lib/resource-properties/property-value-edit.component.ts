@@ -61,13 +61,13 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         <div style="display: flex; width: 144px">
           <button
             (click)="afterUndo.emit()"
-            mat-icon-button
+            matIconButton
             color="primary"
             [matTooltip]="'resourceEditor.resourceProperties.actions.undo' | translate">
             <mat-icon>undo</mat-icon>
           </button>
           <button
-            mat-icon-button
+            matIconButton
             type="button"
             color="primary"
             (click)="toggleCommentValue()"
@@ -83,7 +83,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             [disabled]="(hasValidValue$ | async) !== true"
             (click)="onSave()"
             [matTooltip]="'resourceEditor.resourceProperties.actions.save' | translate"
-            mat-icon-button
+            matIconButton
             data-cy="save-button"
             color="primary">
             <mat-icon>save</mat-icon>

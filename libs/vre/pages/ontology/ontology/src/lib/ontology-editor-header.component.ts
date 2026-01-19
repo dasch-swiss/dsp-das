@@ -24,7 +24,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
         <mat-toolbar-row>
           <button
             data-cy="back-to-data-models"
-            mat-button
+            matButton
             (click)="navigateToDataModels()"
             [matTooltip]="_translate.instant('pages.ontology.editor.backToDataModels')">
             <mat-icon>chevron_left</mat-icon>
@@ -48,7 +48,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
               <button
                 color="primary"
                 data-cy="edit-ontology-button"
-                mat-button
+                matButton
                 [matTooltip]="
                   (hasProjectAdminRights$ | async) ? _translate.instant('pages.ontology.editor.editInfo') : ''
                 "
@@ -59,7 +59,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
               </button>
               <button
                 color="warn"
-                mat-button
+                matButton
                 [matTooltip]="
                   (currentOntologyCanBeDeleted$ | async)
                     ? _translate.instant('pages.ontology.editor.deleteTooltip')

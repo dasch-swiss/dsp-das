@@ -94,7 +94,7 @@ import { CalendarDateAdapter } from '../../adapters/calendar-date.adapter';
             (dateChange)="onDateChange()" />
           <button
             matSuffix
-            mat-icon-button
+            matIconButton
             (click)="startPicker.open()"
             [disabled]="isDisabled()"
             [attr.aria-label]="'Open start date calendar'"
@@ -119,7 +119,7 @@ import { CalendarDateAdapter } from '../../adapters/calendar-date.adapter';
             (dateChange)="onDateChange()" />
           <button
             matSuffix
-            mat-icon-button
+            matIconButton
             (click)="endPicker.open()"
             [disabled]="isDisabled()"
             [attr.aria-label]="'Open end date calendar'"
@@ -131,7 +131,7 @@ import { CalendarDateAdapter } from '../../adapters/calendar-date.adapter';
 
         @if (rangeForm.value.start && rangeForm.value.end && !isDisabled()) {
           <button
-            mat-icon-button
+            matIconButton
             (click)="clear()"
             class="clear-button"
             [attr.aria-label]="'Clear date range'"

@@ -17,7 +17,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       </ul>
     </div>
 
-    <a mat-button href="https://docs.dasch.swiss/latest/DSP-APP/user-guide/data/search" target="_blank" color="primary">
+    <a matButton href="https://docs.dasch.swiss/latest/DSP-APP/user-guide/data/search" target="_blank" color="primary">
       {{ 'ui.hint.readMore' | translate }}
       <mat-icon class="suffix">launch</mat-icon>
     </a>

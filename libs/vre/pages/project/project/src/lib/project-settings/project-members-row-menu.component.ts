@@ -25,7 +25,7 @@ import { CollaborationPageService } from './collaboration/collaboration-page.ser
 @Component({
   selector: 'app-project-members-row-menu',
   template: `
-    <button mat-icon-button [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
+    <button matIconButton [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
       <mat-icon>more_horiz</mat-icon>
     </button>
 

@@ -19,7 +19,7 @@ import { combineLatest, map, switchMap } from 'rxjs';
       @if (resources.length === 0) {
         <app-centered-box>
           <app-no-results-found [message]="noResultMessage" />
-          <a mat-stroked-button (click)="navigate()"><mat-icon>chevron_left</mat-icon>Back to search form</a>
+          <a matButton="outlined" (click)="navigate()"><mat-icon>chevron_left</mat-icon>Back to search form</a>
         </app-centered-box>
       } @else {
         <app-resource-browser

@@ -23,7 +23,7 @@ import { PasswordFormFieldComponent } from '../password-form/password-form-field
       }
 
       <button
-        mat-raised-button
+        matButton="elevated"
         color="primary"
         appLoadingButton
         [isLoading]="loading"

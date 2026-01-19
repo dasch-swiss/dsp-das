@@ -26,7 +26,7 @@ import { ColorViewerComponent } from '../template-switcher/viewer-components/col
         </span>
       } @else {
         <button
-          mat-icon-button
+          matIconButton
           [matTooltip]="'resourceEditor.propertiesDisplay.annotationToolbar.highlightRegion' | translate"
           color="primary"
           matTooltipPosition="above"
@@ -35,7 +35,7 @@ import { ColorViewerComponent } from '../template-switcher/viewer-components/col
         </button>
       }
       <button
-        mat-icon-button
+        matIconButton
         [matTooltip]="'resourceEditor.propertiesDisplay.annotationToolbar.openInNewTab' | translate"
         color="primary"
         data-cy="open-in-new-window-button"
@@ -45,7 +45,7 @@ import { ColorViewerComponent } from '../template-switcher/viewer-components/col
       </button>
       <button
         color="primary"
-        mat-icon-button
+        matIconButton
         class="share-res"
         data-cy="share-button"
         [matTooltip]="

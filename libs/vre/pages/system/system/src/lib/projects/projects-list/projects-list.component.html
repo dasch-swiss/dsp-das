@@ -7,7 +7,7 @@
     </span>
 
     @if (isUserActive && createNewButtonEnabled && (isSysAdmin$ | async) === true) {
-    <button mat-flat-button [color]="'primary'" (click)="createNewProject()">
+    <button matButton="filled" [color]="'primary'" (click)="createNewProject()">
       {{ 'pages.system.projectsList.createNew' | translate }}
     </button>
     }
@@ -50,7 +50,7 @@
       <!-- action: menu with edit, remove, etc. -->
       <td>
         <button
-          mat-icon-button
+          matIconButton
           [matMenuTriggerFor]="projectMenu"
           [disabled]="(userHasPermission$(project.id) | async) === false || systemProjects.includes(project.id)"
           data-cy="more-button">

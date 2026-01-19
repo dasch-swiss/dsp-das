@@ -19,7 +19,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
 @Component({
   selector: 'app-audio-more-button',
   imports: [AsyncPipe, CdkCopyToClipboard, MatIconButton, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, TranslatePipe],
-  template: ` <button mat-icon-button [matMenuTriggerFor]="more">
+  template: ` <button matIconButton [matMenuTriggerFor]="more">
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #more="matMenu" class="representation-menu">

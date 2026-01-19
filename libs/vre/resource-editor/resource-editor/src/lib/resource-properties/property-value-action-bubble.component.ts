@@ -18,7 +18,7 @@ import { PropertyValueService } from './property-value.service';
       <div class="button-container d-flex">
         @if (date) {
           @if (infoTooltip$ | async; as infoTooltip) {
-            <button mat-button class="edit" [matTooltip]="infoTooltip" (click)="$event.stopPropagation()">
+            <button matButton class="edit" [matTooltip]="infoTooltip" (click)="$event.stopPropagation()">
               <mat-icon>info</mat-icon>
             </button>
           }
@@ -27,7 +27,7 @@ import { PropertyValueService } from './property-value.service';
         <span [matTooltip]="'resourceEditor.resourceProperties.actions.edit' | translate">
           @if (userHasPermission('edit')) {
             <button
-              mat-button
+              matButton
               class="edit edit-button"
               (click)="$event.stopPropagation(); editAction.emit()"
               data-cy="edit-button">
@@ -44,7 +44,7 @@ import { PropertyValueService } from './property-value.service';
           ">
           @if (userHasPermission('delete')) {
             <button
-              mat-button
+              matButton
               class="delete"
               [disabled]="disableDeleteButton"
               data-cy="delete-button"

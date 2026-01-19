@@ -38,7 +38,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
       <div style="max-width: 960px; margin: auto; margin-top: 32px; margin-bottom: 32px; padding: 0 16px">
         @if (multipleViewerService.selectMode) {
           <div style="display: flex; justify-content: end">
-            <button mat-icon-button (click)="close(res)">
+            <button matIconButton (click)="close(res)">
               <mat-icon>close</mat-icon>
             </button>
           </div>

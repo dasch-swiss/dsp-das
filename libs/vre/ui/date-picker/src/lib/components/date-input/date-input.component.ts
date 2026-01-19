@@ -84,13 +84,13 @@ import { CalendarDateAdapter } from '../../adapters/calendar-date.adapter';
         (dateChange)="onDateChange($event.value)" />
 
       @if (!isDisabled()) {
-        <button matSuffix mat-icon-button (click)="picker.open()" [attr.aria-label]="'Open calendar'" type="button">
+        <button matSuffix matIconButton (click)="picker.open()" [attr.aria-label]="'Open calendar'" type="button">
           <mat-icon>calendar_today</mat-icon>
         </button>
       }
 
       @if (dateControl.value && !isDisabled()) {
-        <button matSuffix mat-icon-button (click)="clear()" [attr.aria-label]="'Clear date'" type="button">
+        <button matSuffix matIconButton (click)="clear()" [attr.aria-label]="'Clear date'" type="button">
           <mat-icon>clear</mat-icon>
         </button>
       }

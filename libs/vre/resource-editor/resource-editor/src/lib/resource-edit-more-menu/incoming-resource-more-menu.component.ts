@@ -18,7 +18,7 @@ import { EditLabelMenuItemComponent } from './edit-label-menu-item.component';
       <button
         data-cy="resource-toolbar-more-button"
         color="primary"
-        mat-icon-button
+        matIconButton
         class="more-menu"
         [matTooltip]="'resourceEditor.moreMenu.more' | translate"
         matTooltipPosition="above"

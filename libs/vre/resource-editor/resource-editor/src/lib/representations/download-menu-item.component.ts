@@ -9,7 +9,7 @@ import { RepresentationService } from './representation.service';
   selector: 'app-download-menu-item',
   imports: [TranslatePipe, MatButton, MatIcon],
   template: `
-    <button mat-flat-button (click)="download()" data-cy="download-file-button">
+    <button matButton="filled" (click)="download()" data-cy="download-file-button">
       <mat-icon>download</mat-icon>
       {{ 'resourceEditor.representations.downloadFile' | translate }}
     </button>

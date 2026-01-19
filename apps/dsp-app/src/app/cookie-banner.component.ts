@@ -14,7 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         >.
       </p>
       <div class="action">
-        <button mat-flat-button color="primary" (click)="closeCookieBanner()" data-cy="accept-cookies">
+        <button matButton="filled" color="primary" (click)="closeCookieBanner()" data-cy="accept-cookies">
           {{ 'app.cookieBanner.accept' | translate }}
         </button>
       </div>

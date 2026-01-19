@@ -34,16 +34,16 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button color="primary" mat-dialog-close class="cancel-button center">
+  <button matButton color="primary" mat-dialog-close class="cancel-button center">
     {{ 'ui.common.actions.cancel' | translate }}
   </button>
   <span class="fill-remaining-space"></span>
   <button
     [disabled]="eraseForm.invalid"
-    mat-button
+    matButton
     appLoadingButton
     [isLoading]="isLoading"
-    mat-raised-button
+    matButton="elevated"
     class="confirm-button center"
     (click)="submit()">
     {{ 'ui.common.actions.confirm' | translate }}

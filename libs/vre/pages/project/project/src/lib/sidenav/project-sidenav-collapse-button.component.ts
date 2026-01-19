@@ -6,7 +6,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 @Component({
   selector: 'app-project-sidenav-collapse-button',
   template: ` <button
-    mat-icon-button
+    matIconButton
     disableRipple="true"
     color="primary"
     data-cy="side-panel-collapse-btn"

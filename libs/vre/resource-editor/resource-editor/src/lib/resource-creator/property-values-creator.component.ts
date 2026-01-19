@@ -38,7 +38,7 @@ import { PropertyValueCreatorComponent } from './property-value-creator.componen
       formArray.controls[formArray.controls.length - 1].value.item !== null
     ) {
       <button
-        mat-icon-button
+        matIconButton
         type="button"
         (click)="addEntry()"
         [matTooltip]="'resourceEditor.resourceCreator.propertyValuesCreator.addNewValue' | translate">

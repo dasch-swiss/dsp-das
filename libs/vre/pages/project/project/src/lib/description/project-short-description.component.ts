@@ -40,7 +40,7 @@ import { ProjectDescriptionPageComponent } from './project-description-page.comp
       pointer-events: none;
     "></div>
         </div>
-        <button mat-stroked-button (click)="readMore()" style="margin: 16px">
+        <button matButton="outlined" (click)="readMore()" style="margin: 16px">
           {{ 'pages.project.projectShortDescription.readMore' | translate }}
         </button>
       }

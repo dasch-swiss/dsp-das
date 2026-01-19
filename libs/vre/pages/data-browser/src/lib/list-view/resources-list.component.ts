@@ -13,7 +13,7 @@ import { ResourceListComponent } from './resource-list.component';
   selector: 'app-resources-list',
   template: ` @if (showBackToFormButton) {
       <div style="padding: 16px; display: flex; flex-direction: row-reverse">
-        <a mat-stroked-button (click)="navigate()">
+        <a matButton="outlined" (click)="navigate()">
           <mat-icon>chevron_left</mat-icon>{{ 'pages.dataBrowser.resourcesList.backToSearchForm' | translate }}
         </a>
       </div>

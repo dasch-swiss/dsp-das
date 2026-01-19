@@ -37,11 +37,11 @@ import { DownloadPropertyListComponent } from './download-property-list.componen
     </div>
 
     <div mat-dialog-actions align="end">
-      <button mat-button (click)="afterClosed.emit()" style="margin-right: 16px" [disabled]="isDownloading">
+      <button matButton (click)="afterClosed.emit()" style="margin-right: 16px" [disabled]="isDownloading">
         {{ 'ui.common.actions.cancel' | translate }}
       </button>
       <button
-        mat-raised-button
+        matButton="elevated"
         color="primary"
         appLoadingButton
         [isLoading]="isDownloading"

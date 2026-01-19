@@ -35,7 +35,7 @@ import { VideoMoreButtonComponent } from './video-more-button.component';
   template: ` <mat-toolbar-row style="background: black; color: white; justify-content: space-between">
     <div>
       <button
-        mat-icon-button
+        matIconButton
         data-cy="play-pause-button"
         (click)="mediaPlayer.togglePlay()"
         [matTooltip]="
@@ -47,7 +47,7 @@ import { VideoMoreButtonComponent } from './video-more-button.component';
       </button>
 
       <button
-        mat-icon-button
+        matIconButton
         data-cy="go-to-start-button"
         (click)="goToStart()"
         [matTooltip]="'resourceEditor.representations.video.stop' | translate"
@@ -64,7 +64,7 @@ import { VideoMoreButtonComponent } from './video-more-button.component';
 
       @if (resourceFetcherService.userCanEdit$ | async) {
         <button
-          mat-icon-button
+          matIconButton
           data-cy="timeline-button"
           (click)="createVideoSegment()"
           [matTooltip]="'resourceEditor.representations.video.createAnnotation' | translate">
@@ -73,7 +73,7 @@ import { VideoMoreButtonComponent } from './video-more-button.component';
       }
 
       <button
-        mat-icon-button
+        matIconButton
         data-cy="cinema-mode-button"
         (click)="toggleCinemaMode.emit()"
         [matTooltip]="

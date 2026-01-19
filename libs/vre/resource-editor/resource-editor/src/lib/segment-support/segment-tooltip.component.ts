@@ -13,7 +13,7 @@ import { SegmentsService } from './segments.service';
       <div>{{ segment.label }}</div>
       {{ segment.hasSegmentBounds.end - segment.hasSegmentBounds.start | timeFormat }}
     </div>
-    <button mat-icon-button (click)="highlightSegment()">
+    <button matIconButton (click)="highlightSegment()">
       <mat-icon>arrow_downward</mat-icon>
     </button>
   </div>`,

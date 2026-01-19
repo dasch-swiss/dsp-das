@@ -24,7 +24,7 @@ import { SearchTipsComponent } from './search-tips.component';
         (blur)="hideSearchTips()"
         style="border: none; outline: none; padding: 0 16px; font-size: 14px; min-width: 260px"
         [placeholder]="'shared.header.searchEverywhere' | translate" />
-      <button mat-icon-button class="small-icon-button">
+      <button matIconButton class="small-icon-button">
         <mat-icon>search</mat-icon>
       </button>
     </form>

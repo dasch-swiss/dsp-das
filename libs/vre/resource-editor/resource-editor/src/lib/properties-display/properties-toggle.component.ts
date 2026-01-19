@@ -13,7 +13,7 @@ import { PropertiesDisplayService } from '../resource-properties/properties-disp
     @if (numberOfComments > 0) {
       @if (!displayIconsOnly) {
         <button
-          mat-button
+          matButton
           color="primary"
           class="toggle-props"
           data-cy="show-all-comments"
@@ -35,7 +35,7 @@ import { PropertiesDisplayService } from '../resource-properties/properties-disp
         </button>
       } @else {
         <button
-          mat-icon-button
+          matIconButton
           color="primary"
           class="toggle-props"
           data-cy="show-all-comments"
@@ -54,7 +54,7 @@ import { PropertiesDisplayService } from '../resource-properties/properties-disp
     }
     @if (!displayIconsOnly) {
       <button
-        mat-button
+        matButton
         color="primary"
         class="toggle-props"
         data-cy="show-all-properties"
@@ -76,7 +76,7 @@ import { PropertiesDisplayService } from '../resource-properties/properties-disp
       </button>
     } @else {
       <button
-        mat-icon-button
+        matIconButton
         color="primary"
         class="toggle-props"
         data-cy="show-all-properties"

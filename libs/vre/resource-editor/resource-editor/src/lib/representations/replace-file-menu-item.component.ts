@@ -13,7 +13,7 @@ import {
   selector: 'app-replace-file-menu-item',
   imports: [TranslatePipe, MatButton],
   template: `
-    <button mat-flat-button (click)="openReplaceFileDialog()" data-cy="replace-file-button">
+    <button matButton="filled" (click)="openReplaceFileDialog()" data-cy="replace-file-button">
       {{ 'resourceEditor.representations.replaceFile' | translate }}
     </button>
   `,

@@ -6,7 +6,7 @@
   } @if ((isListsLoading$ | async) === false && (rootListNodeInfo$ | async); as list) {
   <mat-toolbar style="margin-bottom: 48px">
     <mat-toolbar-row>
-      <a mat-button (click)="navigateToDataModels()" [matTooltip]="'pages.ontology.list.backToDataModels' | translate">
+      <a matButton (click)="navigateToDataModels()" [matTooltip]="'pages.ontology.list.backToDataModels' | translate">
         <mat-icon class="centered-icon">chevron_left</mat-icon>
       </a>
       <div style="display: flex; flex-direction: column; flex: 1">
@@ -29,7 +29,7 @@
       <div>
         <button
           color="primary"
-          mat-button
+          matButton
           [disabled]="(project$ | async)?.status !== true"
           (click)="editList(list!)"
           [matTooltip]="'pages.ontology.list.editInfo' | translate"
@@ -39,7 +39,7 @@
         </button>
         <button
           color="warn"
-          mat-button
+          matButton
           [disabled]="(project$ | async)?.status !== true"
           (click)="askToDeleteList(list)"
           [matTooltip]="'pages.ontology.list.deleteList' | translate"

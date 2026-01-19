@@ -49,7 +49,7 @@ import { OntologyPageService } from './ontology-page.service';
       @if (rla1.isActive) {
         <div>
           <!-- Classes tab content -->
-          <button mat-button (click)="ops.toggleExpandClasses()">
+          <button matButton (click)="ops.toggleExpandClasses()">
             <mat-icon>{{ (ops.expandClasses$ | async) ? 'compress' : 'expand' }}</mat-icon>
             {{
               (ops.expandClasses$ | async)
@@ -60,7 +60,7 @@ import { OntologyPageService } from './ontology-page.service';
           @if (hasProjectAdminRights$ | async) {
             <button
               [disabled]="!(project$ | async)?.status"
-              mat-button
+              matButton
               data-cy="create-class-button"
               [matMenuTriggerFor]="addResClassMenu">
               <mat-icon>add</mat-icon>
@@ -87,7 +87,7 @@ import { OntologyPageService } from './ontology-page.service';
           <!-- Properties tab content -->
           @if (hasProjectAdminRights$ | async) {
             <button
-              mat-button
+              matButton
               data-cy="create-property-button"
               [disabled]="!(project$ | async)?.status"
               [matMenuTriggerFor]="newFromPropType">

@@ -24,7 +24,7 @@ import { UsersTabService } from '../users-tab.service';
   selector: 'app-users-list-row-menu',
   template: `
     @if (isSysAdmin$ | async) {
-      <button mat-icon-button [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
+      <button matIconButton [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
         <mat-icon>more_horiz</mat-icon>
       </button>
     }

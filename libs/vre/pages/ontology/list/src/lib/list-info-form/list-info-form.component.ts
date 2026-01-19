@@ -46,9 +46,9 @@ import { ListInfoForm } from './list-info-form.type';
         [isRequired]="true"
         data-cy="comments-input" />
       <div mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
+        <button matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
         <button
-          mat-raised-button
+          matButton="elevated"
           type="submit"
           color="primary"
           [disabled]="form.invalid"

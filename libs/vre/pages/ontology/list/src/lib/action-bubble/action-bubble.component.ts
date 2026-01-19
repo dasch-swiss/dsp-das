@@ -27,7 +27,7 @@ import {
     <div class="button-container d-flex">
       @if (position > 0) {
         <button
-          mat-button
+          matButton
           [matTooltip]="_translate.instant('pages.ontology.list.actionBubble.moveUp')"
           (click)="$event.stopPropagation(); repositionNode('up')"
           class="reposition up">
@@ -36,7 +36,7 @@ import {
       }
       @if (position < length - 1) {
         <button
-          mat-button
+          matButton
           [matTooltip]="_translate.instant('pages.ontology.list.actionBubble.moveDown')"
           (click)="$event.stopPropagation(); repositionNode('down')"
           class="reposition down">
@@ -44,21 +44,21 @@ import {
         </button>
       }
       <button
-        mat-button
+        matButton
         [matTooltip]="_translate.instant('pages.ontology.list.actionBubble.insertChild')"
         (click)="$event.stopPropagation(); askToInsertNode()"
         class="insert">
         <mat-icon>vertical_align_top</mat-icon>
       </button>
       <button
-        mat-button
+        matButton
         class="edit"
         [matTooltip]="_translate.instant('pages.ontology.list.actionBubble.edit')"
         (click)="$event.stopPropagation(); askToEditNode()">
         <mat-icon>edit</mat-icon>
       </button>
       <button
-        mat-button
+        matButton
         class="delete"
         [matTooltip]="_translate.instant('pages.ontology.list.actionBubble.delete')"
         (click)="$event.stopPropagation(); askToDeleteListNode()">

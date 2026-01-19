@@ -32,7 +32,7 @@ import { AutocompleteItem } from '../autocomplete-item.interface';
             </div>
           </div>
           <button
-            mat-icon-button
+            matIconButton
             color="warn"
             (click)="removeFromProject(project)"
             aria-label="Button to remove user from project"
@@ -54,7 +54,7 @@ import { AutocompleteItem } from '../autocomplete-item.interface';
           </mat-select>
         </mat-form-field>
         <button
-          mat-icon-button
+          matIconButton
           color="primary"
           (click)="addToProject(selectedValue!)"
           [disabled]="selectedValue === null"

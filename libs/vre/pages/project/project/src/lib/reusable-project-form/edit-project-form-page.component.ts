@@ -21,7 +21,7 @@ import { ReusableProjectFormComponent } from './reusable-project-form.component'
 
     <div style="display: flex; justify-content: space-between">
       <button
-        mat-raised-button
+        matButton="elevated"
         type="submit"
         color="primary"
         (click)="onSubmit()"

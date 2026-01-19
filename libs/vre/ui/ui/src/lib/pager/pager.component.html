@@ -3,14 +3,14 @@
 
   <div class="paginator-container">
     <button
-      mat-icon-button
+      matIconButton
       [matTooltip]="'ui.pager.firstPage' | translate"
       (click)="pageIndex = 0"
       [disabled]="pageIndex === 0">
       <mat-icon>first_page</mat-icon>
     </button>
     <button
-      mat-icon-button
+      matIconButton
       [matTooltip]="'ui.pager.previousPage' | translate"
       (click)="pageIndex = pageIndex - 1"
       [attr.mat-density]="-2"
@@ -32,14 +32,14 @@
       <span class="page-label">{{ 'ui.pager.rangeLabelOf' | translate }} {{ lastPageIndex + 1 }}</span>
     </div>
     <button
-      mat-icon-button
+      matIconButton
       [matTooltip]="'ui.common.actions.next' | translate"
       (click)="pageIndex = pageIndex + 1"
       [disabled]="pageIndex === lastPageIndex">
       <mat-icon>chevron_right</mat-icon>
     </button>
     <button
-      mat-icon-button
+      matIconButton
       [matTooltip]="'ui.pager.lastPage' | translate"
       (click)="pageIndex = lastPageIndex"
       [disabled]="pageIndex === lastPageIndex">

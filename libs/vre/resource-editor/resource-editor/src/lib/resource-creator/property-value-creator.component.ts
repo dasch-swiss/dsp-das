@@ -26,7 +26,7 @@ import { propertiesTypeMapping } from '../resource-properties/resource-payloads-
         <div class="action-buttons">
           @if (canRemoveValue) {
             <button
-              mat-icon-button
+              matIconButton
               type="button"
               color="primary"
               [matTooltip]="'resourceEditor.resourceCreator.propertyValueCreator.remove' | translate"
@@ -35,7 +35,7 @@ import { propertiesTypeMapping } from '../resource-properties/resource-payloads-
             </button>
           }
           <button
-            mat-icon-button
+            matIconButton
             type="button"
             color="primary"
             [hidden]="isHidden$ | async"

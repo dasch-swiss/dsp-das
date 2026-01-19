@@ -26,7 +26,7 @@
 <input matInput class="link" autocomplete="off" readonly placeholder="dd/mm/yyyy or mm/yyyy or yyyy" [value]="date | knoraDate">
 <mat-icon matSuffix class="link">event</mat-icon>
 </mat-form-field> -->
-<!-- <button mat-button [matMenuTriggerFor]="menu">Menu</button> -->
+<!-- <button matButton [matMenuTriggerFor]="menu">Menu</button> -->
 <mat-menu #datePicker="matMenu" [formGroup]="form" class="date-picker" (closed)="datePickerClosed.emit()">
   <div class="date-picker-content" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <!-- select calendar and button to close date picker -->
@@ -42,9 +42,9 @@
       <span class="fill-remaining-space"></span>
       <div class="action">
         <!-- go to the current date -->
-        <button mat-button (click)="setToday()">{{ 'ui.datePicker.today' | translate }}</button>
+        <button matButton (click)="setToday()">{{ 'ui.datePicker.today' | translate }}</button>
         <!-- submit button (which is needed if date doesn't have precision on an exact day) -->
-        <button mat-icon-button color="primary" [disabled]="!form.valid" (click)="setDate(day); closeDatePicker()">
+        <button matIconButton color="primary" [disabled]="!form.valid" (click)="setDate(day); closeDatePicker()">
           <mat-icon>done</mat-icon>
         </button>
       </div>
@@ -75,7 +75,7 @@
         @if (formErrors.year) {
         <mat-error> {{ formErrors.year }}</mat-error>
         }
-        <!-- <button mat-flat-button matSuffix (click)="switchEra()" [attr.aria-label]="'Switch era'"
+        <!-- <button matButton="filled" matSuffix (click)="switchEra()" [attr.aria-label]="'Switch era'"
         [attr.aria-pressed]="ce">
         {{ce ? 'CE' : 'BCE'}}
       </button> -->

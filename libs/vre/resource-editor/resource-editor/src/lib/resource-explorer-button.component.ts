@@ -9,7 +9,7 @@ import type { ResourceFetcherDialogComponent } from './resource-fetcher-dialog.c
 @Component({
   selector: 'app-resource-explorer-button',
   template: `<button
-    mat-icon-button
+    matIconButton
     (click)="tryDialog()"
     style="
     color: #646465;

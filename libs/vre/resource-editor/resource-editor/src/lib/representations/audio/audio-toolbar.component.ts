@@ -22,20 +22,20 @@ import { AudioMoreButtonComponent } from './audio-more-button.component';
   template: `
     <mat-toolbar-row style="background: black; color: white; justify-content: space-between">
       <div>
-        <button data-cy="play-pause-button" mat-icon-button (click)="mediaPlayer.togglePlay()">
+        <button data-cy="play-pause-button" matIconButton (click)="mediaPlayer.togglePlay()">
           <mat-icon>{{ mediaPlayer.isPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
         </button>
-        <button data-cy="go-to-start-button" mat-icon-button (click)="mediaPlayer.navigateToStart()">
+        <button data-cy="go-to-start-button" matIconButton (click)="mediaPlayer.navigateToStart()">
           <mat-icon>skip_previous</mat-icon>
         </button>
-        <button data-cy="volume-button" mat-icon-button (click)="mediaPlayer.toggleMute()">
+        <button data-cy="volume-button" matIconButton (click)="mediaPlayer.toggleMute()">
           <mat-icon>{{ mediaPlayer.isMuted() ? 'volume_off' : 'volume_up' }}</mat-icon>
         </button>
       </div>
       <div data-cy="player-time">{{ parseTime(mediaPlayer.currentTime()) }} / {{ durationString }}</div>
       <div>
         @if (resourceFetcherService.userCanEdit$ | async) {
-          <button data-cy="timeline-button" mat-icon-button (click)="createAudioSegment()">
+          <button data-cy="timeline-button" matIconButton (click)="createAudioSegment()">
             <mat-icon svgIcon="draw_region_icon" />
           </button>
         }

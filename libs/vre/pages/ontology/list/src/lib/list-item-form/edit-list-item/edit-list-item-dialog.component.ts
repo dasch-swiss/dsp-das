@@ -35,10 +35,10 @@ export interface EditListItemDialogProps {
     </div>
 
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
+      <button matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
 
       <button
-        mat-raised-button
+        matButton="elevated"
         color="primary"
         appLoadingButton
         [isLoading]="loading"

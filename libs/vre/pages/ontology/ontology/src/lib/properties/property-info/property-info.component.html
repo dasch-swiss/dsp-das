@@ -94,7 +94,7 @@
             : _translate.instant('pages.ontology.propertyInfo.cannotEdit')
         "
         matTooltipPosition="above"
-        mat-button
+        matButton
         class="edit"
         (click)="openEditProperty(property.propDef!, property.propType)">
         <mat-icon>edit</mat-icon>
@@ -107,7 +107,7 @@
         "
         matTooltipPosition="above">
         <button
-          mat-button
+          matButton
           [disabled]="(canBeDeleted$ | async) !== true"
           class="delete"
           (click)="openDeleteProperty(property.propDef!.id)">

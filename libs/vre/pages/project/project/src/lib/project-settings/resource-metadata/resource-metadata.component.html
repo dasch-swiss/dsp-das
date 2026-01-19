@@ -15,7 +15,7 @@
   <li>{{ 'pages.project.resourceMetadata.text.listContent.modified' | translate }}</li>
   <li>{{ 'pages.project.resourceMetadata.text.listContent.deleted' | translate }}</li>
 </ul>
-<button mat-raised-button color="primary" (click)="exportMetadata()" [disabled]="isDownloadingFile ? true : false">
+<button matButton="elevated" color="primary" (click)="exportMetadata()" [disabled]="isDownloadingFile ? true : false">
   {{ 'pages.project.resourceMetadata.button' | translate }}
 </button>
 @if (isDownloadingFile) {

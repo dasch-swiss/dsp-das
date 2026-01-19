@@ -13,7 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       <div style="display: flex; align-items: center">
         <ng-content />
         <button
-          mat-icon-button
+          matIconButton
           (click)="setValue(null)"
           [title]="'resourceEditor.templateSwitcher.nullableEditor.remove' | translate"
           data-cy="add-value-button"
@@ -23,7 +23,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       </div>
     } @else {
       <button
-        mat-icon-button
+        matIconButton
         (click)="setValue(defaultValue)"
         [title]="'resourceEditor.templateSwitcher.nullableEditor.add' | translate"
         data-cy="add-value-button"

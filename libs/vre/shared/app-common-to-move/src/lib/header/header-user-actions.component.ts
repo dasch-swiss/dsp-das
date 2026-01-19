@@ -12,7 +12,7 @@ import { VersionBadgeComponent } from './version-badge.component';
   template: `
     <span style="display: flex; align-items: center; gap: 8px">
       <app-version-badge />
-      <a mat-button [routerLink]="['/', HELP_LINK]">{{ 'ui.header.help' | translate }}</a>
+      <a matButton [routerLink]="['/', HELP_LINK]">{{ 'ui.header.help' | translate }}</a>
       <app-user-menu />
     </span>
   `,

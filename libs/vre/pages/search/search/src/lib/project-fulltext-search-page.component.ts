@@ -35,7 +35,7 @@ import { SearchResultComponent } from './search-result.component';
     <div
       style="display: flex; justify-content: center; align-items: center; gap: 32px; padding: 16px;"
       [ngClass]="{ big: (isNotQuerying$ | async) }">
-      <a mat-stroked-button [routerLink]="['..', 'advanced-search']">
+      <a matButton="outlined" [routerLink]="['..', 'advanced-search']">
         <mat-icon>swap_horiz</mat-icon>
         {{ 'pages.search.fullTextSearch.switchToAdvancedSearch' | translate }}
       </a>

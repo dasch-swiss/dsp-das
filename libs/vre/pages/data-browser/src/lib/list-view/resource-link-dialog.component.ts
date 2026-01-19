@@ -52,10 +52,10 @@ export interface ResourceLinkDialogProps {
       </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button type="button" (click)="dialogRef.close()">{{ 'ui.common.actions.cancel' | translate }}</button>
+      <button matButton type="button" (click)="dialogRef.close()">{{ 'ui.common.actions.cancel' | translate }}</button>
 
       <button
-        mat-raised-button
+        matButton="elevated"
         color="primary"
         appLoadingButton
         data-cy="submit-button"

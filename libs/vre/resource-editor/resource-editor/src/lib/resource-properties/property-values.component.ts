@@ -18,7 +18,7 @@ import { PropertyValueService } from './property-value.service';
     }
 
     @if (userCanAdd && !currentlyAdding && (editModeData.values.length === 0 || matchesCardinality)) {
-      <button mat-icon-button (click)="currentlyAdding = true" data-cy="add-property-value-button">
+      <button matIconButton (click)="currentlyAdding = true" data-cy="add-property-value-button">
         <mat-icon class="add-icon">add_box</mat-icon>
       </button>
     }

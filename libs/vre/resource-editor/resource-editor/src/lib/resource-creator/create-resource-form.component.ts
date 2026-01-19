@@ -61,11 +61,11 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
             [formGroup]="form.controls.properties" />
         }
         <div class="form-actions">
-          <button mat-raised-button type="button" data-cy="cancel-button" (click)="onCancel()">
+          <button matButton="elevated" type="button" data-cy="cancel-button" (click)="onCancel()">
             {{ 'ui.common.actions.cancel' | translate }}
           </button>
           <button
-            mat-raised-button
+            matButton="elevated"
             type="submit"
             color="primary"
             appLoadingButton

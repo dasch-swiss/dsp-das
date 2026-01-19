@@ -20,8 +20,8 @@ export interface ConfirmDialogProps {
       <p>{{ data.message }}</p>
     </div>
     <div mat-dialog-actions align="end">
-      <button mat-button (click)="dialogRef.close(false)">{{ 'ui.dialog.no' | translate }}</button>
-      <button mat-raised-button color="warn" (click)="dialogRef.close(true)" data-cy="confirmation-button">
+      <button matButton (click)="dialogRef.close(false)">{{ 'ui.dialog.no' | translate }}</button>
+      <button matButton="elevated" color="warn" (click)="dialogRef.close(true)" data-cy="confirmation-button">
         {{ 'ui.dialog.yes' | translate }}
       </button>
     </div>

@@ -14,7 +14,7 @@ import { UploadFileService } from '../representations/upload/upload-file.service
       <mat-card-content style="display: flex; align-items: center">
         <mat-icon color="primary">description</mat-icon>
         <div style="flex: 1; margin-left: 8px">{{ fileToUpload.originalFilename }}</div>
-        <button mat-icon-button (click)="removeFile.emit()">
+        <button matIconButton (click)="removeFile.emit()">
           <mat-icon>cancel</mat-icon>
         </button>
       </mat-card-content>

@@ -19,7 +19,7 @@
     <div class="action horizontal bottom">
       <!-- caption -->
       <span>
-        <button mat-icon-button [matMenuTriggerFor]="more">
+        <button matIconButton [matMenuTriggerFor]="more">
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #more="matMenu" class="representation-menu">
@@ -49,7 +49,7 @@
       <span>
         <!-- zoom buttons -->
         <button
-          mat-icon-button
+          matIconButton
           id="DSP_PDF_ZOOM_OUT"
           [matTooltip]="'resourceEditor.representations.document.zoomOut' | translate"
           (click)="zoom(-1)"
@@ -57,7 +57,7 @@
           <mat-icon>remove_circle_outline</mat-icon>
         </button>
         <button
-          mat-icon-button
+          matIconButton
           id="DSP_PDF_HOME"
           [matTooltip]="'resourceEditor.representations.document.resetZoom' | translate"
           (click)="zoomFactor = 1.0"
@@ -65,7 +65,7 @@
           <mat-icon>adjust</mat-icon>
         </button>
         <button
-          mat-icon-button
+          matIconButton
           id="DSP_PDF_ZOOM_IN"
           [matTooltip]="'resourceEditor.representations.document.zoomIn' | translate"
           (click)="zoom(+1)"
@@ -78,7 +78,7 @@
       <!-- full screen button -->
       <span>
         <button
-          mat-icon-button
+          matIconButton
           id="DSP_PDF_FULL_SCREEN"
           [matTooltip]="'resourceEditor.representations.document.fullscreen' | translate"
           (click)="openFullscreen()"
@@ -109,7 +109,7 @@
     <!-- toolbar -->
     <div class="action horizontal bottom">
       <!-- three dot menu to download and replace file -->
-      <button mat-icon-button [matMenuTriggerFor]="more">
+      <button matIconButton [matMenuTriggerFor]="more">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #more="matMenu" class="mat-menu-custom-black">

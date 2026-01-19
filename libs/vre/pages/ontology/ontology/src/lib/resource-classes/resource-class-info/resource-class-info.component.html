@@ -30,7 +30,7 @@
       <span>
         @if (classHovered || menuOpen) {
         <button
-          mat-icon-button
+          matIconButton
           [matMenuTriggerFor]="resClassMenu"
           data-cy="more-button"
           (menuOpened)="menuOpen = true"
@@ -47,7 +47,7 @@
             ? (_translate.instant('pages.ontology.resourceClassInfo.collapse'))
             : (_translate.instant('pages.ontology.resourceClassInfo.expand'))
         ">
-        <button mat-icon-button (click)="expandClasses = !expandClasses">
+        <button matIconButton (click)="expandClasses = !expandClasses">
           <mat-icon>{{ expandClasses ? "expand_less" : "expand_more" }}</mat-icon>
         </button>
       </span>

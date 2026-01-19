@@ -29,12 +29,12 @@ interface CreateResourceDialogProps {
     <div style="padding-left: 16px; margin-bottom: 32px; padding-right: 16px">
       <div style="display: flex; align-items: center; gap: 8px">
         <h3 style="flex: 1">{{ classSelected.resClass.labels | appStringifyStringLiteral }}</h3>
-        <button mat-stroked-button (click)="openDownloadDialog()" data-cy="download-btn">
+        <button matButton="outlined" (click)="openDownloadDialog()" data-cy="download-btn">
           <mat-icon>download</mat-icon>
           {{ 'pages.dataBrowser.downloadDialog.title' | translate }}
         </button>
         @if (hasProjectMemberRights$ | async) {
-          <button mat-stroked-button (click)="goToAddClassInstance()" data-cy="create-resource-btn">
+          <button matButton="outlined" (click)="goToAddClassInstance()" data-cy="create-resource-btn">
             {{ 'pages.dataBrowser.dataClassPanel.createResource' | translate }}
           </button>
         }

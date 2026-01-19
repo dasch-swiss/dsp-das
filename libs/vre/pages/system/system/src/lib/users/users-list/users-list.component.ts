@@ -31,7 +31,7 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
           </span>
 
           @if (isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)) {
-            <button mat-flat-button [color]="'primary'" (click)="createUser()" style="margin-right: 16px">
+            <button matButton="filled" [color]="'primary'" (click)="createUser()" style="margin-right: 16px">
               {{ 'pages.system.usersList.createNewUser' | translate }}
             </button>
           }
