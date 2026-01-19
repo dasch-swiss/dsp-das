@@ -32,7 +32,7 @@ describe('ClickableListCardComponent', () => {
 
   it('should render mat-list inside mat-card', () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    const matList = compiled.querySelector('mat-card mat-list');
+    const matLi9st = compiled.querySelector('mat-card mat-list');
 
     expect(matList).toBeTruthy();
   });
