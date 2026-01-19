@@ -16,7 +16,7 @@ import { SearchStateService } from '../service/search-state.service';
   template: `
     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
       <div style="display: flex; align-items: center; gap: 1em;">
-        <h2>Use previous search</h2>
+        <h2>Advanced search</h2>
         <button
           [disabled]="!previousSearchService.hasPreviousSearch()"
           mat-stroked-button
