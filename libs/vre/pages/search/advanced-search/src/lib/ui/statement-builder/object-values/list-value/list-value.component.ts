@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatOptionModule } from '@angular/material/core';
@@ -82,27 +82,29 @@ export class ListValueComponent implements OnChanges {
     return this.rootListNode ? [...this.rootListNode.children].sort((a, b) => a.label.localeCompare(b.label)) : [];
   }
 
-  ngOnChanges(): void {
-    this._dataService.getList$(this.rootListNodeIri).subscribe(rootListNode => {
-      this.rootListNode = rootListNode;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['rootListNodeIri']) {
+      this._dataService.getList$(this.rootListNodeIri).subscribe(rootListNode => {
+        this.rootListNode = rootListNode;
 
-      if (this.selectedListNode) {
-        this.valueFilterCtrl.setValue(this.selectedListNode.label || '');
-      }
-
-      const list = [...(this.sortedLabelList || [])];
-      this.filteredList$.next(list);
-      this.valueFilterCtrl.valueChanges.subscribe((value: any) => {
-        let filtered = [];
-        if (value) {
-          const label = typeof value === 'object' ? value.label : value.toLowerCase();
-          filtered = this._filterItems(this.sortedLabelList || [], label);
-        } else {
-          filtered = [...(this.sortedLabelList || [])];
+        if (this.selectedListNode) {
+          this.valueFilterCtrl.setValue(this.selectedListNode.label || '');
         }
-        this.filteredList$.next(filtered);
+
+        const list = [...(this.sortedLabelList || [])];
+        this.filteredList$.next(list);
+        this.valueFilterCtrl.valueChanges.subscribe((value: any) => {
+          let filtered = [];
+          if (value) {
+            const label = typeof value === 'object' ? value.label : value.toLowerCase();
+            filtered = this._filterItems(this.sortedLabelList || [], label);
+          } else {
+            filtered = [...(this.sortedLabelList || [])];
+          }
+          this.filteredList$.next(filtered);
+        });
       });
-    });
+    }
   }
 
   trackByFn = (index: number, item: any) => `${index}-${item.label}`;
