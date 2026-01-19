@@ -40,15 +40,11 @@ import { ProjectImageCoverComponent } from '../project-image-cover.component';
 
       .project-card-wrapper {
         position: relative;
-        height: 100%;
-        min-height: 280px;
+        height: 280px;
       }
 
       .project-card {
         display: flex;
-        border-radius: 8px;
-        cursor: pointer;
-        color: var(--primary);
         transition:
           background-color 0.2s ease,
           box-shadow 0.2s ease;
