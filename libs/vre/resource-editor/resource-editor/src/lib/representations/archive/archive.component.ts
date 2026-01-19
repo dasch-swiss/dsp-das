@@ -48,7 +48,7 @@ export class ArchiveComponent implements OnChanges {
   originalFilename?: string;
 
   readonly representation = Constants.HasArchiveFileValue;
-  failedToLoad = false;
+  failedToLoad = true;
 
   constructor(
     private readonly _rs: RepresentationService,
