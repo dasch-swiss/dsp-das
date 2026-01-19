@@ -1,0 +1,34 @@
+@use '@angular/material' as mat;
+@use 'config';
+@use 'typography' as t;
+
+// Include all typography configurations for the components (M3 compatible)
+@include mat.all-component-typographies(t.$dsp-typography-config);
+
+// Define Material 3 theme
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    plain-family: (Roboto, 'Helvetica Neue', sans-serif),
+    brand-family: (Roboto, 'Helvetica Neue', sans-serif),
+    bold-weight: 700,
+    medium-weight: 500,
+    regular-weight: 400,
+  ),
+  density: (
+    scale: 0
+  )
+));
+
+@include mat.all-component-themes($theme);
+
+// Global snack-bar theme override for Angular Material v18
+:root {
+  --mat-snack-bar-button-color: rgba(51, 103, 144, 1);
+  --mat-snackbar-container-color: rgba(51, 103, 144, 0.9);
+  --mat-snackbar-supporting-text-color: rgb(255, 255, 255);
+}
