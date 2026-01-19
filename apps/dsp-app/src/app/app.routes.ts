@@ -24,6 +24,8 @@ import {
 import {
   AdvancedSearchPageComponent,
   AdvancedSearchResultsPageComponent,
+} from '@dasch-swiss/vre/pages/search/advanced-search';
+import {
   FulltextSearchResultsPageComponent,
   GlobalPageComponent,
   ProjectFulltextSearchPageComponent,

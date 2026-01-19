@@ -1,9 +1,9 @@
-import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { AdvancedSearchComponent, QueryObject } from '@dasch-swiss/vre/pages/search/advanced-search';
 import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
+import { AdvancedSearchComponent } from './advanced-search.component';
+import { QueryObject } from './model';
 
 @Component({
   selector: 'app-advanced-search-page',
@@ -13,25 +13,16 @@ import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CenteredLayoutComponent, AdvancedSearchComponent],
 })
-export class AdvancedSearchPageComponent implements OnInit {
-  uuid: string;
+export class AdvancedSearchPageComponent {
+  uuid = this._route.parent!.snapshot.params[RouteConstants.uuidParameter];
 
   constructor(
     private readonly _router: Router,
-    private readonly _route: ActivatedRoute,
-    private readonly _location: Location
+    private readonly _route: ActivatedRoute
   ) {}
-
-  ngOnInit(): void {
-    this.uuid = this._route.parent.snapshot.params.uuid;
-  }
 
   onSearch(queryObject: QueryObject): void {
     const route = `./${RouteConstants.advancedSearch}/${RouteConstants.gravSearch}/${encodeURIComponent(queryObject.query)}`;
     this._router.navigate([route], { relativeTo: this._route.parent });
-  }
-
-  onBackClicked(): void {
-    this._location.back();
   }
 }
