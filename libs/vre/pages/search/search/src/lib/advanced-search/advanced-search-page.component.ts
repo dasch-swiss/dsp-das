@@ -8,10 +8,7 @@ import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
 @Component({
   selector: 'app-advanced-search-page',
   template: ` <app-centered-layout>
-    <app-advanced-search
-      [projectUuid]="uuid"
-      (emitGravesearchQuery)="onSearch($event)"
-      (emitBackButtonClicked)="onBackClicked()" />
+    <app-advanced-search [projectUuid]="uuid" (gravesearchQuery)="onSearch($event)" />
   </app-centered-layout>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CenteredLayoutComponent, AdvancedSearchComponent],
