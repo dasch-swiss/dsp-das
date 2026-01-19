@@ -21,3 +21,14 @@ $theme: mat.define-theme((
 ));
 
 @include mat.all-component-themes($theme);
+
+// Override button border radius (M3 default is 9999px for pill-shaped buttons)
+html {
+  --app-button-shape: 4px;
+
+  --mat-button-filled-container-shape: var(--app-button-shape);
+  --mat-button-outlined-container-shape: var(--app-button-shape);
+  --mat-button-text-container-shape: var(--app-button-shape);
+  --mat-button-tonal-container-shape: var(--app-button-shape);
+  --mat-button-protected-container-shape: var(--app-button-shape);
+}
