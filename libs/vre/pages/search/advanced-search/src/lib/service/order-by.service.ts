@@ -1,5 +1,5 @@
 import { Injectable, inject, OnDestroy } from '@angular/core';
-import { distinctUntilChanged, map, skip, Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, filter, map, skip, Subject, takeUntil } from 'rxjs';
 import { OrderByItem } from '../model';
 import { SearchStateService } from './search-state.service';
 

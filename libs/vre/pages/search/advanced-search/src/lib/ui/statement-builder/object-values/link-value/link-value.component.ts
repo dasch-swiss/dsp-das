@@ -160,7 +160,6 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('ngOnChanges - selectedResource:', this.selectedResource);
     if (changes['selectedResource'] && this.selectedResource) {
       this.inputControl.setValue(this.selectedResource.label, { emitEvent: false });
       this.inputControl.updateValueAndValidity();

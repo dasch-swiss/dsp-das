@@ -109,7 +109,6 @@ export class PropertyFormManager implements OnDestroy {
   }
 
   private _isLastOrLastForSameSubject(statement: StatementElement): boolean {
-    console.log('Checking if last or last for same subject for', statement);
     const isLast =
       this.searchStateService.currentState.statementElements[
         this.searchStateService.currentState.statementElements.length - 1

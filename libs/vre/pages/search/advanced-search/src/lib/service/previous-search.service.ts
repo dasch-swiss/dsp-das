@@ -57,7 +57,6 @@ export class PreviousSearchService {
 
   get previousSearchObject(): AdvancedSearchStateSnapshot {
     const statementElements = this.reconstructStatementElements(this._previousSearchObject.statementElements || []);
-    console.log('Reconstructed statementElements:', statementElements);
     return {
       ...this._previousSearchObject,
       statementElements: this.reconstructStatementElements(this._previousSearchObject.statementElements || []),

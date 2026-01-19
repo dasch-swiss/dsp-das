@@ -83,12 +83,6 @@ export class ListValueComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
-    console.log(
-      'ListValueComponent: ngOnChanges triggered with rootListNodeIri=',
-      this.rootListNodeIri,
-      'and selectedListNode=',
-      this.selectedListNode
-    );
     this._dataService.getList$(this.rootListNodeIri).subscribe(rootListNode => {
       this.rootListNode = rootListNode;
 

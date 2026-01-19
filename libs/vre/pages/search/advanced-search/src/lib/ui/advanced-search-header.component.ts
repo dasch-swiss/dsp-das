@@ -36,7 +36,6 @@ export class AdvancedSearchHeaderComponent {
 
   loadPreviousSearch(): void {
     const previousSearch = this.previousSearchService.previousSearchObject;
-    console.log('Loading previous search:', previousSearch);
     if (!previousSearch) {
       return;
     }
