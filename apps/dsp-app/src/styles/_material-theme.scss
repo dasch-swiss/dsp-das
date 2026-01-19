@@ -1,9 +1,5 @@
 @use '@angular/material' as mat;
 @use 'config';
-@use 'typography' as t;
-
-// Include all typography configurations for the components (M3 compatible)
-@include mat.all-component-typographies(t.$dsp-typography-config);
 
 // Define Material 3 theme
 $theme: mat.define-theme((
@@ -25,10 +21,3 @@ $theme: mat.define-theme((
 ));
 
 @include mat.all-component-themes($theme);
-
-// Global snack-bar theme override for Angular Material v18
-:root {
-  --mat-snack-bar-button-color: rgba(51, 103, 144, 1);
-  --mat-snackbar-container-color: rgba(51, 103, 144, 0.9);
-  --mat-snackbar-supporting-text-color: rgb(255, 255, 255);
-}
