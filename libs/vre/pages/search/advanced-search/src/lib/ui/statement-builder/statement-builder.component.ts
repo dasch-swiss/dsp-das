@@ -28,7 +28,10 @@ import { StringValueComponent } from './object-values/string-value/string-value.
     StringValueComponent,
   ],
   template: ` @for (statementElement of statementElements; track statementElement.id; let isLast = $last) {
-    <div class="width-100-percent flex gap-05em" [style.margin-left.em]="(statementElement.statementLevel + 1) * 2">
+    <div
+      class="width-100-percent flex gap-05em"
+      [ngClass]="{ 'is-dimmed': statementElement.isPristine && statementElements.length > 1 }"
+      [style.margin-left.em]="(statementElement.statementLevel + 1) * 2">
       <app-predicate-select
         [style.width]="'calc(30% - ' + (statementElement.statementLevel + 1) * 2 + 'em)'"
         [selectedPredicate]="statementElement?.selectedPredicate"
