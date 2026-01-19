@@ -294,7 +294,7 @@ class GravsearchWriterScoped {
     } else if (this.isKnoraValueType) {
       statement += this._whereStatementForValueComparison();
     } else if (this.isLinkValueType) {
-      if (this._operator !== Operator.Exists && this._operator !== Operator.Matches) {
+      if (this._operator !== Operator.Exists && this._operator && this._operator !== Operator.Matches) {
         statement += `${this.subject} ${this.predicate} ${this.objectValue} .\n`;
       }
     }
@@ -339,8 +339,7 @@ class GravsearchWriterScoped {
         // SO WRONG BUT EXACTLY LIKE BEFORE
         return `FILTER knora-api:matchLabel(${this.MAIN_RESOURCE_PLACEHOLDER}, "${this._selectedValue}") .\n`;
       case Operator.IsLike:
-        const islikeObject = this._parentId ? this.objectPlaceHolder : this.MAIN_RESOURCE_PLACEHOLDER;
-        return `FILTER regex(${islikeObject}, "${this._selectedValue}", "i") .\n`;
+        return `FILTER regex(${this.objectPlaceHolder}, "${this._selectedValue}", "i") .\n`;
       default:
         return '';
     }
