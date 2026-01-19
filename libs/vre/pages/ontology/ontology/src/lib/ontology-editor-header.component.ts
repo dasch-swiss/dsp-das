@@ -1,6 +1,11 @@
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, ViewContainerRef } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { MatTooltip } from '@angular/material/tooltip';
+import { Router } from '@angular/router';
 import { OntologyMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
@@ -109,7 +114,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [AsyncPipe, DatePipe, MatButton, MatIcon, MatToolbar, MatToolbarRow, MatTooltip],
 })
 export class OntologyEditorHeaderComponent {
   ontology$ = this._oes.currentOntologyInfo$;
@@ -120,13 +125,12 @@ export class OntologyEditorHeaderComponent {
   protected readonly _translate = inject(TranslateService);
 
   constructor(
-    private _dialog: MatDialog,
-    private _dialogService: DialogService,
-    private _projectPageService: ProjectPageService,
-    private _oes: OntologyEditService,
-    private _router: Router,
-    private _route: ActivatedRoute,
-    private _viewContainerRef: ViewContainerRef
+    private readonly _dialog: MatDialog,
+    private readonly _dialogService: DialogService,
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _oes: OntologyEditService,
+    private readonly _router: Router,
+    private readonly _viewContainerRef: ViewContainerRef
   ) {}
 
   editOntology(ontology: ReadOntology | OntologyMetadata) {

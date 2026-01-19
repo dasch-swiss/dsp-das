@@ -1,14 +1,19 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
+import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { combineLatest, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-advanced-search-results-page',
+  imports: [AsyncPipe, MatButton, MatIcon, CenteredBoxComponent, NoResultsFoundComponent, ResourceBrowserComponent],
   template: `
     @if (resources$ | async; as resources) {
       @if (resources.length === 0) {
@@ -19,13 +24,11 @@ import { combineLatest, map, switchMap } from 'rxjs';
       } @else {
         <app-resource-browser
           [data]="{ resources: resources, selectFirstResource: true }"
-          [showBackToFormButton]="true"
-          [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
+          [showBackToFormButton]="true" />
       }
     }
   `,
   providers: [ResourceResultService],
-  standalone: false,
 })
 export class AdvancedSearchResultsPageComponent {
   readonly resources$ = this._route.params.pipe(
@@ -46,13 +49,11 @@ export class AdvancedSearchResultsPageComponent {
   readonly noResultMessage = `We couldn't find any resources matching your search criteria. Try adjusting your search parameters.`;
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _titleService: Title,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _resourceResultService: ResourceResultService,
-    public projectPageService: ProjectPageService
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _resourceResultService: ResourceResultService,
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _titleService: Title
   ) {
     this._titleService.setTitle(`Advanced search results`);
   }

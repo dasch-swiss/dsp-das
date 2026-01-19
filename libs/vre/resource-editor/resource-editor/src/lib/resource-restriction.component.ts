@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
+import { AlertInfoComponent } from './alert-info.component';
 
 @Component({
   selector: 'app-resource-restriction',
@@ -14,7 +17,7 @@ import { Component } from '@angular/core';
       </app-alert-info>
     </div>
   }`,
-  standalone: false,
+  imports: [MatIconModule, TranslatePipe, AlertInfoComponent],
 })
 export class ResourceRestrictionComponent {
   showRestrictedMessage = true;

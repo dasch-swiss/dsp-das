@@ -38,10 +38,7 @@ For all available commands, see [package.json](https://github.com/dasch-swiss/ds
 
 ## @dasch-swiss librairies
 
-For more information about specific library, please go to its readme, e.g.:
-
-- [@dasch-swiss/jdnconvertiblecalendar](https://github.com/dasch-swiss/dsp-das/blob/main/libs/jdnconvertiblecalendar/README.md)
-- [@dasch-swiss/jdnconvertiblecalendardateadapter](https://github.com/dasch-swiss/dsp-das/blob/main/libs/jdnconvertiblecalendardateadapter/README.md)
+For more information about available libraries, see the VRE libraries under `libs/vre/` and the library path aliases in [tsconfig.base.json](https://github.com/dasch-swiss/dsp-das/blob/main/tsconfig.base.json).
 
 ## DSP-APP &mdash; generic user interface of DaSCH Service Platform
 
@@ -99,14 +96,13 @@ nx run [library-name]:build
 # Lint a specific library
 nx run [library-name]:lint
 
-# Example: Test the calendar library
-nx run jdnconvertiblecalendar:test
+# Example: Test the date-picker library
+nx run vre-ui-date-picker:test
 ```
 
 **Available libraries:**
 - See [tsconfig.base.json](https://github.com/dasch-swiss/dsp-das/blob/main/tsconfig.base.json) for all library path aliases under the `paths` configuration
 - Main VRE libraries are under `@dasch-swiss/vre/*` namespace
-- Standalone libraries: `@dasch-swiss/jdnconvertiblecalendar`, `@dasch-swiss/jdnconvertiblecalendardateadapter`
 
 ### OpenAPI Client Generation
 
@@ -130,11 +126,17 @@ This starts both the observability stack and the app. Access Grafana at [http://
 
 For detailed configuration and troubleshooting, see the inline documentation in `docker-compose.observability.yml` and `apps/dsp-app/src/config/config.dev.json`.
 
+## CI/CD Workflows
+
+The project uses GitHub Actions with three focused workflows:
+
+- **CI** (`.github/workflows/ci.yml`) - Runs on all pushes (including PR branches): linting, unit tests, E2E tests, OpenAPI validation, docs build
+- **Deploy** (`.github/workflows/deploy.yml`) - Runs after CI passes on main or on tag pushes: Docker image publish, DEV deployment trigger, release notifications
+- **Release** (`.github/workflows/release.yml`) - Automated release management with release-please on main branch
+
+All workflows use `npm ci` with caching for fast, deterministic builds and include memory optimizations to prevent CI failures.
+
 ## Further Documentation
-
-### User guide
-
-➡ [for latest released version](https://docs.dasch.swiss/latest/DSP-APP/user-guide/)
 
 ### Developer docs
 
@@ -145,7 +147,7 @@ For detailed configuration and troubleshooting, see the inline documentation in 
 If you would like to contribute to the development of the DSP-APP alongside us,
 please follow the [general DSP contribution guidelines](https://docs.dasch.swiss/latest/developers/contribution/).
 
-### Documentation / User guidelines
+### Documentation
 
-We built the user guidelines and developer documentation with [MkDocs](https://www.mkdocs.org/).
+We built the developer documentation with [MkDocs](https://www.mkdocs.org/).
 More information can be found in the specific [README](https://github.com/dasch-swiss/dsp-das/blob/main/docs/contribution/docs-documentation.md).

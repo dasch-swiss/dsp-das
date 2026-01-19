@@ -37,14 +37,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { KnoraDate } from '@dasch-swiss/dsp-js';
-import {
-  CalendarDate,
-  CalendarPeriod,
-  GregorianCalendarDate,
-  IslamicCalendarDate,
-  JulianCalendarDate,
-} from '@dasch-swiss/jdnconvertiblecalendar';
-import { TranslateModule } from '@ngx-translate/core';
+import { getCalendar } from '@dasch-swiss/vre/shared/calendar';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 
 /** error when invalid control is dirty, touched, or submitted. */
@@ -80,9 +74,8 @@ interface ValidationMessages {
     MatButtonModule,
     MatButtonToggleModule,
     MatSelectModule,
-    TranslateModule,
+    TranslatePipe,
   ],
-  standalone: true,
 })
 export class AppDatePickerComponent
   implements ControlValueAccessor, MatFormFieldControl<KnoraDate>, OnChanges, DoCheck, OnDestroy
@@ -641,19 +634,9 @@ export class AppDatePickerComponent
    * @param month the date's month.
    */
   calculateDaysInMonth(calendar: string, year: number, month: number): number {
-    const date = new CalendarDate(year, month, 1);
-    if (calendar === 'GREGORIAN') {
-      const calDate = new GregorianCalendarDate(new CalendarPeriod(date, date));
-      return calDate.daysInMonth(date);
-    } else if (calendar === 'JULIAN') {
-      const calDate = new JulianCalendarDate(new CalendarPeriod(date, date));
-      return calDate.daysInMonth(date);
-    } else if (calendar === 'ISLAMIC') {
-      const calDate = new IslamicCalendarDate(new CalendarPeriod(date, date));
-      return calDate.daysInMonth(date);
-    } else {
-      throw Error(`Unknown calendar ${calendar}`);
-    }
+    const calendarSystem = calendar.toUpperCase() as 'GREGORIAN' | 'JULIAN' | 'ISLAMIC';
+    const cal = getCalendar(calendarSystem);
+    return cal.daysInMonth(year, month);
   }
 
   /**

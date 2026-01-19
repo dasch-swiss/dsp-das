@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import * as Editor from 'ckeditor5-custom-build';
 import { Subject } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
@@ -19,7 +19,6 @@ import { unescapeHtml } from './unescape-html';
       [formControl]="footnoteControl"
       [config]="ckEditor.config"
       [editor]="editor"
-      (blur)="onBlur()"
       style="margin-bottom: 22px; display: block;" />
     @if (control.touched && control.errors?.['crossProjectLink']; as error) {
       <mat-error>
@@ -39,8 +38,7 @@ import { unescapeHtml } from './unescape-html';
       <mat-error>{{ errors | humanReadableError | translate }}</mat-error>
     }
   `,
-  imports: [CKEditorModule, MatFormFieldModule, ReactiveFormsModule, TranslateModule, HumanReadableErrorPipe],
-  standalone: true,
+  imports: [CKEditorModule, MatFormFieldModule, ReactiveFormsModule, TranslatePipe, HumanReadableErrorPipe],
 })
 export class CkEditorComponent implements OnInit, OnDestroy {
   @Input({ required: true }) control!: FormControl<string | null>;
@@ -92,6 +90,10 @@ export class CkEditorComponent implements OnInit, OnDestroy {
       this.control.patchValue(value ? this._parseFromFootnote(value) : '');
       updating = false;
     });
+
+    if (!this.control.touched) {
+      this.control.markAsTouched();
+    }
   }
 
   ngOnDestroy() {
@@ -103,12 +105,6 @@ export class CkEditorComponent implements OnInit, OnDestroy {
       this.control.removeValidators(this._crossProjectValidator);
       this.control.updateValueAndValidity();
     }
-  }
-
-  onBlur() {
-    // Mark control as touched and trigger validation when editor loses focus
-    this.control.markAsTouched();
-    this.control.updateValueAndValidity();
   }
 
   private _parseToFootnote(rawHtml: string) {

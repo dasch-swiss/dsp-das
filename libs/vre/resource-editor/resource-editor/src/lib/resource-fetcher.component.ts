@@ -12,11 +12,15 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponseError, Constants, ReadResource } from '@dasch-swiss/dsp-js';
-import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslateService } from '@ngx-translate/core';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { filter, Subject, takeUntil } from 'rxjs';
+import { ResourceFetcherService } from './representations/resource-fetcher.service';
+import { ResourceUtil } from './representations/resource.util';
+import { ResourceVersionWarningComponent } from './resource-version-warning.component';
+import { ResourceComponent } from './resource.component';
 
 type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
 
@@ -57,7 +61,7 @@ type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
     </div>
   `,
   providers: [ResourceFetcherService],
-  standalone: false,
+  imports: [TranslatePipe, ResourceVersionWarningComponent, ResourceComponent, AppProgressIndicatorComponent],
 })
 export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
@@ -74,12 +78,12 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   constructor(
-    private _resourceFetcherService: ResourceFetcherService,
-    private _notification: NotificationService,
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _translateService: TranslateService,
-    private _cdr: ChangeDetectorRef
+    private readonly _resourceFetcherService: ResourceFetcherService,
+    private readonly _notification: NotificationService,
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _translateService: TranslateService,
+    private readonly _cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {

@@ -1,8 +1,15 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output, ViewContainerRef } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CanDoResponse, ReadResource } from '@dasch-swiss/dsp-js';
-import { DeleteResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/properties-display';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { DeleteResourceDialogComponent } from '../properties-display/delete-resource-dialog.component';
+import { LoadingMenuItemComponent } from './loading-menu-item.component';
 
 @Component({
   selector: 'app-delete-button',
@@ -14,7 +21,7 @@ import { Observable } from 'rxjs';
         [matTooltip]="
           resourceCanBeDeleted.canDo
             ? ('resourceEditor.moreMenu.moveToTrash' | translate)
-            : resourceCanBeDeleted.cannotDoReason || ('resourceEditor.moreMenu.checkingPermission' | translate)
+            : ('resourceEditor.moreMenu.cannotDeleteIncomingLinks' | translate)
         "
         matTooltipPosition="above"
         [disabled]="!resourceCanBeDeleted.canDo"
@@ -33,7 +40,15 @@ import { Observable } from 'rxjs';
         labelKey="ui.common.actions.delete" />
     }
   `,
-  standalone: false,
+  imports: [
+    AsyncPipe,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    MatTooltipModule,
+    TranslatePipe,
+    LoadingMenuItemComponent,
+  ],
 })
 export class DeleteButtonComponent {
   @Input({ required: true }) resourceCanBeDeleted$!: Observable<CanDoResponse>;
@@ -41,8 +56,8 @@ export class DeleteButtonComponent {
   @Output() deleted = new EventEmitter<void>();
 
   constructor(
-    private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef
+    private readonly _dialog: MatDialog,
+    private readonly _viewContainerRef: ViewContainerRef
   ) {}
 
   deleteResource() {

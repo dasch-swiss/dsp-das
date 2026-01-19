@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MultiLanguageFormArray } from './multi-language-form-array.type';
 import { MultiLanguageFormService } from './multi-language-form.service';
 
@@ -22,9 +22,9 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     FormsModule,
     ReactiveFormsModule,
     HumanReadableErrorPipe,
-    TranslateModule,
+    TranslatePipe,
   ],
-  standalone: true,
+
   template: `
     <div style="display: flex; flex-direction: row-reverse">
       <mat-form-field style="flex: 1" subscriptSizing="dynamic" class="formfield">

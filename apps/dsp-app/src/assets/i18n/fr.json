@@ -312,7 +312,7 @@
         "type": "Type de propriété",
         "name": "Nom de la propriété",
         "labelPlaceholder": "Label de la propriété",
-        "commentPlaceholder": "Commentaire",
+        "commentPlaceholder": "Description",
         "selectResourceClass": "Sélectionner la classe de ressource",
         "selectList": "Sélectionner la liste"
       },
@@ -361,7 +361,9 @@
       "resourceListSelection": {
         "resourcesSelected": "{{count}} ressources sélectionnées",
         "createLinkObject": "Créer un objet de lien",
-        "createLinkObjectTooltip": "Un objet de lien ne peut être créé qu'entre des ressources appartenant au même projet."
+        "createLinkObjectTooltip": "Un objet de lien ne peut être créé qu'entre des ressources appartenant au même projet.",
+        "noResourcesSelected": "Aucune ressource sélectionnée",
+        "resourcesMustBeSameProject": "Les ressources doivent appartenir au même projet"
       },
       "resourcesList": {
         "backToSearchForm": "Retour au formulaire de recherche"
@@ -382,6 +384,20 @@
       },
       "resourceListItem": {
         "foundIn": "Trouvé dans : "
+      },
+      "downloadDialog": {
+        "title": "Télécharger",
+        "resourcesAvailable": "{{count}} ressources disponibles",
+        "noResources": "Il n'y a pas de ressources à télécharger.",
+        "properties": "Propriétés",
+        "selectAll": "Tout sélectionner",
+        "selectNone": "Tout désélectionner",
+        "selectedCount": "{{count}} propriétés sélectionnées sur {{total}}",
+        "includeIrisLabel": "Inclure les IRI de ressources pour les propriétés de référence",
+        "includeIrisExplanation": "Lorsque cette option est activée, les propriétés de référence exportent à la fois des valeurs lisibles par l'homme (p. ex. 'Alice') et des IRI de ressources pour un référencement correct des données.",
+        "downloadCsv": "Télécharger CSV",
+        "downloadSuccess": "CSV téléchargé avec succès.",
+        "downloadError": "Échec du téléchargement du CSV. Veuillez réessayer."
       }
     }
   },
@@ -414,7 +430,9 @@
       "checkingPermissionErase": "Vérification si la ressource peut être supprimée...",
       "eraseResource": "Supprimer définitivement",
       "eraseResourceTooltip": "Supprimer définitivement la ressource. Cette action ne peut pas être annulée.",
-      "noPermission": "Vous n'avez pas l'autorisation de supprimer cette ressource."
+      "noPermission": "Vous n'avez pas l'autorisation de supprimer cette ressource.",
+      "cannotDeleteIncomingLinks": "La ressource ne peut pas être supprimée car elle possède des liens entrants (voir ci-dessous).",
+      "cannotEraseIncomingLinks": "La ressource ne peut pas être effacée car elle possède des liens entrants (voir ci-dessous)."
     },
     "infoBar": {
       "resourceOfProject": "Ressource du projet",
@@ -668,6 +686,10 @@
         "date": "Date",
         "datePlaceholder": "Cliquez pour sélectionner une date",
         "time": "Heure"
+      },
+      "geonameValue": {
+        "placeholder": "Rechercher un lieu...",
+        "label": "Lieu"
       },
       "example": "p.ex."
     }

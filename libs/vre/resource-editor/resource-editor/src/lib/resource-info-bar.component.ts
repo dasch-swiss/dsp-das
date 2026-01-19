@@ -1,11 +1,13 @@
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { TranslatePipe } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
+import { ResourceFetcherService } from './representations/resource-fetcher.service';
 
 @Component({
   selector: 'app-resource-info-bar',
@@ -13,7 +15,10 @@ import { map, Observable } from 'rxjs';
     @if (project$ | async; as project) {
       <div class="infobar mat-caption">
         {{ 'resourceEditor.infoBar.resourceOfProject' | translate }}
-        <a (click)="openProject(project)" class="link" [title]="project.longname">
+        <a
+          [routerLink]="[RouteConstants.projectRelative, getProjectUuid(project.id)]"
+          class="link"
+          [title]="project.longname">
           <strong>{{ project?.shortname }}</strong></a
         >,
         @if (resourceAttachedUser$ | async; as resourceAttachedUser) {
@@ -46,7 +51,7 @@ import { map, Observable } from 'rxjs';
       }
     `,
   ],
-  standalone: false,
+  imports: [AsyncPipe, DatePipe, RouterLink, TranslatePipe],
 })
 export class ResourceInfoBarComponent implements OnChanges {
   @Input({ required: true }) resource!: ReadResource;
@@ -55,10 +60,11 @@ export class ResourceInfoBarComponent implements OnChanges {
 
   project$!: Observable<ReadProject>;
 
+  readonly RouteConstants = RouteConstants;
+
   constructor(
-    private router: Router,
-    private _resourceFetcherService: ResourceFetcherService,
-    private _projectApiService: ProjectApiService
+    private readonly _resourceFetcherService: ResourceFetcherService,
+    private readonly _projectApiService: ProjectApiService
   ) {}
 
   ngOnChanges() {
@@ -67,7 +73,7 @@ export class ResourceInfoBarComponent implements OnChanges {
       .pipe(map(response => response.project));
   }
 
-  openProject(project: ReadProject) {
-    this.router.navigate([RouteConstants.projectRelative, ProjectService.IriToUuid(project.id)]);
+  getProjectUuid(projectIri: string): string {
+    return ProjectService.IriToUuid(projectIri);
   }
 }

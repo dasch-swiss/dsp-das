@@ -1,13 +1,18 @@
 import { Location } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 import { ProjectForm } from './project-form.type';
+import { ReusableProjectFormComponent } from './reusable-project-form.component';
 
 @Component({
   selector: 'app-create-project-form-page',
@@ -42,7 +47,7 @@ import { ProjectForm } from './project-form.type';
       </div>
     </app-centered-layout>
   `,
-  standalone: false,
+  imports: [MatButton, TranslatePipe, LoadingButtonDirective, CenteredLayoutComponent, ReusableProjectFormComponent],
 })
 export class CreateProjectFormPageComponent {
   form!: ProjectForm;

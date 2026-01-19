@@ -312,7 +312,7 @@
         "type": "Tipo di proprietà",
         "name": "Nome della proprietà",
         "labelPlaceholder": "Etichetta della proprietà",
-        "commentPlaceholder": "Commento",
+        "commentPlaceholder": "Descrizione",
         "selectResourceClass": "Seleziona classe di risorsa",
         "selectList": "Seleziona lista"
       },
@@ -361,7 +361,9 @@
       "resourceListSelection": {
         "resourcesSelected": "{{count}} risorse selezionate",
         "createLinkObject": "Crea un oggetto di collegamento",
-        "createLinkObjectTooltip": "Un oggetto di collegamento può essere creato solo tra risorse appartenenti allo stesso progetto."
+        "createLinkObjectTooltip": "Un oggetto di collegamento può essere creato solo tra risorse appartenenti allo stesso progetto.",
+        "noResourcesSelected": "Nessuna risorsa selezionata",
+        "resourcesMustBeSameProject": "Le risorse devono appartenere allo stesso progetto"
       },
       "resourcesList": {
         "backToSearchForm": "Torna al modulo di ricerca"
@@ -382,6 +384,20 @@
       },
       "resourceListItem": {
         "foundIn": "Trovato in: "
+      },
+      "downloadDialog": {
+        "title": "Scarica",
+        "resourcesAvailable": "{{count}} risorse disponibili",
+        "noResources": "Non ci sono risorse da scaricare.",
+        "properties": "Proprietà",
+        "selectAll": "Seleziona tutto",
+        "selectNone": "Deseleziona tutto",
+        "selectedCount": "{{count}} di {{total}} proprietà selezionate",
+        "includeIrisLabel": "Includi IRI delle risorse per le proprietà di riferimento",
+        "includeIrisExplanation": "Quando attivata, le proprietà di riferimento esportano sia valori leggibili (ad es. 'Alice') che IRI delle risorse per un corretto riferimento ai dati.",
+        "downloadCsv": "Scarica CSV",
+        "downloadSuccess": "CSV scaricato con successo.",
+        "downloadError": "Impossibile scaricare il CSV. Riprova."
       }
     }
   },
@@ -414,7 +430,9 @@
       "checkingPermissionErase": "Verifica se la risorsa può essere eliminata...",
       "eraseResource": "Elimina definitivamente",
       "eraseResourceTooltip": "Elimina definitivamente la risorsa. Questa azione non può essere annullata.",
-      "noPermission": "Non hai il permesso di eliminare questa risorsa."
+      "noPermission": "Non hai il permesso di eliminare questa risorsa.",
+      "cannotDeleteIncomingLinks": "La risorsa non può essere eliminata perché ha link in entrata (vedi sotto).",
+      "cannotEraseIncomingLinks": "La risorsa non può essere cancellata perché ha link in entrata (vedi sotto)."
     },
     "infoBar": {
       "resourceOfProject": "Risorsa del progetto",
@@ -668,6 +686,10 @@
         "date": "Data",
         "datePlaceholder": "Clicca per selezionare una data",
         "time": "Ora"
+      },
+      "geonameValue": {
+        "placeholder": "Cerca una località...",
+        "label": "Località"
       },
       "example": "es."
     }

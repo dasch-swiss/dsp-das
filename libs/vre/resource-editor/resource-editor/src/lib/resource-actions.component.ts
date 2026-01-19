@@ -1,23 +1,32 @@
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { Component, inject, Input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterLink } from '@angular/router';
 import { Constants, ReadLinkValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { PermissionInfoComponent } from './permission-info/permission-info.component';
 
 @Component({
   selector: 'app-resource-actions',
   template: `
     <span class="action">
-      <button
+      <a
         mat-icon-button
         [matTooltip]="'resourceEditor.toolbar.openInNewTab' | translate"
         color="primary"
         data-cy="open-in-new-window-button"
         matTooltipPosition="above"
-        (click)="openResource()">
+        [routerLink]="getResourceLink()"
+        [queryParams]="getResourceQueryParams()"
+        target="_blank">
         <mat-icon>open_in_new</mat-icon>
-      </button>
+      </a>
       <button
         color="primary"
         mat-icon-button
@@ -68,7 +77,16 @@ import { TranslateService } from '@ngx-translate/core';
       }
     `,
   ],
-  standalone: false,
+  imports: [
+    ClipboardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatTooltipModule,
+    RouterLink,
+    TranslatePipe,
+    PermissionInfoComponent,
+  ],
 })
 export class ResourceActionsComponent {
   @Input({ required: true }) resource!: ReadResource;
@@ -77,19 +95,25 @@ export class ResourceActionsComponent {
 
   constructor(
     protected notification: NotificationService,
-    private _resourceService: ResourceService
+    private readonly _resourceService: ResourceService
   ) {}
 
-  openResource() {
+  getResourceLink(): string[] {
     let resourceId = this.resource.id;
-    let qParam = '';
     if (this.resource.entityInfo.classes[Constants.Region]) {
       const linkedResource = this.resource.getValues(Constants.IsRegionOfValue)[0] as ReadLinkValue | undefined;
       resourceId = linkedResource?.linkedResourceIri || resourceId;
-      const annotationId = encodeURIComponent(this.resource.id);
-      qParam = `?${RouteConstants.annotationQueryParam}=${annotationId}`;
     }
     const resPath = this._resourceService.getResourcePath(resourceId);
-    window.open(`/${RouteConstants.resource}${resPath}${qParam}`, '_blank');
+    const resourcePath = resPath.split('/').filter(segment => segment);
+    return ['/', RouteConstants.resource, ...resourcePath];
+  }
+
+  getResourceQueryParams(): Record<string, string> | null {
+    if (this.resource.entityInfo.classes[Constants.Region]) {
+      const annotationId = encodeURIComponent(this.resource.id);
+      return { [RouteConstants.annotationQueryParam]: annotationId };
+    }
+    return null;
   }
 }

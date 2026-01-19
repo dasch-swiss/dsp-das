@@ -1,7 +1,15 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadFileValue } from '@dasch-swiss/dsp-js';
-import { getFileValue, RepresentationConstants } from '@dasch-swiss/vre/resource-editor/representations';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { ArchiveComponent } from './representations/archive/archive.component';
+import { AudioComponent } from './representations/audio/audio.component';
+import { DocumentComponent } from './representations/document/document.component';
+import { getFileValue } from './representations/get-file-value';
+import { RepresentationConstants } from './representations/representation-constants';
+import { StillImageComponent } from './representations/still-image/still-image.component';
+import { TextComponent } from './representations/text/text.component';
+import { VideoComponent } from './representations/video/video.component';
 
 @Component({
   selector: 'app-resource-representation',
@@ -43,16 +51,20 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
       }
     }
   </div>`,
-  standalone: false,
+  imports: [ArchiveComponent, AudioComponent, DocumentComponent, StillImageComponent, TextComponent, VideoComponent],
 })
 export class ResourceRepresentationComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
-  fileValue!: ReadFileValue;
+  fileValue!: ReadFileValue | null;
   loading = false;
   protected readonly representationConstants = RepresentationConstants;
 
   ngOnChanges() {
-    this.fileValue = getFileValue(this.resource.res);
+    const fileValue = getFileValue(this.resource.res);
+    if (fileValue === null) {
+      throw new AppError('FileValue should not be null');
+    }
+    this.fileValue = fileValue;
   }
 }

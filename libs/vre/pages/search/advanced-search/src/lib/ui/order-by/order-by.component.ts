@@ -24,7 +24,6 @@ import { OrderByService } from '../../service/order-by.service';
   templateUrl: './order-by.component.html',
   styleUrls: ['./order-by.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class OrderByComponent {
   readonly TOOLTIP_TEXT = 'Search cannot be ordered by a URI property or a property that links to a resource.';

@@ -1,8 +1,12 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatList } from '@angular/material/list';
 import { ActivatedRoute, EventType, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { TranslatePipe } from '@ngx-translate/core';
 import { filter, map, startWith, switchMap } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
+import { ProjectSidenavLinksItemComponent } from './project-sidenav-links-item.component';
 
 @Component({
   selector: 'app-projects-sidenav-links',
@@ -41,7 +45,7 @@ import { ProjectPageService } from '../project-page.service';
       }
     `,
   ],
-  standalone: false,
+  imports: [AsyncPipe, MatList, TranslatePipe, ProjectSidenavLinksItemComponent],
 })
 export class ProjectSidenavLinksComponent {
   protected readonly routeConstants = RouteConstants;
@@ -56,8 +60,8 @@ export class ProjectSidenavLinksComponent {
   );
 
   constructor(
-    private _projectPageService: ProjectPageService,
-    private _route: ActivatedRoute,
-    private _router: Router
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router
   ) {}
 }

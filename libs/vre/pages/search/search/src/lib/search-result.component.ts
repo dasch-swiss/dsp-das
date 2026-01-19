@@ -1,12 +1,22 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges } from '@angular/core';
 import { IFulltextSearchParams, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { UserService } from '@dasch-swiss/vre/core/session';
-import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
+import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
+import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { combineLatest, map, Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-search-result',
+  imports: [
+    AsyncPipe,
+    CenteredBoxComponent,
+    NoResultsFoundComponent,
+    ResourceBrowserComponent,
+    AppProgressIndicatorComponent,
+  ],
   template: `
     @if (loading) {
       <app-progress-indicator />
@@ -17,14 +27,10 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
           <app-no-results-found [message]="noResultMessage" />
         </app-centered-box>
       } @else if (resources.length > 0) {
-        <app-resource-browser
-          [data]="{ resources: resources, selectFirstResource: true }"
-          [hasRightsToShowCreateLinkObject$]="userIsSysAdmin$"
-          [searchKeyword]="query" />
+        <app-resource-browser [data]="{ resources: resources, selectFirstResource: true }" [searchKeyword]="query" />
       }
     }
   `,
-  standalone: false,
   providers: [ResourceResultService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -33,7 +39,6 @@ export class SearchResultComponent implements OnChanges {
   @Input() projectId?: string;
   loading = true;
 
-  userIsSysAdmin$ = this._userService.isSysAdmin$;
   resources$!: Observable<ReadResource[]>;
 
   readonly noResultMessage = 'There are no resources to display.';
@@ -49,8 +54,7 @@ export class SearchResultComponent implements OnChanges {
   constructor(
     @Inject(DspApiConnectionToken)
     private readonly _dspApiConnection: KnoraApiConnection,
-    private readonly _resourceResultService: ResourceResultService,
-    private readonly _userService: UserService
+    private readonly _resourceResultService: ResourceResultService
   ) {}
 
   ngOnChanges() {

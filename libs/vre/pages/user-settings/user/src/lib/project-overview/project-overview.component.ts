@@ -1,15 +1,20 @@
+import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 import { UserService } from '@dasch-swiss/vre/core/session';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 import { AllProjectsService } from './all-projects.service';
+import { ProjectCardComponent } from './project-card.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-project-overview',
   templateUrl: './project-overview.component.html',
   styleUrls: ['./project-overview.component.scss'],
-  standalone: false,
+  imports: [MatIcon, TranslatePipe, ProjectCardComponent, AppProgressIndicatorComponent, AsyncPipe],
 })
 export class ProjectOverviewComponent implements AfterViewInit {
   @ViewChild('filterInput') filterInput!: ElementRef;
@@ -39,8 +44,8 @@ export class ProjectOverviewComponent implements AfterViewInit {
   isSysAdmin$ = this._userService.isSysAdmin$;
 
   constructor(
-    private _userService: UserService,
-    private _allProjectsService: AllProjectsService
+    private readonly _userService: UserService,
+    private readonly _allProjectsService: AllProjectsService
   ) {}
 
   ngAfterViewInit(): void {

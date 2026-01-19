@@ -1,9 +1,11 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { ProjectsListComponent } from './projects-list/projects-list.component';
 
 /**
  * ProjectsComponent handles the list of projects.
@@ -34,7 +36,7 @@ import { BehaviorSubject, combineLatest, map, Subject, switchMap, takeUntil, tap
       }
     </div>
   `,
-  standalone: false,
+  imports: [AsyncPipe, ProjectsListComponent],
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
   @Input() isUsersProjects = false;
@@ -67,10 +69,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   );
 
   constructor(
-    private _userService: UserService,
-    private _allProjectsService: AllProjectsService,
-    private _titleService: Title,
-    private _translateService: TranslateService
+    private readonly _userService: UserService,
+    private readonly _allProjectsService: AllProjectsService,
+    private readonly _titleService: Title,
+    private readonly _translateService: TranslateService
   ) {}
 
   ngOnInit() {

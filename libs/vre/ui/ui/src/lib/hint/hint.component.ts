@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-hint',
@@ -24,7 +24,6 @@ import { TranslateModule } from '@ngx-translate/core';
   `,
   styleUrls: ['./hint.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButtonModule, MatIconModule, TranslateModule],
-  standalone: true,
+  imports: [MatButtonModule, MatIconModule, TranslatePipe],
 })
 export class HintComponent {}

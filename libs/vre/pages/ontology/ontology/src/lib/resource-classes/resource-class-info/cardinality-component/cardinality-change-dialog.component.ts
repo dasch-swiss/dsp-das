@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 import { Cardinality, Constants, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { TranslateService } from '@ngx-translate/core';
+import { ProgressIndicatorOverlayComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { PropertyInfo } from '../../../ontology.types';
 
@@ -27,7 +31,7 @@ export interface CardinalityInfo {
     <mat-dialog-content>
       <div class="cando-headline">
         @if (canSetCardinality === undefined) {
-          <app-progress-indicator class="floating-center" />
+          <app-progress-indicator-overlay class="floating-center" />
         }
         @if (canSetCardinality === false) {
           <div class="mat-headline-6">{{ 'pages.ontology.cardinalityDialog.notPossible' | translate }}</div>
@@ -83,7 +87,15 @@ export interface CardinalityInfo {
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    DialogHeaderComponent,
+    MatButton,
+    MatDialogActions,
+    MatDialogContent,
+    MatIcon,
+    ProgressIndicatorOverlayComponent,
+    TranslatePipe,
+  ],
 })
 export class CardinalityChangeDialogComponent implements OnInit {
   canSetCardinality: boolean | undefined = undefined;
@@ -114,10 +126,10 @@ export class CardinalityChangeDialogComponent implements OnInit {
   }
 
   constructor(
-    protected dialogRef: MatDialogRef<CardinalityChangeDialogComponent, boolean>,
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
     @Inject(MAT_DIALOG_DATA) public data: CardinalityInfo,
-    @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-    private _cdr: ChangeDetectorRef
+    private readonly _cdr: ChangeDetectorRef,
+    protected dialogRef: MatDialogRef<CardinalityChangeDialogComponent, boolean>
   ) {}
 
   ngOnInit() {

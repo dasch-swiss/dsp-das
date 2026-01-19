@@ -1,13 +1,17 @@
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { SearchTipsComponent } from '@dasch-swiss/vre/pages/search/search';
+import { TranslatePipe } from '@ngx-translate/core';
+import { SearchTipsComponent } from './search-tips.component';
 
 @Component({
   selector: 'app-global-search',
+  imports: [ReactiveFormsModule, MatButtonModule, MatIconModule, TranslatePipe, OverlayModule],
   template: `
     <form
       [formGroup]="formGroup"
@@ -32,7 +36,6 @@ import { SearchTipsComponent } from '@dasch-swiss/vre/pages/search/search';
       }
     `,
   ],
-  standalone: false,
 })
 export class GlobalSearchComponent implements OnDestroy {
   formGroup = this._fb.group({
