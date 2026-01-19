@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
@@ -10,7 +10,6 @@ import { QueryObject } from './model';
   template: ` <app-centered-layout>
     <app-advanced-search [projectUuid]="uuid" (gravesearchQuery)="onSearch($event)" />
   </app-centered-layout>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CenteredLayoutComponent, AdvancedSearchComponent],
 })
 export class AdvancedSearchPageComponent {
