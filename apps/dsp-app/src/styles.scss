@@ -10,21 +10,26 @@
 @include mat.elevation-classes();
 @include mat.app-background();
 
-// Include all typography configurations for the components (Angular Material 18 compatible)
+// Include all typography configurations for the components (M3 compatible)
 @include mat.all-component-typographies(t.$dsp-typography-config);
 
-// Define the color palettes for the theme (Material 18 compatible)
-$primary: mat.m2-define-palette(config.$blue_palette, 700, 500, 900);
-$accent: mat.m2-define-palette(config.$light_blue_palette, 900, 600, 900);
-
-// The warn palette is optional (defaults to red).
-$warn: mat.m2-define-palette(config.$velvet_red_palette, 700, 500, 900);
-
-// Define a theme with typography.
-$theme: mat.m2-define-light-theme((
-  color: (primary: $primary, accent: $accent, warn: $warn),
-  typography: t.$dsp-typography-config,
-  density: 0
+// Define Material 3 theme
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    plain-family: (Roboto, 'Helvetica Neue', sans-serif),
+    brand-family: (Roboto, 'Helvetica Neue', sans-serif),
+    bold-weight: 700,
+    medium-weight: 500,
+    regular-weight: 400,
+  ),
+  density: (
+    scale: 0
+  )
 ));
 
 // Include all theme styles for the components.
