@@ -23,8 +23,8 @@ import {
 } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
-import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
   BehaviorSubject,
   debounceTime,
@@ -50,10 +50,10 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
     MatInputModule,
     MatAutocompleteModule,
     MatAutocompleteOptionsScrollDirective,
-    AppProgressIndicatorComponent,
+    MatProgressBar,
   ],
   template: `
-    <mat-form-field>
+    <mat-form-field class="width-100-percent" appearance="fill">
       <input
         matInput
         placeholder="Search for a resource"
@@ -87,23 +87,11 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
           <mat-option [value]="obj">{{ obj?.label }}</mat-option>
         }
         @if (loading) {
-          <mat-option class="loader" [disabled]="true">
-            <div class="loading-container">
-              <app-progress-indicator />
-              <span class="loading-text">Loading resources...</span>
-            </div>
-          </mat-option>
+          <mat-progress-bar mode="query" />
+          <mat-option [disabled]="true">Loading resources...</mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>
-  `,
-  styles: `
-    :host {
-      display: block;
-    }
-    mat-form-field {
-      width: 100%;
-    }
   `,
   styleUrl: '../../../../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -179,16 +167,17 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   onScroll() {
+    if (this.loading$.value) {
+      return;
+    }
     const lastSearch = this.lastSearchString$.value;
-    const currentLoading = this.loading$.value;
     const currentResults = this.linkValueObjects$.value;
 
     if (
-      currentLoading ||
       !lastSearch ||
       lastSearch.length <= 2 ||
       currentResults.length < 25 ||
-      currentResults.length < this.resultCount$.value
+      currentResults.length >= this.resultCount$.value
     ) {
       return;
     }

@@ -53,7 +53,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
           <app-string-value
             class="width-40-percent"
             [valueType]="statementElement.selectedPredicate!.objectValueType"
-            [value]="statementElement.selectedObjectWriteValue"
+            [value]="statementElement.selectedObjectValue"
             (emitValueChanged)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.ListValueObject) {

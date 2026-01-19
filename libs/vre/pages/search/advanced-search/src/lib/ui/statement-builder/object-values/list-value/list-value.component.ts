@@ -26,7 +26,7 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
     TranslateModule,
   ],
   template: `
-    <mat-form-field appearance="fill">
+    <mat-form-field class="width-100-percent" appearance="fill">
       <mat-label>{{ 'pages.search.propertyFormListValue' | translate }}</mat-label>
       <input
         matInput
@@ -54,14 +54,6 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
         </ng-template>
       </mat-autocomplete>
     </mat-form-field>
-  `,
-  styles: `
-    :host {
-      display: block;
-    }
-    mat-form-field {
-      width: 100%;
-    }
   `,
   styleUrl: '../../../../advanced-search.component.scss',
 })

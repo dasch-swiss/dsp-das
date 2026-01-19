@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Operator } from '../../../operators.config';
@@ -9,7 +9,7 @@ import { Operator } from '../../../operators.config';
   standalone: true,
   imports: [CommonModule, MatInputModule, MatSelectModule],
   template: `
-    <mat-form-field class="adv-statement-form right-hand-form">
+    <mat-form-field>
       <mat-label>Comparison Operator</mat-label>
       <mat-select
         [value]="selectedOperator"

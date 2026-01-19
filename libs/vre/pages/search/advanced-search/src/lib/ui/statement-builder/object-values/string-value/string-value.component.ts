@@ -40,14 +40,6 @@ class ValueErrorStateMatcher implements ErrorStateMatcher {
     ReactiveFormsModule,
   ],
   templateUrl: './string-value.component.html',
-  styles: `
-    :host {
-      display: block;
-    }
-    mat-form-field {
-      width: 100%;
-    }
-  `,
   styleUrl: '../../../../advanced-search.component.scss',
 })
 export class StringValueComponent implements OnInit, OnChanges, AfterViewInit {

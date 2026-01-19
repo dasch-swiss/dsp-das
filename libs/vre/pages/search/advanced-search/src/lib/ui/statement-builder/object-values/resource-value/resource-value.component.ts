@@ -19,7 +19,7 @@ import { OntologyDataService } from '../../../../service/ontology-data.service';
   standalone: true,
   imports: [CommonModule, MatSelectModule],
   template: `
-    <mat-form-field>
+    <mat-form-field class="width-100-percent" appearance="fill">
       <mat-label>Resource Class</mat-label>
       <mat-select
         [value]="selectedResource"
@@ -34,14 +34,6 @@ import { OntologyDataService } from '../../../../service/ontology-data.service';
         }
       </mat-select>
     </mat-form-field>
-  `,
-  styles: `
-    :host {
-      display: block;
-    }
-    mat-form-field {
-      width: 100%;
-    }
   `,
   styleUrl: '../../../../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
