@@ -5,12 +5,7 @@
 </button>
 
 } @else {
-<button
-  matButton="elevated"
-  color="primary"
-  [matMenuTriggerFor]="loginForm"
-  class="login-button"
-  data-cy="login-button">
+<button matButton="filled" color="primary" [matMenuTriggerFor]="loginForm" class="login-button" data-cy="login-button">
   {{ 'pages.userSettings.userMenu.login' | translate }}
 </button>
 }

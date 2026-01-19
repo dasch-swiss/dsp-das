@@ -15,27 +15,7 @@ body {
   margin: 0;
 }
 
-
-// mat-form-field overrides
-.mdc-text-field--filled:not(.mdc-text-field--disabled) {
-  background-color: transparent;
-}
-
-.mat-mdc-form-field-focus-overlay {
-  background-color: whitesmoke;
-}
-
-.mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
-  opacity: 1;
-}
-
-// ckEditor
-.ck-editor__editable_inline {
-  min-height: 256px;
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-
+// OTHER
 .mat-mdc-menu-panel {
   min-height: 48px !important;
   max-width: 400px !important;

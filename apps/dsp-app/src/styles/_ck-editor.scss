@@ -18,3 +18,9 @@ pre {
   padding: 0.15em;
   border-radius: 2px;
 }
+
+.ck-editor__editable_inline {
+  min-height: 256px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
