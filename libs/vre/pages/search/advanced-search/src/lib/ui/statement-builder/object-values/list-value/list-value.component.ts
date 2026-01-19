@@ -83,8 +83,19 @@ export class ListValueComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
+    console.log(
+      'ListValueComponent: ngOnChanges triggered with rootListNodeIri=',
+      this.rootListNodeIri,
+      'and selectedListNode=',
+      this.selectedListNode
+    );
     this._dataService.getList$(this.rootListNodeIri).subscribe(rootListNode => {
       this.rootListNode = rootListNode;
+
+      if (this.selectedListNode) {
+        this.valueFilterCtrl.setValue(this.selectedListNode.label || '');
+      }
+
       const list = [...(this.sortedLabelList || [])];
       this.filteredList$.next(list);
       this.valueFilterCtrl.valueChanges.subscribe((value: any) => {

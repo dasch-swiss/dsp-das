@@ -10,6 +10,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   FormControl,
@@ -158,8 +159,12 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnD
       });
   }
 
-  ngOnChanges(): void {
-    this.inputControl.updateValueAndValidity();
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('ngOnChanges - selectedResource:', this.selectedResource);
+    if (changes['selectedResource'] && this.selectedResource) {
+      this.inputControl.setValue(this.selectedResource.label, { emitEvent: false });
+      this.inputControl.updateValueAndValidity();
+    }
   }
 
   ngAfterViewInit(): void {

@@ -35,21 +35,29 @@ export class PreviousSearchService {
     }
 
     return plainObjects.map(obj => {
-      let subjectNode: NodeValue | undefined;
-      if (obj._selectedSubjectNode) {
-        subjectNode = new NodeValue(obj.id, obj._selectedSubjectNode._value);
-      }
-
-      const element = new StatementElement(subjectNode, obj.statementLevel);
-      element.selectedPredicate = obj._selectedPredicate;
-      element.selectedOperator = obj._selectedOperator;
-      element.selectedObjectNode = this.reconstructObjectNode(obj._selectedObjectNode);
-
-      return element;
+      return this.reconstructStatement(obj);
     });
   }
 
+  reconstructStatement(obj: any): StatementElement {
+    let subjectNode: NodeValue | undefined;
+    if (obj._selectedSubjectNode) {
+      subjectNode = new NodeValue(obj.idx, obj._selectedSubjectNode._value);
+    }
+
+    const parentStatement = obj._parentStatement ? this.reconstructStatement(obj._parentStatement) : undefined;
+
+    const element = new StatementElement(subjectNode, obj.statementLevel, parentStatement);
+    element.selectedPredicate = obj._selectedPredicate;
+    element.selectedOperator = obj._selectedOperator;
+    element.selectedObjectNode = this.reconstructObjectNode(obj._selectedObjectNode);
+
+    return element;
+  }
+
   get previousSearchObject(): AdvancedSearchStateSnapshot {
+    const statementElements = this.reconstructStatementElements(this._previousSearchObject.statementElements || []);
+    console.log('Reconstructed statementElements:', statementElements);
     return {
       ...this._previousSearchObject,
       statementElements: this.reconstructStatementElements(this._previousSearchObject.statementElements || []),

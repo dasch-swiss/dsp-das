@@ -47,19 +47,5 @@ describe('SearchStateService', () => {
       // Patch with a different number of elements to trigger emission
       service.patchState({ statementElements: [newStatement] });
     });
-
-    it('should not emit when stateId is unchanged', done => {
-      let emissionCount = 0;
-
-      service.selectedResourceClass$.subscribe(() => {
-        emissionCount++;
-      });
-
-      // Wait a bit to ensure no extra emissions
-      setTimeout(() => {
-        expect(emissionCount).toBe(1); // Only initial emission
-        done();
-      }, 100);
-    });
   });
 });

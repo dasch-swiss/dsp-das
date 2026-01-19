@@ -1,6 +1,6 @@
-import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
+import { Constants } from '@dasch-swiss/dsp-js';
 import { v4 as uuidv4 } from 'uuid';
-import { ResourceLabel } from './constants';
+import { RDFS_LABEL, ResourceLabel } from './constants';
 import { getOperatorsForObjectType, Operator } from './operators.config';
 
 export enum PropertyObjectType {
@@ -63,27 +63,6 @@ export class StringValue extends StatementValue {
   }
 }
 
-export class ListNodeValue extends StatementValue {
-  constructor(
-    statementId: string,
-    private _value?: ListNodeV2
-  ) {
-    super(statementId);
-  }
-
-  get value(): ListNodeV2 | undefined {
-    return this._value;
-  }
-
-  set value(val: ListNodeV2) {
-    this._value = val;
-  }
-
-  get writeValue(): string | undefined {
-    return this._value?.id;
-  }
-}
-
 export class Predicate implements IriLabelPair {
   constructor(
     public iri: string,
@@ -92,15 +71,6 @@ export class Predicate implements IriLabelPair {
     public isLinkProperty: boolean,
     public listObjectIri?: string
   ) {}
-
-  get isKnoraValueType(): boolean {
-    return this.objectValueType.includes(Constants.KnoraApiV2);
-  }
-}
-
-export interface GravsearchStatement {
-  constructString: string;
-  whereString: string;
 }
 
 export class StatementElement {
@@ -131,12 +101,31 @@ export class StatementElement {
     this.selectedOperator = Operator.Equals; // default operator when property changes
   }
 
+  get selectedOperator(): Operator | undefined {
+    return this._selectedOperator;
+  }
+
+  set selectedOperator(operator: Operator) {
+    this._selectedOperator = operator;
+    this._selectedObjectNode = undefined;
+  }
+
   get selectedObjectNode(): NodeValue | StringValue | undefined {
     return this._selectedObjectNode;
   }
 
   set selectedObjectNode(value: StringValue | NodeValue | undefined) {
     this._selectedObjectNode = value;
+  }
+
+  get selectedObjectValue(): string | IriLabelPair | undefined {
+    if (this._selectedObjectNode instanceof StringValue) {
+      return this._selectedObjectNode.value;
+    }
+    if (this._selectedObjectNode instanceof NodeValue) {
+      return this._selectedObjectNode.value;
+    }
+    return undefined;
   }
 
   set selectedObjectValue(value: string | IriLabelPair) {
@@ -153,15 +142,6 @@ export class StatementElement {
 
   get operators(): Operator[] {
     return this._selectedPredicate ? getOperatorsForObjectType(this._selectedPredicate) : [];
-  }
-
-  get selectedOperator(): Operator | undefined {
-    return this._selectedOperator;
-  }
-
-  set selectedOperator(operator: Operator) {
-    this._selectedOperator = operator;
-    this.selectedObjectNode = undefined;
   }
 
   get isPristine(): boolean {
@@ -201,10 +181,6 @@ export class StatementElement {
     return PropertyObjectType.ValueObject;
   }
 
-  get isChildProperty(): boolean {
-    return this.statementLevel > 0;
-  }
-
   clearSelections() {
     this._selectedPredicate = undefined;
     this._selectedOperator = undefined;
@@ -242,11 +218,9 @@ export type AdvancedSearchStateSnapshot = SearchFormsState & {
 
 class GravsearchWriterScoped {
   private readonly RDF_TYPE = 'a';
-  private readonly RDFS_LABEL = 'rdfs:label';
   private readonly MAIN_RESOURCE_PLACEHOLDER = '?mainRes';
-  private readonly RESOURCE_PLACEHOLDER = '?res';
-  private readonly LABEL_PLACEHOLDER = '?label';
-  private readonly LIST_VALUE_AS_LIST_NODE = Constants.ListValueAsListNode.split('#').pop();
+  private readonly VALUE_SUFFIX = 'val';
+  readonly RESOURCE_PLACEHOLDER = '?res';
 
   private _id: string;
   private _parentId: string | undefined;
@@ -262,7 +236,7 @@ class GravsearchWriterScoped {
     const currentStatement = this._statements[this._index];
     this._id = currentStatement.id;
     this._parentId = currentStatement.parentId;
-    this._operator = currentStatement.selectedOperator!;
+    this._operator = currentStatement.selectedOperator;
     this._selectedPredicate = currentStatement.selectedPredicate!.iri;
     this._objectType = currentStatement.selectedPredicate?.objectValueType;
     this._selectedValue = currentStatement.selectedObjectWriteValue;
@@ -272,116 +246,136 @@ class GravsearchWriterScoped {
     return !!this._objectType && this._objectType.includes(Constants.KnoraApiV2);
   }
 
-  get isLinkedResource(): boolean {
-    return !this.isKnoraValueType && this._objectType !== ResourceLabel;
+  get isLinkValueType(): boolean {
+    return !this._objectType?.includes(Constants.KnoraApiV2) && this._objectType !== ResourceLabel;
   }
 
   get subject(): string {
     if (!this._parentId) {
       return this.MAIN_RESOURCE_PLACEHOLDER;
-    }
-    if (this._objectType === ResourceLabel) {
-      return this.LABEL_PLACEHOLDER;
-    }
+    } // for child statements
     const subjectId = this._parentId || this._id;
     const subjectIndex = this._statements.findIndex(stm => stm.id === subjectId);
     return `${this.RESOURCE_PLACEHOLDER}${subjectIndex}`;
   }
 
   get predicate() {
-    if ((this._operator === Operator.Equals || this._operator === Operator.NotEquals) && !this.isKnoraValueType) {
-      return this.RDF_TYPE;
-    }
-    return `<${this._selectedPredicate}>`;
+    return this._selectedPredicate === RDFS_LABEL ? RDFS_LABEL : `<${this._selectedPredicate}>`;
   }
 
-  get object(): string {
-    if (!this._parentId) {
-      return `${this.RESOURCE_PLACEHOLDER}${this._index}`;
-    } else if (
-      (this._operator === Operator.Equals || this._operator === Operator.NotEquals) &&
-      !this.isKnoraValueType
-    ) {
-      return `<${this._selectedValue}>`;
-    } else {
-      return '';
-    }
+  get objectPlaceHolder(): string {
+    return `${this.RESOURCE_PLACEHOLDER}${this._index}`;
   }
 
-  getToSPO(objectOrValue: string): string {
-    return `${this.subject} ${this.predicate} ${objectOrValue} .`;
+  get objectValue(): string {
+    return `<${this._selectedValue}>`;
+  }
+
+  get objectProjection(): string {
+    return `${this.subject} ${this.predicate} ${this.objectPlaceHolder} .\n`;
+  }
+
+  get valueProjection(): string {
+    return this._objectType === Constants.DateValue
+      ? ''
+      : `${this.objectPlaceHolder} <${this.valueAsValueIri}> ${this.objectPlaceHolder}${this.VALUE_SUFFIX} .\n`;
   }
 
   get constructStatement(): string {
-    return this._objectType !== ResourceLabel && this._operator !== Operator.IsLike ? this.getToSPO(this.object) : '';
+    return this._objectType !== ResourceLabel && this._operator !== Operator.IsLike ? this.objectProjection : '';
   }
 
   get whereStatement(): string {
+    let statement = this.objectProjection;
     if (this._objectType === ResourceLabel) {
-      return this._whereStatementForLabelComparison();
+      statement += this._whereStatementForLabelComparison();
     } else if (this._objectType === Constants.ListValue) {
-      return this._getWhereStatementForListObjectComparison();
-    } else {
-      return this._whereStatement();
+      statement += this._getWhereStatementForListObjectComparison();
+    } else if (this.isKnoraValueType) {
+      statement += this._whereStatementForValueComparison();
+    } else if (this.isLinkValueType) {
+      if (this._operator !== Operator.Exists && this._operator !== Operator.Matches) {
+        statement += `${this.subject} ${this.predicate} ${this.objectValue} .\n`;
+      }
     }
+    return this._operator === Operator.NotExists ? `FILTER NOT EXISTS { \n${statement}\n}\n` : `${statement}\n`;
   }
 
-  private _whereStatement(): string {
+  private _whereStatementForValueComparison(): string {
     let whereStm = '';
-    if ((this._operator === Operator.Equals || this._operator === Operator.NotEquals) && !this.isKnoraValueType) {
-      // add the statement for the resource class
-      console.log('IIIII', this.predicate); // TODO: REMOVE?
-      whereStm += `\n${this.subject} ${this.predicate} <${this._selectedValue}> .\n`;
-    } else {
-      whereStm = this.getToSPO(this.object); // node projection for accessing values
+    if (this._operator !== Operator.Exists && this._operator !== Operator.NotExists) {
+      whereStm += this.valueProjection;
+      whereStm += this.valueFilterStatement;
     }
-
-    if (this._operator === Operator.NotExists || this._operator === Operator.NotEquals) {
-      // simply wrap everything into FILTER NOT EXISTS
-      whereStm = `FILTER NOT EXISTS { \n${whereStm}\n}\n`;
-    }
-
     return whereStm;
   }
 
+  get valueAsValueIri(): string | undefined {
+    switch (this._objectType) {
+      case Constants.IntValue:
+        return Constants.IntValueAsInt;
+      case Constants.TextValue:
+        return Constants.ValueAsString;
+      case Constants.DateValue:
+        return 'dateValueAsSimpleDate';
+      case Constants.DecimalValue:
+        return Constants.DecimalValueAsDecimal;
+      case Constants.UriValue:
+        return Constants.UriValueAsUri;
+      case Constants.BooleanValue:
+        return Constants.BooleanValueAsBoolean;
+      default:
+        return undefined;
+    }
+  }
+
   private _whereStatementForLabelComparison(): string {
-    let s = this.getToSPO(this.object);
     switch (this._operator) {
       case Operator.Equals:
-        s += `\nFILTER (${this.object} = "${this._selectedValue}") .\n`;
-        return s;
+        return `FILTER (${this.objectPlaceHolder} = "${this._selectedValue}") .\n`;
       case Operator.NotEquals:
-        s += `\nFILTER (${this.object} != "${this._selectedValue}") .\n`;
-        return s;
+        return `FILTER (${this.objectPlaceHolder} != "${this._selectedValue}") .\n`;
       case Operator.Matches:
-        s += `\nFILTER knora-api:matchLabel(${this.object}, "${this._selectedValue}") .\n`;
-        return s;
+        // SO WRONG BUT EXACTLY LIKE BEFORE
+        return `FILTER knora-api:matchLabel(${this.MAIN_RESOURCE_PLACEHOLDER}, "${this._selectedValue}") .\n`;
       case Operator.IsLike:
-        s += `\nFILTER regex(${this.object}, "${this._selectedValue}", "i") .\n`;
-        return s;
+        const islikeObject = this._parentId ? this.objectPlaceHolder : this.MAIN_RESOURCE_PLACEHOLDER;
+        return `FILTER regex(${islikeObject}, "${this._selectedValue}", "i") .\n`;
       default:
         return '';
     }
   }
 
   private _getWhereStatementForListObjectComparison(): string {
-    let whereStm = this.getToSPO(this.object);
+    let whereStm = '';
 
     if (this._operator === Operator.NotEquals) {
-      whereStm += `\nFILTER NOT EXISTS { ${this.object} knora-api:${this.LIST_VALUE_AS_LIST_NODE} <${this._selectedValue}> . }`;
+      // This is how the api solves list value not equals
+      whereStm += `FILTER NOT EXISTS { ${this.objectPlaceHolder} <${this.valueTypeIri}> <${this._selectedValue}> . }`;
     }
     if (this._operator === Operator.Equals || this._operator === Operator.Matches) {
-      whereStm += `\n${this.object} knora-api:${this.LIST_VALUE_AS_LIST_NODE} <${this._selectedValue}> .`;
-    }
-
-    if (this._operator === Operator.NotExists) {
-      whereStm = `FILTER NOT EXISTS { \n${whereStm}\n}`;
+      whereStm += `${this.objectPlaceHolder} <${this.valueTypeIri}> <${this._selectedValue}> .\n`;
     }
     return whereStm;
   }
 
-  private _operatorToSymbol(operator: string | undefined): string {
-    switch (operator) {
+  get valueFilterStatement(): string {
+    const object =
+      this._objectType === Constants.DateValue
+        ? `knora-api:toSimpleDate(${this.objectPlaceHolder})`
+        : `${this.objectPlaceHolder}${this.VALUE_SUFFIX}`;
+    if (this._operator === Operator.IsLike && this._objectType === Constants.TextValue) {
+      return `FILTER regex(${object}, ${this.typedValueLiteral}, "i") .\n`;
+    }
+    return `FILTER (${object} ${this.operatorSymbol} ${this.typedValueLiteral} ) .\n`;
+  }
+
+  get typedValueLiteral(): string {
+    return `"${this._selectedValue}"^^<${this.valueTypeIri}>`;
+  }
+
+  get operatorSymbol(): string {
+    switch (this._operator) {
       case Operator.Equals:
         return '=';
       case Operator.NotEquals:
@@ -402,6 +396,28 @@ class GravsearchWriterScoped {
         return 'regex';
       case Operator.Matches:
         return Constants.MatchText;
+      default:
+        return '';
+    }
+  }
+
+  get valueTypeIri(): string | undefined {
+    switch (this._objectType) {
+      case Constants.TextValue:
+      case `${Constants.KnoraApiV2}#StringValue`:
+        return Constants.XsdString;
+      case Constants.IntValue:
+        return Constants.XsdInteger;
+      case Constants.DateValue:
+        return `http://api.knora.org/ontology/knora-api/simple/v2${Constants.HashDelimiter}Date`;
+      case Constants.DecimalValue:
+        return Constants.XsdDecimal;
+      case Constants.UriValue:
+        return Constants.XsdAnyUri;
+      case Constants.BooleanValue:
+        return Constants.XsdBoolean;
+      case Constants.ListValue:
+        return Constants.ListValueAsListNode;
       default:
         return '';
     }

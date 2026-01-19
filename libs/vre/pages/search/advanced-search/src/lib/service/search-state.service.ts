@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, map, startWith } from 'rxjs';
-import { StatementElement, OrderByItem, SearchFormsState } from '../model';
+import { IriLabelPair, StatementElement, OrderByItem, SearchFormsState } from '../model';
 
 @Injectable()
 export class SearchStateService {
+  private readonly SEARCH_ALL_OPTION: IriLabelPair = {
+    iri: '',
+    label: 'All resource classes',
+  };
+
   private readonly INITIAL_FORMS_STATE: SearchFormsState = {
-    selectedResourceClass: undefined,
+    selectedResourceClass: this.SEARCH_ALL_OPTION,
     statementElements: [new StatementElement(undefined, 0)],
     orderBy: [],
   } as const;

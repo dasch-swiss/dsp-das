@@ -26,10 +26,12 @@ export class PropertyFormManager implements OnDestroy {
 
   deleteStatement(statement: StatementElement): void {
     const currentState = this.searchStateService.currentState;
-    const updatedPropertyFormList = currentState.statementElements.filter(item => item !== statement);
+    const statementElements = currentState.statementElements.filter(
+      stm => stm.id !== statement.id && stm.parentId !== statement.id
+    );
 
     this.searchStateService.patchState({
-      statementElements: updatedPropertyFormList,
+      statementElements,
     });
   }
 
@@ -56,9 +58,13 @@ export class PropertyFormManager implements OnDestroy {
     this.searchStateService.updateStatement(statement);
     if (statement.isValidAndComplete && this._isLastOrLastForSameSubject(statement)) {
       this._addEmptyStatement(statement);
-      if (statement.selectedOperator === Operator.Matches) {
-        this._addChildStatement(statement);
-      }
+    }
+    if (
+      statement.isValidAndComplete &&
+      statement.selectedOperator === Operator.Matches &&
+      !this._hasIncompleteChildStatement(statement)
+    ) {
+      this._addChildStatement(statement);
     }
   }
 
@@ -94,7 +100,16 @@ export class PropertyFormManager implements OnDestroy {
     });
   }
 
+  private _hasIncompleteChildStatement(statement: StatementElement): boolean {
+    const currentState = this.searchStateService.currentState;
+    const childStatements = currentState.statementElements.filter(
+      s => s.parentId === statement.id && !s.isValidAndComplete
+    );
+    return childStatements.length > 0;
+  }
+
   private _isLastOrLastForSameSubject(statement: StatementElement): boolean {
+    console.log('Checking if last or last for same subject for', statement);
     const isLast =
       this.searchStateService.currentState.statementElements[
         this.searchStateService.currentState.statementElements.length - 1

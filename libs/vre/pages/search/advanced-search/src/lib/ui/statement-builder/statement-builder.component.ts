@@ -43,7 +43,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
           <app-resource-value
             class="width-40-percent"
             [selectedPredicate]="statementElement.selectedPredicate"
-            [selectedResource]="statementElement.subjectNode?.value"
+            [selectedResource]="statementElement.selectedObjectValue"
             (selectedResourceChange)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.ValueObject) {
@@ -57,12 +57,14 @@ import { StringValueComponent } from './object-values/string-value/string-value.
           <app-list-value
             class="width-40-percent"
             [rootListNodeIri]="statementElement.selectedPredicate!.listObjectIri"
+            [selectedListNode]="statementElement.selectedObjectValue"
             (emitValueChanged)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.LinkValueObject) {
           <app-link-value
             class="width-40-percent"
             [resourceClass]="statementElement.selectedPredicate?.objectValueType"
+            [selectedResource]="statementElement.selectedObjectValue"
             (emitResourceSelected)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.None) {

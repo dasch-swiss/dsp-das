@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -50,7 +50,7 @@ class ValueErrorStateMatcher implements ErrorStateMatcher {
   `,
   styleUrl: '../../../../advanced-search.component.scss',
 })
-export class StringValueComponent implements OnInit, AfterViewInit {
+export class StringValueComponent implements OnInit, OnChanges, AfterViewInit {
   @Input({ required: true }) valueType!: string;
   @Input() value?: string;
 
@@ -74,11 +74,21 @@ export class StringValueComponent implements OnInit, AfterViewInit {
     this.inputControl.setValidators([Validators.required, ...this._getValidators(this.valueType)]);
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['value'] && !changes['value'].firstChange) {
+      this._setValue();
+    }
+  }
+
   ngAfterViewInit(): void {
+    this._setValue();
+  }
+
+  private _setValue() {
     if (this.valueType !== Constants.DateValue) {
       this.inputControl.setValue(this.value);
     } else {
-      const knoraDate = this._transformDateStringToKnoraDateObject(this.value as string);
+      const knoraDate = this.value ? this._transformDateStringToKnoraDateObject(this.value as string) : undefined;
       this.dateControl.setValue(knoraDate);
     }
   }

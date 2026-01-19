@@ -16,7 +16,7 @@ export enum Operator {
 }
 
 const BASIC_OPS = [Operator.Equals, Operator.NotEquals, Operator.Exists, Operator.NotExists];
-const TEXT_OPS = [...BASIC_OPS, Operator.IsLike, Operator.Matches];
+const TEXT_OPS = [...BASIC_OPS, Operator.IsLike];
 const NUMERIC_OPS = [
   ...BASIC_OPS,
   Operator.GreaterThan,

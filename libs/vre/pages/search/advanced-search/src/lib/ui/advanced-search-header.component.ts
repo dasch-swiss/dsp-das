@@ -22,7 +22,7 @@ import { SearchStateService } from '../service/search-state.service';
           mat-stroked-button
           color="primary"
           (click)="loadPreviousSearch()">
-          {{ 'pages.search.advancedSearch.usePreviousSearch' | translate }}
+          use previous search
         </button>
       </div>
     </div>
@@ -36,6 +36,7 @@ export class AdvancedSearchHeaderComponent {
 
   loadPreviousSearch(): void {
     const previousSearch = this.previousSearchService.previousSearchObject;
+    console.log('Loading previous search:', previousSearch);
     if (!previousSearch) {
       return;
     }
