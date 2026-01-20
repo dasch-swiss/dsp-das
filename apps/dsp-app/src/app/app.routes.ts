@@ -23,7 +23,7 @@ import {
 } from '@dasch-swiss/vre/pages/project/project';
 import {
   AdvancedSearchPageComponent,
-  AdvancedSearchResultsPageComponent,
+  AdvancedSearchResultsComponent,
 } from '@dasch-swiss/vre/pages/search/advanced-search';
 import {
   FulltextSearchResultsPageComponent,
@@ -129,7 +129,7 @@ export const routes: Routes = [
       },
       {
         path: RouteConstants.advancedSearchResultsRelative,
-        component: AdvancedSearchResultsPageComponent,
+        component: AdvancedSearchResultsComponent,
       },
       { path: RouteConstants.advancedSearch, component: AdvancedSearchPageComponent },
       {

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatDivider } from '@angular/material/divider';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { AdvancedSearchResultsPageComponent } from './advanced-search-results-page.component';
+import { AdvancedSearchResultsComponent } from './advanced-search-results.component';
 import { AdvancedSearchComponent } from './advanced-search.component';
 import { QueryObject } from './model';
 
@@ -19,7 +19,7 @@ import { QueryObject } from './model';
     }
   </div>`,
   styleUrls: ['./advanced-search-page.component.scss'],
-  imports: [AdvancedSearchComponent, AdvancedSearchResultsPageComponent, MatDivider],
+  imports: [AdvancedSearchComponent, AdvancedSearchResultsComponent, MatDivider],
 })
 export class AdvancedSearchPageComponent {
   uuid = this._route.parent!.snapshot.params[RouteConstants.uuidParameter];
@@ -29,6 +29,5 @@ export class AdvancedSearchPageComponent {
 
   onSearch(queryObject: QueryObject): void {
     this.query = queryObject.query;
-    console.log('got search', queryObject, this);
   }
 }

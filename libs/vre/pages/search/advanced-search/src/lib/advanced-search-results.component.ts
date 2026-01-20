@@ -25,7 +25,7 @@ import { BehaviorSubject, combineLatest, map, switchMap, tap } from 'rxjs';
   `,
   providers: [ResourceResultService],
 })
-export class AdvancedSearchResultsPageComponent implements OnChanges {
+export class AdvancedSearchResultsComponent implements OnChanges {
   @Input({ required: true }) query!: string;
   querySubject = new BehaviorSubject<string | null>(null);
 
