@@ -29,7 +29,6 @@ export class PropertyFormManager implements OnDestroy {
     const statementElements = currentState.statementElements.filter(
       stm => stm.id !== statement.id && stm.parentId !== statement.id
     );
-
     this.searchStateService.patchState({
       statementElements,
     });
@@ -56,23 +55,32 @@ export class PropertyFormManager implements OnDestroy {
   setObjectValue(statement: StatementElement, searchValue: string | IriLabelPair): void {
     statement.selectedObjectValue = searchValue;
     this.searchStateService.updateStatement(statement);
-    if (statement.isValidAndComplete && this._isLastOrLastForSameSubject(statement)) {
+    if (statement.isValidAndComplete && this._isLastOrLastForSameSubject(statement) && !statement.parentId) {
       this._addEmptyStatement(statement);
     }
     if (
       statement.isValidAndComplete &&
-      statement.selectedOperator === Operator.Matches &&
+      (statement.selectedOperator === Operator.Matches || statement.parentId) &&
       !this._hasIncompleteChildStatement(statement)
     ) {
-      this._addChildStatement(statement);
+      const previousParent = this.searchStateService.currentState.statementElements.find(
+        s => s.id === statement?.parentId
+      );
+      const parentStatement = previousParent || statement;
+      this._addChildStatement(parentStatement);
     }
   }
 
   private _addChildStatement(parentStatement: StatementElement): void {
     const currentState = this.searchStateService.currentState;
     const parentIndex = currentState.statementElements.findIndex(se => se === parentStatement);
-    const statementsBeforeParent = currentState.statementElements.slice(0, parentIndex + 1);
-    const statementsAfterParent = currentState.statementElements.slice(parentIndex + 1);
+    // get the index of any child statements which come after the parent
+    const lastChild = currentState.statementElements.filter(s => s.parentId === parentStatement.id).pop();
+    const insertIndex = lastChild
+      ? currentState.statementElements.findIndex(se => se === lastChild) + 1
+      : parentIndex + 1;
+    const statementsBeforeParent = currentState.statementElements.slice(0, insertIndex);
+    const statementsAfterParent = currentState.statementElements.slice(insertIndex);
     this.searchStateService.patchState({
       statementElements: [
         ...statementsBeforeParent,

@@ -71,7 +71,7 @@ export class SearchStateService {
   }
 
   clearAllSelections() {
-    this.patchState(this.INITIAL_FORMS_STATE);
+    this._state = new BehaviorSubject<SearchFormsState>(this.INITIAL_FORMS_STATE);
   }
 
   updateStatement(statement: StatementElement) {
