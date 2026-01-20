@@ -1,27 +1,33 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatDivider } from '@angular/material/divider';
+import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
+import { AdvancedSearchResultsComponent } from './advanced-search-results.component';
 import { AdvancedSearchComponent } from './advanced-search.component';
 import { QueryObject } from './model';
 
 @Component({
   selector: 'app-advanced-search-page',
-  template: ` <app-centered-layout>
-    <app-advanced-search [projectUuid]="uuid" (gravesearchQuery)="onSearch($event)" />
-  </app-centered-layout>`,
-  imports: [CenteredLayoutComponent, AdvancedSearchComponent],
+  template: ` <div class="whole-height" style="display: flex; justify-content: space-around">
+    <app-advanced-search
+      [projectUuid]="uuid"
+      (gravesearchQuery)="onSearch($event)"
+      style="min-width: 700px; padding-left: 16px; padding-right: 16px" />
+    @if (query) {
+      <mat-divider [vertical]="true" />
+      <app-advanced-search-results-page [query]="query" style="flex: 1" />
+    }
+  </div>`,
+  styleUrls: ['./advanced-search-page.component.scss'],
+  imports: [AdvancedSearchComponent, AdvancedSearchResultsComponent, MatDivider],
 })
 export class AdvancedSearchPageComponent {
   uuid = this._route.parent!.snapshot.params[RouteConstants.uuidParameter];
+  query?: string;
 
-  constructor(
-    private readonly _router: Router,
-    private readonly _route: ActivatedRoute
-  ) {}
+  constructor(private readonly _route: ActivatedRoute) {}
 
   onSearch(queryObject: QueryObject): void {
-    const route = `./${RouteConstants.advancedSearch}/${RouteConstants.gravSearch}/${encodeURIComponent(queryObject.query)}`;
-    this._router.navigate([route], { relativeTo: this._route.parent });
+    this.query = queryObject.query;
   }
 }

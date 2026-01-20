@@ -28,25 +28,23 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
     ResourceValueComponent,
   ],
   template: `
-    <div class="width-90-percent max-width-100em">
-      @let ontologyLoading = ontologyLoading$ | async;
-      <app-advanced-search-header class="flex-space-between margin-bottom-1em" />
-      <app-advanced-search-ontology-form />
-      @if (ontologyLoading) {
-        <mat-progress-bar mode="query" />
-      }
-      @if (!ontologyLoading) {
-        <app-resource-value
-          class="width-100-percent-standalone"
-          [selectedResource]="selectedResourceClass$ | async"
-          (selectedResourceChange)="formManager.setMainResource($event)" />
-        <app-statement-builder [statementElements]="(searchState.statementElements$ | async) || []" />
-        <app-advanced-search-footer
-          class="flex-space-between margin-top-1em"
-          (searchTriggered)="doSearch()"
-          (resetTriggered)="resetSearch()" />
-      }
-    </div>
+    @let ontologyLoading = ontologyLoading$ | async;
+    <app-advanced-search-header style="display: block; margin-bottom: 24px" />
+    <app-advanced-search-ontology-form />
+    @if (ontologyLoading) {
+      <mat-progress-bar mode="query" />
+    }
+    @if (!ontologyLoading) {
+      <app-resource-value
+        class="width-100-percent-standalone"
+        [selectedResource]="selectedResourceClass$ | async"
+        (selectedResourceChange)="formManager.setMainResource($event)" />
+      <app-statement-builder [statementElements]="(searchState.statementElements$ | async) || []" />
+      <app-advanced-search-footer
+        class="flex-space-between margin-top-1em"
+        (searchTriggered)="doSearch()"
+        (resetTriggered)="resetSearch()" />
+    }
   `,
   styleUrls: ['./advanced-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
