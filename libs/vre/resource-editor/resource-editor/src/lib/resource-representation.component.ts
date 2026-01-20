@@ -31,13 +31,13 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
             <app-pdf-document #document [src]="fileValue" [parentResource]="resource.res" />
           </app-resource-representation-container>
         } @else {
-          <app-resource-representation-container [small]="true">
+          <app-resource-representation-container height="small">
             <app-archive #archive [src]="fileValue" [parentResource]="resource.res" />
           </app-resource-representation-container>
         }
       }
       @case (representationConstants.audio) {
-        <app-resource-representation-container [small]="true">
+        <app-resource-representation-container height="small">
           <app-audio #audio [src]="fileValue" [parentResource]="resource.res" />
         </app-resource-representation-container>
       }
@@ -47,12 +47,12 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
         </app-resource-representation-container>
       }
       @case (representationConstants.archive) {
-        <app-resource-representation-container [small]="true">
+        <app-resource-representation-container height="small">
           <app-archive #archive [src]="fileValue" [parentResource]="resource.res" />
         </app-resource-representation-container>
       }
       @case (representationConstants.text) {
-        <app-resource-representation-container [small]="true">
+        <app-resource-representation-container height="small">
           <app-archive #text [src]="fileValue" [parentResource]="resource.res" />
         </app-resource-representation-container>
       }

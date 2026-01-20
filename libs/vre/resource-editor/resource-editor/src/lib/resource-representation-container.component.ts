@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-resource-representation-container',
   host: {
-    '[style.--height]': 'small ? "200px" : "900px"',
+    '[style.--height]': 'heightValue',
   },
   template: `
     <div class="representation-container center">
@@ -23,5 +23,18 @@ import { Component, Input } from '@angular/core';
   ],
 })
 export class ResourceRepresentationContainerComponent {
-  @Input() small = false;
+  @Input() height: 'auto' | 'small' | 'big' = 'big';
+
+  get heightValue(): string {
+    switch (this.height) {
+      case 'auto':
+        return 'auto';
+      case 'small':
+        return '200px';
+      case 'big':
+        return '900px';
+      default:
+        return '900px';
+    }
+  }
 }
