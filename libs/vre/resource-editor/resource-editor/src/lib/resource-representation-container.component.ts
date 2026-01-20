@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-resource-representation-container',
   host: {
-    '[style.--height]': 'small ? "200px" : "600px"',
+    '[style.--height]': 'small ? "200px" : "900px"',
   },
   template: `
     <div class="representation-container center">

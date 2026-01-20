@@ -30,9 +30,34 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
     MatTooltip,
     TranslatePipe,
   ],
+  styles: [
+    `
+      .pdf-search-field {
+        width: 400px;
+      }
+
+      /* Make the form field smaller/more compact */
+      .pdf-search-field ::ng-deep .mat-mdc-text-field-wrapper {
+        padding-top: 0;
+        padding-bottom: 0;
+        background: white;
+        border-radius: 4px;
+      }
+
+      .pdf-search-field ::ng-deep .mat-mdc-form-field-infix {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        min-height: unset;
+      }
+
+      .pdf-search-field ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+      }
+    `,
+  ],
   template: `
     <div style="display: flex; align-items: center; justify-content: space-between">
-      <span>
+      <span style="display: flex; align-items: center">
         <button mat-icon-button [matMenuTriggerFor]="more">
           <mat-icon>more_vert</mat-icon>
         </button>
@@ -53,27 +78,19 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
           <mat-icon>zoom_in</mat-icon>
         </button>
 
-        <button
-          mat-icon-button
-          id="DSP_PDF_HOME"
-          [matTooltip]="'resourceEditor.representations.document.resetZoom' | translate"
-          (click)="zoomChange.emit(1.0)">
-          <mat-icon>adjust</mat-icon>
-        </button>
+        <!-- Search input -->
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="pdf-search-field">
+          <input
+            matInput
+            #queryInp
+            type="text"
+            id="searchbox"
+            name="searchbox"
+            [placeholder]="'resourceEditor.representations.document.searchPlaceholder' | translate"
+            (input)="onSearchInput($event)"
+            (keyup.enter)="searchQuery.emit(queryInp.value)" />
+        </mat-form-field>
       </span>
-
-      <!-- Search input -->
-      <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width: 400px; background: white">
-        <input
-          matInput
-          #queryInp
-          type="text"
-          id="searchbox"
-          name="searchbox"
-          [placeholder]="'resourceEditor.representations.document.searchPlaceholder' | translate"
-          (input)="onSearchInput($event)"
-          (keyup.enter)="searchQuery.emit(queryInp.value)" />
-      </mat-form-field>
 
       <span>
         <button
