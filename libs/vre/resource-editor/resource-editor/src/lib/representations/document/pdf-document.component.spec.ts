@@ -7,11 +7,11 @@ import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
-import { DocumentComponent } from './document.component';
+import { PdfDocumentComponent } from './pdf-document.component';
 
 describe('DocumentComponent', () => {
-  let component: DocumentComponent;
-  let fixture: ComponentFixture<DocumentComponent>;
+  let component: PdfDocumentComponent;
+  let fixture: ComponentFixture<PdfDocumentComponent>;
   let accessTokenServiceMock: jest.Mocked<Partial<AccessTokenService>>;
   let representationServiceMock: jest.Mocked<Partial<RepresentationService>>;
   let dialogMock: jest.Mocked<Partial<MatDialog>>;
@@ -63,7 +63,7 @@ describe('DocumentComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [DocumentComponent],
+      imports: [PdfDocumentComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         provideTranslateService(),
@@ -75,7 +75,7 @@ describe('DocumentComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DocumentComponent);
+    fixture = TestBed.createComponent(PdfDocumentComponent);
     component = fixture.componentInstance;
     component.src = mockDocumentFileValue;
     component.parentResource = mockParentResource;

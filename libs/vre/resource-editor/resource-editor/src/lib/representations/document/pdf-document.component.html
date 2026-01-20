@@ -1,9 +1,9 @@
-@if (isPdf) {
+@if (failedToLoad) {
+<app-representation-error-message />
+} @else {
 <div #pdfContainer class="pdf-container">
   <!-- in case of an error -->
-  @if (failedToLoad) {
-  <app-representation-error-message />
-  } @if (pdfSrc) {
+  @if (pdfSrc) {
   <pdf-viewer
     class="pdf-viewer"
     [src]="pdfSrc"
@@ -15,6 +15,7 @@
     [zoom-scale]="'page-width'"
     (error)="onPdfLoadError($event)" />
   }
+
   <div>
     <div class="action horizontal bottom">
       <!-- caption -->
@@ -86,42 +87,6 @@
           <mat-icon>fullscreen</mat-icon>
         </button>
       </span>
-    </div>
-  </div>
-</div>
-}
-<!-- default document viewer -->
-@if (!isPdf) {
-<div>
-  <div class="file-representation">
-    <div class="container">
-      <div class="contents">
-        <div class="icon">
-          <mat-icon> text_snippet</mat-icon>
-        </div>
-        <div class="file">
-          <p>{{ originalFilename }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="toolbar">
-    <!-- toolbar -->
-    <div class="action horizontal bottom">
-      <!-- three dot menu to download and replace file -->
-      <button mat-icon-button [matMenuTriggerFor]="more">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #more="matMenu" class="mat-menu-custom-black">
-        <button mat-menu-item (click)="download()" [disabled]="failedToLoad">
-          {{ 'resourceEditor.representations.downloadFile' | translate }}
-        </button>
-        @if (resourceFetcherService.userCanEdit$ | async) {
-        <button mat-menu-item (click)="openReplaceFileDialog()">
-          {{ 'resourceEditor.representations.replaceFile' | translate }}
-        </button>
-        }
-      </mat-menu>
     </div>
   </div>
 </div>

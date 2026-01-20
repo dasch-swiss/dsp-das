@@ -32,7 +32,7 @@ import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 @Component({
-  selector: 'app-document',
+  selector: 'app-pdf-document',
   imports: [
     AsyncPipe,
     MatIconButton,
@@ -46,9 +46,9 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
     TranslatePipe,
     RepresentationErrorMessageComponent,
   ],
-  templateUrl: './document.component.html',
+  templateUrl: './pdf-document.component.html',
 })
-export class DocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
+export class PdfDocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input({ required: true }) src!: ReadDocumentFileValue;
   @Input({ required: true }) parentResource!: ReadResource;
 
@@ -68,10 +68,6 @@ export class DocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
   private readonly _translateService = inject(TranslateService);
   private _resizeObserver: ResizeObserver | null = null;
 
-  get isPdf(): boolean {
-    return this.src.filename.split('.').pop() === 'pdf';
-  }
-
   constructor(
     private readonly _accessTokenService: AccessTokenService,
     private readonly _cd: ChangeDetectorRef,
@@ -89,9 +85,7 @@ export class DocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (this.isPdf) {
-      this._setupResizeObserver();
-    }
+    this._setupResizeObserver();
   }
 
   ngOnDestroy(): void {
@@ -175,7 +169,7 @@ export class DocumentComponent implements OnChanges, AfterViewInit, OnDestroy {
     }
 
     this._resizeObserver = new ResizeObserver(() => {
-      if (this._pdfComponent && this.isPdf && !this.failedToLoad) {
+      if (this._pdfComponent && !this.failedToLoad) {
         setTimeout(() => {
           this._pdfComponent.updateSize();
         }, 0);

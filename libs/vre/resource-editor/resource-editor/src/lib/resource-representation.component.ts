@@ -4,7 +4,7 @@ import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ArchiveComponent } from './representations/archive/archive.component';
 import { AudioComponent } from './representations/audio/audio.component';
-import { DocumentComponent } from './representations/document/document.component';
+import { PdfDocumentComponent } from './representations/document/pdf-document.component';
 import { getFileValue } from './representations/get-file-value';
 import { RepresentationConstants } from './representations/representation-constants';
 import { StillImageComponent } from './representations/still-image/still-image.component';
@@ -26,13 +26,15 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
         </app-resource-representation-container>
       }
       @case (representationConstants.document) {
-        <app-resource-representation-container>
-          <app-document
-            #document
-            [class.pdf]="fileValue.filename.split('.').pop() === 'pdf'"
-            [src]="fileValue"
-            [parentResource]="resource.res" />
-        </app-resource-representation-container>
+        @if (isPdf) {
+          <app-resource-representation-container>
+            <app-pdf-document #document [src]="fileValue" [parentResource]="resource.res" />
+          </app-resource-representation-container>
+        } @else {
+          <app-resource-representation-container [small]="true">
+            <app-archive #archive [src]="fileValue" [parentResource]="resource.res" />
+          </app-resource-representation-container>
+        }
       }
       @case (representationConstants.audio) {
         <app-resource-representation-container [small]="true">
@@ -59,7 +61,7 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
   imports: [
     ArchiveComponent,
     AudioComponent,
-    DocumentComponent,
+    PdfDocumentComponent,
     StillImageComponent,
     VideoComponent,
     ResourceRepresentationContainerComponent,
@@ -69,6 +71,15 @@ export class ResourceRepresentationComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
   fileValue!: ReadFileValue | null;
+
+  get fileExtension() {
+    return this.fileValue?.filename.split('.').pop();
+  }
+
+  get isPdf() {
+    return this.fileExtension === 'pdf';
+  }
+
   loading = false;
   protected readonly representationConstants = RepresentationConstants;
 
