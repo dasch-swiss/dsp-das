@@ -1,15 +1,15 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnChanges } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
-import { combineLatest, map, switchMap } from 'rxjs';
+import { combineLatest, map, Subject, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-advanced-search-results-page',
@@ -30,14 +30,18 @@ import { combineLatest, map, switchMap } from 'rxjs';
   `,
   providers: [ResourceResultService],
 })
-export class AdvancedSearchResultsPageComponent {
-  readonly resources$ = this._route.params.pipe(
-    switchMap(params =>
+export class AdvancedSearchResultsPageComponent implements OnChanges {
+  @Input() query!: string;
+  querySubject = new Subject<string>();
+
+  readonly resources$ = this.querySubject.pipe(
+    tap(v => console.log('got search QUERY SUBJECT', v)),
+    switchMap(query =>
       combineLatest([
         this._resourceResultService.pageIndex$.pipe(
-          switchMap(pageNumber => this._performGravSearch(params, pageNumber))
+          switchMap(pageNumber => this._performGravSearch(query, pageNumber))
         ),
-        this._numberOfAllResults$(params),
+        this._numberOfAllResults$(query),
       ])
     ),
     map(([resourceResponse, countResponse]) => {
@@ -53,25 +57,31 @@ export class AdvancedSearchResultsPageComponent {
     private readonly _resourceResultService: ResourceResultService,
     private readonly _route: ActivatedRoute,
     private readonly _router: Router,
-    private readonly _titleService: Title
+    private readonly _titleService: Title,
+    private readonly _cd: ChangeDetectorRef
   ) {
     this._titleService.setTitle(`Advanced search results`);
   }
 
-  private _performGravSearch(params: Params, index: number) {
-    let query = this._getQuery(params);
+  ngOnChanges() {
+    console.log('in on changes', this);
+    this.querySubject.next(this.query);
+    this._cd.detectChanges();
+  }
+
+  private _performGravSearch(query_: string, index: number) {
+    let query = this._getQuery(query_);
     query = `${query}OFFSET ${index}`;
 
     return this._dspApiConnection.v2.search.doExtendedSearch(query);
   }
 
-  private _getQuery(params: Params) {
-    const query = decodeURIComponent(params['q']);
+  private _getQuery(query: string): any {
     return query.substring(0, query.search('OFFSET'));
   }
 
-  private _numberOfAllResults$ = (params: Params) =>
-    this._dspApiConnection.v2.search.doExtendedSearchCountQuery(`${this._getQuery(params)}OFFSET 0`);
+  private _numberOfAllResults$ = (query_: string) =>
+    this._dspApiConnection.v2.search.doExtendedSearchCountQuery(`${this._getQuery(query_)}OFFSET 0`);
 
   navigate() {
     const projectUuid = this._route.parent?.snapshot.params['uuid'];
