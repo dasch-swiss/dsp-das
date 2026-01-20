@@ -33,7 +33,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
       [ngClass]="{ 'is-dimmed': statementElement.isPristine && statementElements.length > 1 }"
       [style.margin-left.em]="(statementElement.statementLevel + 1) * 2">
       <app-predicate-select
-        [style.width]="'calc(30% - ' + (statementElement.statementLevel + 2) * 2 + 'em)'"
+        [style.width]="'calc(30% - ' + (statementElement.statementLevel + 1) * 2 + 'em)'"
         [selectedPredicate]="statementElement?.selectedPredicate"
         [subjectClass]="statementElement.subjectNode?.value"
         (selectedPredicateChange)="formManager.onPredicateSelectionChanged(statementElement, $event)" />

@@ -12,7 +12,7 @@ import { QueryObject } from './model';
     <app-advanced-search
       [projectUuid]="uuid"
       (gravesearchQuery)="onSearch($event)"
-      style="min-width: 700px; padding-left: 16px; padding-right: 16px" />
+      style="min-width: 960px; padding-left: 16px; padding-right: 16px" />
     @if (query) {
       <mat-divider [vertical]="true" />
       <app-advanced-search-results-page [query]="query" style="flex: 1" />
