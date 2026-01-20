@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { map } from 'rxjs';
+import { SEARCH_ALL_RESOURCE_CLASSES_OPTION } from './constants';
 import { QueryObject } from './model';
 import { provideAdvancedSearch } from './providers';
 import { GravsearchService } from './service/gravsearch.service';
@@ -62,7 +63,7 @@ export class AdvancedSearchComponent implements OnInit {
   ontologyLoading$ = this._dataService.ontologyLoading$;
 
   selectedResourceClass$ = this.searchState.selectedResourceClass$.pipe(
-    map(selectedClass => selectedClass || this._dataService.SEARCH_ALL_RESOURCE_CLASSES_OPTION)
+    map(selectedClass => selectedClass || SEARCH_ALL_RESOURCE_CLASSES_OPTION)
   );
 
   get projectIri() {

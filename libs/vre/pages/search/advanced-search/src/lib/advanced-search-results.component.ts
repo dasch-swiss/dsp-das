@@ -31,7 +31,6 @@ export class AdvancedSearchResultsComponent implements OnChanges {
 
   readonly resources$ = this.querySubject.pipe(
     filterNull(),
-    tap(v => console.log('got search QUERY SUBJECT', v)),
     switchMap(query =>
       combineLatest([
         this._resourceResultService.pageIndex$.pipe(
@@ -58,7 +57,6 @@ export class AdvancedSearchResultsComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    console.log('in on changes', this);
     this.querySubject.next(this.query);
     this._cd.detectChanges();
   }

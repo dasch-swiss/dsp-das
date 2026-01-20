@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, OnDestroy } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatOptionModule } from '@angular/material/core';
@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
-import { ReplaySubject } from 'rxjs';
+import { debounceTime, ReplaySubject, Subscription } from 'rxjs';
 import { NodeValue } from '../../../../model';
 import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.service';
 
@@ -57,7 +57,7 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
   `,
   styleUrl: '../../../../advanced-search.component.scss',
 })
-export class ListValueComponent implements OnChanges {
+export class ListValueComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) rootListNodeIri!: string;
   rootListNode?: ListNodeV2;
   @Input() selectedListNode?: NodeValue | undefined;
@@ -65,6 +65,8 @@ export class ListValueComponent implements OnChanges {
   @Output() emitValueChanged = new EventEmitter<string>();
 
   private _dataService = inject(DynamicFormsDataService);
+
+  private valueChangesSubscription?: Subscription;
 
   valueFilterCtrl: FormControl<string | null> = new FormControl<string | null>(null, [Validators.required]);
 
@@ -76,6 +78,8 @@ export class ListValueComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['rootListNodeIri']) {
+      this.valueChangesSubscription?.unsubscribe();
+
       this._dataService.getList$(this.rootListNodeIri).subscribe(rootListNode => {
         this.rootListNode = rootListNode;
 
@@ -85,16 +89,17 @@ export class ListValueComponent implements OnChanges {
 
         const list = [...(this.sortedLabelList || [])];
         this.filteredList$.next(list);
-        this.valueFilterCtrl.valueChanges.subscribe((value: any) => {
-          let filtered = [];
-          if (value) {
-            const label = typeof value === 'object' ? value.label : value.toLowerCase();
-            filtered = this._filterItems(this.sortedLabelList || [], label);
-          } else {
-            filtered = [...(this.sortedLabelList || [])];
-          }
-          this.filteredList$.next(filtered);
-        });
+        this.valueChangesSubscription = this.valueFilterCtrl.valueChanges
+          .pipe(debounceTime(300))
+          .subscribe((value: string | null) => {
+            let filtered = [];
+            if (value) {
+              filtered = this._filterItems(this.sortedLabelList || [], value.toLowerCase());
+            } else {
+              filtered = [...(this.sortedLabelList || [])];
+            }
+            this.filteredList$.next(filtered);
+          });
       });
     }
   }
@@ -124,5 +129,9 @@ export class ListValueComponent implements OnChanges {
         return null;
       })
       .filter(node => node !== null) as ListNodeV2[];
+  }
+
+  ngOnDestroy() {
+    this.valueChangesSubscription?.unsubscribe();
   }
 }

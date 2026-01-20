@@ -63,7 +63,6 @@ export class GravsearchService {
   }
 
   private _getOrderByString(statements: StatementElement[]): string {
-    console.log('Generating ORDER BY clause...', this._searchStateService.currentState.orderBy);
     const orderByProps: string[] = this._searchStateService.currentState.orderBy
       .filter(o => o.orderBy)
       .map(o => {

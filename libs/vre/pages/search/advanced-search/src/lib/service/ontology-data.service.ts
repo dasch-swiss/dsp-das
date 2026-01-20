@@ -8,17 +8,12 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { BehaviorSubject, combineLatest, filter, map, Observable, startWith, tap } from 'rxjs';
-import { RDFS_LABEL, ResourceLabel } from '../constants';
+import { RDFS_LABEL, ResourceLabel, SEARCH_ALL_RESOURCE_CLASSES_OPTION } from '../constants';
 import { IriLabelPair, Predicate } from '../model';
 
 @Injectable()
 export class OntologyDataService {
   private readonly ResourceLabelPropertyData = new Predicate(RDFS_LABEL, 'Resource Label', ResourceLabel, false);
-
-  readonly SEARCH_ALL_RESOURCE_CLASSES_OPTION: IriLabelPair = {
-    iri: '',
-    label: 'All resource classes',
-  } as const;
 
   private _ontologies = new BehaviorSubject<IriLabelPair[]>([]);
   ontologies$ = this._ontologies.asObservable();
@@ -80,8 +75,8 @@ export class OntologyDataService {
   getResourceClassObjectsForProperty$(propertyIri?: string): Observable<IriLabelPair[]> {
     if (!propertyIri) {
       return this.resourceClasses$.pipe(
-        map(classes => [this.SEARCH_ALL_RESOURCE_CLASSES_OPTION, ...classes]),
-        startWith([this.SEARCH_ALL_RESOURCE_CLASSES_OPTION])
+        map(classes => [SEARCH_ALL_RESOURCE_CLASSES_OPTION, ...classes]),
+        startWith([SEARCH_ALL_RESOURCE_CLASSES_OPTION])
       );
     }
     return combineLatest(this.resourceClasses$, this._propertyDefinitions$).pipe(
