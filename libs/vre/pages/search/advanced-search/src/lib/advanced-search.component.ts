@@ -6,7 +6,6 @@ import { QueryObject } from './model';
 import { provideAdvancedSearch } from './providers';
 import { GravsearchService } from './service/gravsearch.service';
 import { OntologyDataService } from './service/ontology-data.service';
-import { PreviousSearchService } from './service/previous-search.service';
 import { PropertyFormManager } from './service/property-form.manager';
 import { SearchStateService } from './service/search-state.service';
 import { AdvancedSearchFooterComponent } from './ui/advanced-search-footer.component';
@@ -36,7 +35,7 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
     }
     @if (!ontologyLoading) {
       <app-resource-value
-        class="width-100-percent-standalone"
+        class="width-100-percent"
         [selectedResource]="selectedResourceClass$ | async"
         (selectedResourceChange)="formManager.setMainResource($event)" />
       <app-statement-builder [statementElements]="(searchState.statementElements$ | async) || []" />
@@ -59,7 +58,6 @@ export class AdvancedSearchComponent implements OnInit {
 
   private _dataService: OntologyDataService = inject(OntologyDataService);
   private _gravsearchService: GravsearchService = inject(GravsearchService);
-  private _previousSearchService: PreviousSearchService = inject(PreviousSearchService);
 
   ontologyLoading$ = this._dataService.ontologyLoading$;
 
@@ -72,19 +70,11 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._previousSearchService.init(this.projectIri);
     this._dataService.init(this.projectIri);
   }
 
   doSearch(): void {
-    this._previousSearchService.storeSearchSnapshot(
-      this.projectIri,
-      this._dataService.selectedOntology,
-      this.searchState.currentState
-    );
-
     const query = this._gravsearchService.generateGravSearchQuery(this.searchState.validStatementElements);
-
     const queryObject: QueryObject = {
       query,
       properties: this.searchState.validStatementElements,
@@ -93,7 +83,7 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   resetSearch(): void {
-    this._dataService.init(this.projectIri);
     this.searchState.clearAllSelections();
+    this._dataService.init(this.projectIri);
   }
 }
