@@ -4,9 +4,10 @@ import { Title } from '@angular/platform-browser';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
+import { filterNull } from '@dasch-swiss/vre/shared/app-common';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
-import { combineLatest, map, Subject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-advanced-search-results-page',
@@ -25,10 +26,11 @@ import { combineLatest, map, Subject, switchMap, tap } from 'rxjs';
   providers: [ResourceResultService],
 })
 export class AdvancedSearchResultsPageComponent implements OnChanges {
-  @Input() query!: string;
-  querySubject = new Subject<string>();
+  @Input({ required: true }) query!: string;
+  querySubject = new BehaviorSubject<string | null>(null);
 
   readonly resources$ = this.querySubject.pipe(
+    filterNull(),
     tap(v => console.log('got search QUERY SUBJECT', v)),
     switchMap(query =>
       combineLatest([
