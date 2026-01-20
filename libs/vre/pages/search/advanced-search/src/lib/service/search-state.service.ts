@@ -11,7 +11,7 @@ export class SearchStateService {
 
   private readonly INITIAL_FORMS_STATE: SearchFormsState = {
     selectedResourceClass: this.SEARCH_ALL_OPTION,
-    statementElements: [new StatementElement(undefined, 0)],
+    statementElements: [new StatementElement()],
     orderBy: [],
   } as const;
 
@@ -71,7 +71,11 @@ export class SearchStateService {
   }
 
   clearAllSelections() {
-    this._state = new BehaviorSubject<SearchFormsState>(this.INITIAL_FORMS_STATE);
+    const emptyState: SearchFormsState = {
+      ...this.INITIAL_FORMS_STATE,
+      statementElements: [new StatementElement()],
+    };
+    this._state.next(emptyState);
   }
 
   updateStatement(statement: StatementElement) {
