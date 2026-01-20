@@ -1,5 +1,5 @@
 import { Injectable, inject, OnDestroy } from '@angular/core';
-import { distinctUntilChanged, filter, map, skip, Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, map, skip, Subject, takeUntil } from 'rxjs';
 import { OrderByItem } from '../model';
 import { SearchStateService } from './search-state.service';
 
@@ -11,7 +11,15 @@ export class OrderByService implements OnDestroy {
   orderByItems$ = this._searchStateService.orderByItems$;
 
   availablePredicates$ = this._searchStateService.completeStatements$.pipe(
-    map(elements => new Map(elements.map(stmt => [stmt.selectedPredicate!.iri, stmt.selectedPredicate!.label]))),
+    map(
+      elements =>
+        new Map(
+          elements.map(stmt => [
+            stmt.id,
+            { label: stmt.selectedPredicate!.label, isLinkProperty: stmt.selectedPredicate!.isLinkProperty },
+          ])
+        )
+    ),
     distinctUntilChanged()
   );
 
@@ -38,12 +46,14 @@ export class OrderByService implements OnDestroy {
     this._searchStateService.updateOrderBy(orderByItems);
   }
 
-  private _computeNextOrderBy(availablePredicates: Map<string, string>): OrderByItem[] {
+  private _computeNextOrderBy(
+    availablePredicates: Map<string, { label: string; isLinkProperty: boolean }>
+  ): OrderByItem[] {
     const toKeep = this.currentOrderBy.filter(item => availablePredicates.has(item.id));
 
     const toAdd = [...availablePredicates]
       .filter(([id]) => !toKeep.some(i => i.id === id))
-      .map(([id, label]) => new OrderByItem(id, label));
+      .map(([id, info]) => new OrderByItem(id, info.label, info.isLinkProperty));
 
     return [...toKeep, ...toAdd];
   }
