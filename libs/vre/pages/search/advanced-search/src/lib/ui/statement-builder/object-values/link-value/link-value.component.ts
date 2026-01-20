@@ -72,7 +72,7 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
         @let lastSearch = lastSearchString$ | async;
 
         @if (!linkObjects?.length && !loading) {
-          @if (lastSearch && lastSearch.length > 2) {
+          @if (lastSearch && lastSearch.length >= this.MIN_SEARCH_LENGTH) {
             <mat-option [disabled]="true">No resources found for "{{ lastSearch }}"</mat-option>
           } @else {
             <mat-option [disabled]="true">Type at least 3 characters to search</mat-option>
@@ -97,6 +97,8 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+  private readonly OFFSET = 25;
+  readonly MIN_SEARCH_LENGTH = 3;
   private _dataService = inject(DynamicFormsDataService);
   private destroy$ = new Subject<void>();
 
@@ -136,7 +138,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnD
             .subscribe(r => this.resultCount$.next(r))
         ),
         tap(searchString => this.lastSearchString$.next(searchString)),
-        filter(searchString => searchString !== null && searchString.length > 2),
+        filter(searchString => searchString !== null && searchString.length >= this.MIN_SEARCH_LENGTH),
         tap(() => this.loading$.next(true)),
         switchMap(searchString => this._dataService.searchResourcesByLabel$(searchString!, this.resourceClass!, 0)),
         tap(() => this.loading$.next(false)),
@@ -175,15 +177,15 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
     if (
       !lastSearch ||
-      lastSearch.length <= 2 ||
-      currentResults.length < 25 ||
+      lastSearch.length < this.MIN_SEARCH_LENGTH ||
+      currentResults.length < this.OFFSET ||
       currentResults.length >= this.resultCount$.value
     ) {
       return;
     }
 
     this.loading$.next(true);
-    const offset = Math.ceil(currentResults.length / 25) - 1;
+    const offset = Math.ceil(currentResults.length / this.OFFSET) - 1;
 
     this._dataService
       .searchResourcesByLabel$(lastSearch, this.resourceClass!, offset)
