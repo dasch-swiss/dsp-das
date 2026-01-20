@@ -1,32 +1,74 @@
 import { TestBed } from '@angular/core/testing';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { AdvancedSearchStateSnapshot, IriLabelPair, Predicate, StatementElement } from '../../model';
+import { IriLabelPair, NodeValue, Predicate, StatementElement, StringValue } from '../../model';
 import { Operator } from '../../operators.config';
 import { GravsearchService } from '../gravsearch.service';
 import { OntologyDataService } from '../ontology-data.service';
-import { PreviousSearchService } from '../previous-search.service';
 import { SearchStateService } from '../search-state.service';
 
 /**
  * Helper function to set up test from JSON input
+ * Reconstructs StatementElement objects from JSON snapshot
  */
 function setupTestFromJson(
-  previousSearchService: PreviousSearchService,
   searchStateService: SearchStateService,
   jsonSnapshot: string,
   resourceClass?: IriLabelPair,
   orderBy: any[] = []
 ): void {
-  // Parse JSON and reconstruct via PreviousSearchService
-  (previousSearchService as any)._previousSearchObject = JSON.parse(jsonSnapshot);
+  const parsed = JSON.parse(jsonSnapshot);
 
-  const reconstructed = previousSearchService.previousSearchObject;
+  // Reconstruct statement elements from JSON
+  const statementElements = parsed.statementElements.map((jsonElement: any) => {
+    const statement = new StatementElement();
+
+    // Manually set the id to match the JSON
+    (statement as any).id = jsonElement.id;
+    (statement as any).statementLevel = jsonElement.statementLevel;
+
+    // Reconstruct subject node if present
+    if (jsonElement._subjectNode) {
+      (statement as any)._subjectNode = new NodeValue(
+        jsonElement._subjectNode.statementId,
+        jsonElement._subjectNode._value
+      );
+    }
+
+    // Reconstruct predicate if present
+    if (jsonElement._selectedPredicate) {
+      const pred = jsonElement._selectedPredicate;
+      (statement as any)._selectedPredicate = new Predicate(
+        pred.iri,
+        pred.label,
+        pred.objectValueType,
+        pred.isLinkProperty,
+        pred.listObjectIri
+      );
+    }
+
+    // Reconstruct operator if present
+    if (jsonElement._selectedOperator) {
+      (statement as any)._selectedOperator = jsonElement._selectedOperator;
+    }
+
+    // Reconstruct object node if present
+    if (jsonElement._selectedObjectNode) {
+      const objNode = jsonElement._selectedObjectNode;
+      if (typeof objNode._value === 'string') {
+        (statement as any)._selectedObjectNode = new StringValue(objNode.statementId, objNode._value);
+      } else {
+        (statement as any)._selectedObjectNode = new NodeValue(objNode.statementId, objNode._value);
+      }
+    }
+
+    return statement;
+  });
 
   // Patch search state with reconstructed elements
   searchStateService.patchState({
     selectedResourceClass: resourceClass,
-    statementElements: reconstructed.statementElements,
+    statementElements: statementElements,
     orderBy: orderBy,
   } as any);
 }
@@ -57,7 +99,6 @@ function normalizeQuery(query: string): string {
 
 describe('Gravsearch Service and Writer - Label', () => {
   let gravsearchService: GravsearchService;
-  let previousSearchService: PreviousSearchService;
   let searchStateService: SearchStateService;
   let ontologyDataService: OntologyDataService;
 
@@ -130,7 +171,6 @@ describe('Gravsearch Service and Writer - Label', () => {
     TestBed.configureTestingModule({
       providers: [
         GravsearchService,
-        PreviousSearchService,
         SearchStateService,
         OntologyDataService,
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
@@ -138,7 +178,6 @@ describe('Gravsearch Service and Writer - Label', () => {
     });
 
     gravsearchService = TestBed.inject(GravsearchService);
-    previousSearchService = TestBed.inject(PreviousSearchService);
     searchStateService = TestBed.inject(SearchStateService);
     ontologyDataService = TestBed.inject(OntologyDataService);
 
@@ -153,7 +192,7 @@ describe('Gravsearch Service and Writer - Label', () => {
   it('should generate query with equals operator', () => {
     const jsonSnapshot = JSON.stringify(baseJsonSnapshot);
     const resourceClass: IriLabelPair = { iri: '', label: 'All resource classes' };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     const statements = searchStateService.validStatementElements;
     const query = gravsearchService.generateGravSearchQuery(statements);
@@ -180,7 +219,7 @@ OFFSET 0`;
   it('should generate query with notEquals operator', () => {
     const jsonSnapshot = JSON.stringify(baseJsonSnapshot);
     const resourceClass: IriLabelPair = { iri: '', label: 'All resource classes' };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     changeOperator(searchStateService, 0, Operator.NotEquals);
 
@@ -193,7 +232,7 @@ OFFSET 0`;
   it('should generate query with isLike operator', () => {
     const jsonSnapshot = JSON.stringify(baseJsonSnapshot);
     const resourceClass: IriLabelPair = { iri: '', label: 'All resource classes' };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     changeOperator(searchStateService, 0, Operator.IsLike);
 
@@ -206,7 +245,7 @@ OFFSET 0`;
   it('should generate query with matches operator', () => {
     const jsonSnapshot = JSON.stringify(baseJsonSnapshot);
     const resourceClass: IriLabelPair = { iri: '', label: 'All resource classes' };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     changeOperator(searchStateService, 0, Operator.Matches);
 
@@ -219,7 +258,6 @@ OFFSET 0`;
 
 describe('Gravsearch Service and Writer - TextValue', () => {
   let gravsearchService: GravsearchService;
-  let previousSearchService: PreviousSearchService;
   let searchStateService: SearchStateService;
   let ontologyDataService: OntologyDataService;
 
@@ -292,7 +330,6 @@ describe('Gravsearch Service and Writer - TextValue', () => {
     TestBed.configureTestingModule({
       providers: [
         GravsearchService,
-        PreviousSearchService,
         SearchStateService,
         OntologyDataService,
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
@@ -300,7 +337,6 @@ describe('Gravsearch Service and Writer - TextValue', () => {
     });
 
     gravsearchService = TestBed.inject(GravsearchService);
-    previousSearchService = TestBed.inject(PreviousSearchService);
     searchStateService = TestBed.inject(SearchStateService);
     ontologyDataService = TestBed.inject(OntologyDataService);
 
@@ -315,7 +351,7 @@ describe('Gravsearch Service and Writer - TextValue', () => {
   it('should generate query with equals operator', () => {
     const jsonSnapshot = JSON.stringify(baseJsonSnapshot);
     const resourceClass: IriLabelPair = { iri: '', label: 'All resource classes' };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     const statements = searchStateService.validStatementElements;
     const query = gravsearchService.generateGravSearchQuery(statements);
@@ -343,7 +379,7 @@ OFFSET 0`;
   it('should generate query with notEquals operator', () => {
     const jsonSnapshot = JSON.stringify(baseJsonSnapshot);
     const resourceClass: IriLabelPair = { iri: '', label: 'All resource classes' };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     changeOperator(searchStateService, 0, Operator.NotEquals);
 
@@ -356,7 +392,7 @@ OFFSET 0`;
   it('should generate query with isLike operator', () => {
     const jsonSnapshot = JSON.stringify(baseJsonSnapshot);
     const resourceClass: IriLabelPair = { iri: '', label: 'All resource classes' };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     changeOperator(searchStateService, 0, Operator.IsLike);
 
@@ -369,7 +405,6 @@ OFFSET 0`;
 
 describe('Gravsearch Service and Writer - ListValue', () => {
   let gravsearchService: GravsearchService;
-  let previousSearchService: PreviousSearchService;
   let searchStateService: SearchStateService;
   let ontologyDataService: OntologyDataService;
 
@@ -457,7 +492,6 @@ describe('Gravsearch Service and Writer - ListValue', () => {
     TestBed.configureTestingModule({
       providers: [
         GravsearchService,
-        PreviousSearchService,
         SearchStateService,
         OntologyDataService,
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
@@ -465,7 +499,6 @@ describe('Gravsearch Service and Writer - ListValue', () => {
     });
 
     gravsearchService = TestBed.inject(GravsearchService);
-    previousSearchService = TestBed.inject(PreviousSearchService);
     searchStateService = TestBed.inject(SearchStateService);
     ontologyDataService = TestBed.inject(OntologyDataService);
 
@@ -483,7 +516,7 @@ describe('Gravsearch Service and Writer - ListValue', () => {
       iri: 'http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#SourceDescriptionManuscript',
       label: '[AWG] Quellenbeschreibung (MS)',
     };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     const statements = searchStateService.validStatementElements;
     const query = gravsearchService.generateGravSearchQuery(statements);
@@ -514,7 +547,7 @@ OFFSET 0`;
       iri: 'http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#SourceDescriptionManuscript',
       label: '[AWG] Quellenbeschreibung (MS)',
     };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     changeOperator(searchStateService, 0, Operator.NotEquals);
 
@@ -529,7 +562,6 @@ OFFSET 0`;
 
 describe('Gravsearch Service and Writer - IntValue', () => {
   let gravsearchService: GravsearchService;
-  let previousSearchService: PreviousSearchService;
   let searchStateService: SearchStateService;
   let ontologyDataService: OntologyDataService;
 
@@ -602,7 +634,6 @@ describe('Gravsearch Service and Writer - IntValue', () => {
     TestBed.configureTestingModule({
       providers: [
         GravsearchService,
-        PreviousSearchService,
         SearchStateService,
         OntologyDataService,
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
@@ -610,7 +641,6 @@ describe('Gravsearch Service and Writer - IntValue', () => {
     });
 
     gravsearchService = TestBed.inject(GravsearchService);
-    previousSearchService = TestBed.inject(PreviousSearchService);
     searchStateService = TestBed.inject(SearchStateService);
     ontologyDataService = TestBed.inject(OntologyDataService);
 
@@ -628,7 +658,7 @@ describe('Gravsearch Service and Writer - IntValue', () => {
       iri: 'http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#MusicalPiece',
       label: 'Musikstück (AWG-ID)',
     };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     const statements = searchStateService.validStatementElements;
     const query = gravsearchService.generateGravSearchQuery(statements);
@@ -660,7 +690,7 @@ OFFSET 0`;
       iri: 'http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#MusicalPiece',
       label: 'Musikstück (AWG-ID)',
     };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     changeOperator(searchStateService, 0, Operator.NotEquals);
 
@@ -676,7 +706,7 @@ OFFSET 0`;
       iri: 'http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#MusicalPiece',
       label: 'Musikstück (AWG-ID)',
     };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     changeOperator(searchStateService, 0, Operator.GreaterThan);
 
@@ -692,7 +722,7 @@ OFFSET 0`;
       iri: 'http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#MusicalPiece',
       label: 'Musikstück (AWG-ID)',
     };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     changeOperator(searchStateService, 0, Operator.GreaterThanEquals);
 
@@ -708,7 +738,7 @@ OFFSET 0`;
       iri: 'http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#MusicalPiece',
       label: 'Musikstück (AWG-ID)',
     };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     changeOperator(searchStateService, 0, Operator.LessThan);
 
@@ -724,7 +754,7 @@ OFFSET 0`;
       iri: 'http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#MusicalPiece',
       label: 'Musikstück (AWG-ID)',
     };
-    setupTestFromJson(previousSearchService, searchStateService, jsonSnapshot, resourceClass);
+    setupTestFromJson(searchStateService, jsonSnapshot, resourceClass);
 
     changeOperator(searchStateService, 0, Operator.LessThanEquals);
 
