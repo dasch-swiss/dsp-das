@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { take } from 'rxjs';
@@ -55,7 +55,7 @@ export class PredicateSelectComponent implements OnChanges {
   }
 
   get label(): string {
-    return this.subjectClass?.label ? `Select a property of ${this.subjectClass?.label}` : `Select property`;
+    return this.subjectClass?.label ? `Property of ${this.subjectClass?.label}` : 'Property';
   }
 
   compareObjects(object1: Predicate | IriLabelPair, object2: Predicate | IriLabelPair) {
