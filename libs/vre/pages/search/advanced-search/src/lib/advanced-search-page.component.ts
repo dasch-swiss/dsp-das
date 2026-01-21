@@ -15,11 +15,12 @@ import { QueryObject } from './model';
       <div
         [class.myoverlay]="query"
         [class.expanded]="isExpanded"
-        [ngClass]="{ 'mat-elevation-z1': query }"
+        [ngClass]="{ 'mat-elevation-z1': isExpanded }"
         (mouseenter)="onMouseEnter()"
         (mouseleave)="onMouseLeave()"
         (focusin)="onFocusIn()"
-        (focusout)="onFocusOut($event)">
+        (focusout)="onFocusOut()"
+        (click)="onContainerClick()">
         <app-centered-layout>
           <app-advanced-search
             [projectUuid]="uuid"
@@ -40,33 +41,20 @@ export class AdvancedSearchPageComponent implements OnDestroy {
   uuid = this._route.parent!.snapshot.params[RouteConstants.uuidParameter];
   query?: string;
   isExpanded = false;
+  isHovering = false;
+  private _hasRecentClick = false;
 
   private _focusOutTimeout?: ReturnType<typeof setTimeout>;
-  private _clickListener?: () => void;
+  private _clickTimeout?: ReturnType<typeof setTimeout>;
 
-  constructor(private readonly _route: ActivatedRoute) {
-    // Listen for clicks on overlay backdrop to collapse
-    this._clickListener = () => {
-      // Check if click was on overlay backdrop
-      const hasOverlay = document.querySelector('.cdk-overlay-container .cdk-overlay-backdrop');
-      if (!hasOverlay) {
-        // No overlay visible, safe to check if we should collapse
-        const activeElement = document.activeElement;
-        const isInComponent = activeElement?.closest('.myoverlay');
-        if (!isInComponent) {
-          this.isExpanded = false;
-        }
-      }
-    };
-    document.addEventListener('click', this._clickListener);
-  }
+  constructor(private readonly _route: ActivatedRoute) {}
 
   ngOnDestroy(): void {
-    if (this._clickListener) {
-      document.removeEventListener('click', this._clickListener);
-    }
     if (this._focusOutTimeout) {
       clearTimeout(this._focusOutTimeout);
+    }
+    if (this._clickTimeout) {
+      clearTimeout(this._clickTimeout);
     }
   }
 
@@ -75,10 +63,12 @@ export class AdvancedSearchPageComponent implements OnDestroy {
   }
 
   onMouseEnter(): void {
+    this.isHovering = true;
     this.isExpanded = true;
   }
 
   onMouseLeave(): void {
+    this.isHovering = false;
     // Only collapse if no overlay is open and no element has focus within the component
     const hasOpenOverlay = !!document.querySelector('.cdk-overlay-container .cdk-overlay-pane');
     const activeElement = document.activeElement;
@@ -98,7 +88,7 @@ export class AdvancedSearchPageComponent implements OnDestroy {
     this.isExpanded = true;
   }
 
-  onFocusOut(event: FocusEvent): void {
+  onFocusOut(): void {
     // Delay collapse to allow focus to move to overlay elements
     this._focusOutTimeout = setTimeout(() => {
       // Check if focus is still within a Material overlay (cdk-overlay-container)
@@ -106,11 +96,28 @@ export class AdvancedSearchPageComponent implements OnDestroy {
       const isInOverlay = activeElement?.closest('.cdk-overlay-container');
       const hasOpenOverlay = !!document.querySelector('.cdk-overlay-container .cdk-overlay-pane');
 
-      // Only collapse if focus has truly left AND no overlay is open
-      if (!isInOverlay && !hasOpenOverlay) {
+      // Only collapse if focus has truly left AND no overlay is open AND not hovering AND no recent click
+      const shouldCollapse = !isInOverlay && !hasOpenOverlay && !this.isHovering && !this._hasRecentClick;
+      if (shouldCollapse) {
         this.isExpanded = false;
       }
       this._focusOutTimeout = undefined;
     }, 200);
+  }
+
+  onContainerClick(): void {
+    // Mark that we had a recent click to prevent collapse
+    this._hasRecentClick = true;
+    this.isExpanded = true;
+
+    // Clear any existing timeout
+    if (this._clickTimeout) {
+      clearTimeout(this._clickTimeout);
+    }
+
+    // Reset the flag after a short delay
+    this._clickTimeout = setTimeout(() => {
+      this._hasRecentClick = false;
+    }, 300);
   }
 }
