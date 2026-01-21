@@ -1,12 +1,14 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   inject,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -38,6 +40,8 @@ import { MediaSliderComponent } from './media-slider.component';
 export class AudioComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) src!: ReadAudioFileValue;
   @Input({ required: true }) parentResource!: ReadResource;
+
+  @ViewChild('audioPlayer', { static: false }) audioPlayerRef!: ElementRef<HTMLAudioElement>;
 
   originalFilename?: string;
   failedToLoad = false;
@@ -92,11 +96,11 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._ngUnsubscribe.next();
+    this._ngUnsubscribe.complete();
   }
 
   onAudioPlayerReady() {
-    const player = document.getElementById('audio') as HTMLAudioElement;
+    const player = this.audioPlayerRef.nativeElement;
     this.mediaPlayer.onInit(player);
     this.isPlayerReady = true;
     this.duration = this.mediaPlayer.duration();
