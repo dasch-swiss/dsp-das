@@ -36,7 +36,7 @@ import { QueryObject } from './model';
   styleUrls: ['./advanced-search-page.component.scss'],
   imports: [AdvancedSearchComponent, AdvancedSearchResultsComponent, MatDivider, CenteredLayoutComponent, NgClass],
 })
-export class AdvancedSearchPageComponent {
+export class AdvancedSearchPageComponent implements OnDestroy {
   uuid = this._route.parent!.snapshot.params[RouteConstants.uuidParameter];
   query?: string;
   isExpanded = false;
@@ -79,8 +79,14 @@ export class AdvancedSearchPageComponent {
   }
 
   onMouseLeave(): void {
-    // Don't collapse on mouse leave - only collapse when focus truly leaves
-    // This allows moving mouse to overlay without collapsing
+    // Only collapse if no overlay is open and no element has focus within the component
+    const hasOpenOverlay = !!document.querySelector('.cdk-overlay-container .cdk-overlay-pane');
+    const activeElement = document.activeElement;
+    const hasFocusInComponent = activeElement?.closest('.myoverlay');
+
+    if (!hasOpenOverlay && !hasFocusInComponent) {
+      this.isExpanded = false;
+    }
   }
 
   onFocusIn(): void {
