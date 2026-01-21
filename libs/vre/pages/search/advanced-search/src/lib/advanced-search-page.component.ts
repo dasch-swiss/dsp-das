@@ -67,6 +67,12 @@ export class AdvancedSearchPageComponent implements OnDestroy {
     this.isHovering = false;
     this._hasRecentClick = false;
 
+    // Blur the active element (likely the search button) to remove focus
+    const activeElement = document.activeElement as HTMLElement;
+    if (activeElement && activeElement.blur) {
+      activeElement.blur();
+    }
+
     // Clear all timeouts
     if (this._focusOutTimeout) {
       clearTimeout(this._focusOutTimeout);
@@ -89,8 +95,6 @@ export class AdvancedSearchPageComponent implements OnDestroy {
 
   onMouseLeave(): void {
     this.isHovering = false;
-    // Reset force collapsed when mouse leaves
-    this._forceCollapsed = false;
 
     // Only collapse if no overlay is open and no element has focus within the component
     const hasOpenOverlay = !!document.querySelector('.cdk-overlay-container .cdk-overlay-pane');
@@ -100,6 +104,9 @@ export class AdvancedSearchPageComponent implements OnDestroy {
     if (!hasOpenOverlay && !hasFocusInComponent) {
       this.isExpanded = false;
     }
+
+    // Reset force collapsed when mouse leaves (after collapse check)
+    this._forceCollapsed = false;
   }
 
   onFocusIn(): void {
