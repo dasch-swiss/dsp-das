@@ -1,5 +1,40 @@
 @use '../../../../../../../apps/dsp-app/src/styles/config' as *;
 
+$tab-height: 42px;
+$search-height: 89px;
+
 .whole-height {
-  height: calc(100vh - $header-height);
+  height: calc(90vh - $header-height - $search-height);
 }
+
+:host {
+  display: block;
+}
+
+.search-page-container {
+  position: relative;
+  min-height: calc(90vh - $header-height - $tab-height);
+  padding-top: 3rem; // creates normal-flow height even if overlay is shown
+}
+
+.search-toggle-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 30;
+}
+
+.search-card {
+  position: absolute;
+  top: 3rem;
+  inset-inline: 0;
+  margin-inline: auto;
+  width: min(75rem, 100%);
+  z-index: 20;
+}
+
+.is-hidden {
+  display: none;
+}
+
+

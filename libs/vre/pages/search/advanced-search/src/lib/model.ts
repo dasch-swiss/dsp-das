@@ -294,7 +294,11 @@ class GravsearchWriterScoped {
     } else if (this.isKnoraValueType) {
       statement += this._whereStatementForValueComparison();
     } else if (this.isLinkValueType) {
-      if (this._operator !== Operator.Exists && this._operator && this._operator !== Operator.Matches) {
+      if (
+        this._operator !== Operator.Exists &&
+        this._operator !== Operator.NotExists &&
+        this._operator !== Operator.Matches
+      ) {
         statement += `${this.subject} ${this.predicate} ${this.objectValue} .\n`;
       }
     }

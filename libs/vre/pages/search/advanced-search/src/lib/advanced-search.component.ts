@@ -10,7 +10,6 @@ import { OntologyDataService } from './service/ontology-data.service';
 import { PropertyFormManager } from './service/property-form.manager';
 import { SearchStateService } from './service/search-state.service';
 import { AdvancedSearchFooterComponent } from './ui/advanced-search-footer.component';
-import { AdvancedSearchHeaderComponent } from './ui/advanced-search-header.component';
 import { AdvancedSearchOntologySelectComponent } from './ui/advanced-search-ontology-select.component';
 import { ResourceValueComponent } from './ui/statement-builder/object-values/resource-value/resource-value.component';
 import { StatementBuilderComponent } from './ui/statement-builder/statement-builder.component';
@@ -20,7 +19,6 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
   standalone: true,
   imports: [
     CommonModule,
-    AdvancedSearchHeaderComponent,
     AdvancedSearchFooterComponent,
     AdvancedSearchOntologySelectComponent,
     StatementBuilderComponent,
@@ -29,7 +27,6 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
   ],
   template: `
     @let ontologyLoading = ontologyLoading$ | async;
-    <app-advanced-search-header style="display: block; margin-bottom: 24px" />
     <app-advanced-search-ontology-form />
     @if (ontologyLoading) {
       <mat-progress-bar mode="query" />
