@@ -50,9 +50,11 @@ import { QueryObject } from './model';
   ],
 })
 export class AdvancedSearchPageComponent {
+  private static readonly STORAGE_KEY = 'advanced-search-split-direction';
+
   uuid = this._route.parent!.snapshot.params[RouteConstants.uuidParameter];
   query?: string;
-  isVertical = signal(true);
+  isVertical = signal(this.loadDirection());
 
   constructor(private readonly _route: ActivatedRoute) {}
 
@@ -61,6 +63,19 @@ export class AdvancedSearchPageComponent {
   }
 
   toggleDirection(): void {
-    this.isVertical.update(value => !value);
+    this.isVertical.update(value => {
+      const newValue = !value;
+      this.saveDirection(newValue);
+      return newValue;
+    });
+  }
+
+  private loadDirection(): boolean {
+    const stored = localStorage.getItem(AdvancedSearchPageComponent.STORAGE_KEY);
+    return stored !== null ? stored === 'vertical' : true;
+  }
+
+  private saveDirection(isVertical: boolean): void {
+    localStorage.setItem(AdvancedSearchPageComponent.STORAGE_KEY, isVertical ? 'vertical' : 'horizontal');
   }
 }
