@@ -3,3 +3,18 @@
 .whole-height {
   height: calc(100vh - $header-height);
 }
+
+.myoverlay {
+  max-height: 200px;
+  overflow: hidden;
+  padding: 16px;
+  border-bottom: 1px solid #ebebeb;
+  background: white;
+
+  &:hover {
+    position: relative;
+    z-index: 10;
+    overflow: auto;
+    max-height: none;
+  }
+}
