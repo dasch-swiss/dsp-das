@@ -16,7 +16,8 @@ import { QueryObject } from './model';
     #split
     class="whole-height"
     [direction]="isVertical() ? 'vertical' : 'horizontal'"
-    [gutterSize]="8">
+    [gutterSize]="8"
+    (dragEnd)="onDragEnd($event)">
     <as-split-area [size]="query ? 50 : 100">
       <div style="display: flex; flex-direction: column; height: 100%; position: relative">
         @if (query) {
@@ -54,7 +55,8 @@ import { QueryObject } from './model';
   ],
 })
 export class AdvancedSearchPageComponent {
-  private static readonly STORAGE_KEY = 'advanced-search-split-direction';
+  private static readonly STORAGE_KEY_DIRECTION = 'advanced-search-split-direction';
+  private static readonly STORAGE_KEY_RATIO = 'advanced-search-split-ratio';
 
   @ViewChild('split') split?: SplitComponent;
 
@@ -66,6 +68,16 @@ export class AdvancedSearchPageComponent {
 
   onSearch(queryObject: QueryObject): void {
     this.query = queryObject.query;
+
+    // Restore saved ratio when query results appear
+    setTimeout(() => {
+      if (this.split && this.query) {
+        const savedRatio = this.loadRatio();
+        if (savedRatio) {
+          this.split.setVisibleAreaSizes(savedRatio);
+        }
+      }
+    }, 0);
   }
 
   toggleDirection(): void {
@@ -85,12 +97,20 @@ export class AdvancedSearchPageComponent {
     });
   }
 
+  onDragEnd(event: { gutterNum: number; sizes: number[] }): void {
+    // Save the new ratio when user manually adjusts the split
+    if (this.query) {
+      this.saveRatio(event.sizes as [number, number]);
+    }
+  }
+
   @HostListener('window:resize')
   onWindowResize(): void {
     // Only recalculate on resize if in horizontal mode and query exists
     if (!this.isVertical() && this.query && this.split) {
       const sizes = this.getHorizontalSizes();
       this.split.setVisibleAreaSizes(sizes);
+      this.saveRatio(sizes);
     }
   }
 
@@ -101,11 +121,30 @@ export class AdvancedSearchPageComponent {
   }
 
   private loadDirection(): boolean {
-    const stored = localStorage.getItem(AdvancedSearchPageComponent.STORAGE_KEY);
+    const stored = localStorage.getItem(AdvancedSearchPageComponent.STORAGE_KEY_DIRECTION);
     return stored !== null ? stored === 'vertical' : true;
   }
 
   private saveDirection(isVertical: boolean): void {
-    localStorage.setItem(AdvancedSearchPageComponent.STORAGE_KEY, isVertical ? 'vertical' : 'horizontal');
+    localStorage.setItem(AdvancedSearchPageComponent.STORAGE_KEY_DIRECTION, isVertical ? 'vertical' : 'horizontal');
+  }
+
+  private loadRatio(): [number, number] | null {
+    const stored = localStorage.getItem(AdvancedSearchPageComponent.STORAGE_KEY_RATIO);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length === 2) {
+          return parsed as [number, number];
+        }
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  private saveRatio(sizes: [number, number]): void {
+    localStorage.setItem(AdvancedSearchPageComponent.STORAGE_KEY_RATIO, JSON.stringify(sizes));
   }
 }
