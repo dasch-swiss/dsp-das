@@ -10,12 +10,12 @@ import { QueryObject } from './model';
 
 @Component({
   selector: 'app-advanced-search-page',
-  template: ` <div class="whole-height" style="display: flex; justify-content: space-around; flex-direction: column">
+  template: ` <div class="whole-height" style="display: flex; flex-direction: column">
     <div style="height: 233px">
       <div
         [class.myoverlay]="query"
         [class.expanded]="isExpanded"
-        [ngClass]="{ 'mat-elevation-z1': isExpanded }"
+        [ngClass]="{ 'mat-elevation-z1': query && isExpanded }"
         (mouseenter)="onMouseEnter()"
         (mouseleave)="onMouseLeave()"
         (focusin)="onFocusIn()"
@@ -43,6 +43,7 @@ export class AdvancedSearchPageComponent implements OnDestroy {
   isExpanded = false;
   isHovering = false;
   private _hasRecentClick = false;
+  private _forceCollapsed = false;
 
   private _focusOutTimeout?: ReturnType<typeof setTimeout>;
   private _clickTimeout?: ReturnType<typeof setTimeout>;
@@ -60,15 +61,37 @@ export class AdvancedSearchPageComponent implements OnDestroy {
 
   onSearch(queryObject: QueryObject): void {
     this.query = queryObject.query;
+    // Force collapse the form after search is triggered
+    this._forceCollapsed = true;
+    this.isExpanded = false;
+    this.isHovering = false;
+    this._hasRecentClick = false;
+
+    // Clear all timeouts
+    if (this._focusOutTimeout) {
+      clearTimeout(this._focusOutTimeout);
+      this._focusOutTimeout = undefined;
+    }
+    if (this._clickTimeout) {
+      clearTimeout(this._clickTimeout);
+      this._clickTimeout = undefined;
+    }
   }
 
   onMouseEnter(): void {
+    // Don't expand if we just searched
+    if (this._forceCollapsed) {
+      return;
+    }
     this.isHovering = true;
     this.isExpanded = true;
   }
 
   onMouseLeave(): void {
     this.isHovering = false;
+    // Reset force collapsed when mouse leaves
+    this._forceCollapsed = false;
+
     // Only collapse if no overlay is open and no element has focus within the component
     const hasOpenOverlay = !!document.querySelector('.cdk-overlay-container .cdk-overlay-pane');
     const activeElement = document.activeElement;
@@ -80,6 +103,10 @@ export class AdvancedSearchPageComponent implements OnDestroy {
   }
 
   onFocusIn(): void {
+    // Don't expand if we just searched
+    if (this._forceCollapsed) {
+      return;
+    }
     // Clear any pending focus out timeout
     if (this._focusOutTimeout) {
       clearTimeout(this._focusOutTimeout);
@@ -106,6 +133,10 @@ export class AdvancedSearchPageComponent implements OnDestroy {
   }
 
   onContainerClick(): void {
+    // Don't expand if we just searched
+    if (this._forceCollapsed) {
+      return;
+    }
     // Mark that we had a recent click to prevent collapse
     this._hasRecentClick = true;
     this.isExpanded = true;
