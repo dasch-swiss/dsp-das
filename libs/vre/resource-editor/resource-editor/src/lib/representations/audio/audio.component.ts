@@ -10,6 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { MatIcon } from '@angular/material/icon';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadAudioFileValue, ReadResource } from '@dasch-swiss/dsp-js';
@@ -54,11 +55,13 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
 
   isPlayerReady = false;
   private _ngUnsubscribe = new Subject<void>();
+  private _currentBlobUrl: string | null = null;
 
   private readonly _translateService = inject(TranslateService);
 
   constructor(
     private readonly _sanitizer: DomSanitizer,
+    private readonly _http: HttpClient,
     public segmentsService: SegmentsService,
     private readonly _mediaControl: MediaControlService,
     private readonly _notification: NotificationService,
@@ -77,7 +80,29 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
         this._resetPlayer();
       }
 
-      this.audioFileUrl = this._sanitizer.bypassSecurityTrustUrl(this.src.fileUrl);
+      // Fetch audio file as blob with credentials to ensure httpOnly cookies are sent
+      this._http
+        .get(this.src.fileUrl, {
+          responseType: 'blob',
+          withCredentials: true,
+        })
+        .subscribe({
+          next: blob => {
+            // Revoke previous blob URL to prevent memory leaks
+            if (this._currentBlobUrl) {
+              URL.revokeObjectURL(this._currentBlobUrl);
+            }
+
+            // Create new blob URL and store reference for cleanup
+            this._currentBlobUrl = URL.createObjectURL(blob);
+            this.audioFileUrl = this._sanitizer.bypassSecurityTrustUrl(this._currentBlobUrl);
+            this._cd.detectChanges();
+          },
+          error: () => {
+            this.failedToLoad = true;
+            this._cd.detectChanges();
+          },
+        });
 
       this._rs.getFileInfo(this.src.fileUrl).subscribe(
         res => {
@@ -96,6 +121,11 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
+    // Revoke blob URL to prevent memory leaks
+    if (this._currentBlobUrl) {
+      URL.revokeObjectURL(this._currentBlobUrl);
+      this._currentBlobUrl = null;
+    }
     this._ngUnsubscribe.complete();
   }
 
@@ -136,6 +166,13 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
 
   private _resetPlayer() {
     this.mediaPlayer.navigateToStart();
+
+    // Revoke blob URL before resetting to prevent memory leaks
+    if (this._currentBlobUrl) {
+      URL.revokeObjectURL(this._currentBlobUrl);
+      this._currentBlobUrl = null;
+    }
+
     this.audioFileUrl = '';
     this.isPlayerReady = false;
     this._cd.detectChanges();
