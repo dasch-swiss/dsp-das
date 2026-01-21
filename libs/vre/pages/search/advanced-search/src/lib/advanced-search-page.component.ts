@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDivider } from '@angular/material/divider';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -12,7 +12,14 @@ import { QueryObject } from './model';
   selector: 'app-advanced-search-page',
   template: ` <div class="whole-height" style="display: flex; justify-content: space-around; flex-direction: column">
     <div style="height: 233px">
-      <div [class.myoverlay]="query" [ngClass]="{ 'mat-elevation-z1': query }">
+      <div
+        [class.myoverlay]="query"
+        [class.expanded]="isExpanded"
+        [ngClass]="{ 'mat-elevation-z1': query }"
+        (mouseenter)="onMouseEnter()"
+        (mouseleave)="onMouseLeave()"
+        (focusin)="onFocusIn()"
+        (focusout)="onFocusOut($event)">
         <app-centered-layout>
           <app-advanced-search
             [projectUuid]="uuid"
@@ -32,10 +39,72 @@ import { QueryObject } from './model';
 export class AdvancedSearchPageComponent {
   uuid = this._route.parent!.snapshot.params[RouteConstants.uuidParameter];
   query?: string;
+  isExpanded = false;
 
-  constructor(private readonly _route: ActivatedRoute) {}
+  private _focusOutTimeout?: ReturnType<typeof setTimeout>;
+  private _clickListener?: () => void;
+
+  constructor(private readonly _route: ActivatedRoute) {
+    // Listen for clicks on overlay backdrop to collapse
+    this._clickListener = () => {
+      // Check if click was on overlay backdrop
+      const hasOverlay = document.querySelector('.cdk-overlay-container .cdk-overlay-backdrop');
+      if (!hasOverlay) {
+        // No overlay visible, safe to check if we should collapse
+        const activeElement = document.activeElement;
+        const isInComponent = activeElement?.closest('.myoverlay');
+        if (!isInComponent) {
+          this.isExpanded = false;
+        }
+      }
+    };
+    document.addEventListener('click', this._clickListener);
+  }
+
+  ngOnDestroy(): void {
+    if (this._clickListener) {
+      document.removeEventListener('click', this._clickListener);
+    }
+    if (this._focusOutTimeout) {
+      clearTimeout(this._focusOutTimeout);
+    }
+  }
 
   onSearch(queryObject: QueryObject): void {
     this.query = queryObject.query;
+  }
+
+  onMouseEnter(): void {
+    this.isExpanded = true;
+  }
+
+  onMouseLeave(): void {
+    // Don't collapse on mouse leave - only collapse when focus truly leaves
+    // This allows moving mouse to overlay without collapsing
+  }
+
+  onFocusIn(): void {
+    // Clear any pending focus out timeout
+    if (this._focusOutTimeout) {
+      clearTimeout(this._focusOutTimeout);
+      this._focusOutTimeout = undefined;
+    }
+    this.isExpanded = true;
+  }
+
+  onFocusOut(event: FocusEvent): void {
+    // Delay collapse to allow focus to move to overlay elements
+    this._focusOutTimeout = setTimeout(() => {
+      // Check if focus is still within a Material overlay (cdk-overlay-container)
+      const activeElement = document.activeElement;
+      const isInOverlay = activeElement?.closest('.cdk-overlay-container');
+      const hasOpenOverlay = !!document.querySelector('.cdk-overlay-container .cdk-overlay-pane');
+
+      // Only collapse if focus has truly left AND no overlay is open
+      if (!isInOverlay && !hasOpenOverlay) {
+        this.isExpanded = false;
+      }
+      this._focusOutTimeout = undefined;
+    }, 200);
   }
 }
