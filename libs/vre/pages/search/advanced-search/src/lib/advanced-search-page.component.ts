@@ -38,13 +38,16 @@ import { QueryObject } from './model';
   imports: [AdvancedSearchComponent, AdvancedSearchResultsComponent, MatDivider, CenteredLayoutComponent, NgClass],
 })
 export class AdvancedSearchPageComponent implements OnDestroy {
+  private static readonly FOCUS_OUT_DELAY = 200;
+  private static readonly CLICK_DELAY = 300;
+
   uuid = this._route.parent!.snapshot.params[RouteConstants.uuidParameter];
   query?: string;
   isExpanded = false;
   isHovering = false;
+
   private _hasRecentClick = false;
   private _forceCollapsed = false;
-
   private _focusOutTimeout?: ReturnType<typeof setTimeout>;
   private _clickTimeout?: ReturnType<typeof setTimeout>;
 
@@ -61,19 +64,17 @@ export class AdvancedSearchPageComponent implements OnDestroy {
 
   onSearch(queryObject: QueryObject): void {
     this.query = queryObject.query;
-    // Force collapse the form after search is triggered
+
+    // Collapse the form and prevent re-expansion until mouse leaves
     this._forceCollapsed = true;
     this.isExpanded = false;
     this.isHovering = false;
     this._hasRecentClick = false;
 
-    // Blur the active element (likely the search button) to remove focus
-    const activeElement = document.activeElement as HTMLElement;
-    if (activeElement && activeElement.blur) {
-      activeElement.blur();
-    }
+    // Remove focus from search button to allow proper collapse on mouse leave
+    (document.activeElement as HTMLElement)?.blur();
 
-    // Clear all timeouts
+    // Clear all pending timeouts
     if (this._focusOutTimeout) {
       clearTimeout(this._focusOutTimeout);
       this._focusOutTimeout = undefined;
@@ -85,7 +86,6 @@ export class AdvancedSearchPageComponent implements OnDestroy {
   }
 
   onMouseEnter(): void {
-    // Don't expand if we just searched
     if (this._forceCollapsed) {
       return;
     }
@@ -96,25 +96,21 @@ export class AdvancedSearchPageComponent implements OnDestroy {
   onMouseLeave(): void {
     this.isHovering = false;
 
-    // Only collapse if no overlay is open and no element has focus within the component
+    // Collapse if no Material overlay is open and no element within the form has focus
     const hasOpenOverlay = !!document.querySelector('.cdk-overlay-container .cdk-overlay-pane');
-    const activeElement = document.activeElement;
-    const hasFocusInComponent = activeElement?.closest('.myoverlay');
+    const hasFocusInComponent = document.activeElement?.closest('.myoverlay');
 
     if (!hasOpenOverlay && !hasFocusInComponent) {
       this.isExpanded = false;
     }
 
-    // Reset force collapsed when mouse leaves (after collapse check)
     this._forceCollapsed = false;
   }
 
   onFocusIn(): void {
-    // Don't expand if we just searched
     if (this._forceCollapsed) {
       return;
     }
-    // Clear any pending focus out timeout
     if (this._focusOutTimeout) {
       clearTimeout(this._focusOutTimeout);
       this._focusOutTimeout = undefined;
@@ -123,39 +119,33 @@ export class AdvancedSearchPageComponent implements OnDestroy {
   }
 
   onFocusOut(): void {
-    // Delay collapse to allow focus to move to overlay elements
+    // Delay to allow focus to shift to Material overlay elements
     this._focusOutTimeout = setTimeout(() => {
-      // Check if focus is still within a Material overlay (cdk-overlay-container)
-      const activeElement = document.activeElement;
-      const isInOverlay = activeElement?.closest('.cdk-overlay-container');
+      const isInOverlay = document.activeElement?.closest('.cdk-overlay-container');
       const hasOpenOverlay = !!document.querySelector('.cdk-overlay-container .cdk-overlay-pane');
 
-      // Only collapse if focus has truly left AND no overlay is open AND not hovering AND no recent click
       const shouldCollapse = !isInOverlay && !hasOpenOverlay && !this.isHovering && !this._hasRecentClick;
       if (shouldCollapse) {
         this.isExpanded = false;
       }
       this._focusOutTimeout = undefined;
-    }, 200);
+    }, AdvancedSearchPageComponent.FOCUS_OUT_DELAY);
   }
 
   onContainerClick(): void {
-    // Don't expand if we just searched
     if (this._forceCollapsed) {
       return;
     }
-    // Mark that we had a recent click to prevent collapse
+
     this._hasRecentClick = true;
     this.isExpanded = true;
 
-    // Clear any existing timeout
     if (this._clickTimeout) {
       clearTimeout(this._clickTimeout);
     }
 
-    // Reset the flag after a short delay
     this._clickTimeout = setTimeout(() => {
       this._hasRecentClick = false;
-    }, 300);
+    }, AdvancedSearchPageComponent.CLICK_DELAY);
   }
 }
