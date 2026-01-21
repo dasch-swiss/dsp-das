@@ -78,6 +78,14 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
           <mat-icon>zoom_in</mat-icon>
         </button>
 
+        <button
+          mat-icon-button
+          id="DSP_PDF_ZOOM_IN"
+          [matTooltip]="'resourceEditor.representations.document.resetZoom' | translate"
+          (click)="zoomFactor = 1">
+          <mat-icon>youtube_searched_for</mat-icon>
+        </button>
+
         <!-- Search input -->
         <mat-form-field appearance="outline" subscriptSizing="dynamic" class="pdf-search-field">
           <input
