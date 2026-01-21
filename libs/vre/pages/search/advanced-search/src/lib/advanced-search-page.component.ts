@@ -1,18 +1,22 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ViewChild } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
-import { AngularSplitModule } from 'angular-split';
+import { AngularSplitModule, SplitComponent } from 'angular-split';
 import { AdvancedSearchResultsComponent } from './advanced-search-results.component';
 import { AdvancedSearchComponent } from './advanced-search.component';
 import { QueryObject } from './model';
 
 @Component({
   selector: 'app-advanced-search-page',
-  template: `<as-split class="whole-height" [direction]="isVertical() ? 'vertical' : 'horizontal'" [gutterSize]="8">
+  template: `<as-split
+    #split
+    class="whole-height"
+    [direction]="isVertical() ? 'vertical' : 'horizontal'"
+    [gutterSize]="8">
     <as-split-area [size]="query ? 20 : 100">
       <div style="display: flex; flex-direction: column; height: 100%; position: relative">
         @if (query) {
@@ -52,6 +56,8 @@ import { QueryObject } from './model';
 export class AdvancedSearchPageComponent {
   private static readonly STORAGE_KEY = 'advanced-search-split-direction';
 
+  @ViewChild('split') split?: SplitComponent;
+
   uuid = this._route.parent!.snapshot.params[RouteConstants.uuidParameter];
   query?: string;
   isVertical = signal(this.loadDirection());
@@ -66,6 +72,14 @@ export class AdvancedSearchPageComponent {
     this.isVertical.update(value => {
       const newValue = !value;
       this.saveDirection(newValue);
+
+      // Reset to original ratio after direction change
+      setTimeout(() => {
+        if (this.split && this.query) {
+          this.split.setVisibleAreaSizes([20, 80]);
+        }
+      }, 0);
+
       return newValue;
     });
   }
