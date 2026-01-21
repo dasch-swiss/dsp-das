@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild } from '@angular/core';
+import { Component, HostListener, signal, ViewChild } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -17,7 +17,7 @@ import { QueryObject } from './model';
     class="whole-height"
     [direction]="isVertical() ? 'vertical' : 'horizontal'"
     [gutterSize]="8">
-    <as-split-area [size]="query ? 20 : 100">
+    <as-split-area [size]="query ? 50 : 100">
       <div style="display: flex; flex-direction: column; height: 100%; position: relative">
         @if (query) {
           <button
@@ -37,7 +37,7 @@ import { QueryObject } from './model';
       </div>
     </as-split-area>
     @if (query) {
-      <as-split-area [size]="80">
+      <as-split-area [size]="50">
         <app-advanced-search-results-page [query]="query" />
       </as-split-area>
     }
@@ -76,12 +76,28 @@ export class AdvancedSearchPageComponent {
       // Reset to original ratio after direction change
       setTimeout(() => {
         if (this.split && this.query) {
-          this.split.setVisibleAreaSizes([20, 80]);
+          const sizes = newValue ? [50, 50] : this.getHorizontalSizes();
+          this.split.setVisibleAreaSizes(sizes);
         }
       }, 0);
 
       return newValue;
     });
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    // Only recalculate on resize if in horizontal mode and query exists
+    if (!this.isVertical() && this.query && this.split) {
+      const sizes = this.getHorizontalSizes();
+      this.split.setVisibleAreaSizes(sizes);
+    }
+  }
+
+  private getHorizontalSizes(): [number, number] {
+    const screenWidth = window.innerWidth;
+    const firstColumnSize = screenWidth < 1980 ? 33 : 25;
+    return [firstColumnSize, 100 - firstColumnSize];
   }
 
   private loadDirection(): boolean {
