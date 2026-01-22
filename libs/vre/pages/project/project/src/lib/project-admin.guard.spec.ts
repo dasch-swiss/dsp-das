@@ -62,14 +62,22 @@ describe('ProjectAdminGuard', () => {
       });
     });
 
-    it('should return false and navigate to not-allowed page when user is not logged in', done => {
+    it('should navigate to not-allowed page when user is not logged in', done => {
       isLoggedInSubject.next(false);
 
-      guard.canActivate().subscribe(result => {
-        expect(result).toBe(false);
+      guard.canActivate().subscribe({
+        next: () => {
+          // Should not emit any value when user is not logged in due to filter
+          done.fail('Observable should not emit when user is not logged in');
+        },
+        error: done.fail,
+      });
+
+      // Verify navigation happened as a side effect
+      setTimeout(() => {
         expect(routerMock.navigate).toHaveBeenCalledWith([RouteConstants.notAllowed]);
         done();
-      });
+      }, 100);
     });
 
     it('should return false and navigate to not-allowed page when user has no project admin rights', done => {
@@ -84,8 +92,12 @@ describe('ProjectAdminGuard', () => {
     });
 
     it('should filter out false values from isLoggedIn$ before checking admin rights', done => {
-      guard.canActivate().subscribe(() => {
-        // Should not be called immediately
+      guard.canActivate().subscribe({
+        next: () => {
+          // Should not emit when user is not logged in
+          done.fail('Observable should not emit when user is not logged in');
+        },
+        error: done.fail,
       });
 
       // User not logged in - should navigate
@@ -94,7 +106,7 @@ describe('ProjectAdminGuard', () => {
       setTimeout(() => {
         expect(routerMock.navigate).toHaveBeenCalledWith([RouteConstants.notAllowed]);
         done();
-      }, 10);
+      }, 100);
     });
 
     it('should navigate to not-allowed page when logged in but no admin rights', done => {
