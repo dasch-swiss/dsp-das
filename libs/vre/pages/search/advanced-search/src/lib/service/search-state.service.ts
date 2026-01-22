@@ -41,7 +41,9 @@ export class SearchStateService {
     distinctUntilChanged(),
     map(state => state.statementElements),
     map(elements => {
-      return elements.length > 1 && elements.every(statement => statement.isValidAndComplete || statement.isPristine);
+      const allValid = elements.every(statement => statement.isValidAndComplete || statement.isPristine);
+      const canSearch = elements.length > 1 || (elements.length === 1 && elements[0].isPristine);
+      return allValid && canSearch;
     }),
     distinctUntilChanged()
   );
