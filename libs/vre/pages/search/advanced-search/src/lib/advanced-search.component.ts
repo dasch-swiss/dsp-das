@@ -29,7 +29,10 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
   ],
   template: `
     @let ontologyLoading = ontologyLoading$ | async;
-    <app-advanced-search-header style="display: block; margin-bottom: 24px" />
+    <app-advanced-search-header
+      style="display: block; margin-bottom: 24px"
+      [isVerticalDirection]="isVerticalDirection"
+      (toggleDirection)="toggleDirection.emit()" />
     <app-advanced-search-ontology-form />
     @if (ontologyLoading) {
       <mat-progress-bar mode="query" />
@@ -52,6 +55,8 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
 })
 export class AdvancedSearchComponent implements OnInit {
   @Input({ required: true }) projectUuid!: string;
+  @Input({ required: true }) isVerticalDirection: boolean | undefined;
+  @Output() toggleDirection = new EventEmitter<any>();
   @Output() gravesearchQuery = new EventEmitter<QueryObject>();
 
   searchState: SearchStateService = inject(SearchStateService);

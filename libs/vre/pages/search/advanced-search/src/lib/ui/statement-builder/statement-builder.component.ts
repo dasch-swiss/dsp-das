@@ -29,11 +29,10 @@ import { StringValueComponent } from './object-values/string-value/string-value.
   ],
   template: ` @for (statementElement of statementElements; track statementElement.id; let isLast = $last) {
     <div
-      class="width-100-percent flex gap-05em"
+      style="display: flex; gap: 8px"
       [ngClass]="{ 'is-dimmed': statementElement.isPristine && statementElements.length > 1 }"
       [style.margin-left.em]="(statementElement.statementLevel + 1) * 2">
       <app-predicate-select
-        [style.width]="'calc(30% - ' + (statementElement.statementLevel + 1) * 2 + 'em)'"
         [selectedPredicate]="statementElement?.selectedPredicate"
         [subjectClass]="statementElement.subjectNode?.value"
         (selectedPredicateChange)="formManager.onPredicateSelectionChanged(statementElement, $event)" />
@@ -44,28 +43,24 @@ import { StringValueComponent } from './object-values/string-value/string-value.
       @switch (statementElement.objectType) {
         @case (PROPERTY_OBJECT_TYPES.ResourceObject) {
           <app-resource-value
-            class="width-40-percent"
             [selectedPredicate]="statementElement.selectedPredicate"
             [selectedResource]="statementElement.selectedObjectValue"
             (selectedResourceChange)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.ValueObject) {
           <app-string-value
-            class="width-40-percent"
             [valueType]="statementElement.selectedPredicate!.objectValueType"
             [value]="statementElement.selectedObjectValue"
             (emitValueChanged)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.ListValueObject) {
           <app-list-value
-            class="width-40-percent"
             [rootListNodeIri]="statementElement.selectedPredicate!.listObjectIri"
             [selectedListNode]="statementElement.selectedObjectValue"
             (emitValueChanged)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.LinkValueObject) {
           <app-link-value
-            class="width-40-percent"
             [resourceClass]="statementElement.selectedPredicate?.objectValueType"
             [selectedResource]="statementElement.selectedObjectValue"
             (emitResourceSelected)="formManager.setObjectValue(statementElement, $event)" />

@@ -1,10 +1,6 @@
-import { Component, HostListener, signal, ViewChild } from '@angular/core';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
+import { Component, HostListener, signal, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
 import { AngularSplitModule, SplitComponent } from 'angular-split';
 import { AdvancedSearchResultsComponent } from './advanced-search-results.component';
 import { AdvancedSearchComponent } from './advanced-search.component';
@@ -20,21 +16,14 @@ import { QueryObject } from './model';
     (dragEnd)="onDragEnd($event)">
     <as-split-area [size]="query ? 50 : 100">
       <div style="display: flex; flex-direction: column; height: 100%; position: relative">
-        @if (query) {
-          <button
-            style="position: absolute; right: 24px; top: 8px"
-            mat-icon-button
-            (click)="toggleDirection()"
-            [matTooltip]="isVertical() ? 'Switch to horizontal layout' : 'Switch to vertical layout'">
-            <mat-icon>{{ isVertical() ? 'vertical_split' : 'horizontal_split' }}</mat-icon>
-          </button>
-        }
-        <app-centered-layout style="flex: 1">
+        <div style="display: flex; justify-content: center; flex: 1">
           <app-advanced-search
+            [isVerticalDirection]="query ? isVertical() : undefined"
+            (toggleDirection)="toggleDirection()"
             [projectUuid]="uuid"
             (gravesearchQuery)="onSearch($event)"
-            style="padding-left: 16px; padding-right: 16px" />
-        </app-centered-layout>
+            style="max-width: 900px; width: 100%; padding-left: 16px; padding-right: 16px" />
+        </div>
       </div>
     </as-split-area>
     @if (query) {
@@ -44,17 +33,9 @@ import { QueryObject } from './model';
     }
   </as-split>`,
   styleUrls: ['./advanced-search-page.component.scss'],
-  imports: [
-    AdvancedSearchComponent,
-    AdvancedSearchResultsComponent,
-    AngularSplitModule,
-    CenteredLayoutComponent,
-    MatIcon,
-    MatIconButton,
-    MatTooltip,
-  ],
+  imports: [AdvancedSearchComponent, AdvancedSearchResultsComponent, AngularSplitModule],
 })
-export class AdvancedSearchPageComponent {
+export class AdvancedSearchPageComponent implements OnInit {
   private static readonly STORAGE_KEY_DIRECTION = 'advanced-search-split-direction';
   private static readonly STORAGE_KEY_RATIO = 'advanced-search-split-ratio';
 
@@ -66,6 +47,9 @@ export class AdvancedSearchPageComponent {
 
   constructor(private readonly _route: ActivatedRoute) {}
 
+  ngOnInit() {
+    console.log('query', this.query);
+  }
   onSearch(queryObject: QueryObject): void {
     this.query = queryObject.query;
 

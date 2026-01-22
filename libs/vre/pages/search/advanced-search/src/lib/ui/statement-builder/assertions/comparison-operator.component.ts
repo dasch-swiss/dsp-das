@@ -10,7 +10,7 @@ import { Operator } from '../../../operators.config';
   imports: [CommonModule, MatInputModule, MatSelectModule],
   template: `
     <mat-form-field>
-      <mat-label>Comparison Operator</mat-label>
+      <mat-label>Operator</mat-label>
       <mat-select
         [value]="selectedOperator"
         (selectionChange)="operatorChange.emit($event.value)"
