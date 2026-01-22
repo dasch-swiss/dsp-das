@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import {
   ChangeDetectorRef,
   Component,
@@ -10,7 +11,6 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { MatIcon } from '@angular/material/icon';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadAudioFileValue, ReadResource } from '@dasch-swiss/dsp-js';
@@ -96,6 +96,7 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
             // Create new blob URL and store reference for cleanup
             this._currentBlobUrl = URL.createObjectURL(blob);
             this.audioFileUrl = this._sanitizer.bypassSecurityTrustUrl(this._currentBlobUrl);
+            console.log('got it', this.audioFileUrl);
             this._cd.detectChanges();
           },
           error: () => {
