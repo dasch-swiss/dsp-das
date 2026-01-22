@@ -82,7 +82,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
           mat-icon-button
           id="DSP_PDF_ZOOM_IN"
           [matTooltip]="'resourceEditor.representations.document.resetZoom' | translate"
-          (click)="zoomFactor = 1">
+          (click)="resetZoom()">
           <mat-icon>youtube_searched_for</mat-icon>
         </button>
 
@@ -148,6 +148,10 @@ export class PdfToolbarComponent {
   handleZoom(mod: -1 | 1) {
     const newZoom = Math.round((this.zoomFactor + mod * 0.2) * 100) / 100;
     this.zoomChange.emit(newZoom <= 0 ? 0.2 : newZoom);
+  }
+
+  resetZoom() {
+    this.zoomChange.emit(1);
   }
 
   openReplaceDialog() {
