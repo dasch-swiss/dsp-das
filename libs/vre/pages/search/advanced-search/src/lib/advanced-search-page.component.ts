@@ -1,4 +1,4 @@
-import { Component, HostListener, signal, ViewChild, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AngularSplitModule, SplitComponent } from 'angular-split';
@@ -12,7 +12,6 @@ import { QueryObject } from './model';
     #split
     class="whole-height"
     [direction]="isVertical() ? 'vertical' : 'horizontal'"
-    [gutterSize]="8"
     (dragEnd)="onDragEnd($event)">
     <as-split-area [size]="query ? 50 : 100">
       <div style="display: flex; flex-direction: column; height: 100%; position: relative">

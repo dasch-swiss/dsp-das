@@ -11,6 +11,15 @@ import { ResourceListComponent } from './resource-list.component';
       <app-pager
         (pageIndexChanged)="updatePageIndex($event)"
         [numberOfAllResults]="resourceResultService.numberOfResults" />
+    } @else {
+      <div
+        style="margin: 8px;
+    border: 1px solid #ebebeb;
+    padding: 8px;
+    text-align: center;
+    border-radius: 10px;">
+        {{ resourceResultService.numberOfResults }} results
+      </div>
     }
 
     <app-resource-list [resources]="resources" />`,
