@@ -18,7 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
           mat-icon-button
           (click)="toggleDirection.emit()"
           [matTooltip]="isVertical ? 'Switch to horizontal layout' : 'Switch to vertical layout'">
-          <mat-icon>{{ isVertical ? 'vertical_split' : 'horizontal_split' }}</mat-icon>
+          <mat-icon style="color: #646465">{{ isVertical ? 'vertical_split' : 'horizontal_split' }}</mat-icon>
         </button>
       }
       <a mat-stroked-button [routerLink]="['..', 'search']">

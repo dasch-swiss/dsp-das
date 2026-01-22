@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { SearchStateService } from '../service/search-state.service';
 import { OrderByComponent } from './order-by/order-by.component';
 
@@ -31,11 +30,8 @@ export class AdvancedSearchFooterComponent {
   @Output() resetTriggered = new EventEmitter<void>();
 
   searchState = inject(SearchStateService);
-  private _dialogService = inject(DialogService);
 
   handleReset(): void {
-    this._dialogService.afterConfirmation('Are you sure you want to reset the form?').subscribe(() => {
-      this.resetTriggered.emit();
-    });
+    this.resetTriggered.emit();
   }
 }
