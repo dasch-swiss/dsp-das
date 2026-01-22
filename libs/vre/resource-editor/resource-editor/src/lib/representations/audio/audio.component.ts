@@ -16,7 +16,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadAudioFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject, takeUntil } from 'rxjs';
+import { catchError, EMPTY, Subject, takeUntil } from 'rxjs';
 import { MediaControlService } from '../../segment-support/media-control.service';
 import { SegmentsDisplayComponent } from '../../segment-support/segments-display.component';
 import { SegmentsService } from '../../segment-support/segments.service';
@@ -113,14 +113,17 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
           },
         });
 
-      this._rs.getFileInfo(this.src.fileUrl).subscribe(
-        res => {
+      this._rs
+        .getFileInfo(this.src.fileUrl)
+        .pipe(
+          catchError(() => {
+            this.failedToLoad = true;
+            return EMPTY;
+          })
+        )
+        .subscribe(res => {
           this.originalFilename = res.originalFilename;
-        },
-        () => {
-          this.failedToLoad = true;
-        }
-      );
+        });
       this._cd.detectChanges();
     }
 

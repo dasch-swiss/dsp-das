@@ -106,6 +106,9 @@ export class PdfDocumentComponent implements OnChanges, AfterViewInit, OnDestroy
 
   ngOnDestroy(): void {
     this._cleanupResizeObserver();
+    // Note: No blob URL cleanup needed - pdfSrc contains direct file URLs, not blob URLs
+    // The ng2-pdf-viewer library handles its own internal resource cleanup
+    this.pdfSrc = null;
   }
 
   onPdfLoaded() {

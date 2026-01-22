@@ -89,7 +89,6 @@ describe('DocumentComponent', () => {
     expect(component).toBeTruthy();
   });
 
-
   describe('ngOnChanges', () => {
     it('should call _setOriginalFilename when src changes', () => {
       const setOriginalFilenameSpy = jest.spyOn(component as any, '_setOriginalFilename');
@@ -180,7 +179,6 @@ describe('DocumentComponent', () => {
     });
   });
 
-
   describe('onDownload', () => {
     it('should call representationService.downloadProjectFile', () => {
       component.onDownload();
@@ -192,7 +190,6 @@ describe('DocumentComponent', () => {
     });
   });
 
-
   describe('onFullscreenToggle', () => {
     it('should request fullscreen on pdf-viewer element', () => {
       const mockElement = {
@@ -202,8 +199,8 @@ describe('DocumentComponent', () => {
       // Mock the _pdfComponent with element.nativeElement
       component['_pdfComponent'] = {
         element: {
-          nativeElement: mockElement
-        }
+          nativeElement: mockElement,
+        },
       } as any;
 
       component.onFullscreenToggle();
@@ -254,7 +251,6 @@ describe('DocumentComponent', () => {
         done();
       }, 10);
     });
-
 
     it('should set failedToLoad to true on error', done => {
       representationServiceMock.getFileInfo = jest.fn().mockReturnValue(throwError(() => new Error('Fetch failed')));
