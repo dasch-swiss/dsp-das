@@ -6,8 +6,12 @@
   <mat-icon style="color: white; transform: scale(4)"> audio_file</mat-icon>
   @if (audioFileUrl) {
   <div class="audio-player">
-    <audio #audioPlayer preload="auto" (loadedmetadata)="onAudioPlayerReady()">
-      <source [src]="audioFileUrl" type="audio/mpeg" />
+    <audio
+      #audioPlayer
+      [src]="audioFileUrl"
+      preload="auto"
+      (loadedmetadata)="onAudioPlayerReady()"
+      (error)="onAudioError($event)">
     </audio>
   </div>
   }

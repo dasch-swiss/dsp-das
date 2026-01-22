@@ -6,7 +6,6 @@ import { HttpInterceptorFn } from '@angular/common/http';
  */
 export const iiifWithCredentialsInterceptorFn: HttpInterceptorFn = (request, next) => {
   if (request.url.startsWith('https://iiif')) {
-    console.log('url intercept', request.url);
     const modifiedRequest = request.clone({ withCredentials: true });
     return next(modifiedRequest);
   }

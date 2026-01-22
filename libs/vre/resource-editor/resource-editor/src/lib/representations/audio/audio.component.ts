@@ -37,6 +37,15 @@ import { MediaSliderComponent } from './media-slider.component';
     AudioToolbarComponent,
     RepresentationErrorMessageComponent,
   ],
+  styles: [
+    `
+      :host {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+    `,
+  ],
 })
 export class AudioComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) src!: ReadAudioFileValue;
@@ -96,7 +105,6 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
             // Create new blob URL and store reference for cleanup
             this._currentBlobUrl = URL.createObjectURL(blob);
             this.audioFileUrl = this._sanitizer.bypassSecurityTrustUrl(this._currentBlobUrl);
-            console.log('got it', this.audioFileUrl);
             this._cd.detectChanges();
           },
           error: () => {
@@ -146,6 +154,18 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
         this.watchForPause = null;
       }
     });
+  }
+
+  onAudioError(event: Event) {
+    const audioElement = event.target as HTMLAudioElement;
+    if (audioElement.error) {
+      console.error('Failed to load audio file:', {
+        code: audioElement.error.code,
+        message: audioElement.error.message,
+      });
+    }
+    this.failedToLoad = true;
+    this._cd.detectChanges();
   }
 
   private _watchForMediaEvents() {
