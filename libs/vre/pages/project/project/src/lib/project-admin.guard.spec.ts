@@ -66,25 +66,17 @@ describe('ProjectAdminGuard', () => {
       });
     });
 
-    it('should not emit when user is not logged in due to filter', done => {
+    it('should return UrlTree immediately when user is not logged in', done => {
       isLoggedInSubject.next(false);
 
-      guard.canActivate().subscribe({
-        next: () => {
-          // Should not emit any value when user is not logged in due to filter
-          done.fail('Observable should not emit when user is not logged in');
-        },
-        error: done.fail,
-      });
-
-      // Wait to verify no emission
-      setTimeout(() => {
-        expect(routerMock.createUrlTree).not.toHaveBeenCalled();
+      guard.canActivate().subscribe(result => {
+        expect(result).toBe(mockUrlTree);
+        expect(routerMock.createUrlTree).toHaveBeenCalledWith([RouteConstants.notAllowed]);
         done();
-      }, 100);
+      });
     });
 
-    it('should return UrlTree when user has no project admin rights', done => {
+    it('should return UrlTree when user is logged in but has no project admin rights', done => {
       isLoggedInSubject.next(true);
       hasProjectAdminRightsSubject.next(false);
 
@@ -95,32 +87,31 @@ describe('ProjectAdminGuard', () => {
       });
     });
 
-    it('should filter out false values from isLoggedIn$ before checking admin rights', done => {
-      guard.canActivate().subscribe({
-        next: () => {
-          // Should not emit when user is not logged in
-          done.fail('Observable should not emit when user is not logged in');
-        },
-        error: done.fail,
-      });
-
-      // User not logged in - should not emit due to filter
+    it('should handle user not logged in with take(1)', done => {
       isLoggedInSubject.next(false);
-
-      setTimeout(() => {
-        expect(routerMock.createUrlTree).not.toHaveBeenCalled();
-        done();
-      }, 100);
-    });
-
-    it('should return UrlTree to not-allowed page when logged in but no admin rights', done => {
-      isLoggedInSubject.next(true);
-      hasProjectAdminRightsSubject.next(false);
 
       guard.canActivate().subscribe(result => {
         expect(result).toBe(mockUrlTree);
         expect(routerMock.createUrlTree).toHaveBeenCalledWith([RouteConstants.notAllowed]);
         done();
+      });
+    });
+
+    it('should complete after one emission using take(1)', done => {
+      isLoggedInSubject.next(true);
+      hasProjectAdminRightsSubject.next(true);
+
+      let emissionCount = 0;
+
+      guard.canActivate().subscribe({
+        next: result => {
+          emissionCount++;
+          expect(result).toBe(true);
+        },
+        complete: () => {
+          expect(emissionCount).toBe(1);
+          done();
+        },
       });
     });
   });
