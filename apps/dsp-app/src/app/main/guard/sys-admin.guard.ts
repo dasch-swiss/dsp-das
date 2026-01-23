@@ -18,7 +18,7 @@ export class SysAdminGuard implements CanActivate {
       switchMap(() => this._userService.isSysAdmin$),
       map(isSysAdmin => {
         if (!isSysAdmin) {
-          return this._router.createUrlTree([RouteConstants.home]);
+          return this._router.createUrlTree([RouteConstants.notAllowed]);
         }
         return true;
       })

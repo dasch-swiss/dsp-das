@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { UserService } from '@dasch-swiss/vre/core/session';
+import { AutoLoginService, UserService } from '@dasch-swiss/vre/core/session';
 import { filter, map, Observable, switchMap, take } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
 
@@ -9,12 +9,15 @@ import { ProjectPageService } from './project-page.service';
   providedIn: 'root',
 })
 export class ProjectAdminGuard implements CanActivate {
+  private readonly _autoLoginService = inject(AutoLoginService);
   private readonly _userService = inject(UserService);
   private readonly _projectPageService = inject(ProjectPageService);
   private readonly _router = inject(Router);
 
   canActivate(): Observable<boolean | UrlTree> {
-    return this._userService.isLoggedIn$.pipe(
+    return this._autoLoginService.hasCheckedCredentials$.pipe(
+      filter(hasChecked => hasChecked === true),
+      switchMap(() => this._userService.isLoggedIn$),
       take(1),
       switchMap(isLoggedIn => {
         if (!isLoggedIn) {

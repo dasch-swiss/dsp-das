@@ -19,7 +19,7 @@ describe('SysAdminGuard', () => {
     isSysAdminSubject = new BehaviorSubject<boolean>(false);
 
     // Create a mock UrlTree
-    mockUrlTree = { toString: () => '/home' } as UrlTree;
+    mockUrlTree = { toString: () => '/not-allowed' } as UrlTree;
 
     autoLoginServiceMock = {
       hasCheckedCredentials$: hasCheckedCredentialsSubject,
@@ -65,13 +65,13 @@ describe('SysAdminGuard', () => {
       });
     });
 
-    it('should return UrlTree and create url tree to home when user is not sys admin', done => {
+    it('should return UrlTree and create url tree to notAllowed when user is not sys admin', done => {
       hasCheckedCredentialsSubject.next(true);
       isSysAdminSubject.next(false);
 
       guard.canActivate().subscribe(result => {
         expect(result).toBe(mockUrlTree);
-        expect(routerMock.createUrlTree).toHaveBeenCalledWith([RouteConstants.home]);
+        expect(routerMock.createUrlTree).toHaveBeenCalledWith([RouteConstants.notAllowed]);
         done();
       });
     });
