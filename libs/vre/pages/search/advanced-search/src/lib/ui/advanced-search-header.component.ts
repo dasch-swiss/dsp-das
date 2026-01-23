@@ -17,6 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
         <button
           mat-icon-button
           (click)="toggleDirection.emit()"
+          data-faro-user-action-name="advanced-search-toggle-layout-button"
           [matTooltip]="isVertical ? 'Switch to horizontal layout' : 'Switch to vertical layout'">
           <mat-icon style="color: #646465">{{ isVertical ? 'vertical_split' : 'horizontal_split' }}</mat-icon>
         </button>
