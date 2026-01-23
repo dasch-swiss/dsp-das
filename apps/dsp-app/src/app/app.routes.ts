@@ -203,9 +203,10 @@ export const routes: Routes = [
         path: RouteConstants.notFound,
         component: NoResultsFoundPageComponent,
       },
+      // Wildcard route - must be last. Catches all unmatched routes
       {
         path: RouteConstants.notFoundWildcard,
-        component: NoResultsFoundComponent,
+        redirectTo: RouteConstants.notFound,
       },
     ],
   },

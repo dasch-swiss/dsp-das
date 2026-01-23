@@ -148,7 +148,7 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
     this.duration = this.mediaPlayer.duration();
     this._cd.detectChanges();
 
-    this.mediaPlayer.onTimeUpdate$.subscribe(v => {
+    this.mediaPlayer.onTimeUpdate$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(v => {
       this.currentTime = v;
       this._cd.detectChanges();
 

@@ -1,8 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges, ViewContainerRef } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnChanges, SimpleChanges, ViewContainerRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Constants, ReadArchiveFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { CenteredMessageComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
+import { catchError, EMPTY } from 'rxjs';
 import { DownloadMenuItemComponent } from '../download-menu-item.component';
 import { ReplaceFileMenuItemComponent } from '../replace-file-menu-item.component';
 import { RepresentationErrorMessageComponent } from '../representation-error-message.component';
@@ -50,6 +52,8 @@ export class ArchiveComponent implements OnChanges {
   readonly representation = Constants.HasArchiveFileValue;
   failedToLoad = false;
 
+  private readonly _destroyRef = inject(DestroyRef);
+
   constructor(
     private readonly _rs: RepresentationService,
     public readonly viewContainerRef: ViewContainerRef,
@@ -58,14 +62,19 @@ export class ArchiveComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['src']) {
-      this._rs.getFileInfo(this.src.fileUrl).subscribe(
-        res => {
-          this.originalFilename = res['originalFilename'];
-        },
-        () => {
-          this.failedToLoad = true;
-        }
-      );
+      this._rs
+        .getFileInfo(this.src.fileUrl)
+        .pipe(
+          takeUntilDestroyed(this._destroyRef),
+          catchError(error => {
+            console.error('Failed to load file info:', error);
+            this.failedToLoad = true;
+            return EMPTY;
+          })
+        )
+        .subscribe(res => {
+          this.originalFilename = res.originalFilename || res['originalFilename'];
+        });
     }
   }
 }

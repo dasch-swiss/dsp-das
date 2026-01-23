@@ -139,8 +139,26 @@ export class PdfDocumentComponent implements OnChanges, AfterViewInit, OnDestroy
     if (!this._pdfComponent) {
       return;
     }
-    const elem = this._pdfComponent['element']?.nativeElement || document.getElementsByClassName('pdf-viewer')[0];
-    elem?.requestFullscreen?.();
+
+    // Try to get the element from the pdf component's internal element reference
+    let elem: HTMLElement | null = null;
+
+    // Access the internal element if it exists (ng2-pdf-viewer exposes this)
+    if (this._pdfComponent && 'element' in this._pdfComponent) {
+      const elementRef = (this._pdfComponent as { element?: ElementRef }).element;
+      elem = elementRef?.nativeElement;
+    }
+
+    // Fallback to finding the first pdf-viewer element
+    if (!elem) {
+      const elements = document.getElementsByClassName('pdf-viewer');
+      elem = elements.length > 0 ? (elements[0] as HTMLElement) : null;
+    }
+
+    // Request fullscreen if element is found and method exists
+    if (elem && 'requestFullscreen' in elem && typeof elem.requestFullscreen === 'function') {
+      elem.requestFullscreen();
+    }
   }
 
   onPdfLoadError(error: unknown) {
