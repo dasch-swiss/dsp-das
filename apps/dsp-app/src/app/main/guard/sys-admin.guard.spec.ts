@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AutoLoginService, UserService } from '@dasch-swiss/vre/core/session';
 import { BehaviorSubject } from 'rxjs';
@@ -12,10 +12,14 @@ describe('SysAdminGuard', () => {
   let routerMock: jest.Mocked<Partial<Router>>;
   let hasCheckedCredentialsSubject: BehaviorSubject<boolean>;
   let isSysAdminSubject: BehaviorSubject<boolean>;
+  let mockUrlTree: UrlTree;
 
   beforeEach(() => {
     hasCheckedCredentialsSubject = new BehaviorSubject<boolean>(false);
     isSysAdminSubject = new BehaviorSubject<boolean>(false);
+
+    // Create a mock UrlTree
+    mockUrlTree = { toString: () => '/home' } as UrlTree;
 
     autoLoginServiceMock = {
       hasCheckedCredentials$: hasCheckedCredentialsSubject,
@@ -26,7 +30,7 @@ describe('SysAdminGuard', () => {
     };
 
     routerMock = {
-      navigate: jest.fn(),
+      createUrlTree: jest.fn().mockReturnValue(mockUrlTree),
     };
 
     TestBed.configureTestingModule({
@@ -56,18 +60,18 @@ describe('SysAdminGuard', () => {
 
       guard.canActivate().subscribe(result => {
         expect(result).toBe(true);
-        expect(routerMock.navigate).not.toHaveBeenCalled();
+        expect(routerMock.createUrlTree).not.toHaveBeenCalled();
         done();
       });
     });
 
-    it('should return false and navigate to home when user is not sys admin', done => {
+    it('should return UrlTree and create url tree to home when user is not sys admin', done => {
       hasCheckedCredentialsSubject.next(true);
       isSysAdminSubject.next(false);
 
       guard.canActivate().subscribe(result => {
-        expect(result).toBe(false);
-        expect(routerMock.navigate).toHaveBeenCalledWith([RouteConstants.home]);
+        expect(result).toBe(mockUrlTree);
+        expect(routerMock.createUrlTree).toHaveBeenCalledWith([RouteConstants.home]);
         done();
       });
     });

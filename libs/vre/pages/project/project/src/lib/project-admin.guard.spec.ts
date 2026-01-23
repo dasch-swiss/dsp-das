@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { BehaviorSubject } from 'rxjs';
@@ -13,10 +13,14 @@ describe('ProjectAdminGuard', () => {
   let routerMock: jest.Mocked<Partial<Router>>;
   let isLoggedInSubject: BehaviorSubject<boolean>;
   let hasProjectAdminRightsSubject: BehaviorSubject<boolean>;
+  let mockUrlTree: UrlTree;
 
   beforeEach(() => {
     isLoggedInSubject = new BehaviorSubject<boolean>(false);
     hasProjectAdminRightsSubject = new BehaviorSubject<boolean>(false);
+
+    // Create a mock UrlTree
+    mockUrlTree = { toString: () => '/not-allowed' } as UrlTree;
 
     userServiceMock = {
       isLoggedIn$: isLoggedInSubject,
@@ -27,7 +31,7 @@ describe('ProjectAdminGuard', () => {
     };
 
     routerMock = {
-      navigate: jest.fn(),
+      createUrlTree: jest.fn().mockReturnValue(mockUrlTree),
     };
 
     TestBed.configureTestingModule({
@@ -57,12 +61,12 @@ describe('ProjectAdminGuard', () => {
 
       guard.canActivate().subscribe(result => {
         expect(result).toBe(true);
-        expect(routerMock.navigate).not.toHaveBeenCalled();
+        expect(routerMock.createUrlTree).not.toHaveBeenCalled();
         done();
       });
     });
 
-    it('should navigate to not-allowed page when user is not logged in', done => {
+    it('should not emit when user is not logged in due to filter', done => {
       isLoggedInSubject.next(false);
 
       guard.canActivate().subscribe({
@@ -73,20 +77,20 @@ describe('ProjectAdminGuard', () => {
         error: done.fail,
       });
 
-      // Verify navigation happened as a side effect
+      // Wait to verify no emission
       setTimeout(() => {
-        expect(routerMock.navigate).toHaveBeenCalledWith([RouteConstants.notAllowed]);
+        expect(routerMock.createUrlTree).not.toHaveBeenCalled();
         done();
       }, 100);
     });
 
-    it('should return false and navigate to not-allowed page when user has no project admin rights', done => {
+    it('should return UrlTree when user has no project admin rights', done => {
       isLoggedInSubject.next(true);
       hasProjectAdminRightsSubject.next(false);
 
       guard.canActivate().subscribe(result => {
-        expect(result).toBe(false);
-        expect(routerMock.navigate).toHaveBeenCalledWith([RouteConstants.notAllowed]);
+        expect(result).toBe(mockUrlTree);
+        expect(routerMock.createUrlTree).toHaveBeenCalledWith([RouteConstants.notAllowed]);
         done();
       });
     });
@@ -100,22 +104,22 @@ describe('ProjectAdminGuard', () => {
         error: done.fail,
       });
 
-      // User not logged in - should navigate
+      // User not logged in - should not emit due to filter
       isLoggedInSubject.next(false);
 
       setTimeout(() => {
-        expect(routerMock.navigate).toHaveBeenCalledWith([RouteConstants.notAllowed]);
+        expect(routerMock.createUrlTree).not.toHaveBeenCalled();
         done();
       }, 100);
     });
 
-    it('should navigate to not-allowed page when logged in but no admin rights', done => {
+    it('should return UrlTree to not-allowed page when logged in but no admin rights', done => {
       isLoggedInSubject.next(true);
       hasProjectAdminRightsSubject.next(false);
 
       guard.canActivate().subscribe(result => {
-        expect(result).toBe(false);
-        expect(routerMock.navigate).toHaveBeenCalledWith([RouteConstants.notAllowed]);
+        expect(result).toBe(mockUrlTree);
+        expect(routerMock.createUrlTree).toHaveBeenCalledWith([RouteConstants.notAllowed]);
         done();
       });
     });
