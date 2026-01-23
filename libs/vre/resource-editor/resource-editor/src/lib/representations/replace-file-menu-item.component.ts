@@ -11,7 +11,6 @@ import {
 
 export interface ReplaceFileDialogConfig {
   title: string;
-  subtitle: string;
   representation: string;
 }
 
@@ -35,7 +34,7 @@ export class ReplaceFileMenuItemComponent {
     this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
       ...DspDialogConfig.mediumDialog({
         title: this.dialogConfig.title,
-        subtitle: this.dialogConfig.subtitle,
+        subtitle: 'resourceEditor.representations.replaceFile',
         representation: this.dialogConfig.representation,
         resource: this.parentResource,
       }),

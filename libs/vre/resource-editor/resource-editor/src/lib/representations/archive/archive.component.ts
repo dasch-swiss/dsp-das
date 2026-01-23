@@ -12,7 +12,6 @@ import { FileRepresentationComponent } from '../file-representation.component';
       [parentResource]="parentResource"
       [dialogConfig]="{
         title: 'resourceEditor.representations.archive.title' | translate,
-        subtitle: 'resourceEditor.representations.archive.updateFile' | translate,
         representation: representationConstant,
       }" />
   `,
