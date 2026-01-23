@@ -32,10 +32,7 @@ describe('DownloadMenuItemComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DownloadMenuItemComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [
-        provideTranslateService(),
-        { provide: RepresentationService, useValue: representationServiceMock },
-      ],
+      providers: [provideTranslateService(), { provide: RepresentationService, useValue: representationServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DownloadMenuItemComponent);
@@ -56,10 +53,7 @@ describe('DownloadMenuItemComponent', () => {
     it('should call representationService.downloadProjectFile with correct parameters', () => {
       component.download();
 
-      expect(representationServiceMock.downloadProjectFile).toHaveBeenCalledWith(
-        mockFileValue,
-        mockParentResource
-      );
+      expect(representationServiceMock.downloadProjectFile).toHaveBeenCalledWith(mockFileValue, mockParentResource);
     });
   });
 });
