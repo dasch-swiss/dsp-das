@@ -2,12 +2,14 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { ReadFileValue } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { FileRepresentationComponent } from './representations/archive/archive.component';
+import { ArchiveComponent } from './representations/archive/archive.component';
 import { AudioComponent } from './representations/audio/audio.component';
+import { DocumentComponent } from './representations/document/document.component';
 import { PdfDocumentComponent } from './representations/document/pdf-document.component';
 import { getFileValue } from './representations/get-file-value';
 import { RepresentationConstants } from './representations/representation-constants';
 import { StillImageComponent } from './representations/still-image/still-image.component';
+import { TextComponent } from './representations/text/text.component';
 import { VideoComponent } from './representations/video/video.component';
 import { ResourceRepresentationContainerComponent } from './resource-representation-container.component';
 
@@ -32,7 +34,7 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
           </app-resource-representation-container>
         } @else {
           <app-resource-representation-container height="small">
-            <app-file-representation #archive [src]="fileValue" [parentResource]="resource.res" />
+            <app-document #document [src]="fileValue" [parentResource]="resource.res" />
           </app-resource-representation-container>
         }
       }
@@ -48,21 +50,23 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
       }
       @case (representationConstants.archive) {
         <app-resource-representation-container height="small">
-          <app-file-representation #archive [src]="fileValue" [parentResource]="resource.res" />
+          <app-archive #archive [src]="fileValue" [parentResource]="resource.res" />
         </app-resource-representation-container>
       }
       @case (representationConstants.text) {
         <app-resource-representation-container height="small">
-          <app-file-representation #text [src]="fileValue" [parentResource]="resource.res" />
+          <app-text #text [src]="fileValue" [parentResource]="resource.res" />
         </app-resource-representation-container>
       }
     }
   `,
   imports: [
-    FileRepresentationComponent,
+    ArchiveComponent,
     AudioComponent,
+    DocumentComponent,
     PdfDocumentComponent,
     StillImageComponent,
+    TextComponent,
     VideoComponent,
     ResourceRepresentationContainerComponent,
   ],

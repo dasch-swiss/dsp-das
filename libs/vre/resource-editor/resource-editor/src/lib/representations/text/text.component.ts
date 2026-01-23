@@ -1,25 +1,25 @@
 import { Component, Input } from '@angular/core';
-import { Constants, ReadArchiveFileValue, ReadResource } from '@dasch-swiss/dsp-js';
+import { Constants, ReadResource, ReadTextFileValue } from '@dasch-swiss/dsp-js';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FileRepresentationComponent } from '../file-representation.component';
 
 @Component({
-  selector: 'app-archive',
+  selector: 'app-text',
   imports: [FileRepresentationComponent, TranslatePipe],
   template: `
     <app-file-representation
       [src]="src"
       [parentResource]="parentResource"
       [dialogConfig]="{
-        title: 'resourceEditor.representations.archive.title' | translate,
-        subtitle: 'resourceEditor.representations.archive.updateFile' | translate,
+        title: 'resourceEditor.representations.text.title' | translate,
+        subtitle: 'resourceEditor.representations.text.updateFile' | translate,
         representation: representationConstant,
       }" />
   `,
 })
-export class ArchiveComponent {
-  @Input({ required: true }) src!: ReadArchiveFileValue;
+export class TextComponent {
+  @Input({ required: true }) src!: ReadTextFileValue;
   @Input({ required: true }) parentResource!: ReadResource;
 
-  readonly representationConstant = Constants.HasArchiveFileValue;
+  readonly representationConstant = Constants.HasTextFileValue;
 }
