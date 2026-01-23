@@ -9,6 +9,12 @@ import {
   ReplaceFileDialogProps,
 } from './replace-file-dialog/replace-file-dialog.component';
 
+export interface ReplaceFileDialogConfig {
+  title: string;
+  subtitle: string;
+  representation: string;
+}
+
 @Component({
   selector: 'app-replace-file-menu-item',
   imports: [TranslatePipe, MatButton],
@@ -19,20 +25,18 @@ import {
   `,
 })
 export class ReplaceFileMenuItemComponent {
-  @Input({ required: true }) title!: string;
-  @Input({ required: true }) subtitle!: string;
+  @Input({ required: true }) dialogConfig!: ReplaceFileDialogConfig;
   @Input({ required: true }) parentResource!: ReadResource;
   @Input({ required: true }) viewContainerRef!: ViewContainerRef;
-  @Input({ required: true }) representation!: string;
 
   constructor(private readonly _dialog: MatDialog) {}
 
   openReplaceFileDialog() {
     this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
       ...DspDialogConfig.mediumDialog({
-        title: this.title,
-        subtitle: this.subtitle,
-        representation: this.representation,
+        title: this.dialogConfig.title,
+        subtitle: this.dialogConfig.subtitle,
+        representation: this.dialogConfig.representation,
         resource: this.parentResource,
       }),
       viewContainerRef: this.viewContainerRef,

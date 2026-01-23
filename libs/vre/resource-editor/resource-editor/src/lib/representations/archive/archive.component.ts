@@ -33,9 +33,11 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
 
           @if (resourceFetcherService.userCanEdit$ | async) {
             <app-replace-file-menu-item
-              [title]="'resourceEditor.representations.archive.title' | translate"
-              [subtitle]="'resourceEditor.representations.archive.updateFile' | translate"
-              [representation]="representation"
+              [dialogConfig]="{
+                title: 'resourceEditor.representations.archive.title' | translate,
+                subtitle: 'resourceEditor.representations.archive.updateFile' | translate,
+                representation: representation,
+              }"
               [parentResource]="parentResource"
               [viewContainerRef]="viewContainerRef" />
           }
