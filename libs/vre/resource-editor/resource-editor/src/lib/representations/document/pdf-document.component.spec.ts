@@ -196,9 +196,9 @@ describe('DocumentComponent', () => {
         requestFullscreen: jest.fn(),
       };
 
-      // Mock the _pdfComponent with element.nativeElement
+      // Mock the _pdfComponent with pdfViewerContainer.nativeElement
       component['_pdfComponent'] = {
-        element: {
+        pdfViewerContainer: {
           nativeElement: mockElement,
         },
       } as any;

@@ -22,7 +22,7 @@ import { ResourceFetcherService } from './resource-fetcher.service';
   template: `
     @if (failedToLoad) {
       <app-representation-error-message />
-    } @else {
+    } @else if (originalFilename) {
       <div style="padding-top: 20px">
         <app-centered-message [icon]="'description'" [message]="originalFilename" [color]="'white'" />
 

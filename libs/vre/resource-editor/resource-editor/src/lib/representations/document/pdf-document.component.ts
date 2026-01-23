@@ -140,18 +140,17 @@ export class PdfDocumentComponent implements OnChanges, AfterViewInit, OnDestroy
       return;
     }
 
-    // Try to get the element from the pdf component's internal element reference
+    // Use the public pdfViewerContainer property instead of accessing private element
     let elem: HTMLElement | null = null;
 
-    // Access the internal element if it exists (ng2-pdf-viewer exposes this)
-    if (this._pdfComponent && 'element' in this._pdfComponent) {
-      const elementRef = (this._pdfComponent as { element?: ElementRef }).element;
-      elem = elementRef?.nativeElement;
+    // Access the public pdfViewerContainer ElementRef
+    if (this._pdfComponent.pdfViewerContainer?.nativeElement) {
+      elem = this._pdfComponent.pdfViewerContainer.nativeElement;
     }
 
     // Fallback to finding the first pdf-viewer element
     if (!elem) {
-      const elements = document.getElementsByClassName('pdf-viewer');
+      const elements = document.getElementsByClassName('ng2-pdf-viewer-container');
       elem = elements.length > 0 ? (elements[0] as HTMLElement) : null;
     }
 
