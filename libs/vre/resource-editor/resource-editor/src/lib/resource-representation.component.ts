@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { ReadFileValue } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { ArchiveComponent } from './representations/archive/archive.component';
+import { FileRepresentationComponent } from './representations/archive/archive.component';
 import { AudioComponent } from './representations/audio/audio.component';
 import { PdfDocumentComponent } from './representations/document/pdf-document.component';
 import { getFileValue } from './representations/get-file-value';
@@ -32,7 +32,7 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
           </app-resource-representation-container>
         } @else {
           <app-resource-representation-container height="small">
-            <app-archive #archive [src]="fileValue" [parentResource]="resource.res" />
+            <app-file-representation #archive [src]="fileValue" [parentResource]="resource.res" />
           </app-resource-representation-container>
         }
       }
@@ -48,18 +48,18 @@ import { ResourceRepresentationContainerComponent } from './resource-representat
       }
       @case (representationConstants.archive) {
         <app-resource-representation-container height="small">
-          <app-archive #archive [src]="fileValue" [parentResource]="resource.res" />
+          <app-file-representation #archive [src]="fileValue" [parentResource]="resource.res" />
         </app-resource-representation-container>
       }
       @case (representationConstants.text) {
         <app-resource-representation-container height="small">
-          <app-archive #text [src]="fileValue" [parentResource]="resource.res" />
+          <app-file-representation #text [src]="fileValue" [parentResource]="resource.res" />
         </app-resource-representation-container>
       }
     }
   `,
   imports: [
-    ArchiveComponent,
+    FileRepresentationComponent,
     AudioComponent,
     PdfDocumentComponent,
     StillImageComponent,

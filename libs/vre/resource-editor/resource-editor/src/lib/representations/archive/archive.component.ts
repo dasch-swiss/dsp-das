@@ -12,7 +12,7 @@ import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 @Component({
-  selector: 'app-archive',
+  selector: 'app-file-representation',
   imports: [
     AsyncPipe,
     TranslatePipe,
@@ -44,7 +44,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
     }
   `,
 })
-export class ArchiveComponent implements OnChanges {
+export class FileRepresentationComponent implements OnChanges {
   @Input({ required: true }) src!: ReadArchiveFileValue;
   @Input({ required: true }) parentResource!: ReadResource;
   originalFilename?: string;
