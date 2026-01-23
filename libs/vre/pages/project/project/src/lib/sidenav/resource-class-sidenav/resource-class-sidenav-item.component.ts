@@ -13,18 +13,12 @@ import { ProjectPageService } from '../../project-page.service';
   selector: 'app-resource-class-sidenav-item',
   template: `
     <div (click)="selectResourceClass()" class="item" [ngClass]="{ selected: isSelected$ | async }">
-      <span style="flex: 1">
+      <span class="label">
         {{ label | appStringifyStringLiteral }}
       </span>
-      <div
-        style="
-    justify-content: end;
-    display: flex;
-    align-items: center;
-    color: #b9b9b9;
-    margin-right: 0;">
+      <div class="metadata">
         <span>{{ count }}</span>
-        <mat-icon style="margin-left: 8px">{{ icon }}</mat-icon>
+        <mat-icon class="icon">{{ icon }}</mat-icon>
       </div>
     </div>
   `,
@@ -43,6 +37,22 @@ import { ProjectPageService } from '../../project-page.service';
           border-left: 2px solid #33678f;
           background-color: #d6e0e8;
         }
+      }
+
+      .label {
+        flex: 1;
+      }
+
+      .metadata {
+        justify-content: end;
+        display: flex;
+        align-items: center;
+        color: #b9b9b9;
+        margin-right: 0;
+      }
+
+      .icon {
+        margin-left: 8px;
       }
     `,
   ],

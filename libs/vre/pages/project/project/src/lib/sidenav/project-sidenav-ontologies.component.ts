@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
@@ -7,7 +7,7 @@ import { APIV3ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
-import { combineLatest, first } from 'rxjs';
+import { catchError, combineLatest, first, of, shareReplay, switchMap } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 import { ResourceClassSidenavComponent } from './resource-class-sidenav/resource-class-sidenav.component';
 
@@ -23,15 +23,13 @@ import { ResourceClassSidenavComponent } from './resource-class-sidenav/resource
   template: `
     @if (projectOntologies$ | async; as projectOntologies) {
       @if (projectOntologies.length === 0) {
-        <div class="mat-body-2" style="margin-top: 48px; text-align: center">
-          This project does not have any data yet.
-        </div>
+        <div class="mat-body-2 empty-message">This project does not have any data yet.</div>
       } @else {
         <mat-accordion>
           @for (onto of projectOntologies; let first = $first; track onto) {
             <mat-expansion-panel
+              class="ontology-panel"
               [togglePosition]="'before'"
-              style="box-shadow: none"
               data-cy="sidenav-ontology"
               [expanded]="shouldExpand(onto.ontology.iri, projectOntologies.length === 1 && first)">
               <mat-expansion-panel-header>
@@ -44,7 +42,7 @@ import { ResourceClassSidenavComponent } from './resource-class-sidenav/resource
                   {{ onto.ontology.label }}
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <app-resource-class-sidenav [ontology]="onto" style="display: block; margin-left: 40px" />
+              <app-resource-class-sidenav class="resource-class-sidenav" [ontology]="onto" />
             </mat-expansion-panel>
           }
         </mat-accordion>
@@ -55,14 +53,36 @@ import { ResourceClassSidenavComponent } from './resource-class-sidenav/resource
   `,
   styles: [
     `
-      :host ::ng-deep .mat-expansion-panel-body {
+      .mat-expansion-panel-body {
         padding: 0;
+      }
+
+      .empty-message {
+        margin-top: 48px;
+        text-align: center;
+      }
+
+      .ontology-panel {
+        box-shadow: none;
+      }
+
+      .resource-class-sidenav {
+        display: block;
+        margin-left: 40px;
       }
     `,
   ],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ProjectSidenavOntologiesComponent implements OnInit {
-  projectOntologies$ = this._v3.getV3ProjectsProjectiriResourcesperontology(this._projectPageService.currentProject.id);
+  projectOntologies$ = this._projectPageService.currentProject$.pipe(
+    switchMap(project => this._v3.getV3ProjectsProjectiriResourcesperontology(project.id)),
+    shareReplay({ bufferSize: 1, refCount: true }),
+    catchError(error => {
+      console.error('Error loading project ontologies:', error);
+      return of([]);
+    })
+  );
   initialExpandIri?: string;
 
   constructor(
