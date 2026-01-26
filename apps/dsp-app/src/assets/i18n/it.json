@@ -294,7 +294,9 @@
       },
       "propertyInfo": {
         "usedIn": "Usato in",
-        "notUsed": "Non usato"
+        "notUsed": "Non usato",
+        "cannotEdit": "Non può essere modificato",
+        "cannotDelete": "Non può essere eliminato"
       },
       "resourceClassInfo": {
         "collapse": "Riduci",
