@@ -46,28 +46,48 @@ export class PropertyFormManager implements OnDestroy {
 
   setSelectedOperator(statement: StatementElement, selectedOperator: Operator): void {
     statement.selectedOperator = selectedOperator;
+    this._updateStatement(statement);
+  }
+
+  setObjectValue(statement: StatementElement, searchValue: string | IriLabelPair): void {
+    this._removeChildrenIfAny(statement);
+    statement.selectedObjectValue = searchValue;
+    this._updateStatement(statement);
+  }
+
+  private _updateStatement(statement: StatementElement): void {
     this.searchStateService.updateStatement(statement);
-    if (statement.isValidAndComplete && this._isLastOrLastForSameSubject(statement)) {
+    this._addEmptyStatementIfNecessary(statement);
+    this._removeChildrenIfAny(statement);
+    this._addChildIfNecessary(statement);
+  }
+
+  private _removeChildrenIfAny(statement: StatementElement): void {
+    const hasChildren = this.searchStateService.currentState.statementElements.some(s => s.parentId === statement.id);
+    if (hasChildren) {
+      const currentState = this.searchStateService.currentState;
+      const statementElements = currentState.statementElements.filter(stm => stm.parentId !== statement.id);
+      this.searchStateService.patchState({
+        statementElements,
+      });
+    }
+  }
+
+  private _addEmptyStatementIfNecessary(statement: StatementElement): void {
+    if (statement.isValidAndComplete && this._isLastOrLastForSameSubject(statement) && !statement.parentId) {
       this._addEmptyStatement(statement);
     }
   }
 
-  setObjectValue(statement: StatementElement, searchValue: string | IriLabelPair): void {
-    statement.selectedObjectValue = searchValue;
-    this.searchStateService.updateStatement(statement);
-    if (statement.isValidAndComplete && this._isLastOrLastForSameSubject(statement) && !statement.parentId) {
-      this._addEmptyStatement(statement);
-    }
-    if (
-      statement.isValidAndComplete &&
-      (statement.selectedOperator === Operator.Matches || statement.parentId) &&
-      !this._hasIncompleteChildStatement(statement)
-    ) {
-      const previousParent = this.searchStateService.currentState.statementElements.find(
-        s => s.id === statement?.parentId
-      );
-      const parentStatement = previousParent || statement;
-      this._addChildStatement(parentStatement);
+  private _addChildIfNecessary(statement: StatementElement): void {
+    if (statement.isValidAndComplete && (statement.selectedOperator === Operator.Matches || statement.parentId)) {
+      if (!this._hasIncompleteChildStatement(statement)) {
+        const previousParent = this.searchStateService.currentState.statementElements.find(
+          s => s.id === statement?.parentId
+        );
+        const parentStatement = previousParent || statement;
+        this._addChildStatement(parentStatement);
+      }
     }
   }
 
