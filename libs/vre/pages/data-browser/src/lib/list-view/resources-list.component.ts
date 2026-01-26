@@ -34,7 +34,6 @@ import { ResourceListComponent } from './resource-list.component';
 })
 export class ResourcesListComponent {
   @Input({ required: true }) resources!: ReadResource[];
-  @Input({ required: true }) showBackToFormButton!: boolean;
   @Input() showProjectShortname = false;
 
   constructor(public resourceResultService: ResourceResultService) {}
