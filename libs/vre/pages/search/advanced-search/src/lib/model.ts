@@ -336,7 +336,6 @@ class GravsearchWriterScoped {
       case Operator.NotEquals:
         return `FILTER (${this.objectPlaceHolder} != "${this._selectedValue}") .\n`;
       case Operator.Matches:
-        // SO WRONG BUT EXACTLY LIKE BEFORE
         return `FILTER knora-api:matchLabel(${this.MAIN_RESOURCE_PLACEHOLDER}, "${this._selectedValue}") .\n`;
       case Operator.IsLike:
         return `FILTER regex(${this.objectPlaceHolder}, "${this._selectedValue}", "i") .\n`;
