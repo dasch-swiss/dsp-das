@@ -91,7 +91,7 @@ export class AdvancedSearchPageComponent implements AfterViewChecked, OnDestroy 
 
       // Reset to original ratio after direction change
       if (this.query) {
-        const sizes = newValue ? [50, 50] : this.getHorizontalSizes();
+        const sizes: [number, number] = newValue ? [50, 50] : this.getHorizontalSizes();
         this._pendingSizes = sizes;
         this._needsSplitUpdate = true;
       }
