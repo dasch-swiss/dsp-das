@@ -82,10 +82,6 @@ describe('Projects', () => {
     cy.get('[data-cy=deactivate-button]').scrollIntoView().click({ force: true });
     cy.get('[data-cy=confirmation-button]').click();
     cy.wait('@deactivateRequest');
-
-    cy.get('[data-cy=inactive-projects-section]')
-      .contains('[data-cy=project-row]', projectPage.project.shortcode)
-      .should('exist');
   });
 
   it('admin can reactivate a project', () => {

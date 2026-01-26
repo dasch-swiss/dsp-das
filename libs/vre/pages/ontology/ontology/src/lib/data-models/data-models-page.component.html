@@ -33,7 +33,7 @@
   @if (ontologiesMetadata$ | async) {
   <app-clickable-list-card>
     @for (onto of ontologiesMetadata$ | async; track trackByOntologyMetaFn($index, onto)) {
-    <mat-list-item (click)="navigateToOntology(onto.id)">
+    <mat-list-item (click)="navigateToOntology(onto.id)" data-cy="ontology-button">
       <mat-icon matListItemIcon>bubble_chart</mat-icon>
       <div matLine>{{ onto.label }}</div>
     </mat-list-item>
