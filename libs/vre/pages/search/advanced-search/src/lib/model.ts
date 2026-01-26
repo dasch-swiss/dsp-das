@@ -294,14 +294,7 @@ class GravsearchWriterScoped {
     } else if (this.isKnoraValueType) {
       statement += this._whereStatementForValueComparison();
     } else if (this.isLinkValueType) {
-      if (
-        this._operator !== Operator.Exists &&
-        this._operator !== Operator.NotExists &&
-        this._operator &&
-        this._operator !== Operator.Matches
-      ) {
-        statement += `${this.subject} ${this.predicate} ${this.objectValue} .\n`;
-      }
+      statement += this._getWhereStatementForLinkObjectComparison();
     }
     return this._operator === Operator.NotExists ? `FILTER NOT EXISTS { \n${statement}\n}\n` : `${statement}\n`;
   }
@@ -313,6 +306,17 @@ class GravsearchWriterScoped {
       whereStm += this.valueFilterStatement;
     }
     return whereStm;
+  }
+
+  private _getWhereStatementForLinkObjectComparison(): string {
+    let statement = '';
+    if (this._operator === Operator.Equals) {
+      statement += `${this.subject} ${this.predicate} ${this.objectValue} .\n`;
+    }
+    if (this._operator === Operator.NotEquals) {
+      statement += `FILTER NOT EXISTS { ${this.subject} ${this.predicate} ${this.objectValue} . } \n`;
+    }
+    return statement;
   }
 
   get valueAsValueIri(): string | undefined {
