@@ -8,7 +8,7 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { BehaviorSubject, combineLatest, filter, map, Observable, startWith, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
 import { RDFS_LABEL, ResourceLabel, SEARCH_ALL_RESOURCE_CLASSES_OPTION } from '../constants';
 import { IriLabelPair, Predicate } from '../model';
 
@@ -87,17 +87,25 @@ export class OntologyDataService {
         startWith([SEARCH_ALL_RESOURCE_CLASSES_OPTION])
       );
     }
-    return combineLatest(this.resourceClasses$, this._propertyDefinitions$).pipe(
+
+    return combineLatest([this.resourceClasses$, this._propertyDefinitions$]).pipe(
       map(([resClasses, propDefs]) => {
-        const propDef = propDefs.find(p => p.id === propertyIri);
-        if (!propDef) {
-          return [];
-        }
-        const objectType = propDef.objectType;
-        if (!objectType) {
-          return [];
-        }
-        return resClasses.filter(rc => rc.iri === objectType);
+        const objectType = propDefs.find(p => p.id === propertyIri)?.objectType;
+        return { resClasses, objectType };
+      }),
+      switchMap(({ resClasses, objectType }) => {
+        if (!objectType) return of([]);
+
+        return this.getSubclassesOfResourceClass$(objectType).pipe(
+          map(subs => {
+            const direct = resClasses.filter(rc => rc.iri === objectType);
+            const merged = [...direct, ...subs];
+
+            // dedupe by iri
+            const byIri = new Map(merged.map(x => [x.iri, x]));
+            return [...byIri.values()];
+          })
+        );
       })
     );
   }
