@@ -1,4 +1,5 @@
-import { Inject, Injectable } from '@angular/core';
+import { DestroyRef, Inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   Constants,
   KnoraApiConnection,
@@ -26,13 +27,17 @@ export class OntologyDataService {
 
   constructor(
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection
+    private _dspApiConnection: KnoraApiConnection,
+    private _destroyRef: DestroyRef
   ) {}
 
   init(projectIri: string, ontology?: IriLabelPair) {
     this._dspApiConnection.v2.onto
       .getOntologiesByProjectIri(projectIri)
-      .pipe(map(r => r.ontologies.map(o => ({ iri: o.id, label: o.label }))))
+      .pipe(
+        map(r => r.ontologies.map(o => ({ iri: o.id, label: o.label }))),
+        takeUntilDestroyed(this._destroyRef)
+      )
       .subscribe({
         next: ontologies => {
           this._ontologies.next(ontologies);
@@ -45,12 +50,15 @@ export class OntologyDataService {
 
   setOntology(ontologyIri: string) {
     this._ontologyLoading.next(true);
-    this._dspApiConnection.v2.onto.getOntology(ontologyIri, true).subscribe({
-      next: ontology => {
-        this._selectedOntology.next(ontology);
-        this._ontologyLoading.next(false);
-      },
-    });
+    this._dspApiConnection.v2.onto
+      .getOntology(ontologyIri, true)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: ontology => {
+          this._selectedOntology.next(ontology);
+          this._ontologyLoading.next(false);
+        },
+      });
   }
 
   private _resourceClassDefinitions$ = this.selectedOntology$.pipe(

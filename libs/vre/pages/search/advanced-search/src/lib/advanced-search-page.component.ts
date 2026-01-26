@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, HostListener, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AngularSplitModule, SplitComponent } from 'angular-split';
@@ -35,7 +35,7 @@ import { QueryObject } from './model';
   styleUrls: ['./advanced-search-page.component.scss'],
   imports: [AdvancedSearchComponent, AdvancedSearchResultsComponent, AngularSplitModule],
 })
-export class AdvancedSearchPageComponent implements OnInit {
+export class AdvancedSearchPageComponent {
   private static readonly STORAGE_KEY_DIRECTION = 'advanced-search-split-direction';
   private static readonly STORAGE_KEY_RATIO = 'advanced-search-split-ratio';
 
@@ -47,9 +47,6 @@ export class AdvancedSearchPageComponent implements OnInit {
 
   constructor(private readonly _route: ActivatedRoute) {}
 
-  ngOnInit() {
-    console.log('query', this.query);
-  }
   onSearch(queryObject: QueryObject): void {
     this.query = queryObject.query;
 
