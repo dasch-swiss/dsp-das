@@ -23,7 +23,6 @@ export interface ReplaceFileDialogProps {
   representation: FileRepresentationType;
   resource: ReadResource;
   title: string;
-  subtitle: string;
 }
 
 @Component({
