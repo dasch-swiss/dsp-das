@@ -670,6 +670,10 @@
       }
     },
     "templateSwitcher": {
+      "nullableEditor": {
+        "addTooltip": "Ajouter",
+        "removeTooltip": "Supprimer"
+      },
       "createResourceDialog": {
         "title": "Créer une nouvelle ressource de type : {{type}}"
       },
