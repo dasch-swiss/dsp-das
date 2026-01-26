@@ -57,7 +57,7 @@ export class AdvancedSearchComponent implements OnInit {
   @Input({ required: true }) projectUuid!: string;
   @Input({ required: true }) isVerticalDirection: boolean | undefined;
   @Output() toggleDirection = new EventEmitter<any>();
-  @Output() gravesearchQuery = new EventEmitter<QueryObject>();
+  @Output() gravesearchQuery = new EventEmitter<string>();
   @Output() clearQuery = new EventEmitter<any>();
 
   searchState: SearchStateService = inject(SearchStateService);
@@ -86,7 +86,7 @@ export class AdvancedSearchComponent implements OnInit {
       query,
       properties: this.searchState.validStatementElements,
     };
-    this.gravesearchQuery.emit(queryObject);
+    this.gravesearchQuery.emit(queryObject.query);
   }
 
   resetSearch(): void {

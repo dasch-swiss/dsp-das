@@ -1,4 +1,12 @@
-import { AfterViewChecked, Component, HostListener, OnDestroy, signal, ViewChild } from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  OnDestroy,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AngularSplitModule, SplitComponent } from 'angular-split';
@@ -73,9 +81,8 @@ export class AdvancedSearchPageComponent implements AfterViewChecked, OnDestroy 
     this._resizeSubject.complete();
   }
 
-  onSearch(queryObject: QueryObject): void {
-    this.query = queryObject.query;
-
+  onSearch(query: string): void {
+    this.query = query;
     // Restore saved ratio when query results appear
     const savedRatio = this.loadRatio();
     if (savedRatio) {
