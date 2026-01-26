@@ -2,7 +2,6 @@ import { AsyncPipe } from '@angular/common';
 import { Component, Inject, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
-import { MatIcon } from '@angular/material/icon';
 import {
   KnoraApiConnection,
   ReadResource,
@@ -30,23 +29,8 @@ export interface ReplaceFileDialogProps {
 @Component({
   selector: 'app-replace-file-dialog',
   template: `
-    <app-dialog-header [title]="data.title" [subtitle]="data.subtitle" />
+    <app-dialog-header [title]="data.title" [subtitle]="'resourceEditor.representations.replaceFile' | translate" />
     <mat-dialog-content>
-      <div class="warning">
-        <div class="container">
-          <div class="icon">
-            <mat-icon>warning</mat-icon>
-          </div>
-          <div class="message">
-            {{
-              _translateService.instant('resourceEditor.representations.replaceFileDialog.willBeReplaced', {
-                title: data.title,
-              })
-            }}
-          </div>
-        </div>
-      </div>
-
       @if (resourceFetcher.projectShortcode$ | async; as projectShortcode) {
         <app-create-resource-form-file
           [fileRepresentation]="data.representation"
@@ -69,11 +53,9 @@ export interface ReplaceFileDialogProps {
       </button>
     </mat-dialog-actions>
   `,
-  styleUrls: ['./replace-file-dialog.component.scss'],
   imports: [
     DialogHeaderComponent,
     MatDialogContent,
-    MatIcon,
     AsyncPipe,
     CreateResourceFormFileComponent,
     MatDialogActions,
