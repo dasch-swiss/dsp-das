@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   EventEmitter,
   inject,
   Input,
@@ -9,6 +10,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSelectModule } from '@angular/material/select';
 import { BehaviorSubject } from 'rxjs';
 import { IriLabelPair, Predicate } from '../../../../model';
@@ -39,7 +41,8 @@ import { OntologyDataService } from '../../../../service/ontology-data.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceValueComponent implements OnChanges {
-  private _dataService = inject(OntologyDataService);
+  private readonly _dataService = inject(OntologyDataService);
+  private readonly destroyRef = inject(DestroyRef);
 
   @Input() selectedResource?: IriLabelPair;
   @Input() selectedPredicate?: Predicate;
@@ -49,9 +52,12 @@ export class ResourceValueComponent implements OnChanges {
   availableResources$ = new BehaviorSubject<IriLabelPair[]>([]);
 
   ngOnChanges(): void {
-    this._dataService.getResourceClassObjectsForProperty$(this.selectedPredicate?.iri).subscribe(resources => {
-      this.availableResources$.next(resources);
-    });
+    this._dataService
+      .getResourceClassObjectsForProperty$(this.selectedPredicate?.iri)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(resources => {
+        this.availableResources$.next(resources);
+      });
   }
 
   compareObjects(object1: IriLabelPair, object2: IriLabelPair) {

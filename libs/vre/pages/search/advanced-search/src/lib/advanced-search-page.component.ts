@@ -1,7 +1,8 @@
-import { Component, HostListener, signal, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, HostListener, OnDestroy, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AngularSplitModule, SplitComponent } from 'angular-split';
+import { debounceTime, Subject } from 'rxjs';
 import { AdvancedSearchResultsComponent } from './advanced-search-results.component';
 import { AdvancedSearchComponent } from './advanced-search.component';
 import { QueryObject } from './model';
@@ -14,51 +15,73 @@ import { QueryObject } from './model';
     [direction]="isVertical() ? 'vertical' : 'horizontal'"
     (dragEnd)="onDragEnd($event)">
     <as-split-area [size]="query ? 50 : 100">
-      <div style="display: flex; flex-direction: column; height: 100%; position: relative">
-        <div style="display: flex; justify-content: center; flex: 1">
+      <div class="search-form-container">
+        <div class="search-form-wrapper">
           <app-advanced-search
+            class="search-form-content"
             [isVerticalDirection]="query ? isVertical() : undefined"
             (toggleDirection)="toggleDirection()"
             [projectUuid]="uuid"
             (gravesearchQuery)="onSearch($event)"
-            (clearQuery)="query = undefined"
-            style="max-width: 900px; width: 100%; padding-left: 16px; padding-right: 16px" />
+            (clearQuery)="query = undefined" />
         </div>
       </div>
     </as-split-area>
     @if (query) {
       <as-split-area [size]="50">
-        <app-advanced-search-results-page [query]="query" />
+        <app-advanced-search-results [query]="query" />
       </as-split-area>
     }
   </as-split>`,
   styleUrls: ['./advanced-search-page.component.scss'],
   imports: [AdvancedSearchComponent, AdvancedSearchResultsComponent, AngularSplitModule],
 })
-export class AdvancedSearchPageComponent {
+export class AdvancedSearchPageComponent implements AfterViewChecked, OnDestroy {
   private static readonly STORAGE_KEY_DIRECTION = 'advanced-search-split-direction';
   private static readonly STORAGE_KEY_RATIO = 'advanced-search-split-ratio';
 
   @ViewChild('split') split?: SplitComponent;
 
-  uuid = this._route.parent!.snapshot.params[RouteConstants.uuidParameter];
+  uuid = this._route.parent?.snapshot.params[RouteConstants.uuidParameter] ?? '';
   query?: string;
   isVertical = signal(this.loadDirection());
 
-  constructor(private readonly _route: ActivatedRoute) {}
+  private _resizeSubject = new Subject<void>();
+  private _needsSplitUpdate = false;
+  private _pendingSizes?: [number, number];
+
+  constructor(private readonly _route: ActivatedRoute) {
+    if (!this.uuid) {
+      console.error('Project UUID not found in route parameters');
+    }
+
+    // Debounce resize events
+    this._resizeSubject.pipe(debounceTime(300)).subscribe(() => {
+      this._handleResize();
+    });
+  }
+
+  ngAfterViewChecked(): void {
+    if (this._needsSplitUpdate && this.split && this.query && this._pendingSizes) {
+      this.split.setVisibleAreaSizes(this._pendingSizes);
+      this._needsSplitUpdate = false;
+      this._pendingSizes = undefined;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this._resizeSubject.complete();
+  }
 
   onSearch(queryObject: QueryObject): void {
     this.query = queryObject.query;
 
     // Restore saved ratio when query results appear
-    setTimeout(() => {
-      if (this.split && this.query) {
-        const savedRatio = this.loadRatio();
-        if (savedRatio) {
-          this.split.setVisibleAreaSizes(savedRatio);
-        }
-      }
-    }, 0);
+    const savedRatio = this.loadRatio();
+    if (savedRatio) {
+      this._pendingSizes = savedRatio;
+      this._needsSplitUpdate = true;
+    }
   }
 
   toggleDirection(): void {
@@ -67,12 +90,11 @@ export class AdvancedSearchPageComponent {
       this.saveDirection(newValue);
 
       // Reset to original ratio after direction change
-      setTimeout(() => {
-        if (this.split && this.query) {
-          const sizes = newValue ? [50, 50] : this.getHorizontalSizes();
-          this.split.setVisibleAreaSizes(sizes);
-        }
-      }, 0);
+      if (this.query) {
+        const sizes = newValue ? [50, 50] : this.getHorizontalSizes();
+        this._pendingSizes = sizes;
+        this._needsSplitUpdate = true;
+      }
 
       return newValue;
     });
@@ -87,6 +109,10 @@ export class AdvancedSearchPageComponent {
 
   @HostListener('window:resize')
   onWindowResize(): void {
+    this._resizeSubject.next();
+  }
+
+  private _handleResize(): void {
     // Only recalculate on resize if in horizontal mode and query exists
     if (!this.isVertical() && this.query && this.split) {
       const sizes = this.getHorizontalSizes();

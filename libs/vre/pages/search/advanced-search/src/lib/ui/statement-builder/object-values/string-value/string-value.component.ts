@@ -1,4 +1,16 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -43,6 +55,8 @@ class ValueErrorStateMatcher implements ErrorStateMatcher {
   styleUrl: '../../../../advanced-search.component.scss',
 })
 export class StringValueComponent implements OnInit, OnChanges, AfterViewInit {
+  private readonly destroyRef = inject(DestroyRef);
+
   @Input({ required: true }) valueType!: string;
   @Input() value?: string;
 
@@ -60,7 +74,7 @@ export class StringValueComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngOnInit() {
     this.inputControl.valueChanges
-      .pipe(debounceTime(300), distinctUntilChanged())
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe(value => this._emitValueChanged(value));
 
     this.inputControl.setValidators([Validators.required, ...this._getValidators(this.valueType)]);

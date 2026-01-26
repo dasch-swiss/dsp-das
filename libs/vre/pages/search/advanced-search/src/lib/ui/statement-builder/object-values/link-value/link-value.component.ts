@@ -191,6 +191,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnChanges, OnD
       .searchResourcesByLabel$(lastSearch, this.resourceClass!, offset)
       .pipe(
         take(1),
+        takeUntil(this.destroy$),
         finalize(() => this.loading$.next(false))
       )
       .subscribe(results => {

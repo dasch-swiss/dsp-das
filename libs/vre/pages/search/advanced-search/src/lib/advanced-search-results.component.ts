@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, Input, OnChanges } from '@angular/core';
+import { Component, Inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -7,10 +7,10 @@ import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { filterNull } from '@dasch-swiss/vre/shared/app-common';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
-import { BehaviorSubject, combineLatest, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-advanced-search-results-page',
+  selector: 'app-advanced-search-results',
   imports: [AsyncPipe, CenteredBoxComponent, NoResultsFoundComponent, ResourceBrowserComponent],
   template: `
     @if (resources$ | async; as resources) {
@@ -50,15 +50,15 @@ export class AdvancedSearchResultsComponent implements OnChanges {
   constructor(
     @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
     private readonly _resourceResultService: ResourceResultService,
-    private readonly _titleService: Title,
-    private readonly _cd: ChangeDetectorRef
+    private readonly _titleService: Title
   ) {
     this._titleService.setTitle(`Advanced search results`);
   }
 
-  ngOnChanges() {
-    this.querySubject.next(this.query);
-    this._cd.detectChanges();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['query'] && changes['query'].currentValue) {
+      this.querySubject.next(this.query);
+    }
   }
 
   private _performGravSearch(query_: string, index: number) {

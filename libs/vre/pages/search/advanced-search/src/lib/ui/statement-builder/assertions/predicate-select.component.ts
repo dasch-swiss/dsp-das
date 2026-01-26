@@ -1,5 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  Output,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { take } from 'rxjs';
@@ -28,19 +38,20 @@ import { OntologyDataService } from '../../../service/ontology-data.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PredicateSelectComponent implements OnChanges {
+  private readonly _dataService = inject(OntologyDataService);
+  private readonly destroyRef = inject(DestroyRef);
+
   @Input() subjectClass?: IriLabelPair;
   @Input() selectedPredicate?: Predicate;
 
   @Output() selectedPredicateChange = new EventEmitter<Predicate>();
-
-  private _dataService = inject(OntologyDataService);
 
   properties: Predicate[] = [];
 
   ngOnChanges(): void {
     this._dataService
       .getProperties$(this.subjectClass?.iri)
-      .pipe(take(1))
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe(properties => {
         this.properties = properties;
       });
