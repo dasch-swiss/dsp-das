@@ -485,7 +485,7 @@
         "title": "Text (csv, txt, xml)"
       },
       "replaceFileDialog": {
-        "willBeReplaced": " wird ersetzt."
+        "willBeReplaced": "Diese Datei wird ersetzt."
       },
       "iiifControl": {
         "label": "IIIF-URL",

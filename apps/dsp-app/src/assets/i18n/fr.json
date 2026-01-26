@@ -525,7 +525,7 @@
         "openInFullscreen": "Ouvrir en plein écran"
       },
       "replaceFileDialog": {
-        "willBeReplaced": " sera remplacé."
+        "willBeReplaced": "Ce fichier sera remplacé."
       },
       "iiifControl": {
         "label": "URL IIIF",
