@@ -10,7 +10,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
   template: `
     <as-split direction="horizontal">
       <as-split-area [size]="30">
-        <app-resources-list [resources]="data.resources" [showProjectShortname]="showProjectShortname"/>
+        <app-resources-list [resources]="data.resources" [showProjectShortname]="showProjectShortname" />
       </as-split-area>
       <as-split-area [size]="70" cdkScrollable>
         <app-multiple-viewer />
