@@ -27,8 +27,8 @@ export class OntologyDataService {
 
   constructor(
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _destroyRef: DestroyRef
+    private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _destroyRef: DestroyRef
   ) {}
 
   init(projectIri: string, ontology?: IriLabelPair) {
