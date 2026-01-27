@@ -78,7 +78,7 @@ export class ProjectSidenavOntologiesComponent implements OnInit {
   projectOntologies$ = this._projectPageService.currentProject$.pipe(
     switchMap(project => this._v3.getV3ProjectsProjectiriResourcesperontology(project.id)),
     map(ontologies =>
-      [...ontologies].sort((a, b) => a.ontology.label.toLowerCase().localeCompare(b.ontology.label.toLowerCase()))
+      ontologies.sort((a, b) => a.ontology.label.toLowerCase().localeCompare(b.ontology.label.toLowerCase()))
     ),
     shareReplay({ bufferSize: 1, refCount: true }),
     catchError(error => {
