@@ -1,13 +1,5 @@
-import {
-  AfterViewChecked,
-  ChangeDetectorRef,
-  Component,
-  HostListener,
-  OnDestroy,
-  signal,
-  ViewChild,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { AfterViewChecked, Component, HostListener, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AngularSplitModule, SplitComponent } from 'angular-split';
 import { debounceTime, Subject } from 'rxjs';
@@ -44,7 +36,7 @@ import { QueryObject } from './model';
   styleUrls: ['./advanced-search-page.component.scss'],
   imports: [AdvancedSearchComponent, AdvancedSearchResultsComponent, AngularSplitModule],
 })
-export class AdvancedSearchPageComponent implements AfterViewChecked, OnDestroy {
+export class AdvancedSearchPageComponent implements OnInit, AfterViewChecked, OnDestroy {
   private static readonly STORAGE_KEY_DIRECTION = 'advanced-search-split-direction';
   private static readonly STORAGE_KEY_RATIO = 'advanced-search-split-ratio';
 
@@ -58,7 +50,10 @@ export class AdvancedSearchPageComponent implements AfterViewChecked, OnDestroy 
   private _needsSplitUpdate = false;
   private _pendingSizes?: [number, number];
 
-  constructor(private readonly _route: ActivatedRoute) {
+  constructor(
+    private readonly _route: ActivatedRoute,
+    private _router: Router
+  ) {
     if (!this.uuid) {
       console.error('Project UUID not found in route parameters');
     }
@@ -67,6 +62,17 @@ export class AdvancedSearchPageComponent implements AfterViewChecked, OnDestroy 
     this._resizeSubject.pipe(debounceTime(300)).subscribe(() => {
       this._handleResize();
     });
+  }
+
+  ngOnInit(): void {
+    const initialQuery = this._route.snapshot.queryParamMap.get('q');
+    if (initialQuery) {
+      this.query = initialQuery;
+    }
+
+    if (this.query) {
+      this._loadAndSetRatio();
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -83,12 +89,14 @@ export class AdvancedSearchPageComponent implements AfterViewChecked, OnDestroy 
 
   onSearch(query: string): void {
     this.query = query;
+    // Update the URL with the new query
+    this._router.navigate([], {
+      relativeTo: this._route,
+      queryParams: { q: query },
+      queryParamsHandling: 'merge',
+    });
     // Restore saved ratio when query results appear
-    const savedRatio = this.loadRatio();
-    if (savedRatio) {
-      this._pendingSizes = savedRatio;
-      this._needsSplitUpdate = true;
-    }
+    this._loadAndSetRatio();
   }
 
   toggleDirection(): void {
@@ -98,9 +106,8 @@ export class AdvancedSearchPageComponent implements AfterViewChecked, OnDestroy 
 
       // Reset to original ratio after direction change
       if (this.query) {
-        const sizes: [number, number] = newValue ? [50, 50] : this.getHorizontalSizes();
-        this._pendingSizes = sizes;
-        this._needsSplitUpdate = true;
+        const ratio: [number, number] = newValue ? [50, 50] : this.getHorizontalSizes();
+        this._updateRatio(ratio);
       }
 
       return newValue;
@@ -143,7 +150,14 @@ export class AdvancedSearchPageComponent implements AfterViewChecked, OnDestroy 
     localStorage.setItem(AdvancedSearchPageComponent.STORAGE_KEY_DIRECTION, isVertical ? 'vertical' : 'horizontal');
   }
 
-  private loadRatio(): [number, number] | null {
+  private _loadAndSetRatio(): void {
+    const savedRatio = this._loadRatio();
+    if (savedRatio) {
+      this._updateRatio(savedRatio);
+    }
+  }
+
+  private _loadRatio(): [number, number] | null {
     const stored = localStorage.getItem(AdvancedSearchPageComponent.STORAGE_KEY_RATIO);
     if (stored) {
       try {
@@ -156,6 +170,11 @@ export class AdvancedSearchPageComponent implements AfterViewChecked, OnDestroy 
       }
     }
     return null;
+  }
+
+  private _updateRatio(ratio: [number, number]): void {
+    this._pendingSizes = ratio;
+    this._needsSplitUpdate = true;
   }
 
   private saveRatio(sizes: [number, number]): void {
