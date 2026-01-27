@@ -30,7 +30,7 @@ export class ResourceClassSidenavComponent implements OnChanges {
     const lang = this._localizationService.getCurrentLanguage();
     const classesCount = this.ontology.classesAndCount || [];
 
-    this.resourceClassCounts = classesCount.sort((a, b) => {
+    this.resourceClassCounts = [...classesCount].sort((a, b) => {
       const labelA = this.getLabelInLanguage(a.resourceClass, lang).toLowerCase();
       const labelB = this.getLabelInLanguage(b.resourceClass, lang).toLowerCase();
       return labelA.localeCompare(labelB);
