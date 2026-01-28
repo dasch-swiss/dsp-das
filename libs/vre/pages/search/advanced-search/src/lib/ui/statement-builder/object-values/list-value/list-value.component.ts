@@ -91,10 +91,11 @@ export class ListValueComponent implements OnChanges, OnDestroy {
         this.filteredList$.next(list);
         this.valueChangesSubscription = this.valueFilterCtrl.valueChanges
           .pipe(debounceTime(300))
-          .subscribe((value: string | null) => {
+          .subscribe((value: string | ListNodeV2 | null) => {
+            const label = typeof value === 'string' ? value : value?.label || '';
             let filtered = [];
             if (value) {
-              filtered = this._filterItems(this.sortedLabelList || [], value.toLowerCase());
+              filtered = this._filterItems(this.sortedLabelList || [], label.toLowerCase());
             } else {
               filtered = [...(this.sortedLabelList || [])];
             }
