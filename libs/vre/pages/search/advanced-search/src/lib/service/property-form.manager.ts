@@ -93,11 +93,11 @@ export class PropertyFormManager implements OnDestroy {
 
   private _addChildStatement(parentStatement: StatementElement): void {
     const currentState = this.searchStateService.currentState;
-    const parentIndex = currentState.statementElements.findIndex(se => se === parentStatement);
+    const parentIndex = currentState.statementElements.findIndex(se => se.id === parentStatement.id);
     // get the index of any child statements which come after the parent
     const lastChild = currentState.statementElements.filter(s => s.parentId === parentStatement.id).pop();
     const insertIndex = lastChild
-      ? currentState.statementElements.findIndex(se => se === lastChild) + 1
+      ? currentState.statementElements.findIndex(se => se.id === lastChild.id) + 1
       : parentIndex + 1;
     const statementsBeforeParent = currentState.statementElements.slice(0, insertIndex);
     const statementsAfterParent = currentState.statementElements.slice(insertIndex);
