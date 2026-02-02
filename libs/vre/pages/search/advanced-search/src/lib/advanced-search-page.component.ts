@@ -64,9 +64,6 @@ export class AdvancedSearchPageComponent implements OnInit, AfterViewChecked, On
     const initialQuery = this._route.snapshot.queryParamMap.get('q');
     if (initialQuery) {
       this.query = initialQuery;
-    }
-
-    if (this.query) {
       this._loadAndSetRatio();
     }
   }
