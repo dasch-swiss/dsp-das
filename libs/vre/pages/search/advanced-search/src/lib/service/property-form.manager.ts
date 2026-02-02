@@ -81,11 +81,10 @@ export class PropertyFormManager implements OnDestroy {
 
   private _addChildIfNecessary(statement: StatementElement): void {
     if (statement.isValidAndComplete && (statement.selectedOperator === Operator.Matches || statement.parentId)) {
-      if (!this._hasIncompleteChildStatement(statement)) {
-        const previousParent = this.searchStateService.currentState.statementElements.find(
-          s => s.id === statement?.parentId
-        );
-        const parentStatement = previousParent || statement;
+      const parentStatement = statement.parentId
+        ? this.searchStateService.currentState.statementElements.find(s => s.id === statement?.parentId)
+        : statement;
+      if (parentStatement && !this._hasEmptyChildStatement(parentStatement)) {
         this._addChildStatement(parentStatement);
       }
     }
@@ -128,7 +127,7 @@ export class PropertyFormManager implements OnDestroy {
     });
   }
 
-  private _hasIncompleteChildStatement(statement: StatementElement): boolean {
+  private _hasEmptyChildStatement(statement: StatementElement): boolean {
     const currentState = this.searchStateService.currentState;
     const childStatements = currentState.statementElements.filter(
       s => s.parentId === statement.id && !s.isValidAndComplete
