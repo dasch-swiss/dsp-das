@@ -98,7 +98,8 @@ export class StatementElement {
 
   set selectedPredicate(prop: Predicate) {
     this._selectedPredicate = prop;
-    this.selectedOperator = Operator.Equals; // default operator when property changes
+    this._selectedOperator = Operator.Equals;
+    this._selectedObjectNode = undefined;
   }
 
   get selectedOperator(): Operator | undefined {
@@ -195,9 +196,18 @@ export class StatementElement {
 
   private _operatorChangeMustResetObject(operatorToSet: Operator): boolean {
     if (
+      // for value objects, any operator change except a change to exist or not exist must not reset the object value
       this.objectType === 'VALUE_OBJECT' &&
       operatorToSet !== Operator.Exists &&
       operatorToSet !== Operator.NotExists
+    ) {
+      return false;
+    }
+
+    if (
+      // switching between equals and not equals must not reset the object
+      (operatorToSet === Operator.Equals && this._selectedOperator === Operator.NotEquals) ||
+      (operatorToSet === Operator.NotEquals && this._selectedOperator === Operator.Equals)
     ) {
       return false;
     }
