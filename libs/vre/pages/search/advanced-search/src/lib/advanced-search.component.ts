@@ -8,6 +8,7 @@ import { provideAdvancedSearch } from './providers';
 import { GravsearchService } from './service/gravsearch.service';
 import { OntologyDataService } from './service/ontology-data.service';
 import { PropertyFormManager } from './service/property-form.manager';
+import { SearchStateStorageService } from './service/search-state-storage.service';
 import { SearchStateService } from './service/search-state.service';
 import { AdvancedSearchFooterComponent } from './ui/advanced-search-footer.component';
 import { AdvancedSearchHeaderComponent } from './ui/advanced-search-header.component';
@@ -16,7 +17,7 @@ import { ResourceValueComponent } from './ui/statement-builder/object-values/res
 import { StatementBuilderComponent } from './ui/statement-builder/statement-builder.component';
 
 @Component({
-  selector: 'app-advanced-search',
+  selector: '   app-advanced-search',
   standalone: true,
   imports: [
     CommonModule,
@@ -56,6 +57,7 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
 export class AdvancedSearchComponent implements OnInit {
   @Input({ required: true }) projectUuid!: string;
   @Input({ required: true }) isVerticalDirection: boolean | undefined;
+  @Input() queryToLoad?: string;
   @Output() toggleDirection = new EventEmitter<any>();
   @Output() gravesearchQuery = new EventEmitter<string>();
   @Output() clearQuery = new EventEmitter<any>();
@@ -65,6 +67,7 @@ export class AdvancedSearchComponent implements OnInit {
 
   private _dataService: OntologyDataService = inject(OntologyDataService);
   private _gravsearchService: GravsearchService = inject(GravsearchService);
+  private _searchStateStorageService: SearchStateStorageService = inject(SearchStateStorageService);
 
   ontologyLoading$ = this._dataService.ontologyLoading$;
 
@@ -78,6 +81,12 @@ export class AdvancedSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this._dataService.init(this.projectIri);
+    if (this.queryToLoad) {
+      const snapshot = this._searchStateStorageService.getPreviousSearchForQuery(this.queryToLoad);
+      if (snapshot) {
+        this.searchState.patchState(snapshot);
+      }
+    }
   }
 
   doSearch(): void {
@@ -86,6 +95,11 @@ export class AdvancedSearchComponent implements OnInit {
       query,
       properties: this.searchState.validStatementElements,
     };
+    this._searchStateStorageService.storeSearchSnapshot(
+      query,
+      this._dataService.selectedOntology,
+      this.searchState.currentState
+    );
     this.gravesearchQuery.emit(queryObject.query);
   }
 

@@ -56,7 +56,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
         @case (PROPERTY_OBJECT_TYPES.ListValueObject) {
           <app-list-value
             [rootListNodeIri]="statementElement.selectedPredicate!.listObjectIri"
-            [selectedListNode]="statementElement.selectedObjectValue"
+            [selectedListItem]="statementElement.selectedObjectValue"
             (emitValueChanged)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.LinkValueObject) {

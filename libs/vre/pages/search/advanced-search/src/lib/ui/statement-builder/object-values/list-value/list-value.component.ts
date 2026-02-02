@@ -8,8 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
-import { debounceTime, ReplaySubject, Subscription } from 'rxjs';
-import { NodeValue } from '../../../../model';
+import { debounceTime, ReplaySubject, Subscription, take } from 'rxjs';
+import { IriLabelPair } from '../../../../model';
 import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.service';
 
 @Component({
@@ -38,7 +38,9 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
       <mat-autocomplete
         #auto="matAutocomplete"
         [displayWith]="displayNode"
-        (optionSelected)="onSelectionChange($event.option.value)">
+        (optionSelected)="onSelectionChange($event.option.value)"
+        (opened)="onAutocompleteOpened()"
+        (closed)="onAutocompleteClosed()">
         @for (node of filteredList$ | async; track trackByFn($index, node)) {
           <ng-container *ngTemplateOutlet="renderNode; context: { node: node, depth: 0 }" />
         }
@@ -60,17 +62,21 @@ import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.
 export class ListValueComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) rootListNodeIri!: string;
   rootListNode?: ListNodeV2;
-  @Input() selectedListNode?: NodeValue | undefined;
+  @Input() selectedListItem?: IriLabelPair;
 
-  @Output() emitValueChanged = new EventEmitter<string>();
+  @Output() emitValueChanged = new EventEmitter<IriLabelPair>();
 
   private _dataService = inject(DynamicFormsDataService);
 
   private valueChangesSubscription?: Subscription;
 
-  valueFilterCtrl: FormControl<string | null> = new FormControl<string | null>(null, [Validators.required]);
+  valueFilterCtrl: FormControl<ListNodeV2 | string | null> = new FormControl<ListNodeV2 | string | null>(null, [
+    Validators.required,
+  ]);
 
   filteredList$: ReplaySubject<ListNodeV2[]> = new ReplaySubject<ListNodeV2[]>(1);
+
+  selectedListNode?: ListNodeV2;
 
   private get sortedLabelList(): ListNodeV2[] {
     return this.rootListNode ? [...this.rootListNode.children].sort((a, b) => a.label.localeCompare(b.label)) : [];
@@ -80,28 +86,34 @@ export class ListValueComponent implements OnChanges, OnDestroy {
     if (changes['rootListNodeIri']) {
       this.valueChangesSubscription?.unsubscribe();
 
-      this._dataService.getList$(this.rootListNodeIri).subscribe(rootListNode => {
-        this.rootListNode = rootListNode;
-
-        if (this.selectedListNode) {
-          this.valueFilterCtrl.setValue(this.selectedListNode.label || '');
-        }
-
-        const list = [...(this.sortedLabelList || [])];
-        this.filteredList$.next(list);
-        this.valueChangesSubscription = this.valueFilterCtrl.valueChanges
-          .pipe(debounceTime(300))
-          .subscribe((value: string | ListNodeV2 | null) => {
-            const label = typeof value === 'string' ? value : value?.label || '';
-            let filtered = [];
-            if (value) {
-              filtered = this._filterItems(this.sortedLabelList || [], label.toLowerCase());
-            } else {
-              filtered = [...(this.sortedLabelList || [])];
+      this._dataService
+        .getList$(this.rootListNodeIri)
+        .pipe(take(1))
+        .subscribe(rootListNode => {
+          this.rootListNode = rootListNode;
+          const list = [...(this.sortedLabelList || [])];
+          this.filteredList$.next(list);
+          if (this.selectedListItem && this.sortedLabelList) {
+            const selectedItem = this.sortedLabelList.find(node => node.id === this.selectedListItem?.iri);
+            if (selectedItem) {
+              this.selectedListNode = selectedItem;
+              this.selectedListItem = undefined;
+              this.valueFilterCtrl.patchValue(selectedItem);
             }
-            this.filteredList$.next(filtered);
-          });
-      });
+          }
+        });
+      this.valueChangesSubscription = this.valueFilterCtrl.valueChanges
+        .pipe(debounceTime(300))
+        .subscribe((value: string | ListNodeV2 | null) => {
+          const label = typeof value === 'string' ? value : value?.label || '';
+          let filtered = [];
+          if (value) {
+            filtered = this._filterItems(this.sortedLabelList || [], label.toLowerCase());
+          } else {
+            filtered = [...(this.sortedLabelList || [])];
+          }
+          this.filteredList$.next(filtered);
+        });
     }
   }
 
@@ -111,8 +123,23 @@ export class ListValueComponent implements OnChanges, OnDestroy {
     return node ? node.label : '';
   }
 
+  onAutocompleteOpened() {
+    // user should get all items when opening the autocomplete for selection
+    this.valueFilterCtrl.patchValue(null);
+  }
+
+  onAutocompleteClosed() {
+    // reset the input as there are no changes
+    if (this.selectedListNode) {
+      this.valueFilterCtrl.patchValue(this.selectedListNode);
+    } else {
+      this.valueFilterCtrl.patchValue(null);
+    }
+  }
+
   onSelectionChange(node: ListNodeV2) {
-    this.emitValueChanged.emit(node.id);
+    const nodeValue: IriLabelPair = { iri: node.id, label: node.label };
+    this.emitValueChanged.emit(nodeValue);
   }
 
   private _filterItems(nodes: ListNodeV2[], searchText: string): ListNodeV2[] {

@@ -237,6 +237,7 @@ export interface SearchFormsState {
 
 export type AdvancedSearchStateSnapshot = SearchFormsState & {
   selectedOntology: IriLabelPair | undefined;
+  dateOfSnapshot?: string;
 };
 
 class GravsearchWriterScoped {

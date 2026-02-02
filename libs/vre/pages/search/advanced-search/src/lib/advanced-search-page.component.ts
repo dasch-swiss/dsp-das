@@ -22,6 +22,7 @@ import { QueryObject } from './model';
             [isVerticalDirection]="query ? isVertical() : undefined"
             (toggleDirection)="toggleDirection()"
             [projectUuid]="uuid"
+            [queryToLoad]="query"
             (gravesearchQuery)="onSearch($event)"
             (clearQuery)="query = undefined" />
         </div>
@@ -54,11 +55,6 @@ export class AdvancedSearchPageComponent implements OnInit, AfterViewChecked, On
     private readonly _route: ActivatedRoute,
     private _router: Router
   ) {
-    if (!this.uuid) {
-      console.error('Project UUID not found in route parameters');
-    }
-
-    // Debounce resize events
     this._resizeSubject.pipe(debounceTime(300)).subscribe(() => {
       this._handleResize();
     });
