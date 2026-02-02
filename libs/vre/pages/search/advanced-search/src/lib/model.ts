@@ -106,8 +106,10 @@ export class StatementElement {
   }
 
   set selectedOperator(operator: Operator) {
+    if (this._operatorChangeMustResetObject(operator)) {
+      this._selectedObjectNode = undefined;
+    }
     this._selectedOperator = operator;
-    this._selectedObjectNode = undefined;
   }
 
   get selectedObjectNode(): NodeValue | StringValue | undefined {
@@ -189,6 +191,17 @@ export class StatementElement {
 
   get parentId(): string | undefined {
     return this._parentStatement?.id;
+  }
+
+  private _operatorChangeMustResetObject(operatorToSet: Operator): boolean {
+    if (
+      this.objectType === 'VALUE_OBJECT' &&
+      operatorToSet !== Operator.Exists &&
+      operatorToSet !== Operator.NotExists
+    ) {
+      return false;
+    }
+    return true;
   }
 }
 
