@@ -1,34 +1,43 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { Constants, ReadOntology, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
+import {
+  OntologyAndResourceClasses,
+  ResourceClassAndCountDto,
+  ResourceClassDto,
+} from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ResourceClassSidenavItemComponent } from './resource-class-sidenav-item.component';
 
 @Component({
   selector: 'app-resource-class-sidenav',
   template: `
-    @for (classToDisplay of classesToDisplay; track trackByFn($index, classToDisplay)) {
-      <app-resource-class-sidenav-item [resClass]="classToDisplay" />
+    @for (classToDisplay of resourceClassCounts; track $index) {
+      <app-resource-class-sidenav-item
+        [count]="classToDisplay.itemCount"
+        [label]="classToDisplay.resourceClass.label!"
+        [iri]="classToDisplay.resourceClass.iri"
+        [representationClass]="classToDisplay.resourceClass.representationClass" />
     }
   `,
   imports: [ResourceClassSidenavItemComponent],
 })
 export class ResourceClassSidenavComponent implements OnChanges {
-  @Input({ required: true }) ontology!: ReadOntology;
-
-  classesToDisplay: ResourceClassDefinitionWithAllLanguages[] = [];
+  @Input({ required: true }) ontology!: OntologyAndResourceClasses;
+  resourceClassCounts: ResourceClassAndCountDto[] = [];
 
   constructor(private readonly _localizationService: LocalizationService) {}
 
   ngOnChanges() {
-    const classes = this.ontology.getClassDefinitionsByType(ResourceClassDefinitionWithAllLanguages);
-    const filtered = classes.filter(resClass => {
-      if (!resClass.subClassOf.length) return false;
-      const [prefix, suffix] = resClass.subClassOf[0].split('#');
-      return !prefix.includes(Constants.StandoffOntology) && !suffix.includes('Standoff');
-    });
     const lang = this._localizationService.getCurrentLanguage();
-    this.classesToDisplay = SortingHelper.sortByLabelsAlphabetically(filtered, 'label', lang);
+    const classesCount = this.ontology.classesAndCount || [];
+
+    this.resourceClassCounts = [...classesCount].sort((a, b) => {
+      const labelA = this.getLabelInLanguage(a.resourceClass, lang).toLowerCase();
+      const labelB = this.getLabelInLanguage(b.resourceClass, lang).toLowerCase();
+      return labelA.localeCompare(labelB);
+    });
   }
 
-  trackByFn = (index: number, item: ResourceClassDefinitionWithAllLanguages) => `${index}-${item.id}`;
+  getLabelInLanguage(resourceClass: ResourceClassDto, lang = 'en'): string {
+    return resourceClass.label ? resourceClass.label.find(l => l.language === lang)?.value || '' : '';
+  }
 }

@@ -7,11 +7,11 @@ import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
-import { DocumentComponent } from './document.component';
+import { PdfDocumentComponent } from './pdf-document.component';
 
 describe('DocumentComponent', () => {
-  let component: DocumentComponent;
-  let fixture: ComponentFixture<DocumentComponent>;
+  let component: PdfDocumentComponent;
+  let fixture: ComponentFixture<PdfDocumentComponent>;
   let accessTokenServiceMock: jest.Mocked<Partial<AccessTokenService>>;
   let representationServiceMock: jest.Mocked<Partial<RepresentationService>>;
   let dialogMock: jest.Mocked<Partial<MatDialog>>;
@@ -63,7 +63,7 @@ describe('DocumentComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [DocumentComponent],
+      imports: [PdfDocumentComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         provideTranslateService(),
@@ -75,7 +75,7 @@ describe('DocumentComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DocumentComponent);
+    fixture = TestBed.createComponent(PdfDocumentComponent);
     component = fixture.componentInstance;
     component.src = mockDocumentFileValue;
     component.parentResource = mockParentResource;
@@ -87,24 +87,6 @@ describe('DocumentComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('isPdf getter', () => {
-    it('should return true for PDF files', () => {
-      component.src = mockDocumentFileValue;
-      expect(component.isPdf).toBe(true);
-    });
-
-    it('should return false for non-PDF files', () => {
-      component.src = mockNonPdfFileValue;
-      expect(component.isPdf).toBe(false);
-    });
-
-    it('should handle files with uppercase extensions', () => {
-      const uppercasePdf = { ...mockDocumentFileValue, filename: 'test.PDF' };
-      component.src = uppercasePdf;
-      expect(component.isPdf).toBe(false); // Current implementation is case-sensitive
-    });
   });
 
   describe('ngOnChanges', () => {
@@ -140,22 +122,12 @@ describe('DocumentComponent', () => {
   });
 
   describe('ngAfterViewInit', () => {
-    it('should setup resize observer for PDF files', () => {
-      component.src = mockDocumentFileValue;
+    it('should setup resize observer', () => {
       const setupResizeObserverSpy = jest.spyOn(component as any, '_setupResizeObserver');
 
       component.ngAfterViewInit();
 
       expect(setupResizeObserverSpy).toHaveBeenCalled();
-    });
-
-    it('should not setup resize observer for non-PDF files', () => {
-      component.src = mockNonPdfFileValue;
-      const setupResizeObserverSpy = jest.spyOn(component as any, '_setupResizeObserver');
-
-      component.ngAfterViewInit();
-
-      expect(setupResizeObserverSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -169,7 +141,7 @@ describe('DocumentComponent', () => {
     });
   });
 
-  describe('searchQueryChanged', () => {
+  describe('onSearchQueryChange', () => {
     beforeEach(() => {
       // Mock the PDF component and its eventBus
       component['_pdfComponent'] = {
@@ -181,7 +153,7 @@ describe('DocumentComponent', () => {
 
     it('should dispatch "find" event when query changes', () => {
       component.pdfQuery = 'old query';
-      component.searchQueryChanged('new query');
+      component.onSearchQueryChange('new query');
 
       expect(component['_pdfComponent'].eventBus.dispatch).toHaveBeenCalledWith('find', {
         query: 'new query',
@@ -191,7 +163,7 @@ describe('DocumentComponent', () => {
 
     it('should dispatch "findagain" event when query is the same', () => {
       component.pdfQuery = 'same query';
-      component.searchQueryChanged('same query');
+      component.onSearchQueryChange('same query');
 
       expect(component['_pdfComponent'].eventBus.dispatch).toHaveBeenCalledWith('findagain', {
         query: 'same query',
@@ -201,28 +173,15 @@ describe('DocumentComponent', () => {
 
     it('should update pdfQuery property', () => {
       component.pdfQuery = '';
-      component.searchQueryChanged('test query');
+      component.onSearchQueryChange('test query');
 
       expect(component.pdfQuery).toBe('test query');
     });
   });
 
-  describe('onInputChange', () => {
-    it('should call searchQueryChanged with input value', () => {
-      const searchQueryChangedSpy = jest.spyOn(component, 'searchQueryChanged');
-      const mockEvent = {
-        target: { value: 'search term' },
-      } as unknown as Event;
-
-      component.onInputChange(mockEvent);
-
-      expect(searchQueryChangedSpy).toHaveBeenCalledWith('search term');
-    });
-  });
-
-  describe('download', () => {
+  describe('onDownload', () => {
     it('should call representationService.downloadProjectFile', () => {
-      component.download();
+      component.onDownload();
 
       expect(representationServiceMock.downloadProjectFile).toHaveBeenCalledWith(
         mockDocumentFileValue,
@@ -231,83 +190,44 @@ describe('DocumentComponent', () => {
     });
   });
 
-  describe('openReplaceFileDialog', () => {
-    it('should open replace file dialog with correct configuration', () => {
-      component.openReplaceFileDialog();
-
-      expect(dialogMock.open).toHaveBeenCalled();
-      const callArgs = (dialogMock.open as jest.Mock).mock.calls[0];
-      expect(callArgs[1]).toMatchObject({
-        data: expect.objectContaining({
-          representation: Constants.HasDocumentFileValue,
-          resource: mockParentResource,
-        }),
-      });
-    });
-
-    it('should use translation service for dialog titles', () => {
-      component.openReplaceFileDialog();
-
-      expect(translateServiceMock.instant).toHaveBeenCalledWith('resourceEditor.representations.document.title');
-      expect(translateServiceMock.instant).toHaveBeenCalledWith('resourceEditor.representations.document.updateFile');
-    });
-  });
-
-  describe('openFullscreen', () => {
+  describe('onFullscreenToggle', () => {
     it('should request fullscreen on pdf-viewer element', () => {
       const mockElement = {
         requestFullscreen: jest.fn(),
       };
-      jest.spyOn(document, 'getElementsByClassName').mockReturnValue([mockElement] as any);
 
-      component.openFullscreen();
+      // Mock the _pdfComponent with pdfViewerContainer.nativeElement
+      component['_pdfComponent'] = {
+        pdfViewerContainer: {
+          nativeElement: mockElement,
+        },
+      } as any;
+
+      component.onFullscreenToggle();
 
       expect(mockElement.requestFullscreen).toHaveBeenCalled();
     });
 
     it('should handle missing pdf-viewer element gracefully', () => {
-      jest.spyOn(document, 'getElementsByClassName').mockReturnValue([] as any);
+      component['_pdfComponent'] = undefined as any;
 
-      expect(() => component.openFullscreen()).not.toThrow();
+      expect(() => component.onFullscreenToggle()).not.toThrow();
     });
   });
 
-  describe('zoom', () => {
-    it('should increase zoom factor when mod is 1', () => {
+  describe('onZoomChange', () => {
+    it('should update zoom factor', () => {
       component.zoomFactor = 1.0;
-      component.zoom(1);
+      component.onZoomChange(1.5);
 
-      expect(component.zoomFactor).toBe(1.2);
+      expect(component.zoomFactor).toBe(1.5);
     });
 
-    it('should decrease zoom factor when mod is -1', () => {
+    it('should handle different zoom values', () => {
       component.zoomFactor = 1.0;
-      component.zoom(-1);
+      component.onZoomChange(0.5);
 
-      expect(component.zoomFactor).toBe(0.8);
-    });
-
-    it('should not allow zoom factor below 0.2', () => {
-      component.zoomFactor = 0.3;
-      component.zoom(-1);
-
-      expect(component.zoomFactor).toBe(0.2);
-    });
-
-    it('should set minimum zoom to 0.2 when calculation goes to zero or negative', () => {
-      component.zoomFactor = 0.2;
-      component.zoom(-1);
-
-      expect(component.zoomFactor).toBe(0.2);
-    });
-
-    it('should round zoom factor to 2 decimal places', () => {
-      component.zoomFactor = 1.0;
-      component.zoom(1);
-      component.zoom(1);
-
-      // 1.0 + 0.2 + 0.2 = 1.4
-      expect(component.zoomFactor).toBe(1.4);
+      expect(component.zoomFactor).toBe(0.5);
     });
   });
 
@@ -330,14 +250,6 @@ describe('DocumentComponent', () => {
         expect(component.originalFilename).toBe('original-test.pdf');
         done();
       }, 10);
-    });
-
-    it('should reset originalFilename before fetching', () => {
-      component.originalFilename = 'old-filename';
-
-      component['_setOriginalFilename']();
-
-      expect(component.originalFilename).toBe('');
     });
 
     it('should set failedToLoad to true on error', done => {

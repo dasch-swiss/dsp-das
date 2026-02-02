@@ -14,14 +14,15 @@
     <div style="display: flex; gap: 8px">
       <a
         color="primary"
-        matButton="outlined"
-        href="https://docs.dasch.swiss/latest/DSP-APP/user-guide/project/#data-model"
+        mat-stroked-button
+        class="docs"
+        href="https://dasch.swiss/knowledge-hub/dsp-app/project-admin#data-model"
         target="_blank">
         {{ 'pages.ontology.dataModels.documentation' | translate }}
         <mat-icon>chevron_right</mat-icon>
       </a>
 
-      <button color="primary" data-cy="create-button" matButton="elevated" (click)="createNewOntology()">
+      <button color="primary" data-cy="create-button" mat-raised-button (click)="createNewOntology()">
         <mat-icon>add_circle</mat-icon>
         <span>{{ 'pages.ontology.dataModels.createNew' | translate }}</span>
       </button>
@@ -32,7 +33,7 @@
   @if (ontologiesMetadata$ | async) {
   <app-clickable-list-card>
     @for (onto of ontologiesMetadata$ | async; track trackByOntologyMetaFn($index, onto)) {
-    <mat-list-item (click)="navigateToOntology(onto.id)">
+    <mat-list-item (click)="navigateToOntology(onto.id)" data-cy="ontology-button">
       <mat-icon matListItemIcon>bubble_chart</mat-icon>
       <div matLine>{{ onto.label }}</div>
     </mat-list-item>
@@ -54,7 +55,7 @@
     </div>
 
     @if (hasProjectAdminRights$ | async) {
-    <button color="primary" data-cy="create-list-button" matButton="elevated" (click)="createNewList()">
+    <button color="primary" data-cy="create-list-button" mat-raised-button (click)="createNewList()">
       <mat-icon>add_circle</mat-icon>
       {{ 'pages.ontology.dataModels.vocabularies.createNew' | translate }}
     </button>
