@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
 import { GlobalSearchComponent } from './global-search.component';
@@ -7,12 +8,19 @@ import { HeaderUserActionsComponent } from './header-user-actions.component';
 
 @Component({
   selector: 'app-header',
-  imports: [MatToolbarModule, RouterLink, HeaderLogoComponent, GlobalSearchComponent, HeaderUserActionsComponent],
+  imports: [
+    MatToolbarModule,
+    RouterLink,
+    HeaderLogoComponent,
+    GlobalSearchComponent,
+    HeaderUserActionsComponent,
+    MatButton,
+  ],
   template: `
-    <mat-toolbar style="background: inherit; height: 56px; justify-content: space-between">
+    <mat-toolbar style="height: 56px; justify-content: space-between">
       <span style="display: flex; align-items: center">
         <app-header-logo />
-        <a class="title" routerLink="/">DaSCH Service Platform</a>
+        <a matButton="text" class="mat-title-medium" routerLink="/">DaSCH Service Platform</a>
       </span>
       <app-global-search />
 
@@ -24,20 +32,6 @@ import { HeaderUserActionsComponent } from './header-user-actions.component';
       :host {
         display: block;
         border-bottom: 1px solid #ebebeb;
-        background-color: #fcfdff;
-      }
-      .title {
-        font-size: 18px;
-        cursor: pointer;
-        padding: 4px;
-        border-radius: 8px;
-        text-decoration: none;
-        color: inherit;
-        display: inline-block;
-
-        &:hover {
-          background-color: #e8e9eb;
-        }
       }
     `,
   ],
