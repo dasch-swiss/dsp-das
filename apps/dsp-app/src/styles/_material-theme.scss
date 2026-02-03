@@ -1,19 +1,12 @@
 @use '@angular/material' as mat;
 @use 'config';
 
-// Define Material 3 theme
+// Define Material 3 theme using custom DSP palettes
 $theme: mat.define-theme((
   color: (
     theme-type: light,
-    primary: mat.$azure-palette,
-    tertiary: mat.$blue-palette,
-  ),
-  typography: (
-    plain-family: (Roboto, 'Helvetica Neue', sans-serif),
-    brand-family: (Roboto, 'Helvetica Neue', sans-serif),
-    bold-weight: 700,
-    medium-weight: 500,
-    regular-weight: 400,
+    primary: config.$m3-dsp-blue-palette,
+    tertiary: config.$m3-dsp-teal-palette,
   ),
   density: (
     scale: 0
@@ -22,6 +15,7 @@ $theme: mat.define-theme((
 
 @include mat.all-component-themes($theme);
 @include mat.typography-hierarchy($theme);
+@include mat.system-level-colors($theme);
 
 // Override button border radius (M3 default is 9999px for pill-shaped buttons)
 html {
