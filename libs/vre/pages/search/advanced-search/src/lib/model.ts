@@ -240,6 +240,7 @@ class GravsearchWriterScoped {
   private readonly MAIN_RESOURCE_PLACEHOLDER = '?mainRes';
   private readonly VALUE_SUFFIX = 'val';
   readonly RESOURCE_PLACEHOLDER = '?res';
+  private readonly RDFS_TYPE = 'a';
 
   private _id: string;
   private _parentId: string | undefined;
@@ -267,6 +268,10 @@ class GravsearchWriterScoped {
 
   get isLinkValueType(): boolean {
     return !this._objectType?.includes(Constants.KnoraApiV2) && this._objectType !== ResourceLabel;
+  }
+
+  get hasChildStatements(): boolean {
+    return this._statements.some(stm => stm.parentId === this._id);
   }
 
   get subject(): string {
@@ -335,6 +340,11 @@ class GravsearchWriterScoped {
     if (this._operator === Operator.NotEquals) {
       statement += `FILTER NOT EXISTS { ${this.subject} ${this.predicate} ${this.objectValue} . } \n`;
     }
+
+    if (this._operator === Operator.Matches && !this.hasChildStatements) {
+      statement += `${this.objectPlaceHolder} ${this.RDFS_TYPE} ${this.objectValue} .\n`;
+    }
+
     return statement;
   }
 
