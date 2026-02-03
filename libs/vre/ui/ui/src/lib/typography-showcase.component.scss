@@ -1,0 +1,78 @@
+.typography-showcase {
+  padding: 32px 0;
+  max-width: 1000px;
+
+  .page-title {
+    margin-bottom: 8px;
+    color: var(--mat-sys-on-surface);
+  }
+
+  .intro {
+    margin-bottom: 48px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .typography-section {
+    margin-bottom: 48px;
+
+    &:last-child {
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      margin-bottom: 24px;
+      color: var(--mat-sys-primary);
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
+      padding-bottom: 8px;
+    }
+  }
+
+  .typography-item {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--mat-sys-surface-container-highest);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .item-label {
+      min-width: 140px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--mat-sys-on-surface-variant);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .example-text {
+      color: var(--mat-sys-on-surface);
+      flex: 1;
+    }
+
+    h1, h2, h3, h4, h5, h6, p {
+      margin: 0;
+      color: var(--mat-sys-on-surface);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .typography-showcase {
+    padding: 16px 0;
+
+    .typography-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      .item-label {
+        min-width: auto;
+      }
+    }
+  }
+}

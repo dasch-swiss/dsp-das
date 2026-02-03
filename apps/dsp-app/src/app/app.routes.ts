@@ -38,7 +38,7 @@ import {
 import { AccountComponent, ProjectOverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { SingleResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
-import { NoResultsFoundComponent, NoResultsFoundPageComponent, NotAllowedPageComponent } from '@dasch-swiss/vre/ui/ui';
+import { NoResultsFoundComponent, NoResultsFoundPageComponent, NotAllowedPageComponent, TypographyShowcaseComponent } from '@dasch-swiss/vre/ui/ui';
 import { AuthGuard } from './main/guard/auth.guard';
 import { SysAdminGuard } from './main/guard/sys-admin.guard';
 
@@ -146,6 +146,10 @@ export const routes: Routes = [
       {
         path: RouteConstants.help,
         component: HelpPageComponent,
+      },
+      {
+        path: RouteConstants.typography,
+        component: TypographyShowcaseComponent,
       },
       {
         path: `${RouteConstants.createNewProjectRelative}`,

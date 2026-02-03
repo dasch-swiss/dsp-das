@@ -28,6 +28,7 @@ export const LocalStorageLanguageKey = 'dsp_language';
 export class RouteConstants {
   static readonly home = '';
   static readonly help = 'help';
+  static readonly typography = 'typography';
   static readonly userAccount = 'account';
   static readonly systemAdmin = 'system';
   static readonly settings = 'settings';
