@@ -21,6 +21,7 @@ $theme: mat.define-theme((
 ));
 
 @include mat.all-component-themes($theme);
+@include mat.typography-hierarchy($theme);
 
 // Override button border radius (M3 default is 9999px for pill-shaped buttons)
 html {

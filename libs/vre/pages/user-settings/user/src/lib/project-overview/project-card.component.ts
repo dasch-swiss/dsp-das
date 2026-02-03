@@ -22,9 +22,7 @@ import { ProjectImageCoverComponent } from '../project-image-cover.component';
                 {{ project.longname }}
               </mat-card-title>
               <mat-card-subtitle class="project-subtitle">
-                <span>{{ project.shortname }}</span>
-                <span>|</span>
-                <span>{{ project.shortcode }}</span>
+                <span>{{ project.shortname }} | {{ project.shortcode }}</span>
               </mat-card-subtitle>
             </div>
           </mat-card-content>
@@ -63,10 +61,6 @@ import { ProjectImageCoverComponent } from '../project-image-cover.component';
             -webkit-box-orient: vertical;
             overflow: hidden;
             margin: 0;
-          }
-
-          .project-subtitle > span {
-            margin-right: 0.5rem;
           }
         }
       }
