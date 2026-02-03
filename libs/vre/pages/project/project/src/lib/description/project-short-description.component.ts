@@ -18,11 +18,11 @@ import { ProjectDescriptionPageComponent } from './project-description-page.comp
       <div>
         <app-project-image-cover [project]="project" />
         @if (hasManualLicense) {
-          <div class="mat-caption">{{ hasManualLicense }}</div>
+          <div class="mat-label-small">{{ hasManualLicense }}</div>
         }
       </div>
-      <h2>{{ project.longname }}</h2>
-      <h3 class="mat-body subtitle" style="margin-bottom: 32px">
+      <h2 class="mat-headline-medium" style="margin-top: 32px">{{ project.longname }}</h2>
+      <h3 class="mat-title-medium" style="margin-bottom: 32px">
         Project {{ project.shortcode }} | {{ project.shortname | uppercase }}
       </h3>
 
