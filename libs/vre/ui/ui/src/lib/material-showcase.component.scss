@@ -1,0 +1,165 @@
+.material-showcase {
+  padding: 32px 0;
+  max-width: 1200px;
+
+  .page-title {
+    margin-bottom: 8px;
+    color: var(--mat-sys-on-surface);
+  }
+
+  .intro {
+    margin-bottom: 48px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .main-section {
+    margin-bottom: 64px;
+
+    .main-section-title {
+      margin-bottom: 32px;
+      color: var(--mat-sys-on-surface);
+      border-bottom: 2px solid var(--mat-sys-primary);
+      padding-bottom: 12px;
+    }
+  }
+
+  // Color Roles Styles
+  .color-group {
+    margin-bottom: 32px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .group-title {
+      margin-bottom: 16px;
+      color: var(--mat-sys-primary);
+    }
+  }
+
+  .color-swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .color-swatch {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100px;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16);
+    }
+
+    .role-name {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .css-var {
+      font-size: 11px;
+      font-family: 'Roboto Mono', monospace;
+      opacity: 0.8;
+      word-break: break-all;
+    }
+  }
+
+  // Typography Styles
+  .typography-section {
+    margin-bottom: 32px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      margin-bottom: 16px;
+      color: var(--mat-sys-primary);
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
+      padding-bottom: 8px;
+    }
+  }
+
+  .typography-item {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--mat-sys-surface-container-highest);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .item-label {
+      min-width: 140px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--mat-sys-on-surface-variant);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .example-text {
+      color: var(--mat-sys-on-surface);
+      flex: 1;
+    }
+
+    h1, h2, h3, h4, h5, h6, p {
+      margin: 0;
+      color: var(--mat-sys-on-surface);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .material-showcase {
+    padding: 16px 0;
+
+    .color-swatches {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .color-swatch {
+      min-height: 80px;
+      padding: 12px;
+
+      .role-name {
+        font-size: 12px;
+      }
+
+      .css-var {
+        font-size: 10px;
+      }
+    }
+
+    .typography-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      .item-label {
+        min-width: auto;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .material-showcase {
+    .color-swatches {
+      grid-template-columns: 1fr;
+    }
+  }
+}
