@@ -80,7 +80,7 @@ export class PropertyFormManager implements OnDestroy {
   }
 
   private _addChildIfNecessary(statement: StatementElement): void {
-    if (statement.isValidAndComplete && (statement.selectedOperator === Operator.Matches || statement.parentId)) {
+    if (statement.isValidAndComplete && (statement.objectType === 'RESOURCE_OBJECT' || statement.parentId)) {
       const parentStatement = statement.parentId
         ? this.searchStateService.currentState.statementElements.find(s => s.id === statement?.parentId)
         : statement;

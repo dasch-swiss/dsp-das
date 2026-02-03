@@ -24,7 +24,7 @@ abstract class StatementValue {
 export class NodeValue extends StatementValue {
   constructor(
     statementId: string,
-    private _value?: IriLabelPair
+    private readonly _value?: IriLabelPair
   ) {
     super(statementId);
   }
@@ -45,17 +45,13 @@ export class NodeValue extends StatementValue {
 export class StringValue extends StatementValue {
   constructor(
     statementId: string,
-    private _value?: string
+    private readonly _value?: string
   ) {
     super(statementId);
   }
 
   get value(): string | undefined {
     return this._value;
-  }
-
-  set value(val: string) {
-    this._value = val;
   }
 
   get writeValue(): string | undefined {
@@ -327,7 +323,7 @@ class GravsearchWriterScoped {
     let whereStm = '';
     if (this._operator !== Operator.Exists && this._operator !== Operator.NotExists) {
       whereStm += this.valueProjection;
-      whereStm += this.valueFilterStatement;
+      whereStm += this._operator !== Operator.Matches ? this.valueFilterStatement : this.valueMatchStatement;
     }
     return whereStm;
   }
@@ -399,6 +395,10 @@ class GravsearchWriterScoped {
       return `FILTER regex(${object}, ${this.typedValueLiteral}, "i") .\n`;
     }
     return `FILTER (${object} ${this.operatorSymbol} ${this.typedValueLiteral} ) .\n`;
+  }
+
+  get valueMatchStatement(): string {
+    return `FILTER knora-api:matchText(${this.objectPlaceHolder}, ${this.typedValueLiteral}) .\n`;
   }
 
   get typedValueLiteral(): string {
