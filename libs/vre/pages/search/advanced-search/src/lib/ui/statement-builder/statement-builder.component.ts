@@ -72,6 +72,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
       @if (!statementElement.isPristine && !isLast) {
         <button
           mat-icon-button
+          color="primary"
           (click)="formManager.deleteStatement(statementElement)"
           matTooltip="Remove search criteria">
           <mat-icon>remove_circle</mat-icon>
@@ -80,6 +81,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
       @if (!statementElement.isValidAndComplete && !statementElement.isPristine && isLast) {
         <button
           mat-icon-button
+          color="primary"
           (click)="formManager.clearStatementElement(statementElement)"
           matTooltip="Clear selection">
           <mat-icon>replay</mat-icon>
