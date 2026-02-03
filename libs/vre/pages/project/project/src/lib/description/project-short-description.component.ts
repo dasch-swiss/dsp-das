@@ -35,7 +35,7 @@ import { ProjectDescriptionPageComponent } from './project-description-page.comp
       right: 0;
       bottom: 0;
       height: 32px;
-      background: linear-gradient(to bottom, transparent, white 80%);
+      background: linear-gradient(to bottom, transparent, var(--mat-sys-background) 80%);
       pointer-events: none;
     "></div>
       </div>

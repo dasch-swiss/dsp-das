@@ -2,7 +2,6 @@ import { AsyncPipe, UpperCasePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatChip, MatChipListbox } from '@angular/material/chips';
-import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
@@ -24,7 +23,6 @@ import { LicenseCaptionsMapping } from './license-captions-mapping';
     MatIcon,
     MatChip,
     MatChipListbox,
-    MatDivider,
     RouterLink,
     TranslatePipe,
     ClosingDialogComponent,
