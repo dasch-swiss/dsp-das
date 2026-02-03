@@ -60,7 +60,7 @@ export class AdvancedSearchComponent implements OnInit {
   @Input({ required: true }) isVerticalDirection: boolean | undefined;
   @Input() queryToLoad?: string;
   @Output() toggleDirection = new EventEmitter<any>();
-  @Output() gravesearchQuery = new EventEmitter<string>();
+  @Output() gravsearchQuery = new EventEmitter<string>();
 
   searchState: SearchStateService = inject(SearchStateService);
   formManager: PropertyFormManager = inject(PropertyFormManager);
@@ -108,7 +108,7 @@ export class AdvancedSearchComponent implements OnInit {
       this._dataService.selectedOntology,
       this.searchState.currentState
     );
-    this.gravesearchQuery.emit(queryObject.query);
+    this.gravsearchQuery.emit(queryObject.query);
   }
 
   resetSearch(): void {

@@ -6,6 +6,7 @@ import { debounceTime, Subject } from 'rxjs';
 import { AdvancedSearchResultsComponent } from './advanced-search-results.component';
 import { AdvancedSearchComponent } from './advanced-search.component';
 import { QueryObject } from './model';
+import { QueryExecutionService } from './service/query-execution.service';
 
 @Component({
   selector: 'app-advanced-search-page',
@@ -23,7 +24,7 @@ import { QueryObject } from './model';
             (toggleDirection)="toggleDirection()"
             [projectUuid]="uuid"
             [queryToLoad]="query"
-            (gravesearchQuery)="onSearch($event)" />
+            (gravsearchQuery)="onSearch($event)" />
         </div>
       </div>
     </as-split-area>
@@ -35,6 +36,7 @@ import { QueryObject } from './model';
   </as-split>`,
   styleUrls: ['./advanced-search-page.component.scss'],
   imports: [AdvancedSearchComponent, AdvancedSearchResultsComponent, AngularSplitModule],
+  providers: [QueryExecutionService],
 })
 export class AdvancedSearchPageComponent implements OnInit, AfterViewChecked, OnDestroy {
   private static readonly STORAGE_KEY_DIRECTION = 'advanced-search-split-direction';

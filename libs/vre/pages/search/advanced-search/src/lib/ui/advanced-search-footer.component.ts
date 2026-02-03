@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { QueryExecutionService } from '../service/query-execution.service';
 import { SearchStateService } from '../service/search-state.service';
 import { OrderByComponent } from './order-by/order-by.component';
 
 @Component({
   selector: 'app-advanced-search-footer',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, OrderByComponent],
+  imports: [CommonModule, MatButtonModule, OrderByComponent, LoadingButtonDirective],
   template: `
     <app-order-by />
     <div class="flex flex-end gap-05em">
@@ -19,6 +21,9 @@ import { OrderByComponent } from './order-by/order-by.component';
         mat-button
         mat-raised-button
         color="primary"
+        class="min-width-8em-justify-center"
+        appLoadingButton
+        [isLoading]="queryExecutionService.queryIsExecuting()"
         [disabled]="(searchState.isFormStateValidAndComplete$ | async) === false"
         (click)="searchTriggered.emit()">
         Search
@@ -34,4 +39,5 @@ export class AdvancedSearchFooterComponent {
   @Output() restorePreviousSearch = new EventEmitter<void>();
 
   searchState = inject(SearchStateService);
+  queryExecutionService = inject(QueryExecutionService);
 }

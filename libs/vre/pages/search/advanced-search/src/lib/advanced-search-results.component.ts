@@ -7,7 +7,8 @@ import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { filterNull } from '@dasch-swiss/vre/shared/app-common';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
-import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, switchMap, tap } from 'rxjs';
+import { QueryExecutionService } from './service/query-execution.service';
 
 @Component({
   selector: 'app-advanced-search-results',
@@ -34,11 +35,14 @@ export class AdvancedSearchResultsComponent implements OnChanges {
     switchMap(query =>
       combineLatest([
         this._resourceResultService.pageIndex$.pipe(
-          switchMap(pageNumber => this._performGravSearch(query, pageNumber))
+          switchMap(pageNumber => this._performGravSearch$(query, pageNumber))
         ),
         this._numberOfAllResults$(query),
       ])
     ),
+    tap(() => {
+      this._queryExecutionService.queryIsExecuting.set(false);
+    }),
     map(([resourceResponse, countResponse]) => {
       this._resourceResultService.numberOfResults = countResponse.numberOfResults;
       return resourceResponse.resources;
@@ -50,7 +54,8 @@ export class AdvancedSearchResultsComponent implements OnChanges {
   constructor(
     @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
     private readonly _resourceResultService: ResourceResultService,
-    private readonly _titleService: Title
+    private readonly _titleService: Title,
+    private readonly _queryExecutionService: QueryExecutionService
   ) {
     this._titleService.setTitle(`Advanced search results`);
   }
@@ -61,10 +66,10 @@ export class AdvancedSearchResultsComponent implements OnChanges {
     }
   }
 
-  private _performGravSearch(query_: string, index: number) {
+  private _performGravSearch$(query_: string, index: number) {
     let query = this._getQuery(query_);
     query = `${query}OFFSET ${index}`;
-
+    this._queryExecutionService.queryIsExecuting.set(true);
     return this._dspApiConnection.v2.search.doExtendedSearch(query);
   }
 
