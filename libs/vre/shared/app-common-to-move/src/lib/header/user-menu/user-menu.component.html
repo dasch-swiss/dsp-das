@@ -4,12 +4,12 @@
 
 <!-- if user is logged-in: display user's avatar and user menu -->
 @if (isLoggedIn$ | async) {
-<button matButton [matMenuTriggerFor]="userMenu" class="main-toolbar-button user-menu" data-cy="user-button">
+<button matButton [matMenuTriggerFor]="userMenu" class="user-menu" data-cy="user-button">
   <ng-container *ngTemplateOutlet="avatarTmpl" />
 </button>
 
 } @else {
-<button matButton="filled" color="primary" [matMenuTriggerFor]="loginForm" class="login-button" data-cy="login-button">
+<button matButton="filled" color="primary" [matMenuTriggerFor]="loginForm" data-cy="login-button">
   {{ 'pages.userSettings.userMenu.login' | translate }}
 </button>
 }
