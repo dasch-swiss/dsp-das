@@ -1,5 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
 import { HeaderLogoComponent, HeaderUserActionsComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -13,7 +14,9 @@ import { ProjectPageService } from './project-page.service';
   template: ` <mat-toolbar style="background-color: inherit; height: 56px">
       <span style="flex: 1; display: flex; align-items: center">
         <app-header-logo />
-        <a class="title" [routerLink]="projectLink$ | async">{{ currentProjectName$ | async }}</a>
+        <a matButton="text" class="mat-title-medium" [routerLink]="projectLink$ | async">{{
+          currentProjectName$ | async
+        }}</a>
       </span>
       <app-header-user-actions />
     </mat-toolbar>
@@ -23,20 +26,6 @@ import { ProjectPageService } from './project-page.service';
       :host {
         display: block;
         border-bottom: 1px solid #ebebeb;
-        background-color: #f2f3f5;
-      }
-
-      .title {
-        font-size: 18px;
-        cursor: pointer;
-        padding: 4px;
-        border-radius: 8px;
-        text-decoration: none;
-        color: inherit;
-        display: inline-block;
-        &:hover {
-          background-color: #e8e9eb;
-        }
       }
     `,
   ],
@@ -47,6 +36,7 @@ import { ProjectPageService } from './project-page.service';
     HeaderLogoComponent,
     HeaderUserActionsComponent,
     ProjectNavigationTabsComponent,
+    MatButton,
   ],
 })
 export class ProjectPageHeaderComponent {

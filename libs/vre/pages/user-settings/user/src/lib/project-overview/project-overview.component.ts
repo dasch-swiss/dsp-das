@@ -1,6 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
+import { Title } from '@angular/platform-browser';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
@@ -45,8 +46,11 @@ export class ProjectOverviewComponent implements AfterViewInit {
 
   constructor(
     private readonly _userService: UserService,
-    private readonly _allProjectsService: AllProjectsService
-  ) {}
+    private readonly _allProjectsService: AllProjectsService,
+    private readonly _titleService: Title
+  ) {
+    this._titleService.setTitle('DaSCH Service Platform');
+  }
 
   ngAfterViewInit(): void {
     this.filterInput.nativeElement.focus();
