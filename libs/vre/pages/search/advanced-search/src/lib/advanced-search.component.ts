@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
-import { map } from 'rxjs';
+import { map, take } from 'rxjs';
 import { SEARCH_ALL_RESOURCE_CLASSES_OPTION } from './constants';
 import { QueryObject } from './model';
 import { provideAdvancedSearch } from './providers';
@@ -80,21 +80,23 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._dataService.init(this.projectIri);
     if (this.queryToLoad) {
-      const snapshot = this._searchStateStorageService.getPreviousSearchForQuery(this.queryToLoad);
-      if (snapshot) {
-        this.searchState.patchState(snapshot);
-      }
+      this.restoreSearchFromSnapshot();
+    } else {
+      this._dataService.init(this.projectIri);
     }
   }
 
   restoreSearchFromSnapshot(): void {
-    if (this.queryToLoad) {
-      const snapshot = this._searchStateStorageService.getPreviousSearchForQuery(this.queryToLoad);
-      if (snapshot) {
+    if (!this.queryToLoad) {
+      return;
+    }
+    const snapshot = this._searchStateStorageService.getPreviousSearchForQuery(this.queryToLoad);
+    if (snapshot) {
+      this._dataService.selectedOntology$.pipe(take(1)).subscribe(() => {
         this.searchState.patchState(snapshot);
-      }
+      });
+      this._dataService.init(this.projectIri, snapshot.selectedOntology);
     }
   }
 

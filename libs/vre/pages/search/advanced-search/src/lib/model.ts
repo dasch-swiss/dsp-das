@@ -232,12 +232,11 @@ export interface SearchFormsState {
 }
 
 export type AdvancedSearchStateSnapshot = SearchFormsState & {
-  selectedOntology: IriLabelPair | undefined;
+  selectedOntology: IriLabelPair;
   dateOfSnapshot?: string;
 };
 
 class GravsearchWriterScoped {
-  private readonly RDF_TYPE = 'a';
   private readonly MAIN_RESOURCE_PLACEHOLDER = '?mainRes';
   private readonly VALUE_SUFFIX = 'val';
   readonly RESOURCE_PLACEHOLDER = '?res';
