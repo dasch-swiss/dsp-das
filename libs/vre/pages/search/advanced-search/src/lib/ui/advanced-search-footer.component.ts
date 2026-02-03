@@ -11,9 +11,9 @@ import { OrderByComponent } from './order-by/order-by.component';
   template: `
     <app-order-by />
     <div class="flex flex-end gap-05em">
-      <button mat-button mat-stroked-button color="primary" (click)="resetTriggered.emit()">Clear search</button>
+      <button mat-button mat-stroked-button color="primary" (click)="resetTriggered.emit()">Reset</button>
       <button mat-button mat-stroked-button color="primary" (click)="restorePreviousSearch.emit()">
-        Restore previous search
+        Use previous search
       </button>
       <button
         mat-button
