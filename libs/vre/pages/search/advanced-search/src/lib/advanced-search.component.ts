@@ -88,9 +88,6 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   restoreSearchFromSnapshot(): void {
-    if (!this.queryToLoad) {
-      return;
-    }
     const snapshot = this._searchStateStorageService.getPreviousSearchForQuery(this.queryToLoad);
     if (snapshot) {
       this._dataService.selectedOntology$.pipe(take(1)).subscribe(() => {

@@ -60,13 +60,29 @@ export class SearchStateStorageService {
     return undefined;
   }
 
-  getPreviousSearchForQuery(query: string): AdvancedSearchStateSnapshot {
+  getPreviousSearchForQuery(query?: string): AdvancedSearchStateSnapshot | undefined {
     const storedSearches = localStorage.getItem(this.STORAGE_KEY) || '{}';
-    const previousSearchObject =
-      (JSON.parse(storedSearches)[query] as AdvancedSearchStateSnapshot) || ({} as AdvancedSearchStateSnapshot);
+    const previousSearchObject = query
+      ? (JSON.parse(storedSearches)[query] as AdvancedSearchStateSnapshot) || ({} as AdvancedSearchStateSnapshot) // simply the first one if no query provided
+      : this.getLatestSearchSnapshot() || undefined;
+    return previousSearchObject
+      ? {
+          ...previousSearchObject,
+          statementElements: this._reconstructStatementElements(previousSearchObject.statementElements),
+        }
+      : undefined;
+  }
+
+  getLatestSearchSnapshot(): AdvancedSearchStateSnapshot | undefined {
+    const storedSearches = localStorage.getItem(this.STORAGE_KEY) || '{}';
+    const snapshots = Object.values(JSON.parse(storedSearches) as Record<string, AdvancedSearchStateSnapshot>);
+    if (snapshots.length === 0) return undefined;
+
+    snapshots.sort((a, b) => new Date(b.dateOfSnapshot).getTime() - new Date(a.dateOfSnapshot).getTime());
+    const latestSnapshot = snapshots[0];
     return {
-      ...previousSearchObject,
-      statementElements: this._reconstructStatementElements(previousSearchObject.statementElements),
+      ...latestSnapshot,
+      statementElements: this._reconstructStatementElements(latestSnapshot.statementElements),
     };
   }
 
