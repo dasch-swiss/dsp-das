@@ -23,8 +23,7 @@ import { QueryObject } from './model';
             (toggleDirection)="toggleDirection()"
             [projectUuid]="uuid"
             [queryToLoad]="query"
-            (gravesearchQuery)="onSearch($event)"
-            (clearQuery)="query = undefined" />
+            (gravesearchQuery)="onSearch($event)" />
         </div>
       </div>
     </as-split-area>

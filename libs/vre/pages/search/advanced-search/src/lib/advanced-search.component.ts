@@ -47,7 +47,8 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
       <app-advanced-search-footer
         class="flex-space-between margin-top-1em"
         (searchTriggered)="doSearch()"
-        (resetTriggered)="resetSearch()" />
+        (resetTriggered)="resetSearch()"
+        (restorePreviousSearch)="restoreSearchFromSnapshot()" />
     }
   `,
   styleUrls: ['./advanced-search.component.scss'],
@@ -60,7 +61,6 @@ export class AdvancedSearchComponent implements OnInit {
   @Input() queryToLoad?: string;
   @Output() toggleDirection = new EventEmitter<any>();
   @Output() gravesearchQuery = new EventEmitter<string>();
-  @Output() clearQuery = new EventEmitter<any>();
 
   searchState: SearchStateService = inject(SearchStateService);
   formManager: PropertyFormManager = inject(PropertyFormManager);
@@ -89,6 +89,15 @@ export class AdvancedSearchComponent implements OnInit {
     }
   }
 
+  restoreSearchFromSnapshot(): void {
+    if (this.queryToLoad) {
+      const snapshot = this._searchStateStorageService.getPreviousSearchForQuery(this.queryToLoad);
+      if (snapshot) {
+        this.searchState.patchState(snapshot);
+      }
+    }
+  }
+
   doSearch(): void {
     const query = this._gravsearchService.generateGravSearchQuery(this.searchState.validStatementElements);
     const queryObject: QueryObject = {
@@ -106,6 +115,5 @@ export class AdvancedSearchComponent implements OnInit {
   resetSearch(): void {
     this.searchState.clearAllSelections();
     this._dataService.init(this.projectIri);
-    this.clearQuery.emit();
   }
 }
