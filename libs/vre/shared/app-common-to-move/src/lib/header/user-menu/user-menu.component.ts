@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
@@ -17,6 +17,7 @@ import { LoginFormComponent } from '../login-form/login-form.component';
   imports: [
     AdminImageDirective,
     AsyncPipe,
+    NgTemplateOutlet,
     LoginFormComponent,
     MatButton,
     MatDivider,

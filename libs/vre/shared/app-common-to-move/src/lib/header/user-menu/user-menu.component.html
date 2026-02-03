@@ -1,7 +1,11 @@
-<!-- if user is looged-in: display user's avatar and user menu -->
+<ng-template #avatarTmpl>
+  <img appAdminImage [image]="(user$ | async)?.email" [type]="'user'" class="avatar" alt="avatar" />
+</ng-template>
+
+<!-- if user is logged-in: display user's avatar and user menu -->
 @if (isLoggedIn$ | async) {
 <button matButton [matMenuTriggerFor]="userMenu" class="main-toolbar-button user-menu" data-cy="user-button">
-  <img appAdminImage [image]="(user$ | async)?.email" [type]="'user'" class="avatar" alt="avatar" />
+  <ng-container *ngTemplateOutlet="avatarTmpl" />
 </button>
 
 } @else {
@@ -14,9 +18,13 @@
 </mat-menu>
 
 <mat-menu #userMenu="matMenu" xPosition="before" class="user-menu">
-  <div class="menu-header">
-    <div class="menu-title">{{ 'pages.userSettings.userMenu.signedInAs' | translate }}</div>
-    <div class="menu-title">{{ (user$ | async)?.givenName }} {{ (user$ | async)?.familyName }}</div>
+  <div class="menu-header" (click)="$event.stopPropagation()">
+    <ng-container *ngTemplateOutlet="avatarTmpl" />
+
+    @if (user$ | async; as user) {
+    <div class="mat-body-large" style="margin-top: 8px">{{ user.givenName }} {{ user.familyName }}</div>
+    <div class="mat-body-small">{{ user.email }}</div>
+    }
   </div>
 
   <a mat-menu-item [routerLink]="['/', MY_PROFILE, 'account']">
