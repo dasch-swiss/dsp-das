@@ -22,7 +22,7 @@ import { ProjectDescriptionPageComponent } from './project-description-page.comp
         }
       </div>
       <h2 class="mat-headline-medium" style="margin-top: 32px">{{ project.longname }}</h2>
-      <h3 class="mat-title-medium" style="margin-bottom: 32px">
+      <h3 class="mat-title-medium m3-on-surface-variant">
         Project {{ project.shortcode }} | {{ project.shortname | uppercase }}
       </h3>
 
