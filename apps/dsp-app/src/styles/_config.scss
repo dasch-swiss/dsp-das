@@ -1,6 +1,6 @@
 @use 'sass:map';
+@use 'material_palette' as *;
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined");
-@import 'material_palette';
 
 // --------------------------------------
 // default colors and default contrast colors
@@ -15,8 +15,14 @@ $red: rgb(255, 0, 0);
 $red_contrast: rgb(255, 0, 255);
 $cool_gray: #2f2f2f;
 $primary_700: $primary;
+$primary_800: $primary;
+$primary_900: $primary;
 $yellow_100: $yellow;
+$yellow_500: $yellow;
+$yellow_contrast: $yellow;
+$cool_gray_50: $cool_gray;
 $cool_gray_100: $cool_gray;
+$cool_gray_300: $cool_gray;
 $cool_gray_500: $cool_gray;
 $primary_50: $primary;
 $primary_100: $primary;

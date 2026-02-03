@@ -1,12 +1,12 @@
 @use '@angular/material' as mat;
-@use 'config';
+@use './material_palette' as *;
 
 // Define Material 3 theme using custom DSP palettes
 $theme: mat.define-theme((
   color: (
     theme-type: light,
-    primary: config.$m3-dsp-blue-palette,
-    tertiary: config.$m3-dsp-teal-palette,
+    primary: $m3-dsp-blue-palette,
+    tertiary: $m3-dsp-teal-palette,
   ),
   density: (
     scale: 0
