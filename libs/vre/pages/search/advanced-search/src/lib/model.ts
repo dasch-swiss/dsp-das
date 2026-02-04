@@ -1,6 +1,13 @@
 import { Constants } from '@dasch-swiss/dsp-js';
 import { v4 as uuidv4 } from 'uuid';
-import { RDFS_LABEL, ResourceLabel } from './constants';
+import {
+  RDFS_LABEL,
+  ResourceLabel,
+  MAIN_RESOURCE_PLACEHOLDER,
+  RESOURCE_PLACEHOLDER,
+  VALUE_SUFFIX,
+  RDFS_TYPE,
+} from './constants';
 import { getOperatorsForObjectType, Operator } from './operators.config';
 
 export enum PropertyObjectType {
@@ -237,11 +244,6 @@ export type AdvancedSearchStateSnapshot = SearchFormsState & {
 };
 
 class GravsearchWriterScoped {
-  private readonly MAIN_RESOURCE_PLACEHOLDER = '?mainRes';
-  private readonly VALUE_SUFFIX = 'val';
-  readonly RESOURCE_PLACEHOLDER = '?res';
-  private readonly RDFS_TYPE = 'a';
-
   private _id: string;
   private _parentId: string | undefined;
   private _operator;
@@ -276,11 +278,11 @@ class GravsearchWriterScoped {
 
   get subject(): string {
     if (!this._parentId) {
-      return this.MAIN_RESOURCE_PLACEHOLDER;
+      return MAIN_RESOURCE_PLACEHOLDER;
     } // for child statements
     const subjectId = this._parentId || this._id;
     const subjectIndex = this._statements.findIndex(stm => stm.id === subjectId);
-    return `${this.RESOURCE_PLACEHOLDER}${subjectIndex}`;
+    return `${RESOURCE_PLACEHOLDER}${subjectIndex}`;
   }
 
   get predicate() {
@@ -288,7 +290,7 @@ class GravsearchWriterScoped {
   }
 
   get objectPlaceHolder(): string {
-    return `${this.RESOURCE_PLACEHOLDER}${this._index}`;
+    return `${RESOURCE_PLACEHOLDER}${this._index}`;
   }
 
   get objectValue(): string {
@@ -302,7 +304,7 @@ class GravsearchWriterScoped {
   get valueProjection(): string {
     return this._objectType === Constants.DateValue
       ? ''
-      : `${this.objectPlaceHolder} <${this.valueAsValueIri}> ${this.objectPlaceHolder}${this.VALUE_SUFFIX} .\n`;
+      : `${this.objectPlaceHolder} <${this.valueAsValueIri}> ${this.objectPlaceHolder}${VALUE_SUFFIX} .\n`;
   }
 
   get constructStatement(): string {
@@ -342,7 +344,7 @@ class GravsearchWriterScoped {
     }
 
     if (this._operator === Operator.Matches && !this.hasChildStatements) {
-      statement += `${this.objectPlaceHolder} ${this.RDFS_TYPE} ${this.objectValue} .\n`;
+      statement += `${this.objectPlaceHolder} ${RDFS_TYPE} ${this.objectValue} .\n`;
     }
 
     return statement;
@@ -374,7 +376,7 @@ class GravsearchWriterScoped {
       case Operator.NotEquals:
         return `FILTER (${this.objectPlaceHolder} != "${this._selectedValue}") .\n`;
       case Operator.Matches:
-        return `FILTER knora-api:matchLabel(${this.MAIN_RESOURCE_PLACEHOLDER}, "${this._selectedValue}") .\n`;
+        return `FILTER knora-api:matchLabel(${MAIN_RESOURCE_PLACEHOLDER}, "${this._selectedValue}") .\n`;
       case Operator.IsLike:
         return `FILTER regex(${this.objectPlaceHolder}, "${this._selectedValue}", "i") .\n`;
       default:
@@ -399,7 +401,7 @@ class GravsearchWriterScoped {
     const object =
       this._objectType === Constants.DateValue
         ? `knora-api:toSimpleDate(${this.objectPlaceHolder})`
-        : `${this.objectPlaceHolder}${this.VALUE_SUFFIX}`;
+        : `${this.objectPlaceHolder}${VALUE_SUFFIX}`;
     if (this._operator === Operator.IsLike && this._objectType === Constants.TextValue) {
       return `FILTER regex(${object}, ${this.typedValueLiteral}, "i") .\n`;
     }

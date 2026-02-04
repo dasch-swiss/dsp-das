@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { ResourceLabel } from '../constants';
+import { MAIN_RESOURCE_PLACEHOLDER, RDFS_TYPE, RESOURCE_PLACEHOLDER, ResourceLabel } from '../constants';
 import { GravsearchWriter, StatementElement } from '../model';
 import { Operator } from '../operators.config';
 import { OntologyDataService } from './ontology-data.service';
@@ -58,7 +58,10 @@ export class GravsearchService {
     return this._searchStateService.currentState.selectedResourceClass?.iri
       ? `?mainRes a <${this._searchStateService.currentState.selectedResourceClass?.iri}> .`
       : this.dataService.classIris
-          .map(resourceClass => `{ ?mainRes a ${this.ontoShortCode}:${resourceClass.split('#').pop()} . }`)
+          .map(
+            resourceClass =>
+              `{ ${MAIN_RESOURCE_PLACEHOLDER} ${RDFS_TYPE} ${this.ontoShortCode}:${resourceClass.split('#').pop()} . }`
+          )
           .join(' UNION ');
   }
 
@@ -67,7 +70,7 @@ export class GravsearchService {
       .filter(o => o.orderBy)
       .map(o => {
         const index = statements.findIndex(stm => stm.id === o.id);
-        return `?res${index}`;
+        return `${RESOURCE_PLACEHOLDER}${index}`;
       });
 
     return orderByProps.length ? `ORDER BY ${orderByProps.join(' ')}` : '';

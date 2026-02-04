@@ -14,9 +14,8 @@ export class PropertyFormManager implements OnDestroy {
     this.destroy$.complete();
   }
 
-  setMainResource(resourceClass: IriLabelPair | undefined): void {
-    const nodeValue = resourceClass ? new NodeValue(resourceClass.iri, resourceClass) : undefined;
-    const statement = new StatementElement(nodeValue, 0);
+  setMainResource(resourceClass: IriLabelPair): void {
+    const statement = new StatementElement(new NodeValue(resourceClass.iri, resourceClass), 0);
     this.searchStateService.patchState({
       selectedResourceClass: resourceClass,
       statementElements: [statement],
