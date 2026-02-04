@@ -24,6 +24,10 @@
   min-width: 20em;
 }
 
+.width-12em {
+  width: 12em;
+}
+
 .min-width-25em {
   min-width: 25em;
 }
@@ -47,6 +51,11 @@
 
 .flex {
   display: flex;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .flex-end {

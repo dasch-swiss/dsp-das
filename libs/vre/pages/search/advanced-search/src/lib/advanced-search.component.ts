@@ -39,16 +39,18 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
       <mat-progress-bar mode="query" />
     }
     @if (!ontologyLoading) {
-      <app-resource-value
-        class="width-100-percent"
-        [selectedResource]="selectedResourceClass$ | async"
-        (selectedResourceChange)="formManager.setMainResource($event)" />
-      <app-statement-builder [statementElements]="(searchState.statementElements$ | async) || []" />
-      <app-advanced-search-footer
-        class="flex-space-between margin-top-1em"
-        (searchTriggered)="doSearch()"
-        (resetTriggered)="resetSearch()"
-        (restorePreviousSearch)="restoreSearchFromSnapshot()" />
+      <div class="flex-column">
+        <app-resource-value
+          class="width-100-percent"
+          [selectedResource]="selectedResourceClass$ | async"
+          (selectedResourceChange)="formManager.setMainResource($event)" />
+        <app-statement-builder [statementElements]="(searchState.statementElements$ | async) || []" />
+        <app-advanced-search-footer
+          class="flex-space-between margin-top-1em"
+          (searchTriggered)="doSearch()"
+          (resetTriggered)="resetSearch()"
+          (restorePreviousSearch)="restoreSearchFromSnapshot()" />
+      </div>
     }
   `,
   styleUrls: ['./advanced-search.component.scss'],
