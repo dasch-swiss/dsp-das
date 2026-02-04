@@ -39,43 +39,39 @@ export class PropertyFormManager implements OnDestroy {
     this.searchStateService.updateStatement(statement);
   }
 
-  onPredicateSelectionChanged(statement: StatementElement, selectedProperty: Predicate): void {
+  setSelectedPredicate(statement: StatementElement, selectedProperty: Predicate): void {
     statement.selectedPredicate = selectedProperty;
     this.searchStateService.updateStatement(statement);
   }
 
   setSelectedOperator(statement: StatementElement, selectedOperator: Operator): void {
     statement.selectedOperator = selectedOperator;
-    this._updateStatement(statement);
+    this._updateStatementAndUpdateForms(statement);
   }
 
   setObjectValue(statement: StatementElement, searchValue: string | IriLabelPair): void {
-    this._removeChildrenIfAny(statement);
     statement.selectedObjectValue = searchValue;
-    this._updateStatement(statement);
+    this._updateStatementAndUpdateForms(statement);
   }
 
-  private _updateStatement(statement: StatementElement): void {
+  private _updateStatementAndUpdateForms(statement: StatementElement): void {
     this.searchStateService.updateStatement(statement);
     this._addEmptyStatementIfNecessary(statement);
-    this._removeChildrenIfAny(statement);
+    this._removeChildrenOfStatement(statement);
     this._addChildIfNecessary(statement);
   }
 
-  private _removeChildrenIfAny(statement: StatementElement): void {
-    const hasChildren = this.searchStateService.currentState.statementElements.some(s => s.parentId === statement.id);
-    if (hasChildren) {
-      const currentState = this.searchStateService.currentState;
-      const statementElements = currentState.statementElements.filter(stm => stm.parentId !== statement.id);
-      this.searchStateService.patchState({
-        statementElements,
-      });
-    }
+  private _removeChildrenOfStatement(statement: StatementElement): void {
+    this.searchStateService.patchState({
+      statementElements: this.searchStateService.currentState.statementElements.filter(
+        s => s.parentId !== statement.id
+      ),
+    });
   }
 
   private _addEmptyStatementIfNecessary(statement: StatementElement): void {
-    if (statement.isValidAndComplete && this._isLastOrLastForSameSubject(statement) && !statement.parentId) {
-      this._addEmptyStatement(statement);
+    if (statement.isValidAndComplete && this._LastForSameSubject(statement) && !statement.parentId) {
+      this._insertEmptyStatement(statement);
     }
   }
 
@@ -85,35 +81,33 @@ export class PropertyFormManager implements OnDestroy {
         ? this.searchStateService.currentState.statementElements.find(s => s.id === statement?.parentId)
         : statement;
       if (parentStatement && !this._hasEmptyChildStatement(parentStatement)) {
-        this._addChildStatement(parentStatement);
+        this._insertChildStatement(parentStatement);
       }
     }
   }
 
-  private _addChildStatement(parentStatement: StatementElement): void {
-    const currentState = this.searchStateService.currentState;
-    const parentIndex = currentState.statementElements.findIndex(se => se.id === parentStatement.id);
-    // get the index of any child statements which come after the parent
-    const lastChild = currentState.statementElements.filter(s => s.parentId === parentStatement.id).pop();
-    const insertIndex = lastChild
-      ? currentState.statementElements.findIndex(se => se.id === lastChild.id) + 1
-      : parentIndex + 1;
-    const statementsBeforeParent = currentState.statementElements.slice(0, insertIndex);
-    const statementsAfterParent = currentState.statementElements.slice(insertIndex);
+  private _insertChildStatement(parentStatement: StatementElement): void {
+    const { statementElements } = this.searchStateService.currentState;
+
+    const parentIndex = statementElements.findIndex(se => se.id === parentStatement.id);
+    const lastChild = statementElements.filter(s => s.parentId === parentStatement.id).pop();
+
+    const insertIndex = lastChild ? statementElements.findIndex(se => se.id === lastChild.id) + 1 : parentIndex + 1;
+
     this.searchStateService.patchState({
       statementElements: [
-        ...statementsBeforeParent,
+        ...statementElements.slice(0, insertIndex),
         new StatementElement(
           parentStatement.selectedObjectNode as NodeValue,
           parentStatement.statementLevel + 1,
           parentStatement
         ),
-        ...statementsAfterParent,
+        ...statementElements.slice(insertIndex),
       ],
     });
   }
 
-  private _addEmptyStatement(currentStatement: StatementElement): void {
+  private _insertEmptyStatement(currentStatement: StatementElement): void {
     const currentState = this.searchStateService.currentState;
     const currentIndex = currentState.statementElements.findIndex(se => se === currentStatement);
     const statementsBefore = currentState.statementElements.slice(0, currentIndex + 1);
@@ -135,23 +129,12 @@ export class PropertyFormManager implements OnDestroy {
     return childStatements.length > 0;
   }
 
-  private _isLastOrLastForSameSubject(statement: StatementElement): boolean {
-    const isLast =
-      this.searchStateService.currentState.statementElements[
-        this.searchStateService.currentState.statementElements.length - 1
-      ] === statement;
-    if (isLast) {
-      return true;
-    }
-    const currentState = this.searchStateService.currentState;
-    const statementsOfSameLevel = currentState.statementElements.filter(
+  private _LastForSameSubject(statement: StatementElement): boolean {
+    const sameSubject = this.searchStateService.currentState.statementElements.filter(
       s =>
-        s.statementLevel === statement.statementLevel &&
-        s.subjectNode?.value &&
-        s.subjectNode.value.iri === statement.subjectNode?.value?.iri
+        s.statementLevel === statement.statementLevel && s.subjectNode?.value?.iri === statement.subjectNode?.value?.iri
     );
-    return (
-      !!statementsOfSameLevel.length && statementsOfSameLevel[statementsOfSameLevel.length - 1]?.id === statement.id
-    );
+
+    return sameSubject.length > 0 && sameSubject[sameSubject.length - 1].id === statement.id;
   }
 }

@@ -35,7 +35,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
       <app-predicate-select
         [selectedPredicate]="statementElement?.selectedPredicate"
         [subjectClass]="statementElement.subjectNode?.value"
-        (selectedPredicateChange)="formManager.onPredicateSelectionChanged(statementElement, $event)" />
+        (selectedPredicateChange)="formManager.setSelectedPredicate(statementElement, $event)" />
       <app-comparison-operator
         [operators]="statementElement.operators"
         [selectedOperator]="statementElement.selectedOperator"
