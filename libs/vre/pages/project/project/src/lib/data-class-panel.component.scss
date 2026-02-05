@@ -1,0 +1,6 @@
+@use '@angular/material' as mat;
+
+.create-button {
+  background-color: var(--mat-sys-tertiary);
+  color: var(--mat-sys-on-tertiary);
+}

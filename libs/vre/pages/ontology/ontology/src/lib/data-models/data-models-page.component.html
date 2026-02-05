@@ -14,17 +14,16 @@
     <div style="display: flex; gap: 8px">
       <a
         color="primary"
-        mat-stroked-button
+        matButton="tonal"
         class="docs"
         href="https://dasch.swiss/knowledge-hub/dsp-app/project-admin#data-model"
         target="_blank">
         {{ 'pages.ontology.dataModels.documentation' | translate }}
-        <mat-icon>chevron_right</mat-icon>
       </a>
 
-      <button color="primary" data-cy="create-button" mat-raised-button (click)="createNewOntology()">
+      <button matButton="filled" color="primary" data-cy="create-button" (click)="createNewOntology()">
         <mat-icon>add_circle</mat-icon>
-        <span>{{ 'pages.ontology.dataModels.createNew' | translate }}</span>
+        {{ 'pages.ontology.dataModels.createNew' | translate }}
       </button>
     </div>
     }
@@ -55,7 +54,7 @@
     </div>
 
     @if (hasProjectAdminRights$ | async) {
-    <button color="primary" data-cy="create-list-button" mat-raised-button (click)="createNewList()">
+    <button matButton="filled" color="primary" data-cy="create-list-button" (click)="createNewList()">
       <mat-icon>add_circle</mat-icon>
       {{ 'pages.ontology.dataModels.vocabularies.createNew' | translate }}
     </button>

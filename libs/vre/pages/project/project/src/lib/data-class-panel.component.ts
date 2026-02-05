@@ -36,7 +36,11 @@ interface CreateResourceDialogProps {
           {{ 'pages.dataBrowser.downloadDialog.title' | translate }}
         </button>
         @if (hasProjectMemberRights$ | async) {
-          <button matButton="outlined" (click)="goToAddClassInstance()" data-cy="create-resource-btn">
+          <button
+            matButton="filled"
+            class="create-button"
+            (click)="goToAddClassInstance()"
+            data-cy="create-resource-btn">
             <mat-icon>add</mat-icon>{{ 'pages.dataBrowser.dataClassPanel.createResource' | translate }}
           </button>
         }
@@ -49,6 +53,7 @@ interface CreateResourceDialogProps {
   `,
   imports: [AsyncPipe, MatButton, TranslatePipe, StringifyStringLiteralPipe, ResourcesListFetcherComponent, MatIcon],
   providers: [StringifyStringLiteralPipe],
+  styleUrls: ['./data-class-panel.component.scss'],
 })
 export class DataClassPanelComponent {
   @Input() classSelected!: {
