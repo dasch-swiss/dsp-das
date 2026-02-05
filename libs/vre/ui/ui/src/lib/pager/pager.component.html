@@ -1,7 +1,7 @@
-<div class="main-row">
-  <div class="paginator-item-range">{{ 'ui.pager.showing' | translate }} {{ itemRange }}</div>
+<div class="mat-label-medium" style="display: flex; justify-content: space-between; align-items: center">
+  <div>{{ 'ui.pager.showing' | translate }} {{ itemRange }}</div>
 
-  <div class="paginator-container">
+  <div style="display: flex; align-items: center">
     <button
       matIconButton
       [matTooltip]="'ui.pager.firstPage' | translate"
@@ -9,28 +9,29 @@
       [disabled]="pageIndex === 0">
       <mat-icon>first_page</mat-icon>
     </button>
+
     <button
       matIconButton
       [matTooltip]="'ui.pager.previousPage' | translate"
       (click)="pageIndex = pageIndex - 1"
-      [attr.mat-density]="-2"
       [disabled]="pageIndex === 0">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <div class="paginator-page-info">
-      <div class="page-input-container">
-        <input
-          #pageInput
-          type="number"
-          [value]="pageIndex + 1"
-          (focus)="selectText($event)"
-          (blur)="resetToCurrentPage()"
-          (keyup.enter)="goToPage()"
-          [matTooltip]="'ui.pager.inputTooltip' | translate"
-          class="page-input" />
-      </div>
-      <span class="page-label">{{ 'ui.pager.rangeLabelOf' | translate }} {{ lastPageIndex + 1 }}</span>
-    </div>
+
+    <mat-form-field appearance="outline" class="page-input" subscriptSizing="dynamic">
+      <input
+        #pageInput
+        type="number"
+        matInput
+        [value]="pageIndex + 1"
+        (focus)="selectText($event)"
+        (blur)="resetToCurrentPage()"
+        (keyup.enter)="goToPage()"
+        [matTooltip]="'ui.pager.inputTooltip' | translate" />
+    </mat-form-field>
+
+    <span>{{ 'ui.pager.rangeLabelOf' | translate }} {{ lastPageIndex + 1 }}</span>
+
     <button
       matIconButton
       [matTooltip]="'ui.common.actions.next' | translate"
@@ -38,6 +39,7 @@
       [disabled]="pageIndex === lastPageIndex">
       <mat-icon>chevron_right</mat-icon>
     </button>
+
     <button
       matIconButton
       [matTooltip]="'ui.pager.lastPage' | translate"

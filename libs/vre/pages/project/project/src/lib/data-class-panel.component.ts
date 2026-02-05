@@ -26,20 +26,24 @@ interface CreateResourceDialogProps {
 @Component({
   selector: 'app-data-class-panel',
   template: `
-    <div style="padding-left: 16px; margin-bottom: 32px; padding-right: 16px">
+    <div style="padding: 16px; margin-bottom: 16px;">
       <div style="display: flex; align-items: center; gap: 8px">
-        <h3 style="flex: 1">{{ classSelected.resClass.labels | appStringifyStringLiteral }}</h3>
+        <h3 class="mat-headline-medium" style="flex: 1; margin: 0">
+          {{ classSelected.resClass.labels | appStringifyStringLiteral }}
+        </h3>
         <button matButton="outlined" (click)="openDownloadDialog()" data-cy="download-btn">
           <mat-icon>download</mat-icon>
           {{ 'pages.dataBrowser.downloadDialog.title' | translate }}
         </button>
         @if (hasProjectMemberRights$ | async) {
           <button matButton="outlined" (click)="goToAddClassInstance()" data-cy="create-resource-btn">
-            {{ 'pages.dataBrowser.dataClassPanel.createResource' | translate }}
+            <mat-icon>add</mat-icon>{{ 'pages.dataBrowser.dataClassPanel.createResource' | translate }}
           </button>
         }
       </div>
-      <p style="font-style: italic">{{ classSelected.resClass.comments | appStringifyStringLiteral }}</p>
+      <p style="margin: 16px 0 0; font-style: italic">
+        {{ classSelected.resClass.comments | appStringifyStringLiteral }}
+      </p>
     </div>
     <app-resources-list-fetcher [ontologyLabel]="classSelected.ontologyLabel" [classLabel]="classSelected.classLabel" />
   `,
