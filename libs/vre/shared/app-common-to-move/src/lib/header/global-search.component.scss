@@ -1,0 +1,5 @@
+@use '@angular/material' as mat;
+
+.compact-search {
+  @include mat.form-field-density(-5);
+}

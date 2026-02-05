@@ -3,7 +3,9 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -11,35 +13,36 @@ import { SearchTipsComponent } from './search-tips.component';
 
 @Component({
   selector: 'app-global-search',
-  imports: [ReactiveFormsModule, MatButtonModule, MatIconModule, TranslatePipe, OverlayModule],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatIconModule,
+    OverlayModule,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatSuffix,
+    TranslatePipe,
+  ],
   template: `
-    <form
-      [formGroup]="formGroup"
-      (ngSubmit)="search()"
-      style="border: 1px solid #ebebeb; display: flex; align-items: center; height: 40px">
-      <input
-        #searchInput
-        [formControl]="formGroup.controls.search"
+    <form [formGroup]="formGroup" (ngSubmit)="search()">
+      <mat-form-field
+        appearance="outline"
+        subscriptSizing="dynamic"
+        class="compact-search"
         (focus)="showSearchTips()"
-        (blur)="hideSearchTips()"
-        style="border: none; outline: none; padding: 0 16px; font-size: 14px; min-width: 260px"
-        [placeholder]="'shared.header.searchEverywhere' | translate" />
-      <button matIconButton class="small-icon-button">
-        <mat-icon>search</mat-icon>
-      </button>
+        (blur)="hideSearchTips()">
+        <mat-label>{{ 'shared.header.searchEverywhere' | translate }}</mat-label>
+        <input matInput #searchInput [formControl]="formGroup.controls.search" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
     </form>
   `,
-  styles: [
-    `
-      .small-icon-button {
-        transform: scale(0.8);
-      }
-    `,
-  ],
+  styleUrls: ['./global-search.component.scss'],
 })
 export class GlobalSearchComponent implements OnDestroy {
   formGroup = this._fb.group({
-    search: ['', [Validators.required, Validators.minLength(3)]],
+    search: ['', [Validators.minLength(3)]],
   });
   private overlayRef: OverlayRef | null = null;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
