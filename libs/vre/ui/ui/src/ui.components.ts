@@ -13,7 +13,6 @@ import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { DialogHeaderComponent } from './lib/dialog-header.component';
 import { DragDropDirective } from './lib/directives/drag-drop.directive';
 import { DoubleChipSelectorComponent } from './lib/double-chip-selector.component';
-import { HintComponent } from './lib/hint/hint.component';
 import { HumanReadableDatePipe } from './lib/human-readable-date.pipe';
 import { HumanReadableErrorPipe } from './lib/human-readable-error.pipe';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
@@ -49,7 +48,6 @@ export const UiStandaloneComponents = [
   HumanReadableErrorPipe,
   DoubleChipSelectorComponent,
   DragDropDirective,
-  HintComponent,
   HumanReadableDatePipe,
   InternalLinkReplacerPipe,
   InvalidControlScrollDirective,

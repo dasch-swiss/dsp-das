@@ -8,7 +8,6 @@ import { MatTooltip } from '@angular/material/tooltip';
   template: ` <button
     matIconButton
     disableRipple="true"
-    color="primary"
     data-cy="side-panel-collapse-btn"
     class="collapse-btn"
     (click)="toggleSidenav.emit()"

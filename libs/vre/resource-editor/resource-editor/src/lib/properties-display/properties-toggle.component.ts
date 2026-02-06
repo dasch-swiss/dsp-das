@@ -14,8 +14,6 @@ import { PropertiesDisplayService } from '../resource-properties/properties-disp
       @if (!displayIconsOnly) {
         <button
           matButton
-          color="primary"
-          class="toggle-props"
           data-cy="show-all-comments"
           [matTooltip]="
             _translateService.instant(
@@ -36,8 +34,6 @@ import { PropertiesDisplayService } from '../resource-properties/properties-disp
       } @else {
         <button
           matIconButton
-          color="primary"
-          class="toggle-props"
           data-cy="show-all-comments"
           [matTooltip]="
             _translateService.instant(
@@ -55,8 +51,6 @@ import { PropertiesDisplayService } from '../resource-properties/properties-disp
     @if (!displayIconsOnly) {
       <button
         matButton
-        color="primary"
-        class="toggle-props"
         data-cy="show-all-properties"
         [matTooltip]="
           _translateService.instant(
@@ -77,8 +71,6 @@ import { PropertiesDisplayService } from '../resource-properties/properties-disp
     } @else {
       <button
         matIconButton
-        color="primary"
-        class="toggle-props"
         data-cy="show-all-properties"
         [matTooltip]="
           _translateService.instant(

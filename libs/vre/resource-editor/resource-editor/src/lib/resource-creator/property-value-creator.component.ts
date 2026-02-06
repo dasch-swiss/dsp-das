@@ -28,7 +28,6 @@ import { propertiesTypeMapping } from '../resource-properties/resource-payloads-
             <button
               matIconButton
               type="button"
-              color="primary"
               [matTooltip]="'resourceEditor.resourceCreator.propertyValueCreator.remove' | translate"
               (click)="removeValue.emit()">
               <mat-icon>delete</mat-icon>

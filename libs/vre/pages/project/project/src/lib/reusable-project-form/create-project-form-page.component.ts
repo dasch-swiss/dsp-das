@@ -29,14 +29,13 @@ import { ReusableProjectFormComponent } from './reusable-project-form.component'
         (afterFormInit)="form = $event" />
 
       <div style="display: flex; justify-content: space-between">
-        <button color="primary" matButton type="reset" (click)="goBack()">
+        <button matButton type="reset" (click)="goBack()">
           {{ 'ui.common.actions.cancel' | translate }}
         </button>
 
         <button
           matButton="elevated"
           type="submit"
-          color="primary"
           [disabled]="!form || !form.valid"
           (click)="submitForm()"
           appLoadingButton

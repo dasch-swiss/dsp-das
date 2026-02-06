@@ -55,7 +55,7 @@ import { CollaborationPageService } from '../collaboration-page.service';
     <div style="display: flex; align-items: center">
       <p style="flex: 1; margin-bottom: 0">You can also create a new user and add it to the project member list.</p>
 
-      <button matButton="outlined" color="primary" (click)="createUser()">
+      <button matButton="outlined" (click)="createUser()">
         <mat-icon>add</mat-icon>
         {{ 'pages.project.addUser.newUser' | translate }}
       </button>

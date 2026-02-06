@@ -28,7 +28,6 @@ import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
       <button color="primary" matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         matButton="elevated"
-        color="primary"
         appLoadingButton
         [isLoading]="loading"
         data-cy="submit-button"

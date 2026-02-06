@@ -39,7 +39,6 @@ export interface CreateListItemDialogProps {
 
       <button
         matButton="elevated"
-        color="primary"
         appLoadingButton
         [isLoading]="loading"
         [disabled]="form.invalid"

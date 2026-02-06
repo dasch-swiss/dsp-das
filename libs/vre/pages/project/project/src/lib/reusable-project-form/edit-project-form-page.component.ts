@@ -23,7 +23,6 @@ import { ReusableProjectFormComponent } from './reusable-project-form.component'
       <button
         matButton="elevated"
         type="submit"
-        color="primary"
         (click)="onSubmit()"
         appLoadingButton
         [isLoading]="loading"

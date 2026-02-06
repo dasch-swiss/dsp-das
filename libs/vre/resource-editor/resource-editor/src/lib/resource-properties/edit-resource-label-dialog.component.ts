@@ -40,7 +40,6 @@ import { ResourceFetcherService } from '../representations/resource-fetcher.serv
       <button matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         matButton="elevated"
-        color="primary"
         [disabled]="control.invalid"
         appLoadingButton
         data-cy="edit-resource-label-submit"

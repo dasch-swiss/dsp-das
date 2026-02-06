@@ -15,7 +15,6 @@ import { DeleteMenuItemsComponent } from './delete-menu-items.component';
     @if (resourceFetcher.userCanDelete$ | async) {
       <button
         data-cy="resource-toolbar-more-button"
-        color="primary"
         matIconButton
         class="more-menu"
         [matTooltip]="'resourceEditor.moreMenu.more' | translate"

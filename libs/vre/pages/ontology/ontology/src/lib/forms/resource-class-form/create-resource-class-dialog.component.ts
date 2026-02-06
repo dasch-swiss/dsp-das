@@ -31,7 +31,6 @@ import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.
       <button
         data-cy="submit-button"
         matButton="elevated"
-        color="primary"
         appLoadingButton
         [isLoading]="loading"
         [disabled]="form?.invalid"

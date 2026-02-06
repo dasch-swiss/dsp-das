@@ -50,9 +50,7 @@ import { LegalSettingsLicensesComponent } from './legal-settings-licenses.compon
     <section class="section">
       <h2 class="mat-headline-small" style="display: flex; align-items: center; gap: 8px">
         {{ 'pages.project.legalSettings.authorship' | translate }}
-        <mat-icon color="primary" [matTooltip]="'pages.project.legalSettings.authorshipTooltip' | translate">
-          info
-        </mat-icon>
+        <mat-icon [matTooltip]="'pages.project.legalSettings.authorshipTooltip' | translate"> info </mat-icon>
       </h2>
 
       @if (authorships$ | async; as authorship) {

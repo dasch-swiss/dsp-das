@@ -31,13 +31,7 @@ export interface CreateCopyrightHolderDialogProps {
 
     <div mat-dialog-actions align="end">
       <button matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
-      <button
-        matButton="elevated"
-        color="primary"
-        appLoadingButton
-        [isLoading]="loading"
-        [disabled]="form.invalid"
-        (click)="onSubmit()">
+      <button matButton="filled" appLoadingButton [isLoading]="loading" [disabled]="form.invalid" (click)="onSubmit()">
         {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>`,

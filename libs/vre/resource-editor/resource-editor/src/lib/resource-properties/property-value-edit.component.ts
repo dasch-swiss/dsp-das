@@ -62,14 +62,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           <button
             (click)="afterUndo.emit()"
             matIconButton
-            color="primary"
             [matTooltip]="'resourceEditor.resourceProperties.actions.undo' | translate">
             <mat-icon>undo</mat-icon>
           </button>
           <button
             matIconButton
             type="button"
-            color="primary"
             (click)="toggleCommentValue()"
             data-cy="toggle-comment-button"
             [matTooltip]="

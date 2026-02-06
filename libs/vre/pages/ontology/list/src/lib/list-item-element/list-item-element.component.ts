@@ -18,7 +18,7 @@ import { ListItemComponent } from '../list-item/list-item.component';
   selector: 'app-list-item-element',
   template: `
     <div style="display: flex">
-      <button type="button" color="primary" matIconButton (click)="showChildren = !showChildren">
+      <button type="button" matIconButton (click)="showChildren = !showChildren">
         <mat-icon>{{ showChildren ? 'expand_more' : 'chevron_right' }}</mat-icon>
       </button>
 

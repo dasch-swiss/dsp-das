@@ -32,7 +32,6 @@ import { ResourceToolbarComponent } from './resource-toolbar.component';
         <button
           matIconButton
           data-cy="edit-label-button"
-          color="primary"
           [matTooltip]="'resourceEditor.moreMenu.editLabel' | translate"
           (click)="openEditLabelDialog()">
           <mat-icon>edit</mat-icon>

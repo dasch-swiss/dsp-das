@@ -50,7 +50,6 @@ import { ListInfoForm } from './list-info-form.type';
         <button
           matButton="elevated"
           type="submit"
-          color="primary"
           [disabled]="form.invalid"
           (click)="submitForm()"
           appLoadingButton

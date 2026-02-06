@@ -28,7 +28,6 @@
       @if ((hasProjectAdminRights$ | async) === true) {
       <div>
         <button
-          color="primary"
           mat-button
           [disabled]="(project$ | async)?.status !== true"
           (click)="editList(list!)"
@@ -38,7 +37,6 @@
           {{ 'ui.common.actions.edit' | translate }}
         </button>
         <button
-          color="warn"
           mat-button
           [disabled]="(project$ | async)?.status !== true"
           (click)="askToDeleteList(list)"

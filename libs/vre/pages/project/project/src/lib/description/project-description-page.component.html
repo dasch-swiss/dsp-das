@@ -2,7 +2,7 @@
 <app-closing-dialog>
   <div style="display: flex; justify-content: end">
     @if ((hasProjectAdminRights$ | async) && project.status) {
-    <button matButton [routerLink]="['..', routeConstants.settings, routeConstants.edit]" color="primary">
+    <button matButton [routerLink]="['..', routeConstants.settings, routeConstants.edit]">
       <mat-icon>edit_square</mat-icon>
       {{ 'pages.project.projectDescriptionPage.editProjectDescription' | translate }}
     </button>

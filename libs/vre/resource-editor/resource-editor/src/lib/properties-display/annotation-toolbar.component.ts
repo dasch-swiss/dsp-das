@@ -37,7 +37,6 @@ import { ColorViewerComponent } from '../template-switcher/viewer-components/col
       <button
         matIconButton
         [matTooltip]="'resourceEditor.propertiesDisplay.annotationToolbar.openInNewTab' | translate"
-        color="primary"
         data-cy="open-in-new-window-button"
         matTooltipPosition="above"
         (click)="openRegionInNewTab()">

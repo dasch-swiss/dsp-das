@@ -12,10 +12,10 @@ import { TranslatePipe } from '@ngx-translate/core';
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px">
           <span style="font-weight: 500">{{ 'pages.dataBrowser.downloadDialog.properties' | translate }}</span>
           <div style="display: flex; gap: 8px">
-            <button matButton color="primary" (click)="selectAll()">
+            <button matButton (click)="selectAll()">
               {{ 'pages.dataBrowser.downloadDialog.selectAll' | translate }}
             </button>
-            <button matButton color="primary" (click)="selectNone()">
+            <button matButton (click)="selectNone()">
               {{ 'pages.dataBrowser.downloadDialog.selectNone' | translate }}
             </button>
           </div>

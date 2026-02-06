@@ -17,7 +17,6 @@ import { EditLabelMenuItemComponent } from './edit-label-menu-item.component';
     @if (shouldShowMenu$ | async) {
       <button
         data-cy="resource-toolbar-more-button"
-        color="primary"
         matIconButton
         class="more-menu"
         [matTooltip]="'resourceEditor.moreMenu.more' | translate"

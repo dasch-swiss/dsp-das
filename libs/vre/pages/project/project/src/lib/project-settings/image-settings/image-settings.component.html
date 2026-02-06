@@ -52,9 +52,8 @@
 </div>
 <div class="action-buttons mt-2">
   <button
-    matButton="elevated"
+    matButton="filled"
     type="submit"
-    color="primary"
     [disabled]="!hasChanges
           || (imageSettings === imageSettingsEnum.RestrictImageSize
             && ((isPercentageSize && ratio <= 0) || (!isPercentageSize && !fixedWidth)))"

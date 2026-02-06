@@ -63,8 +63,7 @@ export interface DeleteValueDialogProps {
         {{ 'resourceEditor.resourceProperties.deleteValue.noKeep' | translate }}
       </button>
       <button
-        matButton="elevated"
-        color="primary"
+        matButton="filled"
         appLoadingButton
         [isLoading]="loading"
         (click)="deleteValue()"

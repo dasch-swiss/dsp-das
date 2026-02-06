@@ -41,8 +41,7 @@ import { DownloadPropertyListComponent } from './download-property-list.componen
         {{ 'ui.common.actions.cancel' | translate }}
       </button>
       <button
-        matButton="elevated"
-        color="primary"
+        matButton="filled"
         appLoadingButton
         [isLoading]="isDownloading"
         (click)="downloadCsv()"
