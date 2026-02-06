@@ -55,7 +55,7 @@ import { ProjectImageCoverComponent } from '../project-image-cover.component';
           padding-top: 8px;
 
           .project-title {
-            color: black;
+            color: var(--mat-sys-on-surface);
             display: -webkit-box;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
@@ -67,7 +67,6 @@ import { ProjectImageCoverComponent } from '../project-image-cover.component';
 
       .project-card:hover,
       .project-card:focus {
-        background-color: white;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         position: absolute;
         z-index: 1;
