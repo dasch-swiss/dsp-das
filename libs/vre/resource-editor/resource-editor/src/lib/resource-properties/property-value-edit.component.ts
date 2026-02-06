@@ -82,8 +82,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             (click)="onSave()"
             [matTooltip]="'resourceEditor.resourceProperties.actions.save' | translate"
             matIconButton
-            data-cy="save-button"
-            color="primary">
+            data-cy="save-button">
             <mat-icon>save</mat-icon>
           </button>
         </div>

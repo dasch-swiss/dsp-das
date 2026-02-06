@@ -1,29 +1,27 @@
 <app-centered-layout>
   <div class="material-showcase">
     <h1 class="mat-display-medium page-title">Material 3 Design System</h1>
-    <p class="mat-body-large intro">
-      Visual reference for Material 3 color roles and typography styles.
-    </p>
+    <p class="mat-body-large intro">Visual reference for Material 3 color roles and typography styles.</p>
 
     <!-- Color Roles Section -->
     <div class="main-section">
       <h2 class="mat-headline-medium main-section-title">Color Roles</h2>
 
       @for (group of colorGroups; track group.name) {
-        <section class="color-group">
-          <h3 class="mat-headline-small group-title">{{ group.name }}</h3>
-          <div class="color-swatches">
-            @for (role of group.roles; track role.name) {
-              <div
-                class="color-swatch"
-                [style.background-color]="'var(' + role.cssVar + ')'"
-                [style.color]="'var(' + role.textCssVar + ')'">
-                <span class="role-name">{{ role.name }}</span>
-                <span class="css-var">{{ role.cssVar }}</span>
-              </div>
-            }
+      <section class="color-group">
+        <h3 class="mat-headline-small group-title">{{ group.name }}</h3>
+        <div class="color-swatches">
+          @for (role of group.roles; track role.name) {
+          <div
+            class="color-swatch"
+            [style.background-color]="'var(' + role.cssVar + ')'"
+            [style.color]="'var(' + role.textCssVar + ')'">
+            <span class="role-name">{{ role.name }}</span>
+            <span class="css-var">{{ role.cssVar }}</span>
           </div>
-        </section>
+          }
+        </div>
+      </section>
       }
     </div>
 
@@ -35,10 +33,10 @@
       <section class="typography-section">
         <h3 class="mat-headline-small section-title">Display</h3>
         @for (item of typographyLevels.display; track item.level) {
-          <div class="typography-item">
-            <span class="item-label">{{ item.level }}</span>
-            <div class="example-text" [class]="item.class">{{ item.example }}</div>
-          </div>
+        <div class="typography-item">
+          <span class="item-label">{{ item.level }}</span>
+          <div class="example-text" [class]="item.class">{{ item.example }}</div>
+        </div>
         }
       </section>
 
@@ -46,10 +44,10 @@
       <section class="typography-section">
         <h3 class="mat-headline-small section-title">Headline</h3>
         @for (item of typographyLevels.headline; track item.level) {
-          <div class="typography-item">
-            <span class="item-label">{{ item.level }}</span>
-            <div class="example-text" [class]="item.class">{{ item.example }}</div>
-          </div>
+        <div class="typography-item">
+          <span class="item-label">{{ item.level }}</span>
+          <div class="example-text" [class]="item.class">{{ item.example }}</div>
+        </div>
         }
       </section>
 
@@ -57,10 +55,10 @@
       <section class="typography-section">
         <h3 class="mat-headline-small section-title">Title</h3>
         @for (item of typographyLevels.title; track item.level) {
-          <div class="typography-item">
-            <span class="item-label">{{ item.level }}</span>
-            <div class="example-text" [class]="item.class">{{ item.example }}</div>
-          </div>
+        <div class="typography-item">
+          <span class="item-label">{{ item.level }}</span>
+          <div class="example-text" [class]="item.class">{{ item.example }}</div>
+        </div>
         }
       </section>
 
@@ -68,10 +66,10 @@
       <section class="typography-section">
         <h3 class="mat-headline-small section-title">Body</h3>
         @for (item of typographyLevels.body; track item.level) {
-          <div class="typography-item">
-            <span class="item-label">{{ item.level }}</span>
-            <div class="example-text" [class]="item.class">{{ item.example }}</div>
-          </div>
+        <div class="typography-item">
+          <span class="item-label">{{ item.level }}</span>
+          <div class="example-text" [class]="item.class">{{ item.example }}</div>
+        </div>
         }
       </section>
 
@@ -79,10 +77,10 @@
       <section class="typography-section">
         <h3 class="mat-headline-small section-title">Label</h3>
         @for (item of typographyLevels.label; track item.level) {
-          <div class="typography-item">
-            <span class="item-label">{{ item.level }}</span>
-            <div class="example-text" [class]="item.class">{{ item.example }}</div>
-          </div>
+        <div class="typography-item">
+          <span class="item-label">{{ item.level }}</span>
+          <div class="example-text" [class]="item.class">{{ item.example }}</div>
+        </div>
         }
       </section>
 

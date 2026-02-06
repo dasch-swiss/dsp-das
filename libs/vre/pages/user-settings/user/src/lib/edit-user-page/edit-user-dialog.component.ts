@@ -37,8 +37,8 @@ export interface EditUserDialogProps {
     }
 
     <div mat-dialog-actions align="end">
-      <button color="primary" matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
-      <button matButton="elevated" color="primary" (click)="updateUser()">
+      <button matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
+      <button matButton="elevated" (click)="updateUser()">
         {{ 'ui.common.actions.update' | translate }}
       </button>
     </div>

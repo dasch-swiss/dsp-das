@@ -12,7 +12,7 @@ import { UploadFileService } from '../representations/upload/upload-file.service
   template: ` @if (fileToUpload$ | async; as fileToUpload) {
     <mat-card>
       <mat-card-content style="display: flex; align-items: center">
-        <mat-icon color="primary">description</mat-icon>
+        <mat-icon>description</mat-icon>
         <div style="flex: 1; margin-left: 8px">{{ fileToUpload.originalFilename }}</div>
         <button matIconButton (click)="removeFile.emit()">
           <mat-icon>cancel</mat-icon>

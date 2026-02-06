@@ -53,8 +53,16 @@ export class MaterialShowcaseComponent {
       roles: [
         { name: 'Primary', cssVar: '--mat-sys-primary', textCssVar: '--mat-sys-on-primary' },
         { name: 'On Primary', cssVar: '--mat-sys-on-primary', textCssVar: '--mat-sys-primary' },
-        { name: 'Primary Container', cssVar: '--mat-sys-primary-container', textCssVar: '--mat-sys-on-primary-container' },
-        { name: 'On Primary Container', cssVar: '--mat-sys-on-primary-container', textCssVar: '--mat-sys-primary-container' },
+        {
+          name: 'Primary Container',
+          cssVar: '--mat-sys-primary-container',
+          textCssVar: '--mat-sys-on-primary-container',
+        },
+        {
+          name: 'On Primary Container',
+          cssVar: '--mat-sys-on-primary-container',
+          textCssVar: '--mat-sys-primary-container',
+        },
       ],
     },
     {
@@ -62,8 +70,16 @@ export class MaterialShowcaseComponent {
       roles: [
         { name: 'Secondary', cssVar: '--mat-sys-secondary', textCssVar: '--mat-sys-on-secondary' },
         { name: 'On Secondary', cssVar: '--mat-sys-on-secondary', textCssVar: '--mat-sys-secondary' },
-        { name: 'Secondary Container', cssVar: '--mat-sys-secondary-container', textCssVar: '--mat-sys-on-secondary-container' },
-        { name: 'On Secondary Container', cssVar: '--mat-sys-on-secondary-container', textCssVar: '--mat-sys-secondary-container' },
+        {
+          name: 'Secondary Container',
+          cssVar: '--mat-sys-secondary-container',
+          textCssVar: '--mat-sys-on-secondary-container',
+        },
+        {
+          name: 'On Secondary Container',
+          cssVar: '--mat-sys-on-secondary-container',
+          textCssVar: '--mat-sys-secondary-container',
+        },
       ],
     },
     {
@@ -71,8 +87,16 @@ export class MaterialShowcaseComponent {
       roles: [
         { name: 'Tertiary', cssVar: '--mat-sys-tertiary', textCssVar: '--mat-sys-on-tertiary' },
         { name: 'On Tertiary', cssVar: '--mat-sys-on-tertiary', textCssVar: '--mat-sys-tertiary' },
-        { name: 'Tertiary Container', cssVar: '--mat-sys-tertiary-container', textCssVar: '--mat-sys-on-tertiary-container' },
-        { name: 'On Tertiary Container', cssVar: '--mat-sys-on-tertiary-container', textCssVar: '--mat-sys-tertiary-container' },
+        {
+          name: 'Tertiary Container',
+          cssVar: '--mat-sys-tertiary-container',
+          textCssVar: '--mat-sys-on-tertiary-container',
+        },
+        {
+          name: 'On Tertiary Container',
+          cssVar: '--mat-sys-on-tertiary-container',
+          textCssVar: '--mat-sys-tertiary-container',
+        },
       ],
     },
     {
@@ -96,11 +120,27 @@ export class MaterialShowcaseComponent {
     {
       name: 'Surface Containers',
       roles: [
-        { name: 'Surface Container Lowest', cssVar: '--mat-sys-surface-container-lowest', textCssVar: '--mat-sys-on-surface' },
-        { name: 'Surface Container Low', cssVar: '--mat-sys-surface-container-low', textCssVar: '--mat-sys-on-surface' },
+        {
+          name: 'Surface Container Lowest',
+          cssVar: '--mat-sys-surface-container-lowest',
+          textCssVar: '--mat-sys-on-surface',
+        },
+        {
+          name: 'Surface Container Low',
+          cssVar: '--mat-sys-surface-container-low',
+          textCssVar: '--mat-sys-on-surface',
+        },
         { name: 'Surface Container', cssVar: '--mat-sys-surface-container', textCssVar: '--mat-sys-on-surface' },
-        { name: 'Surface Container High', cssVar: '--mat-sys-surface-container-high', textCssVar: '--mat-sys-on-surface' },
-        { name: 'Surface Container Highest', cssVar: '--mat-sys-surface-container-highest', textCssVar: '--mat-sys-on-surface' },
+        {
+          name: 'Surface Container High',
+          cssVar: '--mat-sys-surface-container-high',
+          textCssVar: '--mat-sys-on-surface',
+        },
+        {
+          name: 'Surface Container Highest',
+          cssVar: '--mat-sys-surface-container-highest',
+          textCssVar: '--mat-sys-on-surface',
+        },
       ],
     },
     {

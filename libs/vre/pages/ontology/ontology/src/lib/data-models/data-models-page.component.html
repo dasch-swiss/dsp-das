@@ -19,7 +19,7 @@
         {{ 'pages.ontology.dataModels.documentation' | translate }}
       </a>
 
-      <button matButton="filled" color="primary" data-cy="create-button" (click)="createNewOntology()">
+      <button matButton="filled" data-cy="create-button" (click)="createNewOntology()">
         <mat-icon>add_circle</mat-icon>
         {{ 'pages.ontology.dataModels.createNew' | translate }}
       </button>
@@ -51,7 +51,7 @@
     </div>
 
     @if (hasProjectAdminRights$ | async) {
-    <button matButton="filled" color="primary" data-cy="create-list-button" (click)="createNewList()">
+    <button matButton="filled" data-cy="create-list-button" (click)="createNewList()">
       <mat-icon>add_circle</mat-icon>
       {{ 'pages.ontology.dataModels.vocabularies.createNew' | translate }}
     </button>

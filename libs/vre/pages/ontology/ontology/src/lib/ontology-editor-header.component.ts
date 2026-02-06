@@ -46,7 +46,6 @@ import { OntologyEditService } from './services/ontology-edit.service';
           @if ((hasProjectAdminRights$ | async) === true) {
             <div>
               <button
-                color="primary"
                 data-cy="edit-ontology-button"
                 matButton
                 [matTooltip]="

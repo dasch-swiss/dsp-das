@@ -13,26 +13,21 @@
         @switch (item.url.substring(0, 4)) {
         <!-- in case of http (external address) -->
         @case ('http') {
-        <a matButton [href]="item.url" target="_blank" color="primary" class="external-url">
+        <a matButton [href]="item.url" target="_blank" class="external-url">
           {{ item.urlText ? item.urlText : ('shared.grid.readMore' | translate) }}
           <mat-icon iconPositionEnd class="suffix">launch</mat-icon>
         </a>
         }
         <!-- in case of mailto -->
         @case ('mail') {
-        <a matButton [href]="item.url" color="primary" class="mailto">
+        <a matButton [href]="item.url" class="mailto">
           {{ item.urlText ? item.urlText : ('shared.grid.readMore' | translate) }}
           <mat-icon iconPositionEnd class="suffix">mail</mat-icon>
         </a>
         }
         <!-- in case of internal address -->
         @default {
-        <button
-          matButton
-          [routerLink]="[item.url]"
-          routerLinkActive="router-link-active"
-          color="primary"
-          class="internal-url">
+        <button matButton [routerLink]="[item.url]" routerLinkActive="router-link-active" class="internal-url">
           {{ item.urlText ? item.urlText : ('shared.grid.readMore' | translate) }}
         </button>
         } }

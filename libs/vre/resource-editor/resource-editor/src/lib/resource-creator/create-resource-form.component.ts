@@ -67,7 +67,6 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
           <button
             matButton="elevated"
             type="submit"
-            color="primary"
             appLoadingButton
             data-cy="submit-button"
             [isLoading]="loading"

@@ -14,7 +14,7 @@
       [placeholder]="'ui.datePicker.clickToSelect' | translate"
       autocomplete="off"
       readonly />
-    <mat-icon color="primary" matSuffix class="link">event</mat-icon>
+    <mat-icon matSuffix class="link">event</mat-icon>
     <!-- <mat-error *ngIf="dateForm.controls.date.hasError('required')">
     Date is <strong>required</strong>
   </mat-error> -->
@@ -44,7 +44,7 @@
         <!-- go to the current date -->
         <button matButton (click)="setToday()">{{ 'ui.datePicker.today' | translate }}</button>
         <!-- submit button (which is needed if date doesn't have precision on an exact day) -->
-        <button matIconButton color="primary" [disabled]="!form.valid" (click)="setDate(day); closeDatePicker()">
+        <button matIconButton [disabled]="!form.valid" (click)="setDate(day); closeDatePicker()">
           <mat-icon>done</mat-icon>
         </button>
       </div>

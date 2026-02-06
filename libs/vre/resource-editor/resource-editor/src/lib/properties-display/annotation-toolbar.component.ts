@@ -28,7 +28,6 @@ import { ColorViewerComponent } from '../template-switcher/viewer-components/col
         <button
           matIconButton
           [matTooltip]="'resourceEditor.propertiesDisplay.annotationToolbar.highlightRegion' | translate"
-          color="primary"
           matTooltipPosition="above"
           (click)="onPinPointClicked()">
           <mat-icon>my_location</mat-icon>
@@ -43,7 +42,6 @@ import { ColorViewerComponent } from '../template-switcher/viewer-components/col
         <mat-icon>open_in_new</mat-icon>
       </button>
       <button
-        color="primary"
         matIconButton
         class="share-res"
         data-cy="share-button"

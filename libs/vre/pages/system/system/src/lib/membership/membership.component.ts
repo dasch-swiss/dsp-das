@@ -55,7 +55,6 @@ import { AutocompleteItem } from '../autocomplete-item.interface';
         </mat-form-field>
         <button
           matIconButton
-          color="primary"
           (click)="addToProject(selectedValue!)"
           [disabled]="selectedValue === null"
           aria-label="Button to add user to project"

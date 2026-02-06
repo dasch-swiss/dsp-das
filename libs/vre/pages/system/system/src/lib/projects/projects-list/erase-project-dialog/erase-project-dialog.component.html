@@ -34,9 +34,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button matButton color="primary" mat-dialog-close class="cancel-button center">
-    {{ 'ui.common.actions.cancel' | translate }}
-  </button>
+  <button matButton mat-dialog-close class="cancel-button center">{{ 'ui.common.actions.cancel' | translate }}</button>
   <span class="fill-remaining-space"></span>
   <button
     [disabled]="eraseForm.invalid"

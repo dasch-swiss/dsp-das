@@ -42,7 +42,7 @@ export interface EditPasswordDialogProps {
               { errorKey: 'incorrect', message: 'pages.userSettings.passwordForm.incorrectPassword' | translate },
             ]" />
 
-          <button matButton="elevated" color="primary" (click)="checkAdminPassword()">
+          <button matButton="elevated" (click)="checkAdminPassword()">
             {{ 'ui.common.actions.next' | translate }}
           </button>
         </mat-step>
@@ -52,7 +52,6 @@ export interface EditPasswordDialogProps {
 
           <button
             matButton="elevated"
-            color="primary"
             appLoadingButton
             [isLoading]="updateLoading"
             (click)="updateNewPassword()"
@@ -64,7 +63,7 @@ export interface EditPasswordDialogProps {
     </div>
 
     <div mat-dialog-actions align="end">
-      <button matButton color="primary" matDialogClose>{{ 'ui.common.actions.cancel' | translate }}</button>
+      <button matButton matDialogClose>{{ 'ui.common.actions.cancel' | translate }}</button>
     </div>
   `,
   styles: [

@@ -19,7 +19,6 @@ import { PermissionInfoComponent } from './permission-info/permission-info.compo
       <a
         matIconButton
         [matTooltip]="'resourceEditor.toolbar.openInNewTab' | translate"
-        color="primary"
         data-cy="open-in-new-window-button"
         matTooltipPosition="above"
         [routerLink]="getResourceLink()"
@@ -28,7 +27,6 @@ import { PermissionInfoComponent } from './permission-info/permission-info.compo
         <mat-icon>open_in_new</mat-icon>
       </a>
       <button
-        color="primary"
         matIconButton
         data-cy="share-button"
         [matTooltip]="

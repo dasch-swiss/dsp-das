@@ -10,7 +10,7 @@ import { AlertInfoComponent } from './alert-info.component';
       <div style="display: flex; justify-content: center">
         <div style="display: flex; align-items: center">
           {{ 'resourceEditor.versioned' | translate }} {{ resourceVersion }}.
-          <button matButton color="primary" (click)="navigateToCurrentVersion.emit()">
+          <button matButton (click)="navigateToCurrentVersion.emit()">
             {{ 'resourceEditor.seeCurrentVersion' | translate }}
           </button>
         </div>

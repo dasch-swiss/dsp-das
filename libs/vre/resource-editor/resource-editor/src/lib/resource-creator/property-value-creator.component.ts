@@ -36,7 +36,6 @@ import { propertiesTypeMapping } from '../resource-properties/resource-payloads-
           <button
             matIconButton
             type="button"
-            color="primary"
             [hidden]="isHidden$ | async"
             (click)="toggleCommentValue()"
             [matTooltip]="
