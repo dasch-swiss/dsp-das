@@ -21,14 +21,6 @@ import { ProjectPageService } from './project-page.service';
       <app-header-user-actions />
     </mat-toolbar>
     <app-project-navigation-tabs />`,
-  styles: [
-    `
-      :host {
-        display: block;
-        border-bottom: 1px solid #ebebeb;
-      }
-    `,
-  ],
   imports: [
     AsyncPipe,
     MatToolbar,

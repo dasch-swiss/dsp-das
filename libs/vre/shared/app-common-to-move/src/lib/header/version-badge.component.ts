@@ -10,7 +10,8 @@ import { AppConfigService } from '@dasch-swiss/vre/core/config';
           style="background-color: var(--mat-sys-inverse-surface); color: var(--mat-sys-inverse-on-surface); padding: 4px 8px">
           {{ dsp.environment }}
         </span>
-        <span style="background-color: var(--mat-sys-secondary); color: var(--mat-sys-on-secondary); padding: 4px 8px">
+        <span
+          style="background-color: var(--mat-sys-secondary-container); color: var(--mat-sys-on-secondary-container); padding: 4px 8px">
           {{ dsp.release }}
         </span>
       </div>

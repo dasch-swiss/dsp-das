@@ -8,9 +8,6 @@ $theme: mat.define-theme((
     primary: $m3-dsp-blue-palette,
     tertiary: $m3-dsp-teal-palette,
   ),
-  density: (
-    scale: 0
-  )
 ));
 
 @include mat.all-component-themes($theme);
@@ -20,7 +17,6 @@ $theme: mat.define-theme((
 // Override button border radius (M3 default is 9999px for pill-shaped buttons)
 html {
   --app-button-shape: 4px;
-
   --mat-button-filled-container-shape: var(--app-button-shape);
   --mat-button-outlined-container-shape: var(--app-button-shape);
   --mat-button-text-container-shape: var(--app-button-shape);
