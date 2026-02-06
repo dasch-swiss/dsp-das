@@ -23,32 +23,34 @@ import { CollaborationPageService } from '../collaboration-page.service';
   selector: 'app-add-user',
   template: `
     <h3 class="mat-title-medium">{{ 'pages.project.addUser.title' | translate }}</h3>
-    <p>Select an existing user from the list.</p>
-    <mat-form-field style="flex: 1">
-      <mat-label>{{ 'pages.project.addUser.select' | translate }}</mat-label>
-      <input matInput [matAutocomplete]="user" [formControl]="usernameControl" />
+    <div style="display: flex; align-items: center; gap: 16px">
+      <p style="margin-bottom: 0">Select an existing user from the list.</p>
+      <mat-form-field style="flex: 1">
+        <mat-label>{{ 'pages.project.addUser.select' | translate }}</mat-label>
+        <input matInput [matAutocomplete]="user" [formControl]="usernameControl" />
 
-      <mat-autocomplete
-        #user="matAutocomplete"
-        [displayWith]="displayUser"
-        (optionSelected)="onUserSelected($event.option.value)">
-        @if (loading) {
-          <mat-option [disabled]="true">
-            <app-progress-indicator />
-          </mat-option>
-        }
-        @if (!loading && (filteredUsers$ | async); as filteredUsers) {
-          @for (user of filteredUsers; track user) {
-            <mat-option [value]="user.id" [disabled]="isMember(user)">
-              {{ getLabel(user) }}
+        <mat-autocomplete
+          #user="matAutocomplete"
+          [displayWith]="displayUser"
+          (optionSelected)="onUserSelected($event.option.value)">
+          @if (loading) {
+            <mat-option [disabled]="true">
+              <app-progress-indicator />
             </mat-option>
           }
-          @if (filteredUsers.length === 0) {
-            <mat-option [disabled]="true">{{ 'pages.project.addUser.noResults' | translate }}</mat-option>
+          @if (!loading && (filteredUsers$ | async); as filteredUsers) {
+            @for (user of filteredUsers; track user) {
+              <mat-option [value]="user.id" [disabled]="isMember(user)">
+                {{ getLabel(user) }}
+              </mat-option>
+            }
+            @if (filteredUsers.length === 0) {
+              <mat-option [disabled]="true">{{ 'pages.project.addUser.noResults' | translate }}</mat-option>
+            }
           }
-        }
-      </mat-autocomplete>
-    </mat-form-field>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
 
     <div style="display: flex; align-items: center">
       <p style="flex: 1; margin-bottom: 0">You can also create a new user and add it to the project member list.</p>

@@ -19,7 +19,10 @@ import { LegalSettingsLicensesComponent } from './legal-settings-licenses.compon
   selector: 'app-legal-settings',
   template: `
     <div style="display: flex;justify-content: center; margin: 32px;">
-      <div style="border: 1px solid; padding: 16px">{{ 'pages.project.legalSettings.warning' | translate }}</div>
+      <div
+        style="padding: 16px; background-color: var(--mat-sys-primary-container); color: var(--mat-sys-on-primary-container)">
+        {{ 'pages.project.legalSettings.warning' | translate }}
+      </div>
     </div>
     <section class="section">
       <div style="display: flex; align-items: center">
