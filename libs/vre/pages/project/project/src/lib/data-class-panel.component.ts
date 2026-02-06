@@ -31,7 +31,7 @@ interface CreateResourceDialogProps {
         <h3 class="mat-headline-medium" style="flex: 1; margin: 0">
           {{ classSelected.resClass.labels | appStringifyStringLiteral }}
         </h3>
-        <button matButton="outlined" (click)="openDownloadDialog()" data-cy="download-btn">
+        <button matButton="tonal" (click)="openDownloadDialog()" data-cy="download-btn">
           <mat-icon>download</mat-icon>
           {{ 'pages.dataBrowser.downloadDialog.title' | translate }}
         </button>

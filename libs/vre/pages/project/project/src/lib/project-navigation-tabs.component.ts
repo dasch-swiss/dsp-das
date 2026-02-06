@@ -62,7 +62,6 @@ export class ProjectNavigationTabsComponent {
   readonly DATA_MODELS = RouteConstants.dataModels;
   readonly SETTINGS = RouteConstants.settings;
   readonly SEARCH = RouteConstants.search;
-  readonly DESCRIPTION = RouteConstants.projectDescription;
 
   get path() {
     return this._route.snapshot.children[0].url[0].path;

@@ -1,9 +1,8 @@
 import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { MatCard } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatList, MatListItem, MatListItemIcon } from '@angular/material/list';
+import { MatListItem, MatListItemIcon } from '@angular/material/list';
 import { Title } from '@angular/platform-browser';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
@@ -31,7 +30,9 @@ import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/
           </mat-list-item>
         </app-clickable-list-card>
 
-        <h3>{{ 'pages.userSettings.account.danger' | translate }}</h3>
+        <h3 class="mat-headline-small" style="margin-top: 32px">
+          {{ 'pages.userSettings.account.danger' | translate }}
+        </h3>
 
         <app-clickable-list-card>
           <mat-list-item (click)="onDeleteOwnAccount(user)">
