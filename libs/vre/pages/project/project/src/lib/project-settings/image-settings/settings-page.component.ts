@@ -15,7 +15,6 @@ import { TranslateService } from '@ngx-translate/core';
       <nav
         mat-tab-nav-bar
         mat-align-tabs="center"
-        class="settings navigation"
         style="background: none"
         animationDuration="0ms"
         [tabPanel]="tabPanel">

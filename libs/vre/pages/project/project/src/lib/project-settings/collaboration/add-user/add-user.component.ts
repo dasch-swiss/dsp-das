@@ -5,6 +5,7 @@ import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/mat
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
@@ -21,35 +22,39 @@ import { CollaborationPageService } from '../collaboration-page.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-add-user',
   template: `
-    <h3>{{ 'pages.project.addUser.title' | translate }}</h3>
-    <div style="display: flex; gap: 8px; align-items: center">
-      <mat-form-field style="flex: 1">
-        <mat-label>{{ 'pages.project.addUser.select' | translate }}</mat-label>
-        <input matInput [matAutocomplete]="user" [formControl]="usernameControl" />
+    <h3 class="mat-title-medium">{{ 'pages.project.addUser.title' | translate }}</h3>
+    <p>Select an existing user from the list.</p>
+    <mat-form-field style="flex: 1">
+      <mat-label>{{ 'pages.project.addUser.select' | translate }}</mat-label>
+      <input matInput [matAutocomplete]="user" [formControl]="usernameControl" />
 
-        <mat-autocomplete
-          #user="matAutocomplete"
-          [displayWith]="displayUser"
-          (optionSelected)="onUserSelected($event.option.value)">
-          @if (loading) {
-            <mat-option [disabled]="true">
-              <app-progress-indicator />
+      <mat-autocomplete
+        #user="matAutocomplete"
+        [displayWith]="displayUser"
+        (optionSelected)="onUserSelected($event.option.value)">
+        @if (loading) {
+          <mat-option [disabled]="true">
+            <app-progress-indicator />
+          </mat-option>
+        }
+        @if (!loading && (filteredUsers$ | async); as filteredUsers) {
+          @for (user of filteredUsers; track user) {
+            <mat-option [value]="user.id" [disabled]="isMember(user)">
+              {{ getLabel(user) }}
             </mat-option>
           }
-          @if (!loading && (filteredUsers$ | async); as filteredUsers) {
-            @for (user of filteredUsers; track user) {
-              <mat-option [value]="user.id" [disabled]="isMember(user)">
-                {{ getLabel(user) }}
-              </mat-option>
-            }
-            @if (filteredUsers.length === 0) {
-              <mat-option [disabled]="true">{{ 'pages.project.addUser.noResults' | translate }}</mat-option>
-            }
+          @if (filteredUsers.length === 0) {
+            <mat-option [disabled]="true">{{ 'pages.project.addUser.noResults' | translate }}</mat-option>
           }
-        </mat-autocomplete>
-      </mat-form-field>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
 
-      <button matButton="elevated" color="primary" (click)="createUser()">
+    <div style="display: flex; align-items: center">
+      <p style="flex: 1; margin-bottom: 0">You can also create a new user and add it to the project member list.</p>
+
+      <button matButton="outlined" color="primary" (click)="createUser()">
+        <mat-icon>add</mat-icon>
         {{ 'pages.project.addUser.newUser' | translate }}
       </button>
     </div>
@@ -66,6 +71,7 @@ import { CollaborationPageService } from '../collaboration-page.service';
     MatButton,
     TranslatePipe,
     AppProgressIndicatorComponent,
+    MatIcon,
   ],
 })
 export class AddUserComponent {

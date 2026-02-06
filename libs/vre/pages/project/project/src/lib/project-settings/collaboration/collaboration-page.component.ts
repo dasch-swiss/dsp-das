@@ -15,7 +15,14 @@ import { ProjectMembersComponent } from './project-members.component';
   template: `
     @if (project$ | async; as project) {
       @if (project.status) {
-        <app-add-user [projectUuid]="projectUuid" />
+        <app-add-user
+          [projectUuid]="projectUuid"
+          style="
+    display: block;
+    padding: 16px;
+    background: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+    " />
       }
     }
     @if (activeProjectMembers$ | async; as activeProjectMembers) {

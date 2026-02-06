@@ -22,12 +22,17 @@ import { LegalSettingsLicensesComponent } from './legal-settings-licenses.compon
       <div style="border: 1px solid; padding: 16px">{{ 'pages.project.legalSettings.warning' | translate }}</div>
     </div>
     <section class="section">
-      <h2>
-        {{ 'pages.project.legalSettings.copyrightHolders' | translate }}
-        <button color="primary" matButton="elevated" (click)="addCopyrightHolder()">
+      <div style="display: flex; align-items: center">
+        <h2 class="mat-headline-small" style="flex: 1; margin-bottom: 0">
+          {{ 'pages.project.legalSettings.copyrightHolders' | translate }}
+        </h2>
+
+        <button matButton="filled" (click)="addCopyrightHolder()">
+          <mat-icon>add</mat-icon>
           {{ 'pages.project.legalSettings.add' | translate }}
         </button>
-      </h2>
+      </div>
+
       <app-alternated-list>
         @for (item of copyrightHolders$ | async; track item) {
           <div>{{ item }}</div>
@@ -36,11 +41,11 @@ import { LegalSettingsLicensesComponent } from './legal-settings-licenses.compon
     </section>
 
     <section class="section">
-      <h2>{{ 'pages.project.legalSettings.licenses' | translate }}</h2>
+      <h2 class="mat-headline-small">{{ 'pages.project.legalSettings.licenses' | translate }}</h2>
       <app-legal-settings-licenses />
     </section>
     <section class="section">
-      <h2 style="display: flex; align-items: center; gap: 8px">
+      <h2 class="mat-headline-small" style="display: flex; align-items: center; gap: 8px">
         {{ 'pages.project.legalSettings.authorship' | translate }}
         <mat-icon color="primary" [matTooltip]="'pages.project.legalSettings.authorshipTooltip' | translate">
           info

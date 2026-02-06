@@ -10,8 +10,8 @@ import { AdminImageDirective } from '@dasch-swiss/vre/ui/ui';
     </span>
 
     <span>
-      <h5 class="mat-subtitle-1" style="margin-bottom: 0">{{ user.givenName }} {{ user.familyName }}</h5>
-      <span class="mat-subtitle-2">{{ user.username }} | {{ user.email }}</span>
+      <h5 class="mat-body-large" style="margin-bottom: 0">{{ user.givenName }} {{ user.familyName }}</h5>
+      <span class="mat-body-small">{{ user.username }} | {{ user.email }}</span>
     </span>
   </span>`,
   imports: [AdminImageDirective],
