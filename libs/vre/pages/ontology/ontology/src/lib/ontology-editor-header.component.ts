@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, ViewContainerRef } from '@a
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { MatToolbar } from '@angular/material/toolbar';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { OntologyMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
@@ -21,62 +21,57 @@ import { OntologyEditService } from './services/ontology-edit.service';
   template: `
     @if (ontology$ | async; as ontology) {
       <mat-toolbar>
-        <mat-toolbar-row>
-          <button
-            data-cy="back-to-data-models"
-            matButton
-            (click)="navigateToDataModels()"
-            [matTooltip]="_translate.instant('pages.ontology.editor.backToDataModels')">
-            <mat-icon>chevron_left</mat-icon>
-          </button>
-          <div style="display: flex; flex-direction: column; flex: 1">
-            <h3
-              data-cy="ontology-label"
-              class="mat-headline-6"
-              [matTooltip]="ontology?.comment ? ontology.label + ' &mdash; ' + ontology?.comment : ''"
-              matTooltipPosition="above">
-              {{ ontology.label }}
-            </h3>
-            <span class="mat-caption">
-              {{ _translate.instant('pages.ontology.editor.updatedOn') }}
-              {{ ontology.lastModificationDate | date: 'medium' }}
-            </span>
-          </div>
+        <button
+          data-cy="back-to-data-models"
+          matButton
+          (click)="navigateToDataModels()"
+          [matTooltip]="_translate.instant('pages.ontology.editor.backToDataModels')">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <div style="flex: 1">
+          <h3
+            data-cy="ontology-label"
+            class="mat-title-medium"
+            [matTooltip]="ontology?.comment ? ontology.label + ' &mdash; ' + ontology?.comment : ''"
+            matTooltipPosition="above">
+            {{ ontology.label }}
+          </h3>
+          <span class="mat-body-medium">
+            {{ _translate.instant('pages.ontology.editor.updatedOn') }}
+            {{ ontology.lastModificationDate | date: 'medium' }}
+          </span>
+        </div>
 
-          @if ((hasProjectAdminRights$ | async) === true) {
-            <div>
-              <button
-                data-cy="edit-ontology-button"
-                matButton
-                [matTooltip]="
-                  (hasProjectAdminRights$ | async) ? _translate.instant('pages.ontology.editor.editInfo') : ''
-                "
-                [disabled]="(project$ | async)?.status !== true"
-                (click)="$event.stopPropagation(); editOntology(ontology)">
-                <mat-icon>edit</mat-icon>
-                {{ _translate.instant('ui.common.actions.edit') }}
-              </button>
-              <button
-                color="warn"
-                matButton
-                [matTooltip]="
-                  (currentOntologyCanBeDeleted$ | async)
-                    ? _translate.instant('pages.ontology.editor.deleteTooltip')
-                    : _translate.instant('pages.ontology.editor.cannotDelete')
-                "
-                [disabled]="(currentOntologyCanBeDeleted$ | async) !== true"
-                (click)="deleteOntology(ontology.id)">
-                <mat-icon>delete</mat-icon>
-                {{ _translate.instant('ui.common.actions.delete') }}
-              </button>
-            </div>
-          }
-        </mat-toolbar-row>
+        @if ((hasProjectAdminRights$ | async) === true) {
+          <button
+            data-cy="edit-ontology-button"
+            matButton
+            [matTooltip]="(hasProjectAdminRights$ | async) ? _translate.instant('pages.ontology.editor.editInfo') : ''"
+            [disabled]="(project$ | async)?.status !== true"
+            (click)="$event.stopPropagation(); editOntology(ontology)">
+            <mat-icon>edit</mat-icon>
+            {{ _translate.instant('ui.common.actions.edit') }}
+          </button>
+
+          <button
+            color="warn"
+            matButton
+            [matTooltip]="
+              (currentOntologyCanBeDeleted$ | async)
+                ? _translate.instant('pages.ontology.editor.deleteTooltip')
+                : _translate.instant('pages.ontology.editor.cannotDelete')
+            "
+            [disabled]="(currentOntologyCanBeDeleted$ | async) !== true"
+            (click)="deleteOntology(ontology.id)">
+            <mat-icon>delete</mat-icon>
+            {{ _translate.instant('ui.common.actions.delete') }}
+          </button>
+        }
       </mat-toolbar>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AsyncPipe, DatePipe, MatButton, MatIcon, MatToolbar, MatToolbarRow, MatTooltip],
+  imports: [AsyncPipe, DatePipe, MatButton, MatIcon, MatToolbar, MatTooltip],
 })
 export class OntologyEditorHeaderComponent {
   ontology$ = this._oes.currentOntologyInfo$;

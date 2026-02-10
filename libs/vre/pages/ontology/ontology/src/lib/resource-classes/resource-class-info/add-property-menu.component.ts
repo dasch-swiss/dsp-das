@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewContainerRef 
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatListItemIcon } from '@angular/material/list';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -19,7 +18,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   selector: 'app-add-property-menu',
   template: `
     <button matButton="tonal" data-cy="add-property-button" [matMenuTriggerFor]="addPropertyMenu">
-      <mat-icon matListItemIcon class="list-icon">add</mat-icon>
+      <mat-icon>add</mat-icon>
       <span>{{ 'pages.ontology.addPropertyMenu.addProperty' | translate }}</span>
     </button>
 
@@ -83,7 +82,6 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   imports: [
     AsyncPipe,
     MatIcon,
-    MatListItemIcon,
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,
