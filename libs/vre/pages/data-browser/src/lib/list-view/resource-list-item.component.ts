@@ -19,9 +19,9 @@ import { ProjectShortnameService } from '../project-shortname.service';
       (click)="multipleViewerService.selectOneResource(resource)">
       <div style="display: flex; align-items: center; min-height: 40px">
         <div style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-          <div style="color: black">
+          <div>
             @if (showProjectShortname && (projectShortname$ | async); as shortname) {
-              <span style="font-weight: 500; color: #555;">[{{ shortname }}]</span>
+              <span class="mat-label-medium">[{{ shortname }}]</span>
             }
             {{ resource.label }}
           </div>
@@ -48,18 +48,15 @@ import { ProjectShortnameService } from '../project-shortname.service';
         padding: 0 16px;
         cursor: pointer;
         &:hover {
-          background-color: #ebebeb;
+          background-color: buttonface;
         }
         &.search {
           padding: 8px 16px;
         }
       }
       .highlighted {
-        border-left: 2px solid #33678f;
-        background-color: #d6e0e8;
-      }
-      mat-list-item {
-        border-bottom: 1px solid #ebebeb;
+        border-left: 2px solid var(--mat-sys-primary);
+        background-color: var(--mat-button-tonal-container-color);
       }
 
       .found-in {
