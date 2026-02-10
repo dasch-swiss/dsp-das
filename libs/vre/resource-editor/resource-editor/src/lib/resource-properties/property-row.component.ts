@@ -11,7 +11,7 @@ import { PropertiesDisplayService } from './properties-display.service';
     class="property-row"
     [class.border-bottom]="borderBottom"
     [ngClass]="{ hidden: (showAllProperties | async) === false && isEmptyRow }">
-    <div class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</div>
+    <div class="label mat-body-large" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</div>
     <div style="flex: 1" class="value" [ngClass]="{ 'with-styling': singleRow }">
       <ng-content />
     </div>

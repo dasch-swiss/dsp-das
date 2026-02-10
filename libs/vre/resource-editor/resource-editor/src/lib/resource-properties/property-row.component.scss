@@ -5,7 +5,7 @@
 }
 
 .label {
-  color: rgb(107, 114, 128);
+  color: var(--mat-sys-outline);
   align-self: start;
   cursor: help;
   width: 150px;

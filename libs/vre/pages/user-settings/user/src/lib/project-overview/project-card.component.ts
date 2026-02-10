@@ -65,7 +65,7 @@ import { ProjectImageCoverComponent } from '../project-image-cover.component';
         }
 
         .project-subtitle {
-          color: var(--mat-sys-on-surface-variant);
+          color: var(--mat-sys-outline);
         }
       }
 
