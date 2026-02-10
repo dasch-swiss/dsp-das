@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
+import { TranslateService } from '@ngx-translate/core';
 import { NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { CompoundArrowNavigationComponent } from '../../compound/compound-arrow-navigation.component';
 import { CompoundSliderComponent } from '../../compound/compound-slider.component';
@@ -76,7 +77,8 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
     protected osdService: OpenSeaDragonService,
-    private readonly _osdDrawerService: OsdDrawerService
+    private readonly _osdDrawerService: OsdDrawerService,
+    private readonly _translateService: TranslateService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -118,11 +120,16 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
           await this._openExternal3iFImage(image as ReadStillImageExternalFileValue);
           break;
         default:
-          this.errorMessage = 'Unknown image type';
+          this.errorMessage = this._translateService.instant(
+            'resourceEditor.representations.stillImage.errors.unknownImageType'
+          );
           this._cdr.detectChanges();
       }
     } catch (error) {
-      this.errorMessage = error instanceof Error ? error.message : 'Failed to load image.';
+      this.errorMessage =
+        error instanceof Error
+          ? error.message
+          : this._translateService.instant('resourceEditor.representations.stillImage.errors.failedToLoadImage');
       this._cdr.detectChanges();
     }
   }
@@ -140,7 +147,9 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
   private async _openExternal3iFImage(image: ReadStillImageExternalFileValue) {
     const i3f = IIIFUrl.createUrl(image.externalUrl);
     if (!i3f) {
-      this.errorMessage = "Can't open external IIIF URL";
+      this.errorMessage = this._translateService.instant(
+        'resourceEditor.representations.stillImage.errors.cannotOpenIiifUrl'
+      );
       this._cdr.detectChanges();
       return;
     }
@@ -149,7 +158,10 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
       // Fetch and validate the info.json before passing to OpenSeadragon
       const response = await fetch(i3f.infoJsonUrl);
       if (!response.ok) {
-        this.errorMessage = `Failed to fetch IIIF info.json: ${response.status} ${response.statusText}`;
+        this.errorMessage = this._translateService.instant(
+          'resourceEditor.representations.stillImage.errors.failedToFetchInfoJson',
+          { status: response.status, statusText: response.statusText }
+        );
         this._cdr.detectChanges();
         return;
       }
@@ -158,7 +170,9 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
 
       // Validate required IIIF parameters
       if (!infoJson.width || !infoJson.height || !infoJson['@id']) {
-        this.errorMessage = 'Invalid external IIIF image source: missing width, height, or @id.';
+        this.errorMessage = this._translateService.instant(
+          'resourceEditor.representations.stillImage.errors.invalidIiifSource'
+        );
         this._cdr.detectChanges();
         return;
       }
@@ -169,7 +183,11 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
       this.osdService.viewer.open(infoJson);
       this._cdr.detectChanges();
     } catch (error) {
-      this.errorMessage = `Failed to load external IIIF image: ${error instanceof Error ? error.message : 'Unknown error'}`;
+      const errorText = error instanceof Error ? error.message : 'Unknown error';
+      this.errorMessage = this._translateService.instant(
+        'resourceEditor.representations.stillImage.errors.failedToLoadExternalImage',
+        { error: errorText }
+      );
       this._cdr.detectChanges();
     }
   }
