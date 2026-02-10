@@ -19,10 +19,12 @@ import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality
   selector: 'app-cardinality',
   styles: [
     `
-      .cardinality-checkbox {
-        gap: 0.5rem;
+      :host {
         display: flex;
-        flex-direction: row;
+        gap: 8px;
+      }
+      .cardinality-checkbox {
+        display: flex;
         align-items: center;
       }
       input[type='checkbox'] {
@@ -41,24 +43,32 @@ import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality
     `,
   ],
   template: `
-    <div class="cardinality-checkbox">
-      <input
-        type="checkbox"
-        [disabled]="disabled || disabledForBooleanType"
-        [ngClass]="disabled || disabledForBooleanType ? 'card-disabled' : 'card-enabled'"
-        [(ngModel)]="multipleCheckboxState"
-        (change)="onCheckboxChange()" />
-      <label>{{ 'pages.ontology.cardinality.multipleValues' | translate }}</label>
-    </div>
-    <div class="cardinality-checkbox">
-      <input
-        type="checkbox"
-        [disabled]="disabled"
-        [ngClass]="disabled ? 'card-disabled' : 'card-enabled'"
-        [(ngModel)]="requiredCheckboxState"
-        (change)="onCheckboxChange()" />
-      <label>{{ 'pages.ontology.cardinality.required' | translate }}</label>
-    </div>
+    @if (isHovered || multipleCheckboxState) {
+      <div class="cardinality-checkbox">
+        @if (isHovered) {
+          <input
+            type="checkbox"
+            [disabled]="disabled || disabledForBooleanType"
+            [ngClass]="disabled || disabledForBooleanType ? 'card-disabled' : 'card-enabled'"
+            [(ngModel)]="multipleCheckboxState"
+            (change)="onCheckboxChange()" />
+        }
+        <label>{{ 'pages.ontology.cardinality.multipleValues' | translate }}</label>
+      </div>
+    }
+    @if (isHovered || requiredCheckboxState) {
+      <div class="cardinality-checkbox">
+        @if (isHovered) {
+          <input
+            type="checkbox"
+            [disabled]="disabled"
+            [ngClass]="disabled ? 'card-disabled' : 'card-enabled'"
+            [(ngModel)]="requiredCheckboxState"
+            (change)="onCheckboxChange()" />
+        }
+        <label>{{ 'pages.ontology.cardinality.required' | translate }}</label>
+      </div>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, NgClass, TranslatePipe],
@@ -66,6 +76,7 @@ import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality
 export class CardinalityComponent implements OnInit {
   @Input({ required: true }) classProp!: ClassPropertyInfo;
   @Input() disabled = false;
+  @Input() isHovered = false;
   @Output() cardinalityChange = new EventEmitter<Cardinality>();
 
   multipleCheckboxState = false;

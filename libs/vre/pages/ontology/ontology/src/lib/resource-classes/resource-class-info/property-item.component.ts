@@ -15,10 +15,10 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatRipple } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatListItem, MatListItemIcon } from '@angular/material/list';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Cardinality, IHasProperty } from '@dasch-swiss/dsp-js';
@@ -38,79 +38,76 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
 @Component({
   selector: 'app-property-item',
   template: ` <div
-      cdkDrag
-      [cdkDragDisabled]="(isAdmin$ | async) !== true"
-      (mouseenter)="isHovered = true"
-      (mouseleave)="isHovered = false">
-      <mat-list-item class="drag-n-drop-placeholder" *cdkDragPlaceholder></mat-list-item>
-      <mat-list-item
-        class="property-item"
-        [class.admin]="(isAdmin$ | async) === true"
-        matRipple
-        #propertyCardRipple="matRipple">
-        <div cdkDragHandle matListItemIcon class="list-icon">
-          @if ((isAdmin$ | async) === true && isHovered) {
-            <mat-icon class="drag-n-drop-handle">drag_indicator </mat-icon>
+    cdkDrag
+    [cdkDragDisabled]="(isAdmin$ | async) !== true"
+    (mouseenter)="isHovered = true"
+    (mouseleave)="isHovered = false">
+    <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
+
+    <div class="property-item" [class.admin]="(isAdmin$ | async) === true">
+      <button cdkDragHandle matIconButton class="list-icon">
+        @if ((isAdmin$ | async) === true && isHovered) {
+          <mat-icon class="drag-n-drop-handle">drag_indicator </mat-icon>
+        }
+        @if (!isHovered || (isAdmin$ | async) !== true) {
+          <mat-icon
+            [matTooltip]="
+              classProp.propType?.group +
+              ': ' +
+              classProp.propType?.label +
+              ' (' +
+              classProp.propDef?.id?.split('#')[1] +
+              ')'
+            "
+            matTooltipPosition="above"
+            >{{ classProp.propType?.icon }}
+          </mat-icon>
+        }
+      </button>
+
+      <div style="flex: 1">
+        <div class="upper-prop-container mat-body-medium">
+          <span data-cy="property-label">{{ classProp.propDef.labels | appStringifyStringLiteral }} </span>
+          @if (classProp.objectLabels && classProp.objectLabels.length > 0) {
+            <span
+              data-cy="property-object-label"
+              class="additional-info"
+              [innerHTML]="'&rarr;&nbsp;' + (classProp.objectLabels | appStringifyStringLiteral)"></span>
           }
-          @if (!isHovered || (isAdmin$ | async) !== true) {
+        </div>
+        <div class="lower-prop-container mat-label-small">
+          <span> {{ classProp.propDef.id | split: '#' : 1 }} </span>
+          @if (isHovered && classProp.propDef.comments?.length) {
             <mat-icon
-              [matTooltip]="
-                classProp.propType?.group +
-                ': ' +
-                classProp.propType?.label +
-                ' (' +
-                classProp.propDef?.id?.split('#')[1] +
-                ')'
-              "
+              class="small-icon"
+              [matTooltip]="classProp.propDef.comments | appStringifyStringLiteral"
               matTooltipPosition="above"
-              >{{ classProp.propType?.icon }}
-            </mat-icon>
-          }
-        </div>
-        <div class="property-item-content-container">
-          <div>
-            <div class="upper-prop-container">
-              <span class="label" data-cy="property-label"
-                >{{ classProp.propDef.labels | appStringifyStringLiteral }}
-              </span>
-              @if (classProp.objectLabels && classProp.objectLabels.length > 0) {
-                <span
-                  data-cy="property-object-label"
-                  class="additional-info"
-                  [innerHTML]="'&rarr;&nbsp;' + (classProp.objectLabels | appStringifyStringLiteral)"></span>
-              }
-            </div>
-            <div mat-line class="lower-prop-container">
-              <span class="mat-caption"> {{ classProp.propDef.id | split: '#' : 1 }} </span>
-              @if (isHovered && classProp.propDef.comments?.length) {
-                <mat-icon
-                  [matTooltip]="classProp.propDef.comments | appStringifyStringLiteral"
-                  matTooltipPosition="above"
-                  class="info-icon">
-                  info
-                </mat-icon>
-              }
-            </div>
-          </div>
-          <app-cardinality
-            [disabled]="(isAdmin$ | async) !== true"
-            [classProp]="classProp"
-            (cardinalityChange)="updateCardinality($event)" />
-        </div>
-        <div class="edit-menu">
-          @if ((isHovered || menuOpen) && (isAdmin$ | async) === true) {
-            <mat-icon
-              (menuOpened)="menuOpen = true"
-              (menuClosed)="menuOpen = false"
-              [matMenuTriggerFor]="classInfoMenu"
-              class="menu-icon-button"
-              (click)="canBeRemovedFromClass()"
-              >more_vert</mat-icon
+              >info</mat-icon
             >
           }
         </div>
-      </mat-list-item>
+      </div>
+
+      <app-cardinality
+        [disabled]="(isAdmin$ | async) !== true"
+        [isHovered]="isHovered"
+        [classProp]="classProp"
+        (cardinalityChange)="updateCardinality($event)" />
+
+      @if ((isHovered || menuOpen) && (isAdmin$ | async) === true) {
+        <button mat-icon-button>
+          <mat-icon
+            (menuOpened)="menuOpen = true"
+            (menuClosed)="menuOpen = false"
+            [matMenuTriggerFor]="classInfoMenu"
+            class="menu-icon-button"
+            (click)="canBeRemovedFromClass()"
+            >more_vert</mat-icon
+          >
+        </button>
+      }
     </div>
+
     <mat-menu #classInfoMenu="matMenu">
       <button mat-menu-item (click)="openEditProperty()">
         <mat-icon>edit</mat-icon>
@@ -124,25 +121,28 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
         <mat-icon>content_copy</mat-icon>
         {{ 'pages.ontology.propertyItem.copyId' | translate }}
       </button>
-    </mat-menu>`,
+    </mat-menu>
+  </div>`,
   styles: [
     `
-      @use '../../../../../../../../../apps/dsp-app/src/styles/config' as *;
-
+      .small-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
       .list-icon {
-        color: black;
         display: flex;
         align-items: center;
       }
 
       .property-item {
+        display: flex;
         align-items: center;
-        border-radius: 8px;
-        margin: 0;
-      }
+        padding: 8px;
 
-      .property-item.admin:hover {
-        background: var(--mat-sys-surface-variant);
+        &.admin:hover {
+          background: var(--mat-sys-surface-variant);
+        }
       }
 
       .drag-n-drop-handle {
@@ -150,17 +150,7 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
         color: var(--primary);
       }
 
-      .property-item-content-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
-
       .upper-prop-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -179,16 +169,6 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
         transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
       }
 
-      .edit-menu {
-        position: absolute;
-        top: 0.2rem;
-        right: -6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1;
-      }
-
       .menu-icon-button {
         cursor: pointer;
       }
@@ -202,16 +182,14 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
     CdkDragHandle,
     CdkDragPlaceholder,
     MatIcon,
-    MatListItem,
-    MatListItemIcon,
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,
-    MatRipple,
     MatTooltip,
     SplitPipe,
     StringifyStringLiteralPipe,
     TranslatePipe,
+    MatIconButton,
   ],
 })
 export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {

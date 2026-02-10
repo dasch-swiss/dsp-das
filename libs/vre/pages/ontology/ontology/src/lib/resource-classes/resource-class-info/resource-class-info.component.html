@@ -25,10 +25,14 @@
         </span>
       </mat-card-subtitle>
     </div>
-    <span>
-      @if ((project$ | async)?.status) {
-      <span>
-        @if (classHovered || menuOpen) {
+
+    @if ((project$ | async)?.status) {
+    <div style="display: flex; gap: 8px">
+      @if (classHovered || menuOpen) {
+      <div style="display: flex; gap: 8px">
+        @if ((hasProjectAdminRights$ | async)) {
+        <app-add-property-menu [resourceClass]="resourceClass" />
+        }
         <button
           matIconButton
           [matMenuTriggerFor]="resClassMenu"
@@ -38,24 +42,24 @@
           (click)="setCanBeDeleted()">
           <mat-icon>more_vert</mat-icon>
         </button>
-        }
-      </span>
+      </div>
       }
-      <span
-        [matTooltip]="
+    </div>
+    }
+    <span
+      [matTooltip]="
           expandClasses
             ? (_translate.instant('pages.ontology.resourceClassInfo.collapse'))
             : (_translate.instant('pages.ontology.resourceClassInfo.expand'))
         ">
-        <button matIconButton (click)="expandClasses = !expandClasses">
-          <mat-icon>{{ expandClasses ? "expand_less" : "expand_more" }}</mat-icon>
-        </button>
-      </span>
+      <button matIconButton (click)="expandClasses = !expandClasses">
+        <mat-icon>{{ expandClasses ? "expand_less" : "expand_more" }}</mat-icon>
+      </button>
     </span>
   </mat-card-header>
   <!-- resource class card content with list of properties -->
   @if (expandClasses) {
-  <mat-card-content>
+  <div>
     @if (resourceClass.properties?.length) {
     <mat-list cdkDropList (cdkDropListDropped)="onPropertyDropped($event)">
       @for (prop of resourceClass.properties; track trackByPropToDisplayFn(i, prop); let i = $index) {
@@ -64,10 +68,8 @@
     </mat-list>
     } @else {
     <p>{{ 'pages.ontology.resourceClassInfo.noProperties' | translate }}</p>
-    } @if ((hasProjectAdminRights$ | async)) {
-    <app-add-property-menu [resourceClass]="resourceClass" />
     }
-  </mat-card-content>
+  </div>
   }
 </mat-card>
 
