@@ -38,7 +38,7 @@ $m3-dsp-blue-palette: (
   ),
   neutral: (
     0: #000000,
-    10: #1a1c1e,
+    10: #333333, // Custom: Softer text color (M3 default: #1a1c1e)
     20: #2f3133,
     25: #3a3c3e,
     30: #46484a,
@@ -50,8 +50,8 @@ $m3-dsp-blue-palette: (
     80: #c7c8ca,
     90: #e3e4e5,
     95: #f1f1f2,
-    98: #f9f9fa,
-    99: #fcfcfc,
+    98: #ffffff, // Custom: Pure white background (M3 default: #f9f9fa)
+    99: #ffffff, // Custom: Pure white background (M3 default: #fcfcfc)
     100: #ffffff,
     4: #0d0e0f,
     6: #131415,
@@ -140,7 +140,7 @@ $m3-dsp-teal-palette: (
   ),
   neutral: (
     0: #000000,
-    10: #1a1c1c,
+    10: #333333, // Custom: Softer text color (M3 default: #1a1c1c)
     20: #2f3131,
     25: #3a3c3c,
     30: #464848,
@@ -152,8 +152,8 @@ $m3-dsp-teal-palette: (
     80: #c7c8c8,
     90: #e3e4e4,
     95: #f1f2f2,
-    98: #f9f9f9,
-    99: #fcfcfc,
+    98: #ffffff, // Custom: Pure white background (M3 default: #f9f9f9)
+    99: #ffffff, // Custom: Pure white background (M3 default: #fcfcfc)
     100: #ffffff,
     4: #0d0e0e,
     6: #131414,
