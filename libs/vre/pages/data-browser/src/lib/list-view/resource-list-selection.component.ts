@@ -15,7 +15,8 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
 @Component({
   selector: 'app-resource-list-selection',
   template: `
-    <div style="background: #336790; color: white; padding: 0 16px; display: flex; gap: 8px; align-items: center">
+    <div
+      style="background: var(--mat-sys-primary-container); color: var(--mat-sys-on-primary-container); padding: 8px 16px; display: flex; gap: 8px; align-items: center">
       <div style="flex: 1; display: flex; align-items: center; gap: 16px;">
         <div>
           {{ 'pages.dataBrowser.resourceListSelection.resourcesSelected' | translate: { count: count$ | async } }}
@@ -41,7 +42,6 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
       <button matIconButton (click)="reset()"><mat-icon>close</mat-icon></button>
     </div>
   `,
-  styles: ['button[disabled] { background-color: #fff; color: #b8b8b8 }'],
   imports: [AsyncPipe, MatButton, MatIconButton, MatIcon, MatTooltip, TranslatePipe],
 })
 export class ResourceListSelectionComponent {
