@@ -12,8 +12,8 @@ import {
 } from '@angular/core';
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
-import { TranslateService } from '@ngx-translate/core';
 import { NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslateService } from '@ngx-translate/core';
 import { CompoundArrowNavigationComponent } from '../../compound/compound-arrow-navigation.component';
 import { CompoundSliderComponent } from '../../compound/compound-slider.component';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
