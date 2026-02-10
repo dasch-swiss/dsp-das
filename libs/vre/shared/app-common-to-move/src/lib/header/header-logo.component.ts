@@ -9,7 +9,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
   selector: 'app-header-logo',
   imports: [MatIconModule, RouterModule, MatIconButton],
   template: `
-    <a matIconButton [routerLink]="homeLink">
+    <a matIconButton [routerLink]="homeLink" style="transform: scale(1.1)">
       <mat-icon svgIcon="dasch_mosaic_icon_color" />
     </a>
   `,

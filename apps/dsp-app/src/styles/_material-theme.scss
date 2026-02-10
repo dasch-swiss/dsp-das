@@ -30,6 +30,12 @@ html {
   --mat-sys-surface: var(--app-background-color);
   --mat-app-background-color: var(--app-background-color);
 
+  // Text color overrides
+  --app-text-color: red;
+  --mat-sys-on-surface: var(--app-text-color);
+  --mat-sys-on-background: var(--app-text-color);
+  --mat-app-text-color: var(--app-text-color);
+
   // Component-specific background overrides
   --mat-expansion-container-background-color: var(--app-background-color);
   --mat-card-outlined-container-color: var(--app-background-color);

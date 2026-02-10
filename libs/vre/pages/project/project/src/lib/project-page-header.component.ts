@@ -12,7 +12,7 @@ import { ProjectPageService } from './project-page.service';
 @Component({
   selector: 'app-project-page-header',
   template: ` <mat-toolbar style="background-color: inherit; height: 56px">
-      <span style="flex: 1; display: flex; align-items: center">
+      <span style="flex: 1; display: flex">
         <app-header-logo />
         <a matButton="text" class="mat-title-medium" [routerLink]="projectLink$ | async">{{
           currentProjectName$ | async
