@@ -26,11 +26,12 @@ import { ResourceToolbarComponent } from './resource-toolbar.component';
       </h3>
       <app-resource-toolbar [resource]="resource.res" />
     </div>
-    <div class="resource-label" style="display: flex; justify-content: space-between">
-      <h4 data-cy="resource-header-label">{{ resource.res.label }}</h4>
+    <div style="display: flex; justify-content: space-between;">
+      <h4 data-cy="resource-header-label" class="mat-headline-large">{{ resource.res.label }}</h4>
       @if (resourceFetcherService.userCanEdit$ | async) {
         <button
           matIconButton
+          style="color: var(--mat-sys-primary)"
           data-cy="edit-label-button"
           [matTooltip]="'resourceEditor.moreMenu.editLabel' | translate"
           (click)="openEditLabelDialog()">

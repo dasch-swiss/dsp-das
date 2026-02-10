@@ -69,8 +69,15 @@ import { PermissionInfoComponent } from './permission-info/permission-info.compo
       .action {
         display: inline-flex;
 
-        button {
-          border-radius: 0;
+        button,
+        a[matIconButton] {
+          color: var(--mat-sys-primary);
+        }
+      }
+
+      .res-share-menu {
+        button[mat-menu-item] {
+          color: var(--mat-sys-primary);
         }
       }
     `,

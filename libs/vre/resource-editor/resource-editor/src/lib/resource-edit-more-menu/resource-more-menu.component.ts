@@ -34,7 +34,7 @@ import { DeleteMenuItemsComponent } from './delete-menu-items.component';
   styles: [
     `
       .more-menu {
-        border-radius: 0;
+        color: var(--mat-sys-primary);
       }
     `,
   ],
