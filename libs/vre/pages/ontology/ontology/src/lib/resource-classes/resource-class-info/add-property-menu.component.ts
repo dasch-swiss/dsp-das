@@ -18,7 +18,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   selector: 'app-add-property-menu',
   template: `
     <mat-list style="border-top: 1px solid rgba(0, 0, 0, .12);">
-      <mat-list-item class="property link" data-cy="add-property-button" [matMenuTriggerFor]="addPropertyMenu">
+      <mat-list-item data-cy="add-property-button" [matMenuTriggerFor]="addPropertyMenu">
         <mat-icon matListItemIcon class="list-icon">add</mat-icon>
         <span matListItemTitle>{{ 'pages.ontology.addPropertyMenu.addProperty' | translate }}</span>
       </mat-list-item>
@@ -80,14 +80,6 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
       }
     </mat-menu>
   `,
-  styles: [
-    `
-      .property:hover {
-        background: #d7e1e9;
-        cursor: pointer;
-      }
-    `,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,

@@ -136,15 +136,13 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
       }
 
       .property-item {
-        height: 3rem;
         align-items: center;
         border-radius: 8px;
         margin: 0;
       }
 
       .property-item.admin:hover {
-        background: var(--element-active-hover);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        background: var(--mat-sys-surface-variant);
       }
 
       .drag-n-drop-handle {
@@ -157,11 +155,9 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        margin-right: 0.5rem;
       }
 
       .upper-prop-container {
-        margin-top: 12px;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -172,19 +168,8 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
       }
 
       .lower-prop-container {
-        color: $primary_700;
         display: flex;
         align-items: center;
-        gap: 0.25rem;
-      }
-
-      .info-icon {
-        font-size: 16px;
-        height: 16px;
-        width: 16px;
-        line-height: 1;
-        vertical-align: middle;
-        cursor: help;
       }
 
       .drag-n-drop-placeholder {
@@ -205,10 +190,7 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
       }
 
       .menu-icon-button {
-        font-size: medium;
         cursor: pointer;
-        margin-right: 0.1rem;
-        margin-top: 0.1rem;
       }
     `,
   ],
