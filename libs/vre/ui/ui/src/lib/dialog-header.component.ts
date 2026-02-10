@@ -4,8 +4,8 @@ import { MatDialogTitle } from '@angular/material/dialog';
 @Component({
   selector: 'app-dialog-header',
   template: `
-    <h2 matDialogTitle>{{ title }}</h2>
-    <p>{{ subtitle }}</p>
+    <div matDialogTitle>{{ title }}</div>
+    <p class="mat-title-small" style="margin-left: 24px">{{ subtitle }}</p>
   `,
   imports: [MatDialogTitle],
 })

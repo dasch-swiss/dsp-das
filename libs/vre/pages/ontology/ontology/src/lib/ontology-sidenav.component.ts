@@ -127,10 +127,6 @@ import { OntologyPageService } from './ontology-page.service';
         text-align: left;
         display: inline-block;
       }
-
-      button:hover {
-        background: var(--element-active-hover);
-      }
     `,
   ],
   imports: [
