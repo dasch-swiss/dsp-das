@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
-import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { CompoundArrowNavigationComponent } from '../../compound/compound-arrow-navigation.component';
 import { CompoundSliderComponent } from '../../compound/compound-slider.component';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
@@ -23,31 +23,46 @@ import { StillImageToolbarComponent } from './still-image-toolbar.component';
 
 @Component({
   selector: 'app-still-image',
-  template: ` <div class="osd-container" [class.drawing]="isViewInitialized && osdService.drawing" #osdViewer>
-      @if (compoundMode) {
-        <div>
-          <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
-          <app-compound-arrow-navigation [forwardNavigation]="true" class="arrow" />
-        </div>
-      }
-    </div>
-    <div class="toolbar-container">
-      @if (compoundMode) {
-        <app-compound-slider />
-      }
+  template: ` @if (errorMessage) {
+      <app-no-results-found
+        [message]="errorMessage"
+        [color]="'white'"
+        style="    flex: 1;
+    justify-content: center;
+    align-items: center;
+    display: flex;" />
+    } @else {
+      <div class="osd-container" [class.drawing]="isViewInitialized && osdService.drawing" #osdViewer>
+        @if (compoundMode) {
+          <div>
+            <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
+            <app-compound-arrow-navigation [forwardNavigation]="true" class="arrow" />
+          </div>
+        }
+      </div>
+      <div class="toolbar-container">
+        @if (compoundMode) {
+          <app-compound-slider />
+        }
 
-      @if (isViewInitialized) {
-        <app-still-image-toolbar
-          [resource]="resource"
-          [compoundMode]="compoundMode"
-          [isPng]="isPng"
-          (imageIsPng)="afterFormatChange($event)" />
-      }
-    </div>`,
+        @if (isViewInitialized) {
+          <app-still-image-toolbar
+            [resource]="resource"
+            [compoundMode]="compoundMode"
+            [isPng]="isPng"
+            (imageIsPng)="afterFormatChange($event)" />
+        }
+      </div>
+    }`,
   styleUrls: ['./still-image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [OsdDrawerService, OpenSeaDragonService],
-  imports: [CompoundArrowNavigationComponent, CompoundSliderComponent, StillImageToolbarComponent],
+  imports: [
+    CompoundArrowNavigationComponent,
+    CompoundSliderComponent,
+    StillImageToolbarComponent,
+    NoResultsFoundComponent,
+  ],
 })
 export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input({ required: true }) compoundMode!: boolean;
@@ -56,6 +71,7 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
 
   isViewInitialized = false;
   isPng = false;
+  errorMessage: string | null = null;
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
@@ -87,18 +103,27 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
     this.osdService.viewer.destroy();
   }
 
-  private _loadImage() {
-    const image = this.resource.properties[Constants.HasStillImageFileValue][0];
+  private async _loadImage() {
+    try {
+      // Clear any previous errors
+      this.errorMessage = null;
 
-    switch (image.type) {
-      case Constants.StillImageFileValue:
-        this._openInternalImage(image as ReadStillImageFileValue);
-        break;
-      case Constants.StillImageExternalFileValue:
-        this._openExternal3iFImage(image as ReadStillImageExternalFileValue);
-        break;
-      default:
-        throw new AppError('Unknown image type');
+      const image = this.resource.properties[Constants.HasStillImageFileValue][0];
+
+      switch (image.type) {
+        case Constants.StillImageFileValue:
+          this._openInternalImage(image as ReadStillImageFileValue);
+          break;
+        case Constants.StillImageExternalFileValue:
+          await this._openExternal3iFImage(image as ReadStillImageExternalFileValue);
+          break;
+        default:
+          this.errorMessage = 'Unknown image type';
+          this._cdr.detectChanges();
+      }
+    } catch (error) {
+      this.errorMessage = error instanceof Error ? error.message : 'Failed to load image.';
+      this._cdr.detectChanges();
     }
   }
 
@@ -112,13 +137,40 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
     this.osdService.viewer.open(tiles);
   }
 
-  private _openExternal3iFImage(image: ReadStillImageExternalFileValue) {
+  private async _openExternal3iFImage(image: ReadStillImageExternalFileValue) {
     const i3f = IIIFUrl.createUrl(image.externalUrl);
     if (!i3f) {
-      throw new AppError("Can't open external IIIF URL");
+      this.errorMessage = "Can't open external IIIF URL";
+      this._cdr.detectChanges();
+      return;
     }
 
-    (this.osdService.viewer as any).loadTilesWithAjax = false;
-    this.osdService.viewer.open(i3f.infoJsonUrl);
+    try {
+      // Fetch and validate the info.json before passing to OpenSeadragon
+      const response = await fetch(i3f.infoJsonUrl);
+      if (!response.ok) {
+        this.errorMessage = `Failed to fetch IIIF info.json: ${response.status} ${response.statusText}`;
+        this._cdr.detectChanges();
+        return;
+      }
+
+      const infoJson = await response.json();
+
+      // Validate required IIIF parameters
+      if (!infoJson.width || !infoJson.height || !infoJson['@id']) {
+        this.errorMessage = 'Invalid external IIIF image source: missing width, height, or @id.';
+        this._cdr.detectChanges();
+        return;
+      }
+
+      // If validation passes, clear any previous errors and open with OpenSeadragon
+      this.errorMessage = null;
+      (this.osdService.viewer as any).loadTilesWithAjax = false;
+      this.osdService.viewer.open(infoJson);
+      this._cdr.detectChanges();
+    } catch (error) {
+      this.errorMessage = `Failed to load external IIIF image: ${error instanceof Error ? error.message : 'Unknown error'}`;
+      this._cdr.detectChanges();
+    }
   }
 }
