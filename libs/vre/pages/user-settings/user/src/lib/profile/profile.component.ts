@@ -24,10 +24,8 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
 
           <div style="display: flex; flex-direction: column; gap: 4px;">
             <div style="display: flex; gap: 8px; align-items: center;">
-              <h1 style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #1a1a1a;">
-                {{ user.givenName }} {{ user.familyName }}
-              </h1>
-              <p style="margin: 0; color: #666">({{ user.username }})</p>
+              <h1 style="margin: 0" class="mat-headline-medium">{{ user.givenName }} {{ user.familyName }}</h1>
+              <p style="margin: 0; color: var(--mat-sys-outline)">({{ user.username }})</p>
             </div>
 
             <mat-chip-set>
