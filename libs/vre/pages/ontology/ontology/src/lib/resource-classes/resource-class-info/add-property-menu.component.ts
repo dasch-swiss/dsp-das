@@ -1,5 +1,13 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  ViewContainerRef,
+} from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
@@ -17,7 +25,12 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 @Component({
   selector: 'app-add-property-menu',
   template: `
-    <button matButton="tonal" data-cy="add-property-button" [matMenuTriggerFor]="addPropertyMenu">
+    <button
+      matButton="tonal"
+      data-cy="add-property-button"
+      [matMenuTriggerFor]="addPropertyMenu"
+      (menuOpened)="menuStateChange.emit(true)"
+      (menuClosed)="menuStateChange.emit(false)">
       <mat-icon>add</mat-icon>
       <span>{{ 'pages.ontology.addPropertyMenu.addProperty' | translate }}</span>
     </button>
@@ -93,6 +106,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 })
 export class AddPropertyMenuComponent implements OnChanges {
   @Input({ required: true }) resourceClass!: ResourceClassInfo;
+  @Input({ required: true }) viewContainerRef!: ViewContainerRef;
+  @Output() menuStateChange = new EventEmitter<boolean>();
 
   private ngUnsubscribe = new Subject<void>();
   private resourceClass$ = new BehaviorSubject<ResourceClassInfo | null>(null);
@@ -128,8 +143,7 @@ export class AddPropertyMenuComponent implements OnChanges {
 
   constructor(
     private readonly _dialog: MatDialog,
-    private readonly _oes: OntologyEditService,
-    private readonly _viewContainerRef: ViewContainerRef
+    private readonly _oes: OntologyEditService
   ) {}
 
   ngOnChanges() {
@@ -155,7 +169,7 @@ export class AddPropertyMenuComponent implements OnChanges {
     };
     this._dialog.open<EditPropertyFormDialogComponent, CreatePropertyDialogData>(EditPropertyFormDialogComponent, {
       data: createData,
-      viewContainerRef: this._viewContainerRef,
+      viewContainerRef: this.viewContainerRef,
     });
   }
 }

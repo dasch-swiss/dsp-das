@@ -28,10 +28,13 @@
 
     @if ((project$ | async)?.status) {
     <div style="display: flex; gap: 8px">
-      @if (classHovered || menuOpen) {
+      @if (classHovered || menuOpen || addPropertyMenuOpen) {
       <div style="display: flex; gap: 8px">
         @if ((hasProjectAdminRights$ | async)) {
-        <app-add-property-menu [resourceClass]="resourceClass" />
+        <app-add-property-menu
+          [resourceClass]="resourceClass"
+          [viewContainerRef]="viewContainerRef"
+          (menuStateChange)="addPropertyMenuOpen = $event" />
         }
         <button
           matIconButton

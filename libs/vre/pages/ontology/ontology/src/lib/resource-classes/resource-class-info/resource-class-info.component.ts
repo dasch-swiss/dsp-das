@@ -74,6 +74,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
 
   classHovered = false;
   menuOpen = false;
+  addPropertyMenuOpen = false;
 
   classCanBeDeleted = false;
   subscription!: Subscription;
@@ -85,7 +86,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
-    private _viewContainerRef: ViewContainerRef,
+    public readonly viewContainerRef: ViewContainerRef,
     private readonly _cd: ChangeDetectorRef,
     private readonly _clipboard: Clipboard,
     private readonly _dialog: MatDialog,
@@ -126,7 +127,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
           labels: this.resourceClass.labels,
           data: this.resourceClass.updateResourceClassData,
         }),
-        viewContainerRef: this._viewContainerRef,
+        viewContainerRef: this.viewContainerRef,
       }
     );
   }
