@@ -7,7 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   template: `
     <div style="display: flex">
       <h3
-        class="mat-subtitle-2 grid-h3"
+        class="mat-label-large grid-h3"
         [ngClass]="{ 'with-tooltip': tooltip !== undefined }"
         [matTooltipDisabled]="tooltip === undefined"
         [matTooltip]="tooltip"
@@ -26,7 +26,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         text-align: end;
         padding: 16px;
         margin: 0;
-        color: rgb(107, 114, 128);
 
         &.with-tooltip {
           cursor: help;

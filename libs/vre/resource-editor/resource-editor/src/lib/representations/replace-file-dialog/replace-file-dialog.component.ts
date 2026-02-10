@@ -31,14 +31,10 @@ export interface ReplaceFileDialogProps {
   template: `
     <app-dialog-header [subtitle]="data.title" [title]="'resourceEditor.representations.replaceFile' | translate" />
     <mat-dialog-content>
-      <div class="warning">
-        <div class="container">
-          <div class="icon">
-            <mat-icon>warning</mat-icon>
-          </div>
-          <div class="message">
-            {{ 'resourceEditor.representations.replaceFileDialog.willBeReplaced' | translate }}
-          </div>
+      <div class="container">
+        <mat-icon class="icon">warning</mat-icon>
+        <div class="message">
+          {{ 'resourceEditor.representations.replaceFileDialog.willBeReplaced' | translate }}
         </div>
       </div>
 
