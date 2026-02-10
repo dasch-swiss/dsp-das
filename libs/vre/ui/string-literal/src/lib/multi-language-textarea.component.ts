@@ -40,9 +40,15 @@ import { MultiLanguageFormService } from './multi-language-form.service';
           (ngModelChange)="formService.onInputChange($event)"
           [disabled]="formService.selectedFormControl?.disabled ?? false"></textarea>
       </mat-form-field>
-      <mat-button-toggle-group matPrefix #group="matButtonToggleGroup" vertical>
+      <mat-button-toggle-group
+        matPrefix
+        #group="matButtonToggleGroup"
+        vertical
+        style="     border-radius: var(--mat-form-field-filled-container-shape) 0 0 var(--mat-form-field-filled-container-shape);
+    border: 1px solid var(--mat-tab-divider-color); width: 70px">
         @for (lang of formService.availableLanguages; track lang; let index = $index) {
           <mat-button-toggle
+            style="flex: 1"
             tabIndex="-1"
             (click)="formService.changeLanguage(index); textInput.focus()"
             [checked]="index === formService.selectedLanguageIndex"
