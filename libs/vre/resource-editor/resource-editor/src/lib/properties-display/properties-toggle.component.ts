@@ -86,7 +86,7 @@ import { PropertiesDisplayService } from '../resource-properties/properties-disp
     }
   `,
   styles: [
-    'button { padding-top: 24px; padding-bottom: 24px} :host { display: flex; flex-direction: row-reverse; gap: 16px; background: #eaeff3;}',
+    'button { padding-top: 24px; padding-bottom: 24px} :host { display: flex; flex-direction: row-reverse; gap: 16px; background: var(--mat-sys-primary-container)}',
   ],
   imports: [AsyncPipe, MatButtonModule, MatIconModule, MatTooltipModule, TranslatePipe],
 })
