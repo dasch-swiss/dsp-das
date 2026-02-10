@@ -31,11 +31,11 @@ import { ProjectPageService } from '../../project-page.service';
         cursor: pointer;
 
         &:hover {
-          background-color: #ebebeb;
+          background-color: buttonface;
         }
         &.selected {
-          border-left: 2px solid #33678f;
-          background-color: #d6e0e8;
+          border-left: 2px solid var(--mat-sys-primary);
+          background-color: var(--mat-button-tonal-container-color);
         }
       }
 
