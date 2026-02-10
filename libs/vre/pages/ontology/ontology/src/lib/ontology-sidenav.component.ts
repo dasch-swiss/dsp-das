@@ -100,7 +100,7 @@ import { OntologyPageService } from './ontology-page.service';
               <button mat-menu-item [matMenuTriggerFor]="sub_menu" [attr.data-cy]="type.group">
                 {{ type.group }}
               </button>
-              <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
+              <mat-menu #sub_menu="matMenu">
                 @for (ele of type.elements; track trackByDefaultPropertyFn($index, ele)) {
                   <button
                     mat-menu-item

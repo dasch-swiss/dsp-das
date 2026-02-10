@@ -8,7 +8,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Observable, Subject, BehaviorSubject, combineLatest, map, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { CreatePropertyDialogData } from '../../forms/property-form/property-form.type';
 import { PropertyInfo, PropToAdd, ResourceClassInfo } from '../../ontology.types';
@@ -35,12 +35,12 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
       }
     </mat-menu>
 
-    <mat-menu #addExistingProp="matMenu" class="default-nested-sub-menu">
+    <mat-menu #addExistingProp="matMenu">
       @for (onto of availableProperties$ | async; track trackByPropToAddFn($index, onto)) {
         <button mat-menu-item [disabled]="!onto.properties.length" [matMenuTriggerFor]="sub_menu">
           {{ onto.ontologyLabel }}
         </button>
-        <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
+        <mat-menu #sub_menu="matMenu">
           @for (prop of onto.properties; track trackByPropFn($index, prop)) {
             <button
               mat-menu-item
@@ -63,7 +63,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
           [attr.data-cy]="type.group.replaceAll(' ', '').replace('/', '-')">
           {{ type.group }}
         </button>
-        <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
+        <mat-menu #sub_menu="matMenu">
           @for (ele of type.elements; track trackByDefaultPropertyFn($index, ele)) {
             <button
               mat-menu-item
