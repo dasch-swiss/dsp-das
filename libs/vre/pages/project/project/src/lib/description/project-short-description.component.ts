@@ -21,8 +21,8 @@ import { ProjectDescriptionPageComponent } from './project-description-page.comp
           <div class="mat-label-small">{{ hasManualLicense }}</div>
         }
       </div>
-      <h2 class="mat-headline-medium" style="margin-top: 32px">{{ project.longname }}</h2>
-      <h3 class="mat-title-medium m3-on-surface-variant" style="color: var(--mat-sys-on-surface-variant)">
+      <h2 class="mat-headline-small" style="margin-top: 32px">{{ project.longname }}</h2>
+      <h3 class="mat-headline-medium m3-on-surface-variant" style="color: var(--mat-sys-on-surface-variant)">
         Project {{ project.shortcode }} | {{ project.shortname | uppercase }}
       </h3>
 
