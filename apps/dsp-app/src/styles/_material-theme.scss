@@ -15,6 +15,7 @@ $theme: mat.define-theme((
 @include mat.system-level-colors($theme);
 
 // Override button border radius (M3 default is 9999px for pill-shaped buttons)
+// Override background colors (M3 default is light gray #f9f9fa, we prefer white)
 html {
   --app-button-shape: 4px;
   --mat-button-filled-container-shape: var(--app-button-shape);
@@ -22,4 +23,18 @@ html {
   --mat-button-text-container-shape: var(--app-button-shape);
   --mat-button-tonal-container-shape: var(--app-button-shape);
   --mat-button-protected-container-shape: var(--app-button-shape);
+
+  // Background color overrides
+  --app-background-color: #ffffff;
+  --mat-sys-background: var(--app-background-color);
+  --mat-sys-surface: var(--app-background-color);
+  --mat-app-background-color: var(--app-background-color);
+
+  // Component-specific background overrides
+  --mat-expansion-container-background-color: var(--app-background-color);
+  --mat-card-outlined-container-color: var(--app-background-color);
+  --mat-card-container-color: var(--app-background-color);
+  --mat-dialog-container-background-color: var(--app-background-color);
+  --mat-sidenav-container-background-color: var(--app-background-color);
+  --mat-toolbar-container-background-color: var(--app-background-color);
 }
