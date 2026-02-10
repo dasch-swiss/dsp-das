@@ -21,9 +21,9 @@ import { ProjectImageCoverComponent } from '../project-image-cover.component';
               <mat-card-title class="project-title">
                 {{ project.longname }}
               </mat-card-title>
-              <mat-card-subtitle class="project-subtitle">
-                <span>{{ project.shortname }} | {{ project.shortcode }}</span>
-              </mat-card-subtitle>
+              <mat-card-subtitle class="project-subtitle mat-body-large"
+                >{{ project.shortname }} | {{ project.shortcode }}</mat-card-subtitle
+              >
             </div>
           </mat-card-content>
         </mat-card>
@@ -55,13 +55,17 @@ import { ProjectImageCoverComponent } from '../project-image-cover.component';
           padding-top: 8px;
 
           .project-title {
-            color: var(--mat-sys-on-surface);
+            color: var(--mat-app-text-color);
             display: -webkit-box;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
             margin: 0;
           }
+        }
+
+        .project-subtitle {
+          color: var(--mat-sys-on-surface-variant);
         }
       }
 
