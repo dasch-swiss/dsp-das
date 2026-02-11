@@ -7,13 +7,11 @@ import { AlertInfoComponent } from './alert-info.component';
   selector: 'app-resource-version-warning',
   template: `
     <app-alert-info>
-      <div style="display: flex; justify-content: center">
-        <div style="display: flex; align-items: center">
-          {{ 'resourceEditor.versioned' | translate }} {{ resourceVersion }}.
-          <button matButton (click)="navigateToCurrentVersion.emit()">
-            {{ 'resourceEditor.seeCurrentVersion' | translate }}
-          </button>
-        </div>
+      <div style="flex: 1; display: flex; justify-content: space-between; align-items: center">
+        {{ 'resourceEditor.versioned' | translate }} {{ resourceVersion }}.
+        <button matButton="filled" (click)="navigateToCurrentVersion.emit()">
+          {{ 'resourceEditor.seeCurrentVersion' | translate }}
+        </button>
       </div>
     </app-alert-info>
   `,

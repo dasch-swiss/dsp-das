@@ -1,25 +1,10 @@
-@use '../../../../../../apps/dsp-app/src/styles/config' as *;
-
-
 .restricted-message {
-  background: $yellow_100;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 25px;
+  padding: 24px;
   border-radius: 20px;
   gap: 10px;
-  margin: 2%;
-
-
-  ::ng-deep {
-    mat-icon {
-      color: $yellow_500;
-      min-width: 25px;
-    }
-  }
-}
-
-.close {
-  cursor: pointer;
 }
