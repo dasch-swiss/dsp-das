@@ -59,7 +59,7 @@ export interface DeleteValueDialogProps {
       </mat-form-field>
     </div>
     <div mat-dialog-actions align="end">
-      <button matButton mat-dialog-close (click)="dialogRef.close()">
+      <button matButton matDialogClose (click)="dialogRef.close()">
         {{ 'resourceEditor.resourceProperties.deleteValue.noKeep' | translate }}
       </button>
       <button

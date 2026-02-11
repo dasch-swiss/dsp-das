@@ -2,7 +2,12 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent } from '@angular/material/dialog';
-import { CkEditorControlComponent, ColorPickerComponent, CommonInputComponent, DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import {
+  CkEditorControlComponent,
+  ColorPickerComponent,
+  CommonInputComponent,
+  DialogHeaderComponent,
+} from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
 
 export interface AddRegionFormDialogProps {
@@ -37,13 +42,13 @@ export interface AddRegionFormDialogProps {
           [control]="regionForm.controls.comment"
           [projectShortcode]="projectShortcode"
           [label]="'resourceEditor.representations.addRegionFormDialog.comment' | translate" />
-        <app-color-picker [formControl]="regionForm.controls.color"></app-color-picker>
+        <app-color-picker [formControl]="regionForm.controls.color" />
       </form>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button matButton type="button" mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
-      <button matButton="filled" [mat-dialog-close]="regionForm.value" type="button" [disabled]="regionForm.invalid">
+      <button matButton type="button" matDialogClose>{{ 'ui.common.actions.cancel' | translate }}</button>
+      <button matButton="filled" [matDialogClose]="regionForm.value" type="button" [disabled]="regionForm.invalid">
         {{ 'ui.common.actions.submit' | translate }}
       </button>
     </mat-dialog-actions>

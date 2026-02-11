@@ -70,7 +70,7 @@ export interface CreateSegmentDialogProps {
         [label]="'resourceEditor.resourceProperties.comment' | translate" />
     </div>
     <div mat-dialog-actions align="end">
-      <button matButton mat-dialog-close data-cy="cancel-button">{{ 'ui.common.actions.cancel' | translate }}</button>
+      <button matButton matDialogClose data-cy="cancel-button">{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         data-cy="submit-button"
         matButton="filled"

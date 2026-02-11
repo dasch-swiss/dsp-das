@@ -27,7 +27,7 @@ import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.
       <app-resource-class-form [formData]="formData" (afterFormInit)="afterFormInit($event)" />
     </div>
     <div mat-dialog-actions align="end">
-      <button data-cy="cancel-button" matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
+      <button data-cy="cancel-button" matButton matDialogClose>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         data-cy="submit-button"
         matButton="filled"

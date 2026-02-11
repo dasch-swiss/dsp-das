@@ -56,7 +56,7 @@ import { ResourceFetcherService } from '../representations/resource-fetcher.serv
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button matButton mat-dialog-close class="cancel-button center">
+      <button matButton matDialogClose class="cancel-button center">
         {{ 'resourceEditor.resourceProperties.eraseResource.noKeep' | translate }}
       </button>
       <button

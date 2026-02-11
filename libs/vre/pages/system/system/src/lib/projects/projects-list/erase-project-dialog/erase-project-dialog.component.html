@@ -15,7 +15,7 @@
       [formControl]="eraseForm.controls.shortCode"
       [value]="eraseForm.controls.shortCode" />
     @if (eraseForm.controls.shortCode.hasError('shortCode'); as errors) {
-    <mat-error> {{ 'pages.system.projectsList.eraseConfirmationDialog.shortCodeValidation' | translate }} </mat-error>
+    <mat-error> {{ 'pages.system.projectsList.eraseConfirmationDialog.shortCodeValidation' | translate }}</mat-error>
     }
   </mat-form-field>
   <mat-form-field class="large-field">
@@ -28,13 +28,13 @@
       matInput
       type="password" />
     @if (eraseForm.controls.password.hasError('password'); as errors) {
-    <mat-error> {{ 'pages.system.projectsList.eraseConfirmationDialog.passwordValidation' | translate }} </mat-error>
+    <mat-error> {{ 'pages.system.projectsList.eraseConfirmationDialog.passwordValidation' | translate }}</mat-error>
     }
   </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button matButton mat-dialog-close class="cancel-button center">{{ 'ui.common.actions.cancel' | translate }}</button>
+  <button matButton matDialogClose class="cancel-button center">{{ 'ui.common.actions.cancel' | translate }}</button>
   <span class="fill-remaining-space"></span>
   <button
     [disabled]="eraseForm.invalid"

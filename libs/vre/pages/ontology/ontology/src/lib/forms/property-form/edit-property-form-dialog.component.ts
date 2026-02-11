@@ -28,7 +28,7 @@ import {
   template: ` <app-dialog-header [title]="title" [subtitle]="data.propType.group + ': ' + data.propType.label || ''" />
     <app-property-form mat-dialog-content (afterFormInit)="form = $event" [propertyData]="data" />
     <div mat-dialog-actions align="end">
-      <button matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
+      <button matButton matDialogClose>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         matButton="filled"
         appLoadingButton
