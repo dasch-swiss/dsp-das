@@ -23,13 +23,12 @@ export interface SortProp {
 
     <mat-menu #sortSelection="matMenu">
       @for (item of sortProps; track item) {
-        <button mat-menu-item (click)="sortBy(item.key)" [class.active]="activeKey === item.key">
+        <button mat-menu-item (click)="sortBy(item.key)">
           {{ item.label }}
         </button>
       }
     </mat-menu>
   `,
-  styleUrls: ['./sort-button.component.scss'],
   imports: [MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, MatButton],
 })
 export class SortButtonComponent implements OnInit {
