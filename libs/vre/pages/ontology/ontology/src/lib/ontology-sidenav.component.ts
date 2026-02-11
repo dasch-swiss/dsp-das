@@ -1,9 +1,9 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, ViewContainerRef } from '@angular/core';
-import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
+import { MatActionList, MatListItem } from '@angular/material/list';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTabLink, MatTabNav, MatTabNavPanel } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -47,91 +47,96 @@ import { OntologyPageService } from './ontology-page.service';
     <mat-divider />
     <mat-tab-nav-panel #tabPanel>
       @if (rla1.isActive) {
-        <div>
-          <!-- Classes tab content -->
-          <button matButton (click)="ops.toggleExpandClasses()">
-            <mat-icon>{{ (ops.expandClasses$ | async) ? 'compress' : 'expand' }}</mat-icon>
-            {{
-              (ops.expandClasses$ | async)
-                ? ('pages.ontology.sidenav.collapseAll' | translate)
-                : ('pages.ontology.sidenav.expandAll' | translate)
-            }}
+        <mat-action-list>
+          <button mat-list-item (click)="ops.toggleExpandClasses()">
+            <span class="list-item">
+              <mat-icon>{{ (ops.expandClasses$ | async) ? 'compress' : 'expand' }}</mat-icon>
+              {{
+                (ops.expandClasses$ | async)
+                  ? ('pages.ontology.sidenav.collapseAll' | translate)
+                  : ('pages.ontology.sidenav.expandAll' | translate)
+              }}
+            </span>
           </button>
           @if (hasProjectAdminRights$ | async) {
             <button
+              mat-list-item
               [disabled]="!(project$ | async)?.status"
-              matButton
               data-cy="create-class-button"
               [matMenuTriggerFor]="addResClassMenu">
-              <mat-icon>add</mat-icon>
-              {{ 'pages.ontology.sidenav.createNewClass' | translate }}
+              <span class="list-item">
+                <mat-icon>add</mat-icon>
+                {{ 'pages.ontology.sidenav.createNewClass' | translate }}
+              </span>
             </button>
           }
-          <mat-menu #addResClassMenu="matMenu" xPosition="before">
-            @for (type of defaultClasses; track trackByDefaultClassFn($index, type)) {
-              <button
-                [disabled]="!(project$ | async)?.status"
-                [attr.data-cy]="type.iri.split('#').pop()"
-                mat-menu-item
-                (click)="openCreateResourceClass(type)">
-                <mat-icon>{{ type.icon }}</mat-icon>
-                {{ type.label }}
-              </button>
-            }
-          </mat-menu>
-        </div>
+        </mat-action-list>
+
+        <mat-menu #addResClassMenu="matMenu" xPosition="before">
+          @for (type of defaultClasses; track trackByDefaultClassFn($index, type)) {
+            <button
+              [disabled]="!(project$ | async)?.status"
+              [attr.data-cy]="type.iri.split('#').pop()"
+              mat-menu-item
+              (click)="openCreateResourceClass(type)">
+              <mat-icon>{{ type.icon }}</mat-icon>
+              {{ type.label }}
+            </button>
+          }
+        </mat-menu>
       }
 
       @if (rla2.isActive) {
-        <div>
-          <!-- Properties tab content -->
-          @if (hasProjectAdminRights$ | async) {
+        <!-- Properties tab content -->
+        @if (hasProjectAdminRights$ | async) {
+          <mat-action-list>
             <button
-              matButton
+              mat-list-item
               data-cy="create-property-button"
               [disabled]="!(project$ | async)?.status"
               [matMenuTriggerFor]="newFromPropType">
-              <mat-icon>add</mat-icon>
-              {{ 'pages.ontology.sidenav.addProperty' | translate }}
+              <span class="list-item">
+                <mat-icon>add</mat-icon>
+                {{ 'pages.ontology.sidenav.addProperty' | translate }}
+              </span>
             </button>
+          </mat-action-list>
+        }
+        <mat-menu #newFromPropType="matMenu">
+          @for (type of defaultProperties; track trackByPropCategoryFn($index, type)) {
+            <button mat-menu-item [matMenuTriggerFor]="sub_menu" [attr.data-cy]="type.group">
+              {{ type.group }}
+            </button>
+            <mat-menu #sub_menu="matMenu">
+              @for (ele of type.elements; track trackByDefaultPropertyFn($index, ele)) {
+                <button
+                  mat-menu-item
+                  [value]="ele"
+                  [attr.data-cy]="ele.label"
+                  [matTooltip]="ele.description"
+                  matTooltipPosition="after"
+                  (click)="openCreateNewProperty(ele)">
+                  <mat-icon>{{ ele.icon }}</mat-icon>
+                  {{ ele.label }}
+                </button>
+              }
+            </mat-menu>
           }
-          <mat-menu #newFromPropType="matMenu">
-            @for (type of defaultProperties; track trackByPropCategoryFn($index, type)) {
-              <button mat-menu-item [matMenuTriggerFor]="sub_menu" [attr.data-cy]="type.group">
-                {{ type.group }}
-              </button>
-              <mat-menu #sub_menu="matMenu">
-                @for (ele of type.elements; track trackByDefaultPropertyFn($index, ele)) {
-                  <button
-                    mat-menu-item
-                    [value]="ele"
-                    [attr.data-cy]="ele.label"
-                    [matTooltip]="ele.description"
-                    matTooltipPosition="after"
-                    (click)="openCreateNewProperty(ele)">
-                    <mat-icon>{{ ele.icon }}</mat-icon>
-                    {{ ele.label }}
-                  </button>
-                }
-              </mat-menu>
-            }
-          </mat-menu>
-        </div>
+        </mat-menu>
       }
     </mat-tab-nav-panel>
   `,
   styles: [
     `
-      button {
-        width: 100%;
-        text-align: left;
-        display: inline-block;
+      .list-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
     `,
   ],
   imports: [
     AsyncPipe,
-    MatButton,
     MatDivider,
     MatIcon,
     MatMenu,
@@ -144,6 +149,8 @@ import { OntologyPageService } from './ontology-page.service';
     RouterLink,
     RouterLinkActive,
     TranslatePipe,
+    MatListItem,
+    MatActionList,
   ],
 })
 export class OntologySidenavComponent {

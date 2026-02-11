@@ -35,12 +35,12 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
     @if (!loading) {
       <form [formGroup]="form" appInvalidControlScroll class="form">
         @if (fileRepresentation) {
-          <h3>{{ 'resourceEditor.resourceCreator.form.file' | translate }}</h3>
+          <h3 class="mat-headline-small">{{ 'resourceEditor.resourceCreator.form.file' | translate }}</h3>
           <app-create-resource-form-file
             [projectShortcode]="projectShortcode"
             [fileRepresentation]="fileRepresentation"
             (afterFormCreated)="afterFileFormCreated($event)" />
-          <h3>{{ 'resourceEditor.resourceCreator.form.properties' | translate }}</h3>
+          <h3 class="mat-headline-small">{{ 'resourceEditor.resourceCreator.form.properties' | translate }}</h3>
         }
         <app-create-resource-form-row
           [label]="('resourceEditor.resourceCreator.form.resourceLabel' | translate) + ' *'"
@@ -61,7 +61,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
             [formGroup]="form.controls.properties" />
         }
         <div class="form-actions">
-          <button matButton="filled" type="button" data-cy="cancel-button" (click)="onCancel()">
+          <button matButton type="button" data-cy="cancel-button" (click)="onCancel()">
             {{ 'ui.common.actions.cancel' | translate }}
           </button>
           <button
