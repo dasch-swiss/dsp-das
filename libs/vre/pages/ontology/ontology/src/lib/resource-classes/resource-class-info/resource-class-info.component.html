@@ -3,6 +3,7 @@
   (mouseleave)="classHovered = false"
   data-cy="class-card"
   appearance="outlined"
+  style="padding-bottom: 16px"
   cdkDrag
   cdkDragBoundary=".drag-drop-stop">
   <mat-card-header cdkDragHandle>
@@ -10,18 +11,15 @@
       <mat-card-title [matTooltip]="this.resourceClass.comments | appStringifyStringLiteral" matTooltipPosition="above">
         {{ this.resourceClass.labels | appStringifyStringLiteral | appTruncate: 56 }}
       </mat-card-title>
-      <mat-card-subtitle>
-        <span class="mat-caption">
-          <span> {{ resourceClass.name }} </span>
-          <span>&nbsp;&middot;&nbsp;</span>
-          <span data-cy="class-type-label"
-            >@if (resourceClass.defaultClassIcon) {
-            <mat-icon
-              style="width: 14px; height: 14px; font-size: 14px; line-height: 14px; position: relative; top: 2px"
-              >{{ resourceClass.defaultClassIcon }}</mat-icon
-            >
-            } {{ resourceClass.defaultClassLabel }}
-          </span>
+      <mat-card-subtitle style="color: var(--mat-sys-outline)" class="mat-body-medium">
+        <span> {{ resourceClass.name }} </span>
+        <span>&nbsp;&middot;&nbsp;</span>
+        <span data-cy="class-type-label"
+          >@if (resourceClass.defaultClassIcon) {
+          <mat-icon style="width: 14px; height: 14px; font-size: 14px; line-height: 14px; position: relative; top: 2px"
+            >{{ resourceClass.defaultClassIcon }}</mat-icon
+          >
+          } {{ resourceClass.defaultClassLabel }}
         </span>
       </mat-card-subtitle>
     </div>

@@ -1,7 +1,8 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MatList, MatListItem } from '@angular/material/list';
+import { MatCard, MatCardContent } from '@angular/material/card';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
 import { PropertyInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
 import { PropertyInfoComponent } from './property-info/property-info.component';
@@ -9,33 +10,21 @@ import { PropertyInfoComponent } from './property-info/property-info.component';
 @Component({
   selector: 'app-ontology-properties',
   template: `
-    <mat-list class="properties">
-      @for (prop of oes.currentOntologyProperties$ | async; track trackByPropertyDefinitionFn($index, prop)) {
-        <mat-list-item class="property" [class.admin]="(hasProjectAdminRights$ | async) === true">
-          <app-property-info [property]="prop" />
-        </mat-list-item>
-      }
-    </mat-list>
-  `,
-  styles: `
-    .properties {
-      max-width: 100em;
-
-      .property {
-        background: white;
-        border-radius: 8px;
-        height: auto;
-        margin: 8px 0;
-
-        &.admin:hover {
-          background: var(--element-active-hover);
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-      }
-    }
+    <app-centered-layout>
+      <h2 class="mat-headline-medium">List of properties</h2>
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          @for (prop of oes.currentOntologyProperties$ | async; track trackByPropertyDefinitionFn($index, prop)) {
+            <div [class.admin]="(hasProjectAdminRights$ | async) === true">
+              <app-property-info [property]="prop" />
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    </app-centered-layout>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AsyncPipe, MatList, MatListItem, PropertyInfoComponent],
+  imports: [AsyncPipe, PropertyInfoComponent, MatCard, MatCardContent, CenteredLayoutComponent],
 })
 export class OntologyPropertiesComponent {
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;

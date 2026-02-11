@@ -19,7 +19,7 @@ import { ReusableProjectFormComponent } from './reusable-project-form.component'
       <app-reusable-project-form [formData]="formData" (afterFormInit)="form = $event" />
     }
 
-    <div style="display: flex; justify-content: space-between">
+    <div style="display: flex; justify-content: flex-end">
       <button
         matButton="filled"
         type="submit"
