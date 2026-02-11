@@ -1,32 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cookie-banner',
   template: ` @if (showCookieBanner) {
-    <div class="cookie-banner">
-      <p class="note">
+    <div class="container">
+      <p>
         {{ 'app.cookieBanner.message' | translate }}
-        <span class="link" (click)="goToCookiePolicy()">{{ 'app.cookieBanner.useOfCookies' | translate }}</span
+        <a [routerLink]="RouteConstants.cookiePolicy">{{ 'app.cookieBanner.useOfCookies' | translate }}</a
         >.
       </p>
-      <div class="action">
-        <button matButton="filled" (click)="closeCookieBanner()" data-cy="accept-cookies">
-          {{ 'app.cookieBanner.accept' | translate }}
-        </button>
-      </div>
+      <button matButton="filled" (click)="closeCookieBanner()" data-cy="accept-cookies">
+        {{ 'app.cookieBanner.accept' | translate }}
+      </button>
     </div>
   }`,
   styleUrls: [`./cookie-banner.component.scss`],
-  imports: [MatButtonModule, TranslatePipe],
+  imports: [MatButtonModule, TranslatePipe, RouterLink],
 })
 export class CookieBannerComponent implements OnInit {
   showCookieBanner = true;
-
-  constructor(private readonly _router: Router) {}
 
   ngOnInit() {
     if (localStorage.getItem('cookieBanner') === null) {
@@ -36,12 +32,10 @@ export class CookieBannerComponent implements OnInit {
     }
   }
 
-  goToCookiePolicy() {
-    this._router.navigate([RouteConstants.cookiePolicy]);
-  }
-
   closeCookieBanner() {
     this.showCookieBanner = false;
     localStorage.setItem('cookieBanner', JSON.stringify(this.showCookieBanner));
   }
+
+  protected readonly RouteConstants = RouteConstants;
 }
