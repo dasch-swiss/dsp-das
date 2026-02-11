@@ -9,7 +9,7 @@
 }
 
 .osd-container {
-  color: $bright;
+  color: var(--mat-sys-surface-lowest);
   flex: 1;
 
   &.drawing {
@@ -49,7 +49,7 @@
     }
 
     .mat-mdc-button.full-size:disabled {
-      color: $grey !important;
+      color: var(--mat-sys-surface-variant) !important;
     }
   }
 }

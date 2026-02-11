@@ -1,11 +1,7 @@
-@use "../../../../../../../apps/dsp-app/src/styles/config" as *;
-@use "../../../../../../../apps/dsp-app/src/styles/mixins" as *;
-
 .overlay-info-box {
-  background: white;
+  background: var(--mat-sys-surface-container-lowest);
   padding: 8px 16px;
-  @include mat-box-shadow();
-  border-radius: $border-radius;
+  border-radius: 4px;
 
   table {
     border-collapse: collapse;
@@ -27,15 +23,15 @@
     }
 
     .border-top {
-      border-top: 1px solid black;
+      border-top: 1px solid var(--mat-sys-surface-container);
     }
   }
 }
 
 .status {
-  color: $red;
+  color: var(--mat-sys-error);
 
   &.checked {
-    color: $secondary;
+    color: var(--mat-sys-primary);
   }
 }
