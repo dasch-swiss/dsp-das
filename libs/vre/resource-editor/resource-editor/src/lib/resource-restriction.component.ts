@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { AlertInfoComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AlertInfoComponent } from './alert-info.component';
 
 @Component({
   selector: 'app-resource-restriction',

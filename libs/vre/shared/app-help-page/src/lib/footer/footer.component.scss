@@ -1,22 +1,10 @@
-@use "config" as *;
-
 footer {
-  padding: 32px 0;
-  background: $primary_900;
-  color: $white;
+  padding: 32px 0 0;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-surface);
 }
 
 a {
-  color: $white !important;
+  color: var(--mat-sys-surface) !important;
   font-weight: bold;
-}
-
-.block {
-  flex: 1;
-  padding: 0 32px;
-}
-
-.center-block a {
-  display: block;
-  margin-bottom: 16px;
 }
