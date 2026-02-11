@@ -6,7 +6,9 @@ import { SegmentComponent } from './segment.component';
 @Component({
   selector: 'app-segments-display',
   imports: [NgStyle, SegmentComponent],
-  template: ` <div style="background: black; padding: 0 24px" [ngStyle]="{ height: height + 'px' }">
+  template: ` <div
+    style="background: var(--mat-sys-inverse-surface); padding: 0 24px"
+    [ngStyle]="{ height: height + 'px' }">
     <div style="position: relative">
       @for (row of segmentInRow; track row) {
         <div style="height: 10px">

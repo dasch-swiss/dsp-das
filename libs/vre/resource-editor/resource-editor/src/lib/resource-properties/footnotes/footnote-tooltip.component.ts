@@ -25,7 +25,7 @@ import { AddTargetBlankPipe, InternalLinkReplacerPipe } from '@dasch-swiss/vre/u
       .content {
         font-size: 0.8em;
         background: white;
-        color: black;
+        color: var(--mat-sys-inverse-surface);
         padding: 8px;
         min-width: 200px;
         border-radius: 4px;
