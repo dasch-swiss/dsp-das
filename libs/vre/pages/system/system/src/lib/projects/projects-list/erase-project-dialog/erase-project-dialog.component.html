@@ -38,10 +38,9 @@
   <span class="fill-remaining-space"></span>
   <button
     [disabled]="eraseForm.invalid"
-    matButton
     appLoadingButton
     [isLoading]="isLoading"
-    matButton="elevated"
+    matButton="filled"
     class="confirm-button center"
     (click)="submit()">
     {{ 'ui.common.actions.confirm' | translate }}

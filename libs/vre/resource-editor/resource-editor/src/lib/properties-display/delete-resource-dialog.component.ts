@@ -29,15 +29,10 @@ import { ResourceFetcherService } from '../representations/resource-fetcher.serv
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>
+      <button matButton mat-dialog-close>
         {{ 'resourceEditor.propertiesDisplay.deleteResource.noKeep' | translate }}
       </button>
-      <button
-        data-cy="app-delete-resource-dialog-button"
-        mat-button
-        mat-raised-button
-        [color]="'warn'"
-        (click)="submit()">
+      <button data-cy="app-delete-resource-dialog-button" matButton="filled" [color]="'warn'" (click)="submit()">
         {{ 'resourceEditor.propertiesDisplay.deleteResource.yesDelete' | translate }}
       </button>
     </mat-dialog-actions>`,

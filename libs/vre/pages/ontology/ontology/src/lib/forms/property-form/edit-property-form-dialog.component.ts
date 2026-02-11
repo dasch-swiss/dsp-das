@@ -30,7 +30,7 @@ import {
     <div mat-dialog-actions align="end">
       <button matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
-        matButton="elevated"
+        matButton="filled"
         appLoadingButton
         data-cy="submit-button"
         [isLoading]="loading"

@@ -57,7 +57,7 @@ export interface CardinalityInfo {
           <button matButton (click)="dialogRef.close(false)">{{ 'ui.common.actions.no' | translate }}</button>
         }
         @if (canSetCardinality) {
-          <button matButton="elevated" (click)="dialogRef.close(true)" data-cy="confirmation-button">
+          <button matButton="filled" (click)="dialogRef.close(true)" data-cy="confirmation-button">
             {{ 'ui.common.actions.yes' | translate }}
           </button>
         }

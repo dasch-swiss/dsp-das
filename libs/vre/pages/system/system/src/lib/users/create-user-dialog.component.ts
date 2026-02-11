@@ -25,7 +25,7 @@ import { finalize } from 'rxjs';
 
     <div mat-dialog-actions align="end">
       <button matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
-      <button matButton="elevated" appLoadingButton [isLoading]="isLoading" (click)="createUser()">
+      <button matButton="filled" appLoadingButton [isLoading]="isLoading" (click)="createUser()">
         {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>

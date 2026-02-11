@@ -42,7 +42,7 @@ export interface EditPasswordDialogProps {
               { errorKey: 'incorrect', message: 'pages.userSettings.passwordForm.incorrectPassword' | translate },
             ]" />
 
-          <button matButton="elevated" (click)="checkAdminPassword()">
+          <button matButton="filled" (click)="checkAdminPassword()">
             {{ 'ui.common.actions.next' | translate }}
           </button>
         </mat-step>
@@ -51,7 +51,7 @@ export interface EditPasswordDialogProps {
           <app-password-confirm-form (afterFormInit)="newPasswordFormGroup = $event" />
 
           <button
-            matButton="elevated"
+            matButton="filled"
             appLoadingButton
             [isLoading]="updateLoading"
             (click)="updateNewPassword()"

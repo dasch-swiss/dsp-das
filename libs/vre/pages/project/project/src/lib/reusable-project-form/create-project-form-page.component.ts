@@ -34,7 +34,7 @@ import { ReusableProjectFormComponent } from './reusable-project-form.component'
         </button>
 
         <button
-          matButton="elevated"
+          matButton="filled"
           type="submit"
           [disabled]="!form || !form.valid"
           (click)="submitForm()"

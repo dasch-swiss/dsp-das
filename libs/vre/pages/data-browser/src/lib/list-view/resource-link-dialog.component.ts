@@ -55,7 +55,7 @@ export interface ResourceLinkDialogProps {
       <button matButton type="button" (click)="dialogRef.close()">{{ 'ui.common.actions.cancel' | translate }}</button>
 
       <button
-        matButton="elevated"
+        matButton="filled"
         appLoadingButton
         data-cy="submit-button"
         [isLoading]="isLoading"

@@ -73,7 +73,7 @@ export interface CreateSegmentDialogProps {
       <button matButton mat-dialog-close data-cy="cancel-button">{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         data-cy="submit-button"
-        matButton="elevated"
+        matButton="filled"
         appLoadingButton
         [isLoading]="loading"
         [disabled]="form.invalid"

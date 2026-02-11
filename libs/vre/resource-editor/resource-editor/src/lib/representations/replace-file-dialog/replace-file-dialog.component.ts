@@ -51,7 +51,7 @@ export interface ReplaceFileDialogProps {
         {{ 'ui.common.actions.cancel' | translate }}
       </button>
       <button
-        matButton="elevated"
+        matButton="filled"
         type="submit"
         data-cy="replace-file-submit-button"
         [color]="'primary'"

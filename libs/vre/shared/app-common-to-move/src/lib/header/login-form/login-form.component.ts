@@ -22,7 +22,7 @@ import { PasswordFormFieldComponent } from '../password-form/password-form-field
         <div class="login-error" data-cy="login-error">{{ loginError }}</div>
       }
 
-      <button matButton="elevated" appLoadingButton [isLoading]="loading" type="submit" data-cy="submit-button">
+      <button matButton="filled" appLoadingButton [isLoading]="loading" type="submit" data-cy="submit-button">
         {{ 'pages.userSettings.loginForm.login' | translate }}
       </button>
     </form>

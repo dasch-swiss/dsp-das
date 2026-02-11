@@ -30,7 +30,7 @@ import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.
       <button data-cy="cancel-button" matButton mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         data-cy="submit-button"
-        matButton="elevated"
+        matButton="filled"
         appLoadingButton
         [isLoading]="loading"
         [disabled]="form?.invalid"

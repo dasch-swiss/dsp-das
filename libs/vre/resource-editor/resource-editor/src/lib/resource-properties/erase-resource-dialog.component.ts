@@ -55,16 +55,14 @@ import { ResourceFetcherService } from '../representations/resource-fetcher.serv
       </mat-form-field>
     </mat-dialog-content>
 
-    <mat-dialog-actions>
+    <mat-dialog-actions align="end">
       <button matButton mat-dialog-close class="cancel-button center">
         {{ 'resourceEditor.resourceProperties.eraseResource.noKeep' | translate }}
       </button>
-      <span class="fill-remaining-space"></span>
       <button
         [disabled]="eraseForm.invalid"
-        matButton
         data-cy="app-erase-resource-dialog-button"
-        matButton="elevated"
+        matButton="filled"
         appLoadingButton
         [isLoading]="loading"
         [color]="'warn'"
