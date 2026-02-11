@@ -1,0 +1,9 @@
+@use '../../../../../../../apps/dsp-app/src/styles/mixins' as *;
+
+:host {
+  @include header-host-styles();
+}
+
+.mat-toolbar {
+  background-color: inherit;
+}

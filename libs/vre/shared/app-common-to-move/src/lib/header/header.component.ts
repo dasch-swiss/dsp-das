@@ -27,13 +27,6 @@ import { HeaderUserActionsComponent } from './header-user-actions.component';
       <app-header-user-actions />
     </mat-toolbar>
   `,
-  styles: [
-    `
-      :host {
-        display: block;
-        border-bottom: 1px solid #ebebeb;
-      }
-    `,
-  ],
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent {}

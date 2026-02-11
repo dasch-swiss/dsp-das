@@ -13,3 +13,10 @@
   box-shadow: 0 2px 4px -1px $black-20-opacity, 0 4px 5px 0px $black-14-opacity,
   0 1px 10px 0px $black-12-opacity;
 }
+
+// Header Host Styles
+@mixin header-host-styles() {
+  display: block;
+  border-bottom: 1px solid #ebebeb;
+  background-color: var(--mat-sys-surface-container);
+}
