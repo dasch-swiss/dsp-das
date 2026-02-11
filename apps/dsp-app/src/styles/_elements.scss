@@ -17,16 +17,6 @@ a {
   text-decoration: none;
 }
 
-// file representation menu styling
-.representation-menu {
-  --mat-menu-item-label-text-color: $white;
-
-  &.mdc-menu-surface {
-    background-color: $dark;
-    color: $white;
-  }
-}
-
 // --------------------------------------
 
 .overlay-blocker {

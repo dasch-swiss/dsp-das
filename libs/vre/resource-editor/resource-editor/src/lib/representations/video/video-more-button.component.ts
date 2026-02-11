@@ -23,7 +23,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
   template: ` <button matIconButton [matMenuTriggerFor]="more" style="color: white">
       <mat-icon>more_vert</mat-icon>
     </button>
-    <mat-menu #more="matMenu" class="representation-menu">
+    <mat-menu #more="matMenu">
       <button mat-menu-item (click)="openVideoInNewTab(this.src.fileUrl)">
         {{ 'resourceEditor.representations.video.openInNewTab' | translate }}
       </button>

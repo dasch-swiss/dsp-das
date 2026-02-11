@@ -22,7 +22,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
   template: ` <button matIconButton [matMenuTriggerFor]="more">
       <mat-icon>more_vert</mat-icon>
     </button>
-    <mat-menu #more="matMenu" class="representation-menu">
+    <mat-menu #more="matMenu">
       <button mat-menu-item (click)="openIIIFnewTab()">
         {{ 'resourceEditor.representations.audio.openInNewTab' | translate }}
       </button>
