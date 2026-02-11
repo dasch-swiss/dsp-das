@@ -27,7 +27,7 @@ import { DownloadPropertyListComponent } from './download-property-list.componen
   template: `
     <app-download-property-list [propertyDefinitions]="properties" (propertiesChange)="selectedPropertyIds = $event" />
 
-    <div style="margin-top: 16px; padding: 16px; background: #f5f5f5; border-radius: 4px">
+    <div style="margin-top: 16px; padding: 16px; background: var(--mat-sys-surface-container-low); border-radius: 4px">
       <mat-checkbox [(ngModel)]="includeResourceIris">
         <span style="font-weight: 500">{{ 'pages.dataBrowser.downloadDialog.includeIrisLabel' | translate }}</span>
       </mat-checkbox>

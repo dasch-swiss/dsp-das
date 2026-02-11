@@ -16,8 +16,8 @@ import { Component, Input } from '@angular/core';
         height: var(--height);
         border-radius: 8px;
         overflow: hidden;
-        background: rgb(41, 41, 41);
-        color: white;
+        background: var(--mat-sys-inverse-surface);
+        color: var(--mat-sys-on-surface);
       }
     `,
   ],

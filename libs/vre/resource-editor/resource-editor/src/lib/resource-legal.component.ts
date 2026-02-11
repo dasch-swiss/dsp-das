@@ -12,20 +12,19 @@ import { ResourceLegalLicenseComponent } from './resource-legal-license.componen
     @if (fileValue.copyrightHolder || fileValue.authorship?.length > 0 || fileValue.license) {
       <div
         class="mat-caption"
-        style="border: 1px solid #292929;
-    background: #292929; border-radius: 8px;
-    color: #e4e9ed; padding: 8px; padding-bottom: 16px; margin-top: 8px; position: relative; top: 12px">
+        style="border-radius: 8px 8px 0 0;
+    color: #e4e9ed; background-color: var(--mat-sys-inverse-surface); padding: 8px; padding-bottom: 16px; margin-top: 8px; position: relative; top: 12px">
         <div style="display: flex; justify-content: space-between">
           <div>
             @if (fileValue.copyrightHolder) {
               <div>
-                <span class="label">{{ 'resourceEditor.legal.copyrightHolder' | translate }}</span
+                <span class="label mat-label-medium">{{ 'resourceEditor.legal.copyrightHolder' | translate }}</span
                 >{{ fileValue.copyrightHolder }}
               </div>
             }
             @if (fileValue.authorship.length > 0) {
               <div style="display: flex">
-                <span class="label">{{ 'resourceEditor.legal.authorship' | translate }}</span>
+                <span class="label mat-label-medium">{{ 'resourceEditor.legal.authorship' | translate }}</span>
                 <div style="max-width: 400px">
                   @for (author of fileValue.authorship; track author; let last = $last) {
                     <span>{{ author }}{{ last ? '' : ', ' }}</span>
@@ -43,7 +42,7 @@ import { ResourceLegalLicenseComponent } from './resource-legal-license.componen
       </div>
     }
   `,
-  styles: ['.label { display: inline-block; width: 170px; font-weight: bold}'],
+  styles: ['.label { display: inline-block; width: 170px}'],
   imports: [TranslatePipe, ResourceLegalLicenseComponent],
 })
 export class ResourceLegalComponent implements OnInit {

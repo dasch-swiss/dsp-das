@@ -32,7 +32,7 @@ import { VideoMoreButtonComponent } from './video-more-button.component';
     TranslatePipe,
     TimePipe,
   ],
-  template: ` <mat-toolbar-row style="background: black; color: white; justify-content: space-between">
+  template: ` <mat-toolbar-row style="color: white; justify-content: space-between">
     <div>
       <button
         matIconButton
@@ -89,6 +89,9 @@ import { VideoMoreButtonComponent } from './video-more-button.component';
   </mat-toolbar-row>`,
   styles: [
     `
+      mat-icon {
+        color: white;
+      }
       .mat-mdc-button-base .mat-icon {
         min-height: 0;
       }
