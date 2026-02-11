@@ -86,8 +86,8 @@ import { StringValueComponent } from './object-values/string-value/string-value.
             mat-icon-button
             color="primary"
             (click)="formManager.clearStatementElement(statementElement)"
-            matTooltip="Clear selection">
-            <mat-icon>replay</mat-icon>
+            matTooltip="Remove search criteria">
+            <mat-icon>remove_circle</mat-icon>
           </button>
         }
       </div>
