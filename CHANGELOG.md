@@ -1,5 +1,31 @@
 # Changelog
 
+## [12.5.4](https://github.com/dasch-swiss/dsp-das/compare/v12.5.3...v12.5.4) (2026-02-10)
+
+
+### Bug Fixes
+
+* infoJson can be id or [@id](https://github.com/id) ([#2830](https://github.com/dasch-swiss/dsp-das/issues/2830)) ([e605972](https://github.com/dasch-swiss/dsp-das/commit/e605972faa5379e3d21d1efaee3a3973df3cf64f))
+
+## [12.5.3](https://github.com/dasch-swiss/dsp-das/compare/v12.5.2...v12.5.3) (2026-02-10)
+
+
+### Bug Fixes
+
+* add external iiif infojson validation ([#2827](https://github.com/dasch-swiss/dsp-das/issues/2827)) ([9b34a54](https://github.com/dasch-swiss/dsp-das/commit/9b34a545e5f3e6c00d1eb2b215ba555d9dfb75c0))
+
+## [12.5.2](https://github.com/dasch-swiss/dsp-das/compare/v12.5.1...v12.5.2) (2026-02-03)
+
+
+### Bug Fixes
+
+* prevent list items from reloading after adding a new item ([#2823](https://github.com/dasch-swiss/dsp-das/issues/2823)) ([153fa53](https://github.com/dasch-swiss/dsp-das/commit/153fa533ec0dd796fbf4b2fdad06ca257896842e))
+
+
+### Maintenances
+
+* remove unused variable ([#2821](https://github.com/dasch-swiss/dsp-das/issues/2821)) ([162ac3b](https://github.com/dasch-swiss/dsp-das/commit/162ac3bdff87633a90677f959f3e9e3180dae3cb))
+
 ## [12.5.1](https://github.com/dasch-swiss/dsp-das/compare/v12.5.0...v12.5.1) (2026-01-28)
 
 
