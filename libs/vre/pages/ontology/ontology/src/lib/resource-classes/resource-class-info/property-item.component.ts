@@ -75,7 +75,7 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
               [innerHTML]="'&rarr;&nbsp;' + (classProp.objectLabels | appStringifyStringLiteral)"></span>
           }
         </div>
-        <div class="lower-prop-container mat-label-small">
+        <div class="lower-prop-container mat-body-small">
           <span> {{ classProp.propDef.id | split: '#' : 1 }} </span>
           @if (isHovered && classProp.propDef.comments?.length) {
             <mat-icon
@@ -160,6 +160,7 @@ import { CardinalityComponent } from './cardinality-component/cardinality.compon
       .lower-prop-container {
         display: flex;
         align-items: center;
+        color: var(--mat-sys-outline);
       }
 
       .drag-n-drop-placeholder {
