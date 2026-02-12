@@ -6,7 +6,18 @@ import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss'],
+  styles: `
+    footer {
+      padding: 32px 0 0;
+      background: var(--mat-sys-primary);
+      color: var(--mat-sys-surface);
+    }
+
+    a {
+      color: var(--mat-sys-surface) !important;
+      font-weight: bold;
+    }
+  `,
   imports: [MatButtonModule, MatIconModule, CenteredLayoutComponent],
 })
 export class FooterComponent {
