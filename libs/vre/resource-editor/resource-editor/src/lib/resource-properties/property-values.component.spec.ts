@@ -1,7 +1,7 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Cardinality, ReadResource, ReadValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Cardinality, ReadResource, ReadTextValueAsXml, ReadValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
@@ -173,6 +173,53 @@ describe('PropertyValuesComponent', () => {
       const result = component.getValueSummary(value, 0);
       expect(result.length).toBe(80);
       expect(result).toBe('A'.repeat(77) + '...');
+    });
+
+    describe('ReadTextValueAsXml handling', () => {
+      const makeXmlValue = (strval: string): ReadValue => {
+        const v = Object.create(ReadTextValueAsXml.prototype);
+        v.strval = strval;
+        return v as ReadValue;
+      };
+
+      it('should strip XML wrapper and HTML tags from ReadTextValueAsXml', () => {
+        const value = makeXmlValue('<?xml version="1.0" encoding="UTF-8"?><text><p>Hello world</p></text>');
+        expect(component.getValueSummary(value, 0)).toBe('Hello world');
+      });
+
+      it('should strip nested formatting tags', () => {
+        const value = makeXmlValue(
+          '<?xml version="1.0" encoding="UTF-8"?><text><p>Some <strong>bold</strong> and <em>italic</em> text</p></text>'
+        );
+        expect(component.getValueSummary(value, 0)).toBe('Some bold and italic text');
+      });
+
+      it('should fall back to "Value N" when XML content is empty after stripping', () => {
+        const value = makeXmlValue('<?xml version="1.0" encoding="UTF-8"?><text></text>');
+        expect(component.getValueSummary(value, 2)).toBe('Value 3');
+      });
+
+      it('should truncate long extracted text at 80 chars', () => {
+        const longText = 'A'.repeat(100);
+        const value = makeXmlValue(`<?xml version="1.0" encoding="UTF-8"?><text><p>${longText}</p></text>`);
+        const result = component.getValueSummary(value, 0);
+        expect(result.length).toBe(80);
+        expect(result.endsWith('...')).toBe(true);
+      });
+
+      it('should strip self-closing footnote tags', () => {
+        const value = makeXmlValue(
+          '<?xml version="1.0" encoding="UTF-8"?><text><p>Text with note<footnote content="a note"/></p></text>'
+        );
+        expect(component.getValueSummary(value, 0)).toBe('Text with note');
+      });
+
+      it('should decode XML entities', () => {
+        const value = makeXmlValue(
+          '<?xml version="1.0" encoding="UTF-8"?><text><p>A &amp; B &lt; C &gt; D &quot;E&quot;</p></text>'
+        );
+        expect(component.getValueSummary(value, 0)).toBe('A & B < C > D "E"');
+      });
     });
   });
 

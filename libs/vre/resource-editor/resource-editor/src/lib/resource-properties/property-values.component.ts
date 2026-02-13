@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, O
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
+import { Cardinality, ReadResource, ReadTextValueAsXml, ReadValue } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -179,10 +179,24 @@ export class PropertyValuesComponent implements OnChanges {
   }
 
   getValueSummary(value: ReadValue, index: number): string {
-    const str = value.strval;
+    let str = value.strval;
     if (!str || str.trim().length === 0) {
       return `Value ${index + 1}`;
     }
+
+    if (value instanceof ReadTextValueAsXml) {
+      str = str
+        .replace(/<\?xml[^?]*\?>\s*/g, '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (!str) return `Value ${index + 1}`;
+    }
+
     return str.length > 80 ? `${str.substring(0, 77)}...` : str;
   }
 
