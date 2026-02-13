@@ -607,7 +607,12 @@
         "undo": "Undo",
         "addComment": "Add comment",
         "removeComment": "Remove comment",
-        "save": "Save"
+        "save": "Save",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "reorderStale": "Value order has changed. Please refresh and try again.",
+        "reorderForbidden": "You don't have permission to reorder these values.",
+        "reorderFailed": "Reorder failed. Please try again."
       },
       "deleteValue": {
         "title": "Delete {{label}}",

@@ -607,7 +607,12 @@
         "undo": "Annulla",
         "addComment": "Aggiungi commento",
         "removeComment": "Rimuovi commento",
-        "save": "Salva"
+        "save": "Salva",
+        "moveUp": "Sposta su",
+        "moveDown": "Sposta giù",
+        "reorderStale": "L'ordine dei valori è cambiato. Aggiorna e riprova.",
+        "reorderForbidden": "Non hai il permesso di riordinare questi valori.",
+        "reorderFailed": "Riordinamento fallito. Riprova."
       },
       "deleteValue": {
         "title": "Elimina {{label}}",
