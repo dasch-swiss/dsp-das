@@ -1,3 +1,12 @@
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDragPlaceholder,
+  CdkDragPreview,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnChanges } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -17,31 +26,56 @@ import { ValueOrderService } from './value-order.service';
 
 @Component({
   selector: 'app-property-values',
-  imports: [MatIconButton, MatIcon, PropertyValueComponent, PropertyValueAddComponent, MatTooltip, TranslatePipe],
+  imports: [
+    CdkDropList,
+    CdkDrag,
+    CdkDragHandle,
+    CdkDragPreview,
+    CdkDragPlaceholder,
+    MatIconButton,
+    MatIcon,
+    PropertyValueComponent,
+    PropertyValueAddComponent,
+    MatTooltip,
+    TranslatePipe,
+  ],
   template: `
-    @for (group of editModeData.values; track group.id; let index = $index) {
-      <div class="value-row">
-        <app-property-value [index]="index" style="width: 100%" />
-        @if (canReorder && editModeData.values.length > 1) {
-          <div class="reorder-buttons">
-            <button
-              mat-icon-button
-              [disabled]="index === 0 || isAnyValueEditing || reorderLoading"
-              (click)="moveUp(index)"
-              [matTooltip]="'resourceEditor.resourceProperties.actions.moveUp' | translate">
-              <mat-icon>arrow_upward</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              [disabled]="index === editModeData.values.length - 1 || isAnyValueEditing || reorderLoading"
-              (click)="moveDown(index)"
-              [matTooltip]="'resourceEditor.resourceProperties.actions.moveDown' | translate">
-              <mat-icon>arrow_downward</mat-icon>
-            </button>
+    <div
+      cdkDropList
+      cdkDropListLockAxis="y"
+      [cdkDropListData]="editModeData.values"
+      [cdkDropListDisabled]="!canReorder || isAnyValueEditing || currentlyAdding || reorderLoading"
+      (cdkDropListDropped)="onDrop($event)">
+      @for (group of editModeData.values; track group.id; let index = $index) {
+        <div
+          cdkDrag
+          cdkDragLockAxis="y"
+          [cdkDragDisabled]="!canReorder || isAnyValueEditing || currentlyAdding || reorderLoading"
+          class="value-row">
+          @if (canReorder && editModeData.values.length > 1) {
+            <span cdkDragHandle class="drag-handle" aria-hidden="true">
+              <mat-icon>drag_indicator</mat-icon>
+            </span>
+          }
+
+          <app-property-value [index]="index" style="width: 100%" />
+
+          <!-- Inline styles required: CDK renders *cdkDragPreview in a global overlay
+               outside the component, so component-scoped styles won't reach it -->
+          <div
+            *cdkDragPreview
+            style="padding: 12px 16px; background: white; border-radius: 4px;
+                   font-size: 14px; color: rgba(0,0,0,0.87);
+                   box-shadow: 0 5px 5px -3px rgba(0,0,0,0.2),
+                               0 8px 10px 1px rgba(0,0,0,0.14),
+                               0 3px 14px 2px rgba(0,0,0,0.12);">
+            {{ getValueSummary(group, index) }}
           </div>
-        }
-      </div>
-    }
+
+          <div *cdkDragPlaceholder class="drag-placeholder"></div>
+        </div>
+      }
+    </div>
 
     @if (userCanAdd && !currentlyAdding && (editModeData.values.length === 0 || matchesCardinality)) {
       <button
@@ -63,21 +97,42 @@ import { ValueOrderService } from './value-order.service';
         display: flex;
         align-items: flex-start;
       }
-      .reorder-buttons {
+
+      .drag-handle {
+        cursor: grab;
+        opacity: 0.3;
         display: flex;
-        flex-direction: column;
-        opacity: 0.5;
+        align-items: center;
+        padding: 0 4px;
+        transition: opacity 200ms ease-in-out;
       }
-      .reorder-buttons:hover {
-        opacity: 1;
+      .value-row:hover .drag-handle {
+        opacity: 0.7;
       }
-      .reorder-buttons button {
-        width: 28px;
-        height: 28px;
-        line-height: 28px;
+      .drag-handle:active {
+        cursor: grabbing;
       }
-      .reorder-buttons mat-icon {
-        font-size: 18px;
+
+      .drag-placeholder {
+        border: 3px dotted #999;
+        min-height: 48px;
+        border-radius: 4px;
+        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+      }
+
+      .cdk-drag-animating {
+        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+      }
+
+      .cdk-drop-list-dragging .value-row:not(.cdk-drag-placeholder) {
+        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .cdk-drag-animating,
+        .cdk-drop-list-dragging .value-row:not(.cdk-drag-placeholder) {
+          transition: none !important;
+        }
       }
     `,
   ],
@@ -123,25 +178,28 @@ export class PropertyValuesComponent implements OnChanges {
     this._setupData();
   }
 
-  moveUp(index: number): void {
-    if (index === 0) return;
-    this._swapAndReorder(index, index - 1);
+  getValueSummary(value: ReadValue, index: number): string {
+    const str = value.strval;
+    if (!str || str.trim().length === 0) {
+      return `Value ${index + 1}`;
+    }
+    return str.length > 80 ? `${str.substring(0, 77)}...` : str;
   }
 
-  moveDown(index: number): void {
-    if (index >= this.editModeData.values.length - 1) return;
-    this._swapAndReorder(index, index + 1);
-  }
-
-  private _swapAndReorder(fromIndex: number, toIndex: number): void {
+  onDrop(event: CdkDragDrop<ReadValue[]>): void {
+    if (event.previousIndex === event.currentIndex) return;
     if (this.reorderLoading) return;
+    if (this.currentlyAdding) return;
+
+    const originalOrder = [...this.editModeData.values];
+    const reordered = [...originalOrder];
+    moveItemInArray(reordered, event.previousIndex, event.currentIndex);
+
+    this.editModeData.values = reordered;
     this.reorderLoading = true;
     this._cd.markForCheck();
 
-    const values = this.editModeData.values;
-    const orderedIris = values.map(v => v.id);
-    [orderedIris[fromIndex], orderedIris[toIndex]] = [orderedIris[toIndex], orderedIris[fromIndex]];
-
+    const orderedIris = reordered.map(v => v.id);
     this._valueOrderService
       .reorderValues(this.editModeData.resource.id, this.propertyDefinition.id, orderedIris)
       .pipe(
@@ -151,10 +209,10 @@ export class PropertyValuesComponent implements OnChanges {
         })
       )
       .subscribe({
-        next: () => {
-          this._resourceFetcherService.reload();
-        },
+        next: () => this._resourceFetcherService.reload(),
         error: e => {
+          this.editModeData.values = originalOrder;
+          this._cd.markForCheck();
           if (e.status === 400) {
             this._notification.openSnackBar(
               this._translateService.instant('resourceEditor.resourceProperties.actions.reorderStale'),

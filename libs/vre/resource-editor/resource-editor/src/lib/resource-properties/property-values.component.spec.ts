@@ -1,3 +1,4 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Cardinality, ReadResource, ReadValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
@@ -19,9 +20,19 @@ describe('PropertyValuesComponent', () => {
   let mockNotificationService: jest.Mocked<Partial<NotificationService>>;
 
   const mockValues = [
-    { id: 'http://rdfh.ch/0001/value-1', type: 'text', userHasPermission: 'M' } as unknown as ReadValue,
-    { id: 'http://rdfh.ch/0001/value-2', type: 'text', userHasPermission: 'M' } as unknown as ReadValue,
-    { id: 'http://rdfh.ch/0001/value-3', type: 'text', userHasPermission: 'M' } as unknown as ReadValue,
+    {
+      id: 'http://rdfh.ch/0001/value-1',
+      type: 'text',
+      userHasPermission: 'M',
+      strval: 'Alpha',
+    } as unknown as ReadValue,
+    { id: 'http://rdfh.ch/0001/value-2', type: 'text', userHasPermission: 'M', strval: 'Beta' } as unknown as ReadValue,
+    {
+      id: 'http://rdfh.ch/0001/value-3',
+      type: 'text',
+      userHasPermission: 'M',
+      strval: 'Gamma',
+    } as unknown as ReadValue,
   ];
 
   const mockResource = {
@@ -40,6 +51,9 @@ describe('PropertyValuesComponent', () => {
     guiDef: { cardinality: Cardinality._0_n },
     values: mockValues,
   } as unknown as PropertyInfoValues;
+
+  const mockDropEvent = (previousIndex: number, currentIndex: number): CdkDragDrop<ReadValue[]> =>
+    ({ previousIndex, currentIndex }) as CdkDragDrop<ReadValue[]>;
 
   beforeEach(async () => {
     mockPropertyValueService = {
@@ -86,7 +100,7 @@ describe('PropertyValuesComponent', () => {
 
     fixture = TestBed.createComponent(PropertyValuesComponent);
     component = fixture.componentInstance;
-    component.editModeData = { resource: mockResource, values: mockValues };
+    component.editModeData = { resource: mockResource, values: [...mockValues] };
     component.myProperty = mockMyProperty;
     fixture.detectChanges();
   });
@@ -121,40 +135,100 @@ describe('PropertyValuesComponent', () => {
     });
   });
 
-  describe('moveUp', () => {
-    it('should not call reorder when index is 0', () => {
-      component.moveUp(0);
+  describe('getValueSummary', () => {
+    it('should return strval when present', () => {
+      const value = { strval: 'Alpha' } as unknown as ReadValue;
+      expect(component.getValueSummary(value, 0)).toBe('Alpha');
+    });
+
+    it('should truncate long strval to 80 chars', () => {
+      const value = { strval: 'A'.repeat(100) } as unknown as ReadValue;
+      const result = component.getValueSummary(value, 0);
+      expect(result.length).toBe(80);
+      expect(result.endsWith('...')).toBe(true);
+    });
+
+    it('should fallback to "Value N" when strval is undefined', () => {
+      const value = { strval: undefined } as unknown as ReadValue;
+      expect(component.getValueSummary(value, 2)).toBe('Value 3');
+    });
+
+    it('should fallback to "Value N" when strval is empty string', () => {
+      const value = { strval: '' } as unknown as ReadValue;
+      expect(component.getValueSummary(value, 0)).toBe('Value 1');
+    });
+
+    it('should fallback to "Value N" when strval is whitespace only', () => {
+      const value = { strval: '   ' } as unknown as ReadValue;
+      expect(component.getValueSummary(value, 0)).toBe('Value 1');
+    });
+
+    it('should not truncate string of exactly 80 chars', () => {
+      const value = { strval: 'A'.repeat(80) } as unknown as ReadValue;
+      expect(component.getValueSummary(value, 0)).toBe('A'.repeat(80));
+    });
+
+    it('should truncate string of 81 chars', () => {
+      const value = { strval: 'A'.repeat(81) } as unknown as ReadValue;
+      const result = component.getValueSummary(value, 0);
+      expect(result.length).toBe(80);
+      expect(result).toBe('A'.repeat(77) + '...');
+    });
+  });
+
+  describe('onDrop', () => {
+    it('should not call reorder when dropped at same position', () => {
+      component.onDrop(mockDropEvent(1, 1));
       expect(mockValueOrderService.reorderValues).not.toHaveBeenCalled();
     });
 
-    it('should call reorder service with correctly swapped IRI list', () => {
-      component.moveUp(2);
+    it('should call reorder service with correctly reordered IRI list', () => {
+      component.onDrop(mockDropEvent(2, 0));
       expect(mockValueOrderService.reorderValues).toHaveBeenCalledWith(mockResource.id, mockPropDef.id, [
-        'http://rdfh.ch/0001/value-1',
         'http://rdfh.ch/0001/value-3',
+        'http://rdfh.ch/0001/value-1',
         'http://rdfh.ch/0001/value-2',
       ]);
     });
 
     it('should reload resource after successful reorder', () => {
-      component.moveUp(1);
+      component.onDrop(mockDropEvent(0, 2));
       expect(mockResourceFetcherService.reload).toHaveBeenCalled();
     });
-  });
 
-  describe('moveDown', () => {
-    it('should not call reorder when index is last', () => {
-      component.moveDown(2);
+    it('should optimistically update data model before server response', () => {
+      // Use a delayed observable to check intermediate state
+      let capturedValues: ReadValue[] | undefined;
+      mockValueOrderService.reorderValues = jest.fn().mockImplementation(() => {
+        capturedValues = [...component.editModeData.values];
+        return of({ resourceIri: mockResource.id, propertyIri: mockPropDef.id, valuesReordered: 3 });
+      });
+
+      component.onDrop(mockDropEvent(2, 0));
+
+      // The data model should have been reordered before the service call resolved
+      expect(capturedValues![0].id).toBe('http://rdfh.ch/0001/value-3');
+      expect(capturedValues![1].id).toBe('http://rdfh.ch/0001/value-1');
+      expect(capturedValues![2].id).toBe('http://rdfh.ch/0001/value-2');
+    });
+
+    it('should revert data model on error', () => {
+      mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
+      const originalIds = component.editModeData.values.map(v => v.id);
+      component.onDrop(mockDropEvent(0, 2));
+      expect(component.editModeData.values.map(v => v.id)).toEqual(originalIds);
+    });
+
+    it('should prevent concurrent drops via reorderLoading guard', () => {
+      component.reorderLoading = true;
+      component.onDrop(mockDropEvent(0, 1));
       expect(mockValueOrderService.reorderValues).not.toHaveBeenCalled();
     });
 
-    it('should call reorder service with correctly swapped IRI list', () => {
-      component.moveDown(0);
-      expect(mockValueOrderService.reorderValues).toHaveBeenCalledWith(mockResource.id, mockPropDef.id, [
-        'http://rdfh.ch/0001/value-2',
-        'http://rdfh.ch/0001/value-1',
-        'http://rdfh.ch/0001/value-3',
-      ]);
+    it('should prevent drops while adding a value (currentlyAdding guard)', () => {
+      component.currentlyAdding = true;
+      component.onDrop(mockDropEvent(0, 1));
+      expect(mockValueOrderService.reorderValues).not.toHaveBeenCalled();
     });
   });
 
@@ -164,27 +238,21 @@ describe('PropertyValuesComponent', () => {
     });
 
     it('should reset to false after successful reorder', () => {
-      component.moveUp(1);
+      component.onDrop(mockDropEvent(0, 1));
       expect(component.reorderLoading).toBe(false);
     });
 
     it('should reset to false after failed reorder', () => {
       mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
-      component.moveUp(1);
+      component.onDrop(mockDropEvent(0, 1));
       expect(component.reorderLoading).toBe(false);
-    });
-
-    it('should prevent rapid-fire calls', () => {
-      component.reorderLoading = true;
-      component.moveUp(1);
-      expect(mockValueOrderService.reorderValues).not.toHaveBeenCalled();
     });
   });
 
   describe('error handling', () => {
     it('should show stale notification and reload on 400 error', () => {
       mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 400 })));
-      component.moveUp(1);
+      component.onDrop(mockDropEvent(0, 1));
       expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
         'resourceEditor.resourceProperties.actions.reorderStale',
         'error'
@@ -194,7 +262,7 @@ describe('PropertyValuesComponent', () => {
 
     it('should show forbidden notification on 403 error', () => {
       mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 403 })));
-      component.moveUp(1);
+      component.onDrop(mockDropEvent(0, 1));
       expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
         'resourceEditor.resourceProperties.actions.reorderForbidden',
         'error'
@@ -203,7 +271,7 @@ describe('PropertyValuesComponent', () => {
 
     it('should show generic failure notification on other errors', () => {
       mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
-      component.moveUp(1);
+      component.onDrop(mockDropEvent(0, 1));
       expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
         'resourceEditor.resourceProperties.actions.reorderFailed',
         'error'
