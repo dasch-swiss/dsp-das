@@ -26,7 +26,11 @@ export class ValueOrderService {
     private readonly _accessTokenService: AccessTokenService
   ) {}
 
-  reorderValues(resourceIri: string, propertyIri: string, orderedValueIris: string[]): Observable<ReorderValuesResponse> {
+  reorderValues(
+    resourceIri: string,
+    propertyIri: string,
+    orderedValueIris: string[]
+  ): Observable<ReorderValuesResponse> {
     const url = `${this._appConfig.dspApiConfig.apiUrl}/v2/values/order`;
     const bearerToken = this._accessTokenService.getAccessToken();
     const headerOptions = {

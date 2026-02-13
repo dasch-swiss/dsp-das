@@ -55,7 +55,9 @@ describe('PropertyValuesComponent', () => {
     };
 
     mockValueOrderService = {
-      reorderValues: jest.fn().mockReturnValue(of({ resourceIri: mockResource.id, propertyIri: mockPropDef.id, valuesReordered: 3 })),
+      reorderValues: jest
+        .fn()
+        .mockReturnValue(of({ resourceIri: mockResource.id, propertyIri: mockPropDef.id, valuesReordered: 3 })),
     };
 
     mockNotificationService = {
@@ -127,11 +129,11 @@ describe('PropertyValuesComponent', () => {
 
     it('should call reorder service with correctly swapped IRI list', () => {
       component.moveUp(2);
-      expect(mockValueOrderService.reorderValues).toHaveBeenCalledWith(
-        mockResource.id,
-        mockPropDef.id,
-        ['http://rdfh.ch/0001/value-1', 'http://rdfh.ch/0001/value-3', 'http://rdfh.ch/0001/value-2']
-      );
+      expect(mockValueOrderService.reorderValues).toHaveBeenCalledWith(mockResource.id, mockPropDef.id, [
+        'http://rdfh.ch/0001/value-1',
+        'http://rdfh.ch/0001/value-3',
+        'http://rdfh.ch/0001/value-2',
+      ]);
     });
 
     it('should reload resource after successful reorder', () => {
@@ -148,11 +150,11 @@ describe('PropertyValuesComponent', () => {
 
     it('should call reorder service with correctly swapped IRI list', () => {
       component.moveDown(0);
-      expect(mockValueOrderService.reorderValues).toHaveBeenCalledWith(
-        mockResource.id,
-        mockPropDef.id,
-        ['http://rdfh.ch/0001/value-2', 'http://rdfh.ch/0001/value-1', 'http://rdfh.ch/0001/value-3']
-      );
+      expect(mockValueOrderService.reorderValues).toHaveBeenCalledWith(mockResource.id, mockPropDef.id, [
+        'http://rdfh.ch/0001/value-2',
+        'http://rdfh.ch/0001/value-1',
+        'http://rdfh.ch/0001/value-3',
+      ]);
     });
   });
 
