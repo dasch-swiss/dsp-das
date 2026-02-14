@@ -1,7 +1,13 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Cardinality, ReadResource, ReadTextValueAsXml, ReadValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import {
+  Cardinality,
+  ReadResource,
+  ReadTextValueAsXml,
+  ReadValue,
+  ResourcePropertyDefinition,
+} from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';

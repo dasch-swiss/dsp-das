@@ -12,8 +12,8 @@ export class FootnoteParserPipe implements PipeTransform {
 
   // Manual cache for impure pipe — avoids re-processing on every CD cycle
   private _lastInput: string | null = null;
-  private _lastIndex: number = -1;
-  private _lastFootnoteCount: number = -1;
+  private _lastIndex = -1;
+  private _lastFootnoteCount = -1;
   private _cachedResult: SafeHtml | null = null;
 
   constructor(
@@ -31,11 +31,7 @@ export class FootnoteParserPipe implements PipeTransform {
 
     // Return cached result if inputs unchanged AND footnotes weren't reset
     const currentCount = this._footnoteService.footnotes.length;
-    if (
-      value === this._lastInput &&
-      valueIndex === this._lastIndex &&
-      currentCount >= this._lastFootnoteCount
-    ) {
+    if (value === this._lastInput && valueIndex === this._lastIndex && currentCount >= this._lastFootnoteCount) {
       return this._cachedResult;
     }
 
