@@ -52,6 +52,7 @@ this.hasValidValue$ = this.group.valueChanges.pipe(
 ```
 
 **Existing pattern in codebase:**
+
 - `property-value-creator.component.ts:91` — uses `startWith(this.formGroup.controls.item.getRawValue())`
 - `_watchAndSetupCommentStatus()` in the same file — uses `startWith(null)` on `statusChanges`
 - `iiif-control.component.ts`, `interval-value.component.ts`, `list-value.component.ts` — all use `startWith`
