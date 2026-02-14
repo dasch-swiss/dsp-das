@@ -39,8 +39,14 @@ export class FootnoteParserPipe implements PipeTransform {
       return this._cachedResult;
     }
 
+    const previousIndex = this._lastIndex;
     this._lastInput = value;
     this._lastIndex = valueIndex;
+
+    // Clean up footnotes registered under the old index before re-parsing
+    if (previousIndex >= 0 && previousIndex !== valueIndex) {
+      this._footnoteService.removeFootnotesForValue(previousIndex);
+    }
 
     if (!this._containsFootnote(value)) {
       this._cachedResult = this._sanitizer.bypassSecurityTrustHtml(value);
