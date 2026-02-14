@@ -226,6 +226,39 @@ describe('PropertyValuesComponent', () => {
         );
         expect(component.getValueSummary(value, 0)).toBe('A & B < C > D "E"');
       });
+
+      it('should decode &apos; entity via DOMParser', () => {
+        const value = makeXmlValue(
+          '<?xml version="1.0" encoding="UTF-8"?><text><p>It&apos;s a test</p></text>'
+        );
+        expect(component.getValueSummary(value, 0)).toBe("It's a test");
+      });
+    });
+  });
+
+  describe('dragDropDisabled', () => {
+    it('should be false when user can reorder and no editing/adding/loading is active', () => {
+      expect(component.dragDropDisabled).toBe(false);
+    });
+
+    it('should be true when user cannot reorder (historical version)', () => {
+      mockResourceFetcherService.resourceVersion = '20230101T000000Z';
+      expect(component.dragDropDisabled).toBe(true);
+    });
+
+    it('should be true when a value is being edited', () => {
+      mockPropertyValueService.lastOpenedItem$!.next(1);
+      expect(component.dragDropDisabled).toBe(true);
+    });
+
+    it('should be true when currently adding a value', () => {
+      component.currentlyAdding = true;
+      expect(component.dragDropDisabled).toBe(true);
+    });
+
+    it('should be true when reorder is loading', () => {
+      component.reorderLoading = true;
+      expect(component.dragDropDisabled).toBe(true);
     });
   });
 

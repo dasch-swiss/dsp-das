@@ -7,7 +7,8 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, Input, OnChanges } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -44,16 +45,19 @@ import { ValueOrderService } from './value-order.service';
       cdkDropList
       cdkDropListLockAxis="y"
       [cdkDropListData]="editModeData.values"
-      [cdkDropListDisabled]="!canReorder || isAnyValueEditing || currentlyAdding || reorderLoading"
+      [cdkDropListDisabled]="dragDropDisabled"
       (cdkDropListDropped)="onDrop($event)">
       @for (group of editModeData.values; track group.id; let index = $index) {
         <div
           cdkDrag
           cdkDragLockAxis="y"
-          [cdkDragDisabled]="!canReorder || isAnyValueEditing || currentlyAdding || reorderLoading"
+          [cdkDragDisabled]="dragDropDisabled"
           class="value-row">
           @if (canReorder && editModeData.values.length > 1) {
-            <span cdkDragHandle class="drag-handle" aria-hidden="true">
+            <span
+              cdkDragHandle
+              class="drag-handle"
+              [attr.aria-label]="'resourceEditor.resourceProperties.actions.dragToReorder' | translate">
               <mat-icon>drag_indicator</mat-icon>
             </span>
           }
@@ -151,6 +155,7 @@ export class PropertyValuesComponent implements OnChanges {
   private readonly _valueOrderService = inject(ValueOrderService);
   private readonly _resourceFetcherService = inject(ResourceFetcherService);
   private readonly _cd = inject(ChangeDetectorRef);
+  private readonly _destroyRef = inject(DestroyRef);
 
   constructor(public readonly propertyValueService: PropertyValueService) {}
 
@@ -164,6 +169,10 @@ export class PropertyValuesComponent implements OnChanges {
 
   get isAnyValueEditing(): boolean {
     return this.propertyValueService.lastOpenedItem$.value !== null;
+  }
+
+  get dragDropDisabled(): boolean {
+    return !this.canReorder || this.isAnyValueEditing || this.currentlyAdding || this.reorderLoading;
   }
 
   get matchesCardinality() {
@@ -185,15 +194,8 @@ export class PropertyValuesComponent implements OnChanges {
     }
 
     if (value instanceof ReadTextValueAsXml) {
-      str = str
-        .replace(/<\?xml[^?]*\?>\s*/g, '')
-        .replace(/<[^>]+>/g, '')
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/\s+/g, ' ')
-        .trim();
+      const doc = new DOMParser().parseFromString(str, 'text/html');
+      str = doc.body.textContent?.trim() || '';
       if (!str) return `Value ${index + 1}`;
     }
 
@@ -217,6 +219,7 @@ export class PropertyValuesComponent implements OnChanges {
     this._valueOrderService
       .reorderValues(this.editModeData.resource.id, this.propertyDefinition.id, orderedIris)
       .pipe(
+        takeUntilDestroyed(this._destroyRef),
         finalize(() => {
           this.reorderLoading = false;
           this._cd.markForCheck();
@@ -227,22 +230,14 @@ export class PropertyValuesComponent implements OnChanges {
         error: e => {
           this.editModeData.values = originalOrder;
           this._cd.markForCheck();
+          const key =
+            e.status === 400 ? 'reorderStale' : e.status === 403 ? 'reorderForbidden' : 'reorderFailed';
+          this._notification.openSnackBar(
+            this._translateService.instant(`resourceEditor.resourceProperties.actions.${key}`),
+            'error'
+          );
           if (e.status === 400) {
-            this._notification.openSnackBar(
-              this._translateService.instant('resourceEditor.resourceProperties.actions.reorderStale'),
-              'error'
-            );
             this._resourceFetcherService.reload();
-          } else if (e.status === 403) {
-            this._notification.openSnackBar(
-              this._translateService.instant('resourceEditor.resourceProperties.actions.reorderForbidden'),
-              'error'
-            );
-          } else {
-            this._notification.openSnackBar(
-              this._translateService.instant('resourceEditor.resourceProperties.actions.reorderFailed'),
-              'error'
-            );
           }
         },
       });

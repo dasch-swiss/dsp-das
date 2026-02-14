@@ -29,7 +29,11 @@ export class FootnoteParserPipe implements PipeTransform {
     const value =
       typeof value_ === 'string' ? value_ : (value_ as unknown as any)['changingThisBreaksApplicationSecurity'];
 
-    // Return cached result if inputs unchanged AND footnotes weren't reset
+    // Return cached result if inputs unchanged AND footnotes weren't reset.
+    // We use >= (not ===) because the pipe itself adds footnotes during parsing,
+    // so the count naturally increases after transform(). A decrease means footnotes
+    // were removed externally (e.g. via removeFootnotesForValue after reorder),
+    // which should trigger a re-parse to assign correct footnote indices.
     const currentCount = this._footnoteService.footnotes.length;
     if (value === this._lastInput && valueIndex === this._lastIndex && currentCount >= this._lastFootnoteCount) {
       return this._cachedResult;

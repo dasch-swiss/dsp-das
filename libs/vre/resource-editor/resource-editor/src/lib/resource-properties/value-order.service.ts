@@ -1,7 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
-import { AccessTokenService } from '@dasch-swiss/vre/core/session';
 import { Observable } from 'rxjs';
 
 interface ReorderValuesRequest {
@@ -22,8 +21,7 @@ interface ReorderValuesResponse {
 export class ValueOrderService {
   constructor(
     private readonly _http: HttpClient,
-    private readonly _appConfig: AppConfigService,
-    private readonly _accessTokenService: AccessTokenService
+    private readonly _appConfig: AppConfigService
   ) {}
 
   reorderValues(
@@ -32,20 +30,12 @@ export class ValueOrderService {
     orderedValueIris: string[]
   ): Observable<ReorderValuesResponse> {
     const url = `${this._appConfig.dspApiConfig.apiUrl}/v2/values/order`;
-    const bearerToken = this._accessTokenService.getAccessToken();
-    const headerOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${bearerToken}`,
-      }),
-    };
-
     const body: ReorderValuesRequest = {
       resourceIri,
       propertyIri,
       orderedValueIris,
     };
 
-    return this._http.put<ReorderValuesResponse>(url, body, headerOptions);
+    return this._http.put<ReorderValuesResponse>(url, body);
   }
 }
