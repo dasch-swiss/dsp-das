@@ -10,6 +10,10 @@ export class FootnoteService {
     this.footnotes.push({ indexValue, indexFootnote, content });
   }
 
+  removeFootnotesForValue(indexValue: number) {
+    this.footnotes = this.footnotes.filter(f => f.indexValue !== indexValue);
+  }
+
   reset() {
     this.footnotes = [];
   }
