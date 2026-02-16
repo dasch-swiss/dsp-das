@@ -104,11 +104,7 @@ describe('DraggableValueListComponent', () => {
       expect(mockApiService.putV2ValuesOrder).toHaveBeenCalledWith({
         resourceIri: mockResource.id,
         propertyIri: mockPropDef.id,
-        orderedValueIris: [
-          'http://rdfh.ch/0001/value-3',
-          'http://rdfh.ch/0001/value-1',
-          'http://rdfh.ch/0001/value-2',
-        ],
+        orderedValueIris: ['http://rdfh.ch/0001/value-3', 'http://rdfh.ch/0001/value-1', 'http://rdfh.ch/0001/value-2'],
       });
     });
 
