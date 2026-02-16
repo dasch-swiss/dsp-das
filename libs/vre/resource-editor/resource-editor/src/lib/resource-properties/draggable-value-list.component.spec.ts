@@ -2,18 +2,18 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReadResource, ReadValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { APIV2ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { provideTranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 import { DraggableValueListComponent } from './draggable-value-list.component';
-import { ValueOrderService } from './value-order.service';
 
 describe('DraggableValueListComponent', () => {
   let component: DraggableValueListComponent;
   let fixture: ComponentFixture<DraggableValueListComponent>;
   let mockResourceFetcherService: jest.Mocked<Partial<ResourceFetcherService>>;
-  let mockValueOrderService: jest.Mocked<Partial<ValueOrderService>>;
+  let mockApiService: jest.Mocked<Partial<APIV2ApiService>>;
   let mockNotificationService: jest.Mocked<Partial<NotificationService>>;
 
   const mockValues = [
@@ -52,8 +52,8 @@ describe('DraggableValueListComponent', () => {
       reload: jest.fn(),
     };
 
-    mockValueOrderService = {
-      reorderValues: jest
+    mockApiService = {
+      putV2ValuesOrder: jest
         .fn()
         .mockReturnValue(of({ resourceIri: mockResource.id, propertyIri: mockPropDef.id, valuesReordered: 3 })),
     };
@@ -67,7 +67,7 @@ describe('DraggableValueListComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: ResourceFetcherService, useValue: mockResourceFetcherService },
-        { provide: ValueOrderService, useValue: mockValueOrderService },
+        { provide: APIV2ApiService, useValue: mockApiService },
         { provide: NotificationService, useValue: mockNotificationService },
         provideTranslateService(),
       ],
@@ -96,16 +96,20 @@ describe('DraggableValueListComponent', () => {
   describe('onDrop', () => {
     it('should not call reorder when dropped at same position', () => {
       component.onDrop(mockDropEvent(1, 1));
-      expect(mockValueOrderService.reorderValues).not.toHaveBeenCalled();
+      expect(mockApiService.putV2ValuesOrder).not.toHaveBeenCalled();
     });
 
     it('should call reorder service with correctly reordered IRI list', () => {
       component.onDrop(mockDropEvent(2, 0));
-      expect(mockValueOrderService.reorderValues).toHaveBeenCalledWith(mockResource.id, mockPropDef.id, [
-        'http://rdfh.ch/0001/value-3',
-        'http://rdfh.ch/0001/value-1',
-        'http://rdfh.ch/0001/value-2',
-      ]);
+      expect(mockApiService.putV2ValuesOrder).toHaveBeenCalledWith({
+        resourceIri: mockResource.id,
+        propertyIri: mockPropDef.id,
+        orderedValueIris: [
+          'http://rdfh.ch/0001/value-3',
+          'http://rdfh.ch/0001/value-1',
+          'http://rdfh.ch/0001/value-2',
+        ],
+      });
     });
 
     it('should reload resource after successful reorder', () => {
@@ -118,7 +122,7 @@ describe('DraggableValueListComponent', () => {
       const emittedValues: ReadValue[][] = [];
       component.valuesChange.subscribe(v => emittedValues.push(v));
 
-      mockValueOrderService.reorderValues = jest.fn().mockImplementation(() => {
+      mockApiService.putV2ValuesOrder = jest.fn().mockImplementation(() => {
         capturedValues = [...component.values];
         return of({ resourceIri: mockResource.id, propertyIri: mockPropDef.id, valuesReordered: 3 });
       });
@@ -133,7 +137,7 @@ describe('DraggableValueListComponent', () => {
     });
 
     it('should revert values and emit on error', () => {
-      mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
+      mockApiService.putV2ValuesOrder = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
       const emittedValues: ReadValue[][] = [];
       component.valuesChange.subscribe(v => emittedValues.push(v));
 
@@ -149,13 +153,13 @@ describe('DraggableValueListComponent', () => {
     it('should prevent concurrent drops via reorderLoading guard', () => {
       component.reorderLoading = true;
       component.onDrop(mockDropEvent(0, 1));
-      expect(mockValueOrderService.reorderValues).not.toHaveBeenCalled();
+      expect(mockApiService.putV2ValuesOrder).not.toHaveBeenCalled();
     });
 
     it('should prevent drops when disabled', () => {
       component.disabled = true;
       component.onDrop(mockDropEvent(0, 1));
-      expect(mockValueOrderService.reorderValues).not.toHaveBeenCalled();
+      expect(mockApiService.putV2ValuesOrder).not.toHaveBeenCalled();
     });
   });
 
@@ -170,7 +174,7 @@ describe('DraggableValueListComponent', () => {
     });
 
     it('should reset to false after failed reorder', () => {
-      mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
+      mockApiService.putV2ValuesOrder = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
       component.onDrop(mockDropEvent(0, 1));
       expect(component.reorderLoading).toBe(false);
     });
@@ -178,7 +182,7 @@ describe('DraggableValueListComponent', () => {
 
   describe('error handling', () => {
     it('should show stale notification and reload on 400 error', () => {
-      mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 400 })));
+      mockApiService.putV2ValuesOrder = jest.fn().mockReturnValue(throwError(() => ({ status: 400 })));
       component.onDrop(mockDropEvent(0, 1));
       expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
         'resourceEditor.resourceProperties.actions.reorderStale',
@@ -188,7 +192,7 @@ describe('DraggableValueListComponent', () => {
     });
 
     it('should show forbidden notification on 403 error', () => {
-      mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 403 })));
+      mockApiService.putV2ValuesOrder = jest.fn().mockReturnValue(throwError(() => ({ status: 403 })));
       component.onDrop(mockDropEvent(0, 1));
       expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
         'resourceEditor.resourceProperties.actions.reorderForbidden',
@@ -197,7 +201,7 @@ describe('DraggableValueListComponent', () => {
     });
 
     it('should show generic failure notification on other errors', () => {
-      mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
+      mockApiService.putV2ValuesOrder = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
       component.onDrop(mockDropEvent(0, 1));
       expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
         'resourceEditor.resourceProperties.actions.reorderFailed',

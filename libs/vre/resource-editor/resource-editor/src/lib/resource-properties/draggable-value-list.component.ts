@@ -15,12 +15,12 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
 import { ReadValue } from '@dasch-swiss/dsp-js';
+import { APIV2ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 import { FootnoteService } from './footnotes/footnote.service';
-import { ValueOrderService } from './value-order.service';
 
 @Component({
   selector: 'app-draggable-value-list',
@@ -112,7 +112,7 @@ export class DraggableValueListComponent {
 
   reorderLoading = false;
 
-  private readonly _valueOrderService = inject(ValueOrderService);
+  private readonly _apiService = inject(APIV2ApiService);
   private readonly _resourceFetcherService = inject(ResourceFetcherService);
   private readonly _notification = inject(NotificationService);
   private readonly _translateService = inject(TranslateService);
@@ -136,8 +136,8 @@ export class DraggableValueListComponent {
     this._cd.markForCheck();
 
     const orderedIris = reordered.map(v => v.id);
-    this._valueOrderService
-      .reorderValues(this.resourceIri, this.propertyIri, orderedIris)
+    this._apiService
+      .putV2ValuesOrder({ resourceIri: this.resourceIri, propertyIri: this.propertyIri, orderedValueIris: orderedIris })
       .pipe(
         takeUntilDestroyed(this._destroyRef),
         finalize(() => {

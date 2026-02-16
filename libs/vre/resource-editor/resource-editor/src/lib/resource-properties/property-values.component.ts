@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  Input,
-  OnChanges,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -13,8 +7,8 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 import { ResourceUtil } from '../representations/resource.util';
-import { DraggableValueListComponent } from './draggable-value-list.component';
 import { JsLibPotentialError } from './JsLibPotentialError';
+import { DraggableValueListComponent } from './draggable-value-list.component';
 import { PropertyValueAddComponent } from './property-value-add.component';
 import { PropertyValueComponent } from './property-value.component';
 import { PropertyValueService } from './property-value.service';
@@ -67,8 +61,7 @@ export class PropertyValuesComponent implements OnChanges {
   currentlyAdding = false;
 
   private readonly _resourceFetcherService = inject(ResourceFetcherService);
-
-  constructor(public readonly propertyValueService: PropertyValueService) {}
+  readonly propertyValueService = inject(PropertyValueService);
 
   get userCanAdd() {
     return ResourceUtil.userCanEdit(this.editModeData.resource);
