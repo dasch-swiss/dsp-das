@@ -7,7 +7,15 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, Input, OnChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  Input,
+  OnChanges,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -48,11 +56,7 @@ import { ValueOrderService } from './value-order.service';
       [cdkDropListDisabled]="dragDropDisabled"
       (cdkDropListDropped)="onDrop($event)">
       @for (group of editModeData.values; track group.id; let index = $index) {
-        <div
-          cdkDrag
-          cdkDragLockAxis="y"
-          [cdkDragDisabled]="dragDropDisabled"
-          class="value-row">
+        <div cdkDrag cdkDragLockAxis="y" [cdkDragDisabled]="dragDropDisabled" class="value-row">
           @if (canReorder && editModeData.values.length > 1) {
             <span
               cdkDragHandle
@@ -230,8 +234,7 @@ export class PropertyValuesComponent implements OnChanges {
         error: e => {
           this.editModeData.values = originalOrder;
           this._cd.markForCheck();
-          const key =
-            e.status === 400 ? 'reorderStale' : e.status === 403 ? 'reorderForbidden' : 'reorderFailed';
+          const key = e.status === 400 ? 'reorderStale' : e.status === 403 ? 'reorderForbidden' : 'reorderFailed';
           this._notification.openSnackBar(
             this._translateService.instant(`resourceEditor.resourceProperties.actions.${key}`),
             'error'

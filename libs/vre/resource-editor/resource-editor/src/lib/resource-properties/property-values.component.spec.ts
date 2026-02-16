@@ -228,9 +228,7 @@ describe('PropertyValuesComponent', () => {
       });
 
       it('should decode &apos; entity via DOMParser', () => {
-        const value = makeXmlValue(
-          '<?xml version="1.0" encoding="UTF-8"?><text><p>It&apos;s a test</p></text>'
-        );
+        const value = makeXmlValue('<?xml version="1.0" encoding="UTF-8"?><text><p>It&apos;s a test</p></text>');
         expect(component.getValueSummary(value, 0)).toBe("It's a test");
       });
     });
