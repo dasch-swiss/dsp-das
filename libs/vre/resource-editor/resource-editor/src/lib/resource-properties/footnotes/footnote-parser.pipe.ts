@@ -48,5 +48,4 @@ export class FootnoteParserPipe implements PipeTransform {
 
     return this._sanitizer.bypassSecurityTrustHtml(newValue);
   }
-
 }
