@@ -1,13 +1,13 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
-  CdkDrag,
-  CdkDragDrop,
-  CdkDragHandle,
-  CdkDragPlaceholder,
-  CdkDragPreview,
-  CdkDropList,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, Input, OnChanges } from '@angular/core';
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  Input,
+  OnChanges,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -18,9 +18,10 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
-import { FootnoteService } from './footnotes/footnote.service';
 import { ResourceUtil } from '../representations/resource.util';
+import { DraggableValueListComponent } from './draggable-value-list.component';
 import { JsLibPotentialError } from './JsLibPotentialError';
+import { FootnoteService } from './footnotes/footnote.service';
 import { PropertyValueAddComponent } from './property-value-add.component';
 import { PropertyValueComponent } from './property-value.component';
 import { PropertyValueService } from './property-value.service';
@@ -29,11 +30,7 @@ import { ValueOrderService } from './value-order.service';
 @Component({
   selector: 'app-property-values',
   imports: [
-    CdkDropList,
-    CdkDrag,
-    CdkDragHandle,
-    CdkDragPreview,
-    CdkDragPlaceholder,
+    DraggableValueListComponent,
     MatIconButton,
     MatIcon,
     PropertyValueComponent,
@@ -42,45 +39,16 @@ import { ValueOrderService } from './value-order.service';
     TranslatePipe,
   ],
   template: `
-    <div
-      cdkDropList
-      cdkDropListLockAxis="y"
-      [cdkDropListData]="editModeData.values"
-      [cdkDropListDisabled]="dragDropDisabled"
-      (cdkDropListDropped)="onDrop($event)">
-      @for (group of editModeData.values; track group.id; let index = $index) {
-        <div
-          cdkDrag
-          cdkDragLockAxis="y"
-          [cdkDragDisabled]="dragDropDisabled"
-          class="value-row">
-          @if (canReorder && editModeData.values.length > 1) {
-            <span
-              cdkDragHandle
-              class="drag-handle"
-              [attr.aria-label]="'resourceEditor.resourceProperties.actions.dragToReorder' | translate">
-              <mat-icon>drag_indicator</mat-icon>
-            </span>
-          }
-
-          <app-property-value [index]="index" style="width: 100%" />
-
-          <!-- Inline styles required: CDK renders *cdkDragPreview in a global overlay
-               outside the component, so component-scoped styles won't reach it -->
-          <div
-            *cdkDragPreview
-            style="padding: 12px 16px; background: white; border-radius: 4px;
-                   font-size: 14px; color: rgba(0,0,0,0.87);
-                   box-shadow: 0 5px 5px -3px rgba(0,0,0,0.2),
-                               0 8px 10px 1px rgba(0,0,0,0.14),
-                               0 3px 14px 2px rgba(0,0,0,0.12);">
-            {{ getValueSummary(group, index) }}
-          </div>
-
-          <div *cdkDragPlaceholder class="drag-placeholder"></div>
-        </div>
-      }
-    </div>
+    <app-draggable-value-list
+      [values]="editModeData.values"
+      [disabled]="dragDropDisabled"
+      [showHandle]="canReorder && editModeData.values.length > 1"
+      [previewTextFn]="getValueSummary"
+      (dropped)="onDrop($event)">
+      <ng-template let-value let-index="index">
+        <app-property-value [index]="index" style="width: 100%" />
+      </ng-template>
+    </app-draggable-value-list>
 
     @if (userCanAdd && !currentlyAdding && (editModeData.values.length === 0 || matchesCardinality)) {
       <button
@@ -96,51 +64,6 @@ import { ValueOrderService } from './value-order.service';
       <app-property-value-add (stopAdding)="currentlyAdding = false" />
     }
   `,
-  styles: [
-    `
-      .value-row {
-        display: flex;
-        align-items: flex-start;
-      }
-
-      .drag-handle {
-        cursor: grab;
-        opacity: 0.3;
-        display: flex;
-        align-items: center;
-        padding: 0 4px;
-        transition: opacity 200ms ease-in-out;
-      }
-      .value-row:hover .drag-handle {
-        opacity: 0.7;
-      }
-      .drag-handle:active {
-        cursor: grabbing;
-      }
-
-      .drag-placeholder {
-        border: 3px dotted #999;
-        min-height: 48px;
-        border-radius: 4px;
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-      }
-
-      .cdk-drag-animating {
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-      }
-
-      .cdk-drop-list-dragging .value-row:not(.cdk-drag-placeholder) {
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .cdk-drag-animating,
-        .cdk-drop-list-dragging .value-row:not(.cdk-drag-placeholder) {
-          transition: none !important;
-        }
-      }
-    `,
-  ],
   providers: [PropertyValueService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -189,7 +112,7 @@ export class PropertyValuesComponent implements OnChanges {
     this._setupData();
   }
 
-  getValueSummary(value: ReadValue, index: number): string {
+  getValueSummary = (value: ReadValue, index: number): string => {
     let str = value.strval;
     if (!str || str.trim().length === 0) {
       return `Value ${index + 1}`;
@@ -202,7 +125,7 @@ export class PropertyValuesComponent implements OnChanges {
     }
 
     return str.length > 80 ? `${str.substring(0, 77)}...` : str;
-  }
+  };
 
   onDrop(event: CdkDragDrop<ReadValue[]>): void {
     if (event.previousIndex === event.currentIndex) return;
@@ -233,8 +156,7 @@ export class PropertyValuesComponent implements OnChanges {
         error: e => {
           this.editModeData.values = originalOrder;
           this._cd.markForCheck();
-          const key =
-            e.status === 400 ? 'reorderStale' : e.status === 403 ? 'reorderForbidden' : 'reorderFailed';
+          const key = e.status === 400 ? 'reorderStale' : e.status === 403 ? 'reorderForbidden' : 'reorderFailed';
           this._notification.openSnackBar(
             this._translateService.instant(`resourceEditor.resourceProperties.actions.${key}`),
             'error'
