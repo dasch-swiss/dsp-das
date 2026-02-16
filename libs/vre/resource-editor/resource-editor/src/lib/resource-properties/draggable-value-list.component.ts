@@ -1,17 +1,26 @@
-import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDragPlaceholder, CdkDropList } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDragPlaceholder, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChild,
+  DestroyRef,
   EventEmitter,
+  inject,
   Input,
   Output,
   TemplateRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
 import { ReadValue } from '@dasch-swiss/dsp-js';
-import { TranslatePipe } from '@ngx-translate/core';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { finalize } from 'rxjs/operators';
+import { ResourceFetcherService } from '../representations/resource-fetcher.service';
+import { FootnoteService } from './footnotes/footnote.service';
+import { ValueOrderService } from './value-order.service';
 
 @Component({
   selector: 'app-draggable-value-list',
@@ -22,10 +31,10 @@ import { TranslatePipe } from '@ngx-translate/core';
       cdkDropList
       cdkDropListLockAxis="y"
       [cdkDropListData]="values"
-      [cdkDropListDisabled]="disabled"
-      (cdkDropListDropped)="dropped.emit($event)">
+      [cdkDropListDisabled]="disabled || reorderLoading"
+      (cdkDropListDropped)="onDrop($event)">
       @for (value of values; track value.id; let index = $index) {
-        <div cdkDrag cdkDragLockAxis="y" [cdkDragDisabled]="disabled" class="value-row">
+        <div cdkDrag cdkDragLockAxis="y" [cdkDragDisabled]="disabled || reorderLoading" class="value-row">
           @if (showHandle) {
             <span
               cdkDragHandle
@@ -93,9 +102,64 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class DraggableValueListComponent {
   @Input({ required: true }) values!: ReadValue[];
+  @Input({ required: true }) resourceIri!: string;
+  @Input({ required: true }) propertyIri!: string;
   @Input() disabled = false;
   @Input() showHandle = false;
-  @Output() dropped = new EventEmitter<CdkDragDrop<ReadValue[]>>();
+  @Output() valuesChange = new EventEmitter<ReadValue[]>();
 
   @ContentChild(TemplateRef) itemTemplate!: TemplateRef<{ $implicit: ReadValue; index: number }>;
+
+  reorderLoading = false;
+
+  private readonly _valueOrderService = inject(ValueOrderService);
+  private readonly _resourceFetcherService = inject(ResourceFetcherService);
+  private readonly _notification = inject(NotificationService);
+  private readonly _translateService = inject(TranslateService);
+  private readonly _footnoteService = inject(FootnoteService, { optional: true });
+  private readonly _cd = inject(ChangeDetectorRef);
+  private readonly _destroyRef = inject(DestroyRef);
+
+  onDrop(event: CdkDragDrop<ReadValue[]>): void {
+    if (event.previousIndex === event.currentIndex) return;
+    if (this.reorderLoading) return;
+    if (this.disabled) return;
+
+    const originalOrder = [...this.values];
+    const reordered = [...originalOrder];
+    moveItemInArray(reordered, event.previousIndex, event.currentIndex);
+
+    this._footnoteService?.reset();
+    this.values = reordered;
+    this.valuesChange.emit(reordered);
+    this.reorderLoading = true;
+    this._cd.markForCheck();
+
+    const orderedIris = reordered.map(v => v.id);
+    this._valueOrderService
+      .reorderValues(this.resourceIri, this.propertyIri, orderedIris)
+      .pipe(
+        takeUntilDestroyed(this._destroyRef),
+        finalize(() => {
+          this.reorderLoading = false;
+          this._cd.markForCheck();
+        })
+      )
+      .subscribe({
+        next: () => this._resourceFetcherService.reload(),
+        error: e => {
+          this.values = originalOrder;
+          this.valuesChange.emit(originalOrder);
+          this._cd.markForCheck();
+          const key = e.status === 400 ? 'reorderStale' : e.status === 403 ? 'reorderForbidden' : 'reorderFailed';
+          this._notification.openSnackBar(
+            this._translateService.instant(`resourceEditor.resourceProperties.actions.${key}`),
+            'error'
+          );
+          if (e.status === 400) {
+            this._resourceFetcherService.reload();
+          }
+        },
+      });
+  }
 }

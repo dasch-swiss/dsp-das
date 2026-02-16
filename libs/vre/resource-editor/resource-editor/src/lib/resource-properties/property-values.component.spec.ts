@@ -1,23 +1,18 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Cardinality, ReadResource, ReadValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { provideTranslateService, TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, of, throwError } from 'rxjs';
+import { provideTranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
 import { PropertyValueService } from './property-value.service';
 import { PropertyValuesComponent } from './property-values.component';
-import { ValueOrderService } from './value-order.service';
 
 describe('PropertyValuesComponent', () => {
   let component: PropertyValuesComponent;
   let fixture: ComponentFixture<PropertyValuesComponent>;
   let mockPropertyValueService: jest.Mocked<Partial<PropertyValueService>>;
   let mockResourceFetcherService: jest.Mocked<Partial<ResourceFetcherService>>;
-  let mockValueOrderService: jest.Mocked<Partial<ValueOrderService>>;
-  let mockNotificationService: jest.Mocked<Partial<NotificationService>>;
 
   const mockValues = [
     {
@@ -52,9 +47,6 @@ describe('PropertyValuesComponent', () => {
     values: mockValues,
   } as unknown as PropertyInfoValues;
 
-  const mockDropEvent = (previousIndex: number, currentIndex: number): CdkDragDrop<ReadValue[]> =>
-    ({ previousIndex, currentIndex }) as CdkDragDrop<ReadValue[]>;
-
   beforeEach(async () => {
     mockPropertyValueService = {
       editModeData: { resource: mockResource, values: mockValues },
@@ -68,26 +60,13 @@ describe('PropertyValuesComponent', () => {
       reload: jest.fn(),
     };
 
-    mockValueOrderService = {
-      reorderValues: jest
-        .fn()
-        .mockReturnValue(of({ resourceIri: mockResource.id, propertyIri: mockPropDef.id, valuesReordered: 3 })),
-    };
-
-    mockNotificationService = {
-      openSnackBar: jest.fn(),
-    };
-
     await TestBed.configureTestingModule({
       imports: [PropertyValuesComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: PropertyValueService, useValue: mockPropertyValueService },
         { provide: ResourceFetcherService, useValue: mockResourceFetcherService },
-        { provide: ValueOrderService, useValue: mockValueOrderService },
-        { provide: NotificationService, useValue: mockNotificationService },
         provideTranslateService(),
-        TranslateService,
       ],
     })
       .overrideComponent(PropertyValuesComponent, {
@@ -136,7 +115,7 @@ describe('PropertyValuesComponent', () => {
   });
 
   describe('dragDropDisabled', () => {
-    it('should be false when user can reorder and no editing/adding/loading is active', () => {
+    it('should be false when user can reorder and no editing/adding is active', () => {
       expect(component.dragDropDisabled).toBe(false);
     });
 
@@ -153,114 +132,6 @@ describe('PropertyValuesComponent', () => {
     it('should be true when currently adding a value', () => {
       component.currentlyAdding = true;
       expect(component.dragDropDisabled).toBe(true);
-    });
-
-    it('should be true when reorder is loading', () => {
-      component.reorderLoading = true;
-      expect(component.dragDropDisabled).toBe(true);
-    });
-  });
-
-  describe('onDrop', () => {
-    it('should not call reorder when dropped at same position', () => {
-      component.onDrop(mockDropEvent(1, 1));
-      expect(mockValueOrderService.reorderValues).not.toHaveBeenCalled();
-    });
-
-    it('should call reorder service with correctly reordered IRI list', () => {
-      component.onDrop(mockDropEvent(2, 0));
-      expect(mockValueOrderService.reorderValues).toHaveBeenCalledWith(mockResource.id, mockPropDef.id, [
-        'http://rdfh.ch/0001/value-3',
-        'http://rdfh.ch/0001/value-1',
-        'http://rdfh.ch/0001/value-2',
-      ]);
-    });
-
-    it('should reload resource after successful reorder', () => {
-      component.onDrop(mockDropEvent(0, 2));
-      expect(mockResourceFetcherService.reload).toHaveBeenCalled();
-    });
-
-    it('should optimistically update data model before server response', () => {
-      // Use a delayed observable to check intermediate state
-      let capturedValues: ReadValue[] | undefined;
-      mockValueOrderService.reorderValues = jest.fn().mockImplementation(() => {
-        capturedValues = [...component.editModeData.values];
-        return of({ resourceIri: mockResource.id, propertyIri: mockPropDef.id, valuesReordered: 3 });
-      });
-
-      component.onDrop(mockDropEvent(2, 0));
-
-      // The data model should have been reordered before the service call resolved
-      expect(capturedValues![0].id).toBe('http://rdfh.ch/0001/value-3');
-      expect(capturedValues![1].id).toBe('http://rdfh.ch/0001/value-1');
-      expect(capturedValues![2].id).toBe('http://rdfh.ch/0001/value-2');
-    });
-
-    it('should revert data model on error', () => {
-      mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
-      const originalIds = component.editModeData.values.map(v => v.id);
-      component.onDrop(mockDropEvent(0, 2));
-      expect(component.editModeData.values.map(v => v.id)).toEqual(originalIds);
-    });
-
-    it('should prevent concurrent drops via reorderLoading guard', () => {
-      component.reorderLoading = true;
-      component.onDrop(mockDropEvent(0, 1));
-      expect(mockValueOrderService.reorderValues).not.toHaveBeenCalled();
-    });
-
-    it('should prevent drops while adding a value (currentlyAdding guard)', () => {
-      component.currentlyAdding = true;
-      component.onDrop(mockDropEvent(0, 1));
-      expect(mockValueOrderService.reorderValues).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('reorderLoading', () => {
-    it('should be false initially', () => {
-      expect(component.reorderLoading).toBe(false);
-    });
-
-    it('should reset to false after successful reorder', () => {
-      component.onDrop(mockDropEvent(0, 1));
-      expect(component.reorderLoading).toBe(false);
-    });
-
-    it('should reset to false after failed reorder', () => {
-      mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
-      component.onDrop(mockDropEvent(0, 1));
-      expect(component.reorderLoading).toBe(false);
-    });
-  });
-
-  describe('error handling', () => {
-    it('should show stale notification and reload on 400 error', () => {
-      mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 400 })));
-      component.onDrop(mockDropEvent(0, 1));
-      expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
-        'resourceEditor.resourceProperties.actions.reorderStale',
-        'error'
-      );
-      expect(mockResourceFetcherService.reload).toHaveBeenCalled();
-    });
-
-    it('should show forbidden notification on 403 error', () => {
-      mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 403 })));
-      component.onDrop(mockDropEvent(0, 1));
-      expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
-        'resourceEditor.resourceProperties.actions.reorderForbidden',
-        'error'
-      );
-    });
-
-    it('should show generic failure notification on other errors', () => {
-      mockValueOrderService.reorderValues = jest.fn().mockReturnValue(throwError(() => ({ status: 500 })));
-      component.onDrop(mockDropEvent(0, 1));
-      expect(mockNotificationService.openSnackBar).toHaveBeenCalledWith(
-        'resourceEditor.resourceProperties.actions.reorderFailed',
-        'error'
-      );
     });
   });
 });
