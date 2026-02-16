@@ -80,3 +80,10 @@ body {
   max-width: 360px !important;
   padding: 6px !important;
 }
+
+// CDK drag-and-drop preview (rendered in global overlay, outside component encapsulation)
+.cdk-drag-preview {
+  border: 2px dashed #999;
+  border-radius: 4px;
+  background: white;
+}

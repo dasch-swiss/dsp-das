@@ -12,7 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { Cardinality, ReadResource, ReadTextValueAsXml, ReadValue } from '@dasch-swiss/dsp-js';
+import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -43,7 +43,6 @@ import { ValueOrderService } from './value-order.service';
       [values]="editModeData.values"
       [disabled]="dragDropDisabled"
       [showHandle]="canReorder && editModeData.values.length > 1"
-      [previewTextFn]="getValueSummary"
       (dropped)="onDrop($event)">
       <ng-template let-value let-index="index">
         <app-property-value [index]="index" style="width: 100%" />
@@ -111,21 +110,6 @@ export class PropertyValuesComponent implements OnChanges {
   ngOnChanges() {
     this._setupData();
   }
-
-  getValueSummary = (value: ReadValue, index: number): string => {
-    let str = value.strval;
-    if (!str || str.trim().length === 0) {
-      return `Value ${index + 1}`;
-    }
-
-    if (value instanceof ReadTextValueAsXml) {
-      const doc = new DOMParser().parseFromString(str, 'text/html');
-      str = doc.body.textContent?.trim() || '';
-      if (!str) return `Value ${index + 1}`;
-    }
-
-    return str.length > 80 ? `${str.substring(0, 77)}...` : str;
-  };
 
   onDrop(event: CdkDragDrop<ReadValue[]>): void {
     if (event.previousIndex === event.currentIndex) return;

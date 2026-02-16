@@ -1,11 +1,4 @@
-import {
-  CdkDrag,
-  CdkDragDrop,
-  CdkDragHandle,
-  CdkDragPlaceholder,
-  CdkDragPreview,
-  CdkDropList,
-} from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDragPlaceholder, CdkDropList } from '@angular/cdk/drag-drop';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -23,16 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
   selector: 'app-draggable-value-list',
   standalone: true,
-  imports: [
-    CdkDropList,
-    CdkDrag,
-    CdkDragHandle,
-    CdkDragPreview,
-    CdkDragPlaceholder,
-    NgTemplateOutlet,
-    MatIcon,
-    TranslatePipe,
-  ],
+  imports: [CdkDropList, CdkDrag, CdkDragHandle, CdkDragPlaceholder, NgTemplateOutlet, MatIcon, TranslatePipe],
   template: `
     <div
       cdkDropList
@@ -55,18 +39,6 @@ import { TranslatePipe } from '@ngx-translate/core';
             [ngTemplateOutlet]="itemTemplate"
             [ngTemplateOutletContext]="{ $implicit: value, index: index }" />
 
-          <!-- Inline styles required: CDK renders *cdkDragPreview in a global overlay
-               outside the component, so component-scoped styles won't reach it -->
-          <div
-            *cdkDragPreview
-            style="padding: 12px 16px; background: white; border-radius: 4px;
-                   font-size: 14px; color: rgba(0,0,0,0.87);
-                   box-shadow: 0 5px 5px -3px rgba(0,0,0,0.2),
-                               0 8px 10px 1px rgba(0,0,0,0.14),
-                               0 3px 14px 2px rgba(0,0,0,0.12);">
-            {{ previewTextFn(value, index) }}
-          </div>
-
           <div *cdkDragPlaceholder class="drag-placeholder"></div>
         </div>
       }
@@ -76,7 +48,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     `
       .value-row {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
       }
 
       .drag-handle {
@@ -123,8 +95,6 @@ export class DraggableValueListComponent {
   @Input({ required: true }) values!: ReadValue[];
   @Input() disabled = false;
   @Input() showHandle = false;
-  @Input() previewTextFn: (value: ReadValue, index: number) => string = (_, i) => `Value ${i + 1}`;
-
   @Output() dropped = new EventEmitter<CdkDragDrop<ReadValue[]>>();
 
   @ContentChild(TemplateRef) itemTemplate!: TemplateRef<{ $implicit: ReadValue; index: number }>;
