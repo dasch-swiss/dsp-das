@@ -1,4 +1,4 @@
-import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDragPlaceholder, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -25,7 +25,7 @@ import { FootnoteService } from './footnotes/footnote.service';
 @Component({
   selector: 'app-draggable-value-list',
   standalone: true,
-  imports: [CdkDropList, CdkDrag, CdkDragHandle, CdkDragPlaceholder, NgTemplateOutlet, MatIcon, TranslatePipe],
+  imports: [CdkDropList, CdkDrag, CdkDragHandle, NgTemplateOutlet, MatIcon, TranslatePipe],
   template: `
     <div
       cdkDropList
@@ -48,7 +48,7 @@ import { FootnoteService } from './footnotes/footnote.service';
             [ngTemplateOutlet]="itemTemplate"
             [ngTemplateOutletContext]="{ $implicit: value, index: index }" />
 
-          <div *cdkDragPlaceholder class="drag-placeholder"></div>
+          <div cdkDragPlaceholder></div>
         </div>
       }
     </div>
@@ -73,13 +73,6 @@ import { FootnoteService } from './footnotes/footnote.service';
       }
       .drag-handle:active {
         cursor: grabbing;
-      }
-
-      .drag-placeholder {
-        border: 3px dotted #999;
-        min-height: 48px;
-        border-radius: 4px;
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
       }
 
       .cdk-drag-animating {

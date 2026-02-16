@@ -59,7 +59,6 @@ export class PropertyValuesComponent implements OnChanges {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
 
   currentlyAdding = false;
-
   private readonly _resourceFetcherService = inject(ResourceFetcherService);
   readonly propertyValueService = inject(PropertyValueService);
 
