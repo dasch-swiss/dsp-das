@@ -18,6 +18,7 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
+import { FootnoteService } from './footnotes/footnote.service';
 import { ResourceUtil } from '../representations/resource.util';
 import { JsLibPotentialError } from './JsLibPotentialError';
 import { PropertyValueAddComponent } from './property-value-add.component';
@@ -156,6 +157,7 @@ export class PropertyValuesComponent implements OnChanges {
   private readonly _resourceFetcherService = inject(ResourceFetcherService);
   private readonly _cd = inject(ChangeDetectorRef);
   private readonly _destroyRef = inject(DestroyRef);
+  private readonly _footnoteService = inject(FootnoteService, { optional: true });
 
   constructor(public readonly propertyValueService: PropertyValueService) {}
 
@@ -211,6 +213,7 @@ export class PropertyValuesComponent implements OnChanges {
     const reordered = [...originalOrder];
     moveItemInArray(reordered, event.previousIndex, event.currentIndex);
 
+    this._footnoteService?.reset();
     this.editModeData.values = reordered;
     this.reorderLoading = true;
     this._cd.markForCheck();
