@@ -39,11 +39,9 @@ export class PropertyValuesWithFootnotesComponent implements OnChanges {
   }
 
   private _registerAllFootnotes() {
-    const footnoteRegExp = /<footnote content="([^>]+)"\/>/g;
-
     this.prop.values.forEach((value, valueIndex) => {
       if (value.strval === undefined) return;
-      const matches = value.strval.matchAll(footnoteRegExp);
+      const matches = value.strval.matchAll(FootnoteService.FOOTNOTE_REGEXP);
 
       Array.from(matches).forEach((match, indexFootnote) => {
         this.footnoteService.addFootnote(
