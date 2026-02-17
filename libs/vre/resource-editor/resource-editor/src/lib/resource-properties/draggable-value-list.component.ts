@@ -46,7 +46,11 @@ import { FootnoteService } from './footnotes/footnote.service';
 
           <ng-container
             [ngTemplateOutlet]="itemTemplate"
-            [ngTemplateOutletContext]="{ $implicit: value, index: index }" />
+            [ngTemplateOutletContext]="{
+              $implicit: value,
+              index: index,
+              reloadToken: _footnoteService?.reloadToken ?? 0,
+            }" />
 
           <div cdkDragPlaceholder></div>
         </div>
@@ -109,7 +113,7 @@ export class DraggableValueListComponent {
   private readonly _resourceFetcherService = inject(ResourceFetcherService);
   private readonly _notification = inject(NotificationService);
   private readonly _translateService = inject(TranslateService);
-  private readonly _footnoteService = inject(FootnoteService, { optional: true });
+  public readonly _footnoteService = inject(FootnoteService, { optional: true });
   private readonly _cd = inject(ChangeDetectorRef);
   private readonly _destroyRef = inject(DestroyRef);
 
