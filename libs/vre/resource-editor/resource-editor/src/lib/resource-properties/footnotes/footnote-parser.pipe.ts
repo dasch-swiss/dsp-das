@@ -2,6 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FootnoteService } from './footnote.service';
 
+// Pure pipe: reloadToken parameter triggers re-evaluation when footnotes change,
+// avoiding the performance cost of pure: false (which runs on every change detection cycle).
 @Pipe({
   name: 'footnoteParser',
 })

@@ -45,7 +45,6 @@ import { FootnoteService } from '../../resource-properties/footnotes/footnote.se
 })
 export class RichTextViewerComponent {
   @Input({ required: true }) value!: ReadTextValueAsXml;
-  @Input({ required: true }) index!: number;
 
   constructor(public readonly footnoteService: FootnoteService) {}
 }

@@ -9,8 +9,12 @@ export class FootnoteService {
   uuid = window.crypto.getRandomValues(new Uint32Array(1))[0].toString(); // make the service / propertyValue unique
   footnotes: SafeHtml[] = [];
 
-  footnoteRead = 0; // used by footnote-parser pipe for having the correct index number.
+  private _footnoteRead = 0;
   reloadToken = signal(0); // used to update footnote-parser pipe
+
+  get footnoteRead(): number {
+    return this._footnoteRead;
+  }
 
   reloadFootnotes(values: ReadValue[], sanitizer: DomSanitizer) {
     this._reset();
@@ -26,11 +30,11 @@ export class FootnoteService {
 
   private _reset() {
     this.footnotes = [];
-    this.footnoteRead = 0;
+    this._footnoteRead = 0;
   }
 
   increaseReadFootnote() {
-    this.footnoteRead++;
+    this._footnoteRead++;
   }
   private _addFootnote(content: SafeHtml) {
     this.footnotes.push(content);
