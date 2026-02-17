@@ -5,13 +5,20 @@ import { SafeHtml } from '@angular/platform-browser';
 export class FootnoteService {
   static readonly FOOTNOTE_REGEXP = /<footnote content="([^>]+)"\/>/g;
   uuid = window.crypto.getRandomValues(new Uint32Array(1))[0].toString(); // make the service / propertyValue unique
-  footnotes: { indexValue: number; indexFootnote: number; content: SafeHtml }[] = [];
+  footnotes: SafeHtml[] = [];
 
-  addFootnote(indexValue: number, indexFootnote: number, content: SafeHtml) {
-    this.footnotes.push({ indexValue, indexFootnote, content });
+  footnoteRead = 0;
+
+  addFootnote(content: SafeHtml) {
+    this.footnotes.push(content);
   }
 
   reset() {
     this.footnotes = [];
+    this.footnoteRead = 0;
+  }
+
+  increaseReadFootnote() {
+    this.footnoteRead++;
   }
 }

@@ -11,7 +11,7 @@ import { FootnoteDirective } from '../../resource-properties/footnotes/footnote.
     <div
       data-cy="rich-text-switch"
       class="rich-text-viewer"
-      [innerHTML]="value.strval || '' | footnoteParser: index | internalLinkReplacer | addTargetBlank"
+      [innerHTML]="value.strval || '' | footnoteParser | internalLinkReplacer | addTargetBlank"
       appFootnote></div>
   `,
   styles: [

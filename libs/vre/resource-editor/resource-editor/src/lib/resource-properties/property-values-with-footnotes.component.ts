@@ -32,6 +32,7 @@ export class PropertyValuesWithFootnotesComponent implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log('property values with footnotes component', changes);
     if (changes['prop']) {
       this.footnoteService.reset();
       this._registerAllFootnotes();
@@ -39,18 +40,12 @@ export class PropertyValuesWithFootnotesComponent implements OnChanges {
   }
 
   private _registerAllFootnotes() {
-    let currentFootnote = 1;
     this.prop.values.forEach((value, valueIndex) => {
       if (value.strval === undefined) return;
       const matches = value.strval.matchAll(FootnoteService.FOOTNOTE_REGEXP);
 
-      Array.from(matches).forEach((match, indexFootnote) => {
-        this.footnoteService.addFootnote(
-          valueIndex,
-          indexFootnote,
-          this._sanitizer.bypassSecurityTrustHtml(unescapeHtml(match[1]))
-        );
-        currentFootnote += 1;
+      Array.from(matches).forEach(match => {
+        this.footnoteService.addFootnote(this._sanitizer.bypassSecurityTrustHtml(unescapeHtml(match[1])));
       });
     });
   }
