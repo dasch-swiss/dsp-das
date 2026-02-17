@@ -20,7 +20,6 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 import { ResourceFetcherService } from '../representations/resource-fetcher.service';
-import { FootnoteService } from './footnotes/footnote.service';
 
 @Component({
   selector: 'app-draggable-value-list',
@@ -49,7 +48,6 @@ import { FootnoteService } from './footnotes/footnote.service';
             [ngTemplateOutletContext]="{
               $implicit: value,
               index: index,
-              reloadToken: _footnoteService?.reloadToken() ?? 0,
             }" />
 
           <div cdkDragPlaceholder></div>
@@ -113,7 +111,6 @@ export class DraggableValueListComponent {
   private readonly _resourceFetcherService = inject(ResourceFetcherService);
   private readonly _notification = inject(NotificationService);
   private readonly _translateService = inject(TranslateService);
-  public readonly _footnoteService = inject(FootnoteService, { optional: true });
   private readonly _cd = inject(ChangeDetectorRef);
   private readonly _destroyRef = inject(DestroyRef);
 
