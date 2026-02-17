@@ -2,7 +2,6 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { unescapeHtml } from '@dasch-swiss/vre/ui/ui';
 import { FootnoteService } from './footnotes/footnote.service';
 import { FootnotesComponent } from './footnotes/footnotes.component';
 import { PropertyValuesComponent } from './property-values.component';
@@ -32,21 +31,8 @@ export class PropertyValuesWithFootnotesComponent implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('property values with footnotes component', changes);
     if (changes['prop']) {
-      this.footnoteService.reset();
-      this._registerAllFootnotes();
+      this.footnoteService.reloadFootnotes(this.prop.values, this._sanitizer);
     }
-  }
-
-  private _registerAllFootnotes() {
-    this.prop.values.forEach((value, valueIndex) => {
-      if (value.strval === undefined) return;
-      const matches = value.strval.matchAll(FootnoteService.FOOTNOTE_REGEXP);
-
-      Array.from(matches).forEach(match => {
-        this.footnoteService.addFootnote(this._sanitizer.bypassSecurityTrustHtml(unescapeHtml(match[1])));
-      });
-    });
   }
 }

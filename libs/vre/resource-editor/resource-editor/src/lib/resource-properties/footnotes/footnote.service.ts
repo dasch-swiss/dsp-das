@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ReadValue } from '@dasch-swiss/dsp-js';
+import { unescapeHtml } from '@dasch-swiss/vre/ui/ui';
 
 @Injectable()
 export class FootnoteService {
@@ -8,14 +10,27 @@ export class FootnoteService {
   footnotes: SafeHtml[] = [];
 
   footnoteRead = 0;
+  reloadToken = 0;
 
   addFootnote(content: SafeHtml) {
     this.footnotes.push(content);
   }
 
-  reset() {
+  private reset() {
     this.footnotes = [];
     this.footnoteRead = 0;
+  }
+
+  reloadFootnotes(values: ReadValue[], sanitizer: DomSanitizer) {
+    this.reset();
+    values.forEach(value => {
+      if (value.strval === undefined) return;
+      const matches = value.strval.matchAll(FootnoteService.FOOTNOTE_REGEXP);
+      Array.from(matches).forEach(match => {
+        this.addFootnote(sanitizer.bypassSecurityTrustHtml(unescapeHtml(match[1])));
+      });
+    });
+    this.reloadToken++;
   }
 
   increaseReadFootnote() {
