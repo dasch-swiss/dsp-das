@@ -13,8 +13,8 @@ export class FootnoteParserPipe implements PipeTransform {
     private readonly _footnoteService: FootnoteService
   ) {}
 
-  transform(value_: null | string | SafeHtml, _reloadToken?: number): SafeHtml | null {
-    console.log('_reloadToken', value_);
+  transform(value_: null | string | SafeHtml, _reloadToken: number): SafeHtml | null {
+    console.log('footnote parser', value_, _reloadToken);
     if (value_ === null) {
       return value_; // Return as is if value is empty or null
     } // does nothing if only displayMode changes

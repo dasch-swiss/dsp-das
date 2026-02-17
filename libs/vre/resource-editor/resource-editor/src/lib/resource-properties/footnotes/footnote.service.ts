@@ -12,17 +12,13 @@ export class FootnoteService {
   footnoteRead = 0; // used by footnote-parser pipe for having the correct index number.
   reloadToken = 0; // used to update footnote-parser pipe
 
-  addFootnote(content: SafeHtml) {
-    this.footnotes.push(content);
-  }
-
   reloadFootnotes(values: ReadValue[], sanitizer: DomSanitizer) {
     this._reset();
     values.forEach(value => {
       if (value.strval === undefined) return;
       const matches = value.strval.matchAll(FootnoteService.FOOTNOTE_REGEXP);
       Array.from(matches).forEach(match => {
-        this.addFootnote(sanitizer.bypassSecurityTrustHtml(unescapeHtml(match[1])));
+        this._addFootnote(sanitizer.bypassSecurityTrustHtml(unescapeHtml(match[1])));
       });
     });
     this.reloadToken++;
@@ -35,5 +31,8 @@ export class FootnoteService {
 
   increaseReadFootnote() {
     this.footnoteRead++;
+  }
+  private _addFootnote(content: SafeHtml) {
+    this.footnotes.push(content);
   }
 }

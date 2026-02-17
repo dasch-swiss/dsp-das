@@ -32,6 +32,7 @@ export class PropertyValuesWithFootnotesComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['prop']) {
+      console.log('changes prop');
       this.footnoteService.reloadFootnotes(this.prop.values, this._sanitizer);
     }
   }
