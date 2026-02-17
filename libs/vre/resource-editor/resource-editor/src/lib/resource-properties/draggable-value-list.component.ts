@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ReadValue } from '@dasch-swiss/dsp-js';
 import { APIV2ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
@@ -111,7 +110,6 @@ export class DraggableValueListComponent {
   private readonly _notification = inject(NotificationService);
   private readonly _translateService = inject(TranslateService);
   private readonly _footnoteService = inject(FootnoteService, { optional: true });
-  private readonly _sanitizer = inject(DomSanitizer);
   private readonly _cd = inject(ChangeDetectorRef);
   private readonly _destroyRef = inject(DestroyRef);
 
@@ -124,7 +122,6 @@ export class DraggableValueListComponent {
     const reordered = [...originalOrder];
     moveItemInArray(reordered, event.previousIndex, event.currentIndex);
 
-    this._footnoteService?.reloadFootnotes(reordered, this._sanitizer);
     this.values = reordered;
     this.valuesChange.emit(reordered);
     this.reorderLoading = true;
