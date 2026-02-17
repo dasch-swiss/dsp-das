@@ -13,7 +13,7 @@ import { FootnoteService } from '../../resource-properties/footnotes/footnote.se
       data-cy="rich-text-switch"
       class="rich-text-viewer"
       [innerHTML]="
-        value.strval || '' | footnoteParser: footnoteService.reloadToken | internalLinkReplacer | addTargetBlank
+        value.strval || '' | footnoteParser: footnoteService.reloadToken() | internalLinkReplacer | addTargetBlank
       "
       appFootnote></div>
   `,

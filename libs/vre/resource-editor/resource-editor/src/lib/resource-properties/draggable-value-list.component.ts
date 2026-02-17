@@ -49,7 +49,7 @@ import { FootnoteService } from './footnotes/footnote.service';
             [ngTemplateOutletContext]="{
               $implicit: value,
               index: index,
-              reloadToken: _footnoteService?.reloadToken ?? 0,
+              reloadToken: _footnoteService?.reloadToken() ?? 0,
             }" />
 
           <div cdkDragPlaceholder></div>

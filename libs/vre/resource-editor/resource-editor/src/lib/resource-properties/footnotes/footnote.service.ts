@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ReadValue } from '@dasch-swiss/dsp-js';
 import { unescapeHtml } from '@dasch-swiss/vre/ui/ui';
@@ -10,7 +10,7 @@ export class FootnoteService {
   footnotes: SafeHtml[] = [];
 
   footnoteRead = 0; // used by footnote-parser pipe for having the correct index number.
-  reloadToken = 0; // used to update footnote-parser pipe
+  reloadToken = signal(0); // used to update footnote-parser pipe
 
   reloadFootnotes(values: ReadValue[], sanitizer: DomSanitizer) {
     this._reset();
@@ -21,7 +21,7 @@ export class FootnoteService {
         this._addFootnote(sanitizer.bypassSecurityTrustHtml(unescapeHtml(match[1])));
       });
     });
-    this.reloadToken++;
+    this.reloadToken.update(v => v + 1);
   }
 
   private _reset() {
