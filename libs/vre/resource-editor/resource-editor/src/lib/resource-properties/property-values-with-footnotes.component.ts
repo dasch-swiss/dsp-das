@@ -39,6 +39,7 @@ export class PropertyValuesWithFootnotesComponent implements OnChanges {
   }
 
   private _registerAllFootnotes() {
+    let currentFootnote = 1;
     this.prop.values.forEach((value, valueIndex) => {
       if (value.strval === undefined) return;
       const matches = value.strval.matchAll(FootnoteService.FOOTNOTE_REGEXP);
@@ -49,6 +50,7 @@ export class PropertyValuesWithFootnotesComponent implements OnChanges {
           indexFootnote,
           this._sanitizer.bypassSecurityTrustHtml(unescapeHtml(match[1]))
         );
+        currentFootnote += 1;
       });
     });
   }
