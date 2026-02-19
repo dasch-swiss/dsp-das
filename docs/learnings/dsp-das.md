@@ -72,50 +72,46 @@ this.hasValidValue$ = this.group.valueChanges.pipe(
 
 **Rule of thumb:** Before implementing drag-and-drop, search the codebase for existing CDK drag-drop patterns. Consistency reduces review friction and ensures tested behavior. The `cdkDragHandle` pattern (drag only via a handle icon, not the whole row) is the established convention in this codebase.
 
-**Affected file:** `property-values.component.ts`
+**Affected file:** `draggable-value-list.component.ts`
 
 ---
 
-## Use Lightweight Custom Drag Previews for Complex Components (DEV-5870)
+## Use `cdkDragPlaceholder` for Clean Drop Zones (DEV-5870)
 
-**Context:** The default CDK drag preview cloned the entire value component DOM, causing jank during drag.
+**Context:** Value components contain complex sub-components (CKEditor instances, file previews, IIIF viewers). CDK's default placeholder can look messy when the dragged item's DOM is heavy.
 
-**Root cause:** Value components contain complex sub-components (CKEditor instances, file previews, IIIF viewers). CDK's default preview clones the full DOM subtree, which is expensive for these heavy components.
-
-**Fix:** Use `*cdkDragPreview` with a lightweight summary element instead of the default full-clone:
+**Decision:** Use `cdkDragPlaceholder` to render a clean, minimal drop zone while dragging, instead of building a custom drag preview:
 
 ```html
-<!-- Lightweight preview instead of cloning the full value component -->
-<div *cdkDragPreview class="drag-preview">
-  {{ getValueSummary(value) }}
-</div>
+<div cdkDragPlaceholder></div>
 ```
 
-**Rule of thumb:** When dragging components with heavy DOM subtrees, always provide a custom `*cdkDragPreview`. The default clone can cause jank, layout issues, and even break components that assume a single instance (like CKEditor).
+No custom `*cdkDragPreview` or summary helper was needed — the default drag preview (which clones the element) worked fine, and the placeholder keeps the drop target area clean.
 
-**Affected file:** `property-values.component.ts`
+**Rule of thumb:** Use `cdkDragPlaceholder` to show a clean drop zone when reordering complex components. A custom `*cdkDragPreview` is only needed if the default clone causes performance or visual issues — start without one and add it only if necessary.
+
+**Affected file:** `draggable-value-list.component.ts`
 
 ---
 
-## Direct `HttpClient` Calls When `dsp-js` Lacks the Endpoint (DEV-5870)
+## Prefer the OpenAPI-Generated Client Over Direct `HttpClient` (DEV-5870)
 
 **Context:** The new `PUT /v2/values/order` endpoint wasn't available in `@dasch-swiss/dsp-js` yet, but the frontend needed to call it.
 
-**Decision:** Used direct `HttpClient.put()` with `DspApiConfigToken` / `KnoraApiConfig` to build the base URL:
+**Decision:** Used the OpenAPI-generated `APIV2ApiService` (auto-generated from `dsp-api_spec.yaml` via openapitools) instead of manual `HttpClient` calls:
 
 ```typescript
-@Injectable({ providedIn: 'root' })
-export class ValueOrderService {
-  constructor(
-    private readonly http: HttpClient,
-    @Inject(DspApiConfigToken) private readonly config: KnoraApiConfig,
-  ) {}
+private readonly apiService = inject(APIV2ApiService);
 
-  reorderValues(resourceIri: string, propertyIri: string, orderedValueIris: string[]): Observable<any> {
-    const url = `${this.config.apiProtocol}://${this.config.apiHost}:${this.config.apiPort}/v2/values/order`;
-    return this.http.put(url, { resourceIri, propertyIri, orderedValueIris });
-  }
-}
+this.apiService.putV2ValuesOrder({
+  resourceIri,
+  propertyIri,
+  orderedValueIris,
+});
 ```
 
-**Rule of thumb:** When `dsp-js` doesn't expose a new API endpoint yet, use direct `HttpClient` calls with `DspApiConfigToken` for the base URL. Add a `// TODO: migrate to dsp-js when available` comment. This avoids blocking frontend work on library releases.
+No manual URL construction, no `DspApiConfigToken` injection — the generated client handles base URL configuration and serialization.
+
+**Rule of thumb:** When `dsp-js` lacks an endpoint, prefer the OpenAPI-generated client (`APIV2ApiService`) if the endpoint is defined in `dsp-api_spec.yaml`. Fall back to direct `HttpClient` only when no generated client is available.
+
+**Affected file:** `draggable-value-list.component.ts`
