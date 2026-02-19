@@ -1,5 +1,26 @@
 # Changelog
 
+## [12.6.1](https://github.com/dasch-swiss/dsp-das/compare/v12.6.0...v12.6.1) (2026-02-17)
+
+
+### Bug Fixes
+
+* add stroke color to spinner ([#2839](https://github.com/dasch-swiss/dsp-das/issues/2839)) ([ff48a4d](https://github.com/dasch-swiss/dsp-das/commit/ff48a4d7f10b4ddf8513c4e0d96195820124e084))
+* footnotes ordering ([#2841](https://github.com/dasch-swiss/dsp-das/issues/2841)) ([70358bc](https://github.com/dasch-swiss/dsp-das/commit/70358bc4a9a877439894e46b64feb057fd9a0c38))
+
+## [12.6.0](https://github.com/dasch-swiss/dsp-das/compare/v12.5.4...v12.6.0) (2026-02-16)
+
+
+### Enhancements
+
+* add drag and drop to reorder values ([#2838](https://github.com/dasch-swiss/dsp-das/issues/2838)) ([43ccf24](https://github.com/dasch-swiss/dsp-das/commit/43ccf2451c3a1e9013965f7e10999fd38ed999ff))
+
+
+### Bug Fixes
+
+* allow saving boolean false value in property editor (DEV-5866) ([#2834](https://github.com/dasch-swiss/dsp-das/issues/2834)) ([89dab3c](https://github.com/dasch-swiss/dsp-das/commit/89dab3c6671c248a392e45b20ebae3f8f904a308))
+* footnotes are displayed again ([#2837](https://github.com/dasch-swiss/dsp-das/issues/2837)) ([5a93a81](https://github.com/dasch-swiss/dsp-das/commit/5a93a818ad50e5b23e4af31d29ba9d2b47b00f3b))
+
 ## [12.5.4](https://github.com/dasch-swiss/dsp-das/compare/v12.5.3...v12.5.4) (2026-02-10)
 
 
