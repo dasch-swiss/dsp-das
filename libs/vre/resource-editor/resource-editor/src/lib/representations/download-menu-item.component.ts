@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RepresentationService } from './representation.service';
 
@@ -30,7 +31,8 @@ export class DownloadMenuItemComponent {
 
   constructor(
     private readonly _rs: RepresentationService,
-    private _clipboard: Clipboard
+    private _clipboard: Clipboard,
+    private readonly _notification: NotificationService
   ) {}
 
   download() {
@@ -38,6 +40,9 @@ export class DownloadMenuItemComponent {
   }
 
   copyUrl() {
-    const link = this._rs.getIngestUrl(this.src, this.parentResource);
+    this._rs.getIngestUrl(this.src, this.parentResource).subscribe(link => {
+      this._clipboard.copy(link);
+      this._notification.openSnackBar('File link copied to clipboard');
+    });
   }
 }
