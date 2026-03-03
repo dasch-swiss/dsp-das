@@ -2,23 +2,24 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, Input, signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenu, MatMenuItem } from '@angular/material/menu';
 import { ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { RepresentationService } from './representation.service';
 
 @Component({
   selector: 'app-download-menu-item',
   standalone: true,
-  imports: [MatButton, MatIcon, MatMenuTrigger, MatMenu, MatMenuItem],
+  imports: [MatButton, MatIcon, MatMenu, MatMenuItem],
   template: `
-    <div class="split-button-container">
-      <button mat-flat-button class="main-button">
+    <div>
+      <button mat-flat-button style="margin-right: 16px">
         <mat-icon>download</mat-icon>
         Download File
       </button>
 
-      <button mat-flat-button class="arrow-button" [matMenuTriggerFor]="menu">
-        <mat-icon>arrow_drop_down</mat-icon>
+      <button mat-flat-button>
+        <mat-icon>link</mat-icon>
+        Copy link
       </button>
     </div>
 
