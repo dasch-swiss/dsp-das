@@ -54,6 +54,7 @@ export class RepresentationService {
     this._projectApiService.get(resource.attachedToProject).subscribe(response => {
       const assetId = fileValue.filename.split('.')[0] || '';
       const ingestFileUrl = this.getIngestFileUrl(response.project.shortcode, assetId);
+      console.log('a', ingestFileUrl);
       this.downloadFile(ingestFileUrl, this.userCanView(fileValue));
     });
   }
