@@ -13637,7 +13637,6 @@ components:
       required:
       - resourceClass
       - language
-      - includeIris
       properties:
         resourceClass:
           type: string
@@ -13648,6 +13647,8 @@ components:
         language:
           type: string
         includeIris:
+          type: boolean
+        includeArkUrls:
           type: boolean
     FamilyName:
       title: FamilyName
