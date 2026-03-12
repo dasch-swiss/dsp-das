@@ -58,8 +58,6 @@ export class VideoComponent implements OnChanges, OnDestroy {
   isPlayerReady = false;
   fileInfo?: MovingImageSidecar;
 
-  readonly frameWidth = 160;
-  readonly halfFrameWidth: number = Math.round(this.frameWidth / 2);
   private _ngUnsubscribe = new Subject<void>();
 
   private readonly _translateService = inject(TranslateService);
