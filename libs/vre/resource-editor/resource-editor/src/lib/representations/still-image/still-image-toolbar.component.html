@@ -28,7 +28,7 @@
       <mat-icon>download</mat-icon>
     </div>
 
-    @if ((resourceFetcherService.userCanEdit$ | async) && !isReadStillImageExternalFileValue) {
+    @if ((resourceFetcherService.userCanEdit$ | async) && isAnnotatable) {
     <div
       class="clickable-icon"
       data-cy="still-image-region-button"
@@ -36,6 +36,17 @@
       (click)="toggleDrawMode()"
       [class.active]="osd.drawing">
       <mat-icon svgIcon="draw_region_icon" />
+    </div>
+    }
+
+    @if (isReadStillImageVectorFileValue) {
+    <div
+      class="clickable-icon"
+      data-cy="still-image-bg-button"
+      [matMenuTriggerFor]="bgColor"
+      [matTooltip]="'resourceEditor.representations.stillImage.backgroundColor' | translate"
+      matTooltipPosition="above">
+      <mat-icon>palette</mat-icon>
     </div>
     }
   </div>
@@ -50,7 +61,7 @@
       data-cy="still-image-settings-button"
       [matTooltip]="'resourceEditor.representations.stillImage.settings' | translate"
       [matMenuTriggerFor]="settings"
-      [class.disabled]="isReadStillImageExternalFileValue">
+      [class.disabled]="isReadStillImageExternalFileValue || isReadStillImageVectorFileValue">
       <mat-icon>settings</mat-icon>
     </div>
 
@@ -127,5 +138,17 @@
     @if (isPng) {
     <mat-icon>check</mat-icon>
     } PNG
+  </button>
+</mat-menu>
+
+<mat-menu #bgColor="matMenu" class="settings-menu">
+  <button data-cy="bg-default-button" mat-menu-item (click)="setSvgBackground('default')">
+    {{ 'resourceEditor.representations.stillImage.bgDefault' | translate }}
+  </button>
+  <button data-cy="bg-white-button" mat-menu-item (click)="setSvgBackground('white')">
+    {{ 'resourceEditor.representations.stillImage.bgWhite' | translate }}
+  </button>
+  <button data-cy="bg-transparent-button" mat-menu-item (click)="setSvgBackground('transparent')">
+    {{ 'resourceEditor.representations.stillImage.bgTransparent' | translate }}
   </button>
 </mat-menu>

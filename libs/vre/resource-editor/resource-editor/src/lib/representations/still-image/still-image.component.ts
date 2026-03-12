@@ -11,7 +11,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
-import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
+import {
+  ReadStillImageExternalFileValue,
+  ReadStillImageVectorFileValue,
+} from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateService } from '@ngx-translate/core';
 import { CompoundArrowNavigationComponent } from '../../compound/compound-arrow-navigation.component';
@@ -51,7 +54,8 @@ import { StillImageToolbarComponent } from './still-image-toolbar.component';
             [resource]="resource"
             [compoundMode]="compoundMode"
             [isPng]="isPng"
-            (imageIsPng)="afterFormatChange($event)" />
+            (imageIsPng)="afterFormatChange($event)"
+            (svgBackgroundChange)="onSvgBackgroundChange($event)" />
         }
       </div>
     }`,
@@ -101,6 +105,20 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
     this._loadImage();
   }
 
+    onSvgBackgroundChange(bg: 'default' | 'white' | 'transparent'): void {
+        const container = this.osdViewerElement?.nativeElement as HTMLElement | null;
+        if (!container) return;
+        if (bg === 'white') {
+            container.style.background = 'white';
+        } else if (bg === 'transparent') {
+            container.style.background =
+                'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%) 0 0 / 24px 24px,' +
+                'linear-gradient(45deg, #ccc 25%, #fff 25%, #fff 75%, #ccc 75%) 12px 12px / 24px 24px';
+        } else {
+            container.style.background = '';
+        }
+    }
+
   ngOnDestroy() {
     this.osdService.viewer.destroy();
   }
@@ -127,6 +145,9 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
         case Constants.StillImageExternalFileValue:
           await this._openExternal3iFImage(image as ReadStillImageExternalFileValue);
           break;
+        case Constants.StillImageVectorFileValue:
+          this._openSvgImage(image as ReadStillImageVectorFileValue);
+          break;
         default:
           this.errorMessage = this._translateService.instant(
             'resourceEditor.representations.stillImage.errors.unknownImageType'
@@ -150,6 +171,14 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
     );
     (this.osdService.viewer as any).loadTilesWithAjax = true;
     this.osdService.viewer.open(tiles);
+  }
+
+  private _openSvgImage(image: ReadStillImageVectorFileValue): void {
+    (this.osdService.viewer as any).loadTilesWithAjax = true;
+    this.osdService.viewer.open({
+      type: 'image',
+      url: image.fileUrl,
+    });
   }
 
   private async _openExternal3iFImage(image: ReadStillImageExternalFileValue) {
