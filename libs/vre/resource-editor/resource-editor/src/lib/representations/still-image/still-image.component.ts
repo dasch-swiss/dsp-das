@@ -4,13 +4,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import {
   ReadStillImageExternalFileValue,
@@ -80,6 +83,7 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
   errorMessage: string | null = null;
 
   private _svgBlobUrl: string | null = null;
+  private readonly _destroyRef = inject(DestroyRef);
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
@@ -188,22 +192,25 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
     }
 
     // Fetch SVG using HttpClient which has auth interceptor
-    this._http.get(image.fileUrl, { responseType: 'blob' }).subscribe({
-      next: blob => {
-        this._svgBlobUrl = URL.createObjectURL(blob);
-        (this.osdService.viewer as any).loadTilesWithAjax = false;
-        this.osdService.viewer.open({
-          type: 'image',
-          url: this._svgBlobUrl,
-        });
-      },
-      error: () => {
-        this.errorMessage = this._translateService.instant(
-          'resourceEditor.representations.stillImage.errors.failedToLoadImage'
-        );
-        this._cdr.detectChanges();
-      },
-    });
+    this._http
+      .get(image.fileUrl, { responseType: 'blob' })
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: blob => {
+          this._svgBlobUrl = URL.createObjectURL(blob);
+          (this.osdService.viewer as any).loadTilesWithAjax = false;
+          this.osdService.viewer.open({
+            type: 'image',
+            url: this._svgBlobUrl,
+          });
+        },
+        error: () => {
+          this.errorMessage = this._translateService.instant(
+            'resourceEditor.representations.stillImage.errors.failedToLoadImage'
+          );
+          this._cdr.detectChanges();
+        },
+      });
   }
 
   private async _openExternal3iFImage(image: ReadStillImageExternalFileValue) {
