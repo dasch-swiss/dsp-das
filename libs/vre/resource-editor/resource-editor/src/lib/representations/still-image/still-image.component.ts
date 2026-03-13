@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -78,8 +79,11 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
   isPng = false;
   errorMessage: string | null = null;
 
+  private _svgBlobUrl: string | null = null;
+
   constructor(
     private readonly _cdr: ChangeDetectorRef,
+    private readonly _http: HttpClient,
     protected osdService: OpenSeaDragonService,
     private readonly _osdDrawerService: OsdDrawerService,
     private readonly _translateService: TranslateService
@@ -120,6 +124,9 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
     }
 
   ngOnDestroy() {
+    if (this._svgBlobUrl) {
+      URL.revokeObjectURL(this._svgBlobUrl);
+    }
     this.osdService.viewer.destroy();
   }
 
@@ -174,10 +181,28 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
   }
 
   private _openSvgImage(image: ReadStillImageVectorFileValue): void {
-    (this.osdService.viewer as any).loadTilesWithAjax = true;
-    this.osdService.viewer.open({
-      type: 'image',
-      url: image.fileUrl,
+    // Revoke previous blob URL to prevent memory leaks
+    if (this._svgBlobUrl) {
+      URL.revokeObjectURL(this._svgBlobUrl);
+      this._svgBlobUrl = null;
+    }
+
+    // Fetch SVG using HttpClient which has auth interceptor
+    this._http.get(image.fileUrl, { responseType: 'blob' }).subscribe({
+      next: blob => {
+        this._svgBlobUrl = URL.createObjectURL(blob);
+        (this.osdService.viewer as any).loadTilesWithAjax = false;
+        this.osdService.viewer.open({
+          type: 'image',
+          url: this._svgBlobUrl,
+        });
+      },
+      error: () => {
+        this.errorMessage = this._translateService.instant(
+          'resourceEditor.representations.stillImage.errors.failedToLoadImage'
+        );
+        this._cdr.detectChanges();
+      },
     });
   }
 
