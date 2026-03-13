@@ -14,11 +14,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import {
+  Constants,
+  ReadResource,
   ReadStillImageExternalFileValue,
+  ReadStillImageFileValue,
   ReadStillImageVectorFileValue,
-} from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
+} from '@dasch-swiss/dsp-js';
 import { NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateService } from '@ngx-translate/core';
 import { CompoundArrowNavigationComponent } from '../../compound/compound-arrow-navigation.component';
