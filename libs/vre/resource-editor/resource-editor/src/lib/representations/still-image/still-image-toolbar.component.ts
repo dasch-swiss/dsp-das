@@ -53,7 +53,11 @@ export class StillImageToolbarComponent {
   @Output() imageIsPng = new EventEmitter<boolean>();
   @Output() svgBackgroundChange = new EventEmitter<'default' | 'white' | 'transparent'>();
 
-  get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | ReadStillImageVectorFileValue | null {
+  get imageFileValue():
+    | ReadStillImageFileValue
+    | ReadStillImageExternalFileValue
+    | ReadStillImageVectorFileValue
+    | null {
     const imageValues = this.resource.properties[Constants.HasStillImageFileValue];
     if (!imageValues?.length) {
       return null;

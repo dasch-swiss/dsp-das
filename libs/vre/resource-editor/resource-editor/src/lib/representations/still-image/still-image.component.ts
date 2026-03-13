@@ -109,19 +109,19 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
     this._loadImage();
   }
 
-    onSvgBackgroundChange(bg: 'default' | 'white' | 'transparent'): void {
-        const container = this.osdViewerElement?.nativeElement as HTMLElement | null;
-        if (!container) return;
-        if (bg === 'white') {
-            container.style.background = 'white';
-        } else if (bg === 'transparent') {
-            container.style.background =
-                'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%) 0 0 / 24px 24px,' +
-                'linear-gradient(45deg, #ccc 25%, #fff 25%, #fff 75%, #ccc 75%) 12px 12px / 24px 24px';
-        } else {
-            container.style.background = '';
-        }
+  onSvgBackgroundChange(bg: 'default' | 'white' | 'transparent'): void {
+    const container = this.osdViewerElement?.nativeElement as HTMLElement | null;
+    if (!container) return;
+    if (bg === 'white') {
+      container.style.background = 'white';
+    } else if (bg === 'transparent') {
+      container.style.background =
+        'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%) 0 0 / 24px 24px,' +
+        'linear-gradient(45deg, #ccc 25%, #fff 25%, #fff 75%, #ccc 75%) 12px 12px / 24px 24px';
+    } else {
+      container.style.background = '';
     }
+  }
 
   ngOnDestroy() {
     if (this._svgBlobUrl) {

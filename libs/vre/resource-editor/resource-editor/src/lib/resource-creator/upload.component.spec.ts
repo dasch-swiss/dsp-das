@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { provideTranslateService } from '@ngx-translate/core';
-import { UploadComponent } from './upload.component';
 import { UploadFileService } from '../representations/upload/upload-file.service';
+import { UploadComponent } from './upload.component';
 
 describe('UploadComponent', () => {
   let component: UploadComponent;

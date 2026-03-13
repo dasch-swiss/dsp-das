@@ -20,9 +20,7 @@ export function getFileValue(resource: ReadResource): ReadFileValue | null {
       resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageExternalFileValue
     ) {
       return resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageExternalFileValue;
-    } else if (
-      resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageVectorFileValue
-    ) {
+    } else if (resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageVectorFileValue) {
       return resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageVectorFileValue;
     }
   } else if (resource.properties[Constants.HasDocumentFileValue]) {
