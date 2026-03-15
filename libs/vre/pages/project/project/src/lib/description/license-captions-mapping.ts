@@ -49,5 +49,4 @@ Belltower of Aurigeno. © Romeo Dell’Era`,
       '"When did the Sun darken in antiquity? Discover calculated solar eclipses and their traces in ancient historical sources."',
   ],
   ['082A', 'Foto: Archiv Verein Folk Festivals Lenzburg'],
-
 ]);
