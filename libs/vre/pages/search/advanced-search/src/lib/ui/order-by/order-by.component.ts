@@ -10,7 +10,6 @@ import { OrderByItem } from '../../data-access/advanced-search-store/advanced-se
 
 @Component({
   selector: 'app-order-by',
-  standalone: true,
   imports: [
     CdkDrag,
     CdkDragHandle,

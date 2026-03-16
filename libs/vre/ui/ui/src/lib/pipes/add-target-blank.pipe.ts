@@ -5,14 +5,19 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   name: 'addTargetBlank',
 })
 export class AddTargetBlankPipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private readonly _sanitizer: DomSanitizer) {}
 
   transform(value: null | string | SafeHtml): SafeHtml | null {
     if (value === null) {
       return value; // Return as is if value is empty or null
     }
 
-    const htmlString = typeof value === 'string' ? value : value['changingThisBreaksApplicationSecurity'];
+    const htmlString =
+      typeof value === 'string'
+        ? value
+        : (value as unknown as { changingThisBreaksApplicationSecurity: string })[
+            'changingThisBreaksApplicationSecurity'
+          ];
 
     // Create a temporary DOM element to manipulate the HTML string
     const tempDiv = document.createElement('div');
@@ -34,6 +39,6 @@ export class AddTargetBlankPipe implements PipeTransform {
     });
 
     // Return the modified HTML string
-    return this.sanitizer.bypassSecurityTrustHtml(tempDiv.innerHTML);
+    return this._sanitizer.bypassSecurityTrustHtml(tempDiv.innerHTML);
   }
 }

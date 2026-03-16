@@ -1,12 +1,16 @@
+import { AsyncPipe, I18nPluralPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { SortButtonComponent } from '../../sort-button/sort-button.component';
 import { CreateUserDialogComponent } from '../create-user-dialog.component';
 import { UsersTabService } from '../users-tab.service';
+import { UsersListRowComponent } from './users-list-row.component';
 
 interface SortProperty {
   key: keyof ReadUser;
@@ -22,22 +26,19 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
     @if (list.length > 0) {
       <div>
         <div style="display: flex; align-items: center; padding: 16px; background-color: #f5f5f5">
-          <span class="mat-headline-6" style="margin-bottom: 0; flex: 1" data-cy="user-count">
-            {{ list.length | i18nPlural: itemPluralMapping['user'] }}
-          </span>
+          <div style="flex: 1">
+            <div class="mat-headline-6" style="margin-bottom: 0; margin-left: 8px" data-cy="user-count">
+              {{ list.length | i18nPlural: itemPluralMapping['user'] }}
+            </div>
+            @if (list.length > 1) {
+              <app-sort-button [sortProps]="sortProps" [activeKey]="sortBy" (sortKeyChange)="sortList($event)" />
+            }
+          </div>
 
           @if (isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)) {
             <button mat-flat-button [color]="'primary'" (click)="createUser()" style="margin-right: 16px">
-              Create a new user
+              {{ 'pages.system.usersList.createNewUser' | translate }}
             </button>
-          }
-
-          @if (list.length > 1) {
-            <app-sort-button
-              [icon]="'sort_by_alpha'"
-              [sortProps]="sortProps"
-              [activeKey]="sortBy"
-              (sortKeyChange)="sortList($event)" />
           }
         </div>
 
@@ -47,6 +48,7 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
       </div>
     }
   `,
+  imports: [AsyncPipe, I18nPluralPipe, MatButton, SortButtonComponent, TranslatePipe, UsersListRowComponent],
 })
 export class UsersListComponent {
   _list!: ReadUser[];
@@ -63,32 +65,32 @@ export class UsersListComponent {
   itemPluralMapping = {
     user: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      '=1': '1 User',
-      other: '# Users',
+      '=1': `1 ${this._ts.instant('ui.common.entities.user')}`,
+      other: `# ${this._ts.instant('ui.common.entities.users')}`,
     },
     member: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      '=1': '1 Member',
-      other: '# Members',
+      '=1': `1 ${this._ts.instant('ui.common.entities.member')}`,
+      other: `# ${this._ts.instant('ui.common.entities.members')}`,
     },
   };
 
   readonly sortProps: SortProperty[] = [
     {
       key: 'familyName',
-      label: this._ts.instant('pages.system.usersList.sortFamilyName'),
+      label: this._ts.instant('ui.common.fields.lastName'),
     },
     {
       key: 'givenName',
-      label: this._ts.instant('pages.system.usersList.sortGivenName'),
+      label: this._ts.instant('ui.common.fields.firstName'),
     },
     {
       key: 'email',
-      label: 'E-mail',
+      label: this._ts.instant('pages.system.usersList.sortEmail'),
     },
     {
       key: 'username',
-      label: 'Username',
+      label: this._ts.instant('ui.common.fields.username'),
     },
   ];
 
@@ -99,7 +101,7 @@ export class UsersListComponent {
     private readonly _matDialog: MatDialog,
     private readonly _userService: UserService,
     private readonly _ts: TranslateService,
-    private _usersTabService: UsersTabService
+    private readonly _usersTabService: UsersTabService
   ) {}
 
   trackByFn = (index: number, item: ReadUser) => `${index}-${item.id}`;

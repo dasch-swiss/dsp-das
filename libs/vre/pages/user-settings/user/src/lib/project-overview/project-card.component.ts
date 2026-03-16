@@ -1,8 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { MatCard, MatCardContent, MatCardImage, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
+import { Router, RouterLink } from '@angular/router';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectImageCoverComponent } from '../project-image-cover.component';
 
 @Component({
   selector: 'app-project-card',
@@ -93,6 +95,15 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
       }
     `,
   ],
+  imports: [
+    RouterLink,
+    MatCard,
+    MatCardImage,
+    ProjectImageCoverComponent,
+    MatCardContent,
+    MatCardTitle,
+    MatCardSubtitle,
+  ],
 })
 export class ProjectCardComponent {
   @Input({ required: true }) project!: StoredProject;
@@ -104,7 +115,7 @@ export class ProjectCardComponent {
     return ProjectService.IriToUuid(this.project.id);
   }
 
-  constructor(private _router: Router) {}
+  constructor(private readonly _router: Router) {}
 
   navigate() {
     this._router.navigate([RouteConstants.project, this.projectUuid]);

@@ -31,7 +31,6 @@ class ValueErrorStateMatcher implements ErrorStateMatcher {
 
 @Component({
   selector: 'app-property-form-value',
-  standalone: true,
   imports: [
     AppDatePickerComponent,
     MatButtonModule,

@@ -1,18 +1,31 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { OntologyMetadata } from '@dasch-swiss/dsp-js';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 import { OntologyEditService } from '../../services/ontology-edit.service';
+import { OntologyFormComponent } from './ontology-form.component';
 import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
 
 @Component({
   selector: 'app-edit-ontology-form-dialog',
-  template: ` <app-dialog-header [title]="data.id" [subtitle]="'pages.ontology.ontologyForm.edit' | translate" />
+  template: ` <app-dialog-header [title]="data.label" [subtitle]="'pages.ontology.ontologyForm.edit' | translate" />
 
-    <app-ontology-form [data]="data" [mode]="'edit'" (afterFormInit)="afterFormInit($event)" />
+    <div mat-dialog-content>
+      <app-ontology-form [data]="data" [mode]="'edit'" (afterFormInit)="afterFormInit($event)" />
+    </div>
 
     <div mat-dialog-actions align="end">
-      <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+      <button color="primary" mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         mat-raised-button
         color="primary"
@@ -20,10 +33,20 @@ import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
         [isLoading]="loading"
         data-cy="submit-button"
         (click)="onSubmit()">
-        {{ 'ui.form.action.submit' | translate }}
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    DialogHeaderComponent,
+    LoadingButtonDirective,
+    MatButton,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    OntologyFormComponent,
+    TranslatePipe,
+  ],
 })
 export class EditOntologyFormDialogComponent {
   loading = false;
@@ -31,9 +54,9 @@ export class EditOntologyFormDialogComponent {
   form!: OntologyForm;
 
   constructor(
-    private _oes: OntologyEditService,
-    @Inject(MAT_DIALOG_DATA) public data: UpdateOntologyData,
-    public dialogRef: MatDialogRef<EditOntologyFormDialogComponent, OntologyMetadata>
+    private readonly _oes: OntologyEditService,
+    @Inject(MAT_DIALOG_DATA) public readonly data: UpdateOntologyData,
+    public readonly dialogRef: MatDialogRef<EditOntologyFormDialogComponent, OntologyMetadata>
   ) {}
 
   afterFormInit(form: OntologyForm) {

@@ -1,10 +1,21 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ListItemForm } from '../list-item-form.type';
+import { ReusableListItemFormComponent } from '../reusable-list-item-form.component';
 
 export interface CreateListItemDialogProps {
   nodeIri: string;
@@ -17,14 +28,14 @@ export interface CreateListItemDialogProps {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create-list-item-dialog',
   template: `
-    <app-dialog-header title="Insert new child node" />
+    <app-dialog-header [title]="'pages.ontology.list.createDialog.title' | translate" />
 
     <div mat-dialog-content>
       <app-reusable-list-item-form [formData]="initialFormValue" (afterFormInit)="form = $event" />
     </div>
 
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
 
       <button
         mat-raised-button
@@ -33,10 +44,20 @@ export interface CreateListItemDialogProps {
         [isLoading]="loading"
         [disabled]="form.invalid"
         (click)="createChildNode()">
-        Submit
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>
   `,
+  imports: [
+    MatButton,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    TranslatePipe,
+    DialogHeaderComponent,
+    LoadingButtonDirective,
+    ReusableListItemFormComponent,
+  ],
 })
 export class CreateListItemDialogComponent {
   form: ListItemForm;

@@ -35,8 +35,8 @@ export class AdminImageDirective implements OnChanges {
   onError: string = AdminImageConfig.defaultNotFound;
 
   constructor(
-    private _renderer: Renderer2,
-    private _ele: ElementRef
+    private readonly _renderer: Renderer2,
+    private readonly _ele: ElementRef
   ) {}
 
   ngOnChanges() {

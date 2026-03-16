@@ -1,17 +1,14 @@
 // Include non-theme styles for core.
 @use '@angular/material' as mat;
-@use "styles/config" as *;
 @use "styles/config";
 @use "styles/font";
-@use "styles/theme";
 @use "styles/layout";
 @use "styles/elements";
-@use "styles/search";
 @use "styles/typography" as t;
-@use "styles/viewer";
-@use "styles/ontology";
+@use "styles/ck-editor";
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Include all typography configurations for the components (Angular Material 18 compatible)
 @include mat.all-component-typographies(t.$dsp-typography-config);
@@ -36,8 +33,8 @@ $theme: mat.m2-define-light-theme((
 // Global snack-bar theme override for Angular Material v18
 :root {
   --mat-snack-bar-button-color: rgba(51, 103, 144, 1);
-  --mdc-snackbar-container-color: rgba(51, 103, 144, 0.9);
-  --mdc-snackbar-supporting-text-color: rgb(255, 255, 255);
+  --mat-snackbar-container-color: rgba(51, 103, 144, 0.9);
+  --mat-snackbar-supporting-text-color: rgb(255, 255, 255);
 }
 
 body {
@@ -45,33 +42,6 @@ body {
   margin: 0;
 }
 
-// material icons
-.material-icons {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px; /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
-
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
-
-  /* Support for IE. */
-  font-feature-settings: 'liga';
-}
-
-// The following styles will override material design!
 
 // mat-form-field overrides
 .mdc-text-field--filled:not(.mdc-text-field--disabled) {
@@ -86,86 +56,11 @@ body {
   opacity: 1;
 }
 
-// jdnconvertiblecalendar main style
-.mat-datepicker-content {
-  .mat-calendar {
-    height: auto !important;
-  }
-}
-
-.grid-card .mat-mdc-card-header > div.mat-card-header-text {
-  margin: 0 0 !important;
-}
-
-// String literal input
-// string literal textarea: overwrite material styling !important
-.string-literal {
-  &.short-text {
-    .mat-mdc-form-field-infix {
-      margin-left: 12px;
-    }
-  }
-
-  &.long-text {
-    .mat-button-toggle-appearance-standard {
-      .mat-button-toggle-label-content {
-        line-height: 36px !important;
-        padding: 0 8px !important;
-      }
-    }
-
-    // textarea
-    .mat-mdc-text-field-wrapper {
-      width: 100%;
-      padding-left: 0px;
-
-      .mat-mdc-form-field-flex {
-        border-left: 1px solid rgba(0, 0, 0, 0.12);
-        min-height: calc(4 * 36px + 2px);
-
-        .mat-mdc-form-field-infix {
-          // negative values are not the best choice,
-          // but with this margin-top the placeholder is at the
-          // same position as in the short-text input
-          margin: -12px auto auto 12px;
-        }
-      }
-    }
-  }
-}
-
-.mat-mdc-menu-panel.res-share-menu {
-  max-width: 360px !important;
-  padding: 6px !important;
-}
-
-.info-tooltip {
-  white-space: pre-line;
-}
-
-// date picker adaption
-.mat-mdc-menu-panel.date-picker {
-  max-width: 312px !important;
-}
-
-.mat-mdc-form-field.without-border {
-  .mdc-line-ripple {
-    display: none;
-  }
-}
-
-
 // ckEditor
 .ck-editor__editable_inline {
   min-height: 256px;
-}
-
-// mat-menu with form element
-.form-menu {
-  &.mat-mdc-menu-panel {
-    min-width: 320px !important;
-    max-width: 320px !important;
-  }
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .mat-mdc-menu-panel {
@@ -173,20 +68,21 @@ body {
   max-width: 400px !important;
 }
 
-.full-size-dialog {
-  transition: unset !important;
-
-  .mat-mdc-dialog-container {
-    transition: none !important;
-    border-radius: 0 !important;
-  }
-}
-
-
 .mat-drawer-inner-container::-webkit-scrollbar {
   display: none;
 }
 
 .mat-mdc-dialog-content { //prevent horizontal scrollbar in dialog
   overflow-x: hidden !important;
+}
+
+.mat-mdc-menu-panel.res-share-menu {
+  max-width: 360px !important;
+  padding: 6px !important;
+}
+
+.cdk-drag-preview {
+  border: 2px dashed #999;
+  border-radius: 4px;
+  background: white;
 }

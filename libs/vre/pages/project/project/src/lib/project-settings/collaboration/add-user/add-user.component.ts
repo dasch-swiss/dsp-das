@@ -1,12 +1,19 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { CreateUserDialogComponent } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs';
 import { CollaborationPageService } from '../collaboration-page.service';
 
@@ -20,7 +27,10 @@ import { CollaborationPageService } from '../collaboration-page.service';
         <mat-label>{{ 'pages.project.addUser.select' | translate }}</mat-label>
         <input matInput [matAutocomplete]="user" [formControl]="usernameControl" />
 
-        <mat-autocomplete #user="matAutocomplete" (optionSelected)="addUser($event.option.value)">
+        <mat-autocomplete
+          #user="matAutocomplete"
+          [displayWith]="displayUser"
+          (optionSelected)="onUserSelected($event.option.value)">
           @if (loading) {
             <mat-option [disabled]="true">
               <app-progress-indicator />
@@ -33,18 +43,30 @@ import { CollaborationPageService } from '../collaboration-page.service';
               </mat-option>
             }
             @if (filteredUsers.length === 0) {
-              <mat-option [disabled]="true">No results</mat-option>
+              <mat-option [disabled]="true">{{ 'pages.project.addUser.noResults' | translate }}</mat-option>
             }
           }
         </mat-autocomplete>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" class="add-new create-user-btn" (click)="createUser()">
+      <button mat-raised-button color="primary" (click)="createUser()">
         {{ 'pages.project.addUser.newUser' | translate }}
       </button>
     </div>
   `,
-  styleUrls: ['./add-user.component.scss'],
+  imports: [
+    AsyncPipe,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatOption,
+    MatButton,
+    TranslatePipe,
+    AppProgressIndicatorComponent,
+  ],
 })
 export class AddUserComponent {
   @Input({ required: true }) projectUuid!: string;
@@ -71,20 +93,22 @@ export class AddUserComponent {
         this.loading = false;
         this._cdr.detectChanges();
       }),
-      map(response => response.users),
+      map(response => {
+        this.users = response.users;
+        return response.users;
+      }),
       shareReplay(1)
     ),
   ]).pipe(map(([filterVal, users_]) => (filterVal ? this._filter(users_, filterVal) : users_)));
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _dialog: MatDialog,
-    private _userApiService: UserApiService,
-    private _projectService: ProjectService,
-    private readonly _adminUsersApi: AdminUsersApiService,
-    public collaborationPageService: CollaborationPageService,
-    private _cdr: ChangeDetectorRef
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _adminApiService: AdminAPIApiService,
+    private readonly _cdr: ChangeDetectorRef,
+    private readonly _dialog: MatDialog,
+    private readonly _projectService: ProjectService,
+    private readonly _userApiService: UserApiService,
+    public readonly collaborationPageService: CollaborationPageService
   ) {}
 
   getLabel(user: ReadUser): string {
@@ -93,15 +117,25 @@ export class AddUserComponent {
     return `${usernameLabel}${emailLabel}${user.givenName} ${user.familyName}`;
   }
 
+  displayUser = (userId: string): string => {
+    const user = this.users.find(u => u.id === userId);
+    return user ? this.getLabel(user) : '';
+  };
+
   isMember(user: ReadUser): boolean {
     return user.projects
       ? user.projects.map(project => project.id as unknown as string).includes(this.projectIri)
       : false;
   }
 
+  onUserSelected(userId: string) {
+    // Clear the input immediately to prevent the user ID from being displayed
+    this.usernameControl.setValue(null, { emitEvent: false });
+    this.addUser(userId);
+  }
+
   addUser(userId: string) {
     this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(userId, this.projectIri).subscribe(() => {
-      this.usernameControl.setValue(null);
       this.collaborationPageService.reloadProjectMembers();
       this.reloadListSubject.next(null);
     });
@@ -117,7 +151,7 @@ export class AddUserComponent {
       .pipe(
         filter(result => result !== undefined),
         switchMap(userId =>
-          this._adminUsersApi.postAdminUsersIriUseririProjectMembershipsProjectiri(userId!, this.projectIri)
+          this._adminApiService.postAdminUsersIriUseririProjectMembershipsProjectiri(userId!, this.projectIri)
         )
       )
       .subscribe(() => {

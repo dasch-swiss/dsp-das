@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Constants, KnoraApiConfig, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ensureWithDefaultLanguage, StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConfigToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from './default-data/default-properties';
 import { LocalizationService } from './localization.service';
@@ -17,9 +17,9 @@ export class OntologyService {
   defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
   constructor(
-    @Inject(DspApiConfigToken) private _dspApiConfig: KnoraApiConfig,
-    private _route: ActivatedRoute,
-    private _localizationService: LocalizationService
+    @Inject(DspApiConfigToken) private readonly _dspApiConfig: KnoraApiConfig,
+    private readonly _route: ActivatedRoute,
+    private readonly _localizationService: LocalizationService
   ) {}
 
   static getOntologyNameFromIri(ontologyIri: string): string {
@@ -37,7 +37,14 @@ export class OntologyService {
 
   getInPreferedLanguage(labels: StringLiteralV2[]): string | undefined {
     const language = this._localizationService.getCurrentLanguage();
-    return labels.find(l => l.language === language)?.value;
+    const withLanguage = ensureWithDefaultLanguage(labels, language);
+
+    if (withLanguage.length === 0) {
+      return undefined;
+    }
+
+    // Find label matching current language, or fallback to first available
+    return withLanguage.find(l => l.language === language)?.value ?? withLanguage[0].value;
   }
 
   /**
@@ -110,13 +117,12 @@ export class OntologyService {
     }${this._dspApiConfig.apiPath}`;
   }
 
-  getOntologyIriFromRoute(projectShortcode: string): string | null {
+  getOntologyIriFromRoute(projectShortcode: string, ontologyName: string) {
     const iriBase = this.getIriBaseUrl();
-    let ontologyName = this._route.snapshot?.paramMap.get(RouteConstants.ontoParameter);
-    if (!ontologyName && this._route.snapshot?.root.children[0].children.length) {
-      ontologyName = this._route.snapshot?.root.children[0].children[0].paramMap.get(RouteConstants.ontoParameter);
-    }
+    return `${iriBase}/${RouteConstants.ontology}/${projectShortcode}/${ontologyName}/v2`;
+  }
 
-    return ontologyName ? `${iriBase}/${RouteConstants.ontology}/${projectShortcode}/${ontologyName}/v2` : null;
+  getClassIdFromParams(projectShortcode: string, ontologyLabel: string, classLabel: string) {
+    return `${this.getOntologyIriFromRoute(projectShortcode, ontologyLabel)}#${classLabel}`;
   }
 }

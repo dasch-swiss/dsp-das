@@ -30,7 +30,6 @@ import { PropertyFormValueComponent } from '../property-form-value/property-form
 
 @Component({
   selector: 'app-property-form-link-match-property',
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

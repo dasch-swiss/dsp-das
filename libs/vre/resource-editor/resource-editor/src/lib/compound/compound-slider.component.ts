@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatSliderModule } from '@angular/material/slider';
 import { CompoundService } from './compound.service';
 
 @Component({
@@ -27,6 +29,7 @@ import { CompoundService } from './compound.service';
       "
       #ngSliderThumb="matSliderThumb" />
   </mat-slider>`,
+  imports: [MatSliderModule, FormsModule],
 })
 export class CompoundSliderComponent {
   get compoundNavigation() {
@@ -37,5 +40,5 @@ export class CompoundSliderComponent {
     this.compoundService.openPage(page);
   }
 
-  constructor(public compoundService: CompoundService) {}
+  constructor(public readonly compoundService: CompoundService) {}
 }

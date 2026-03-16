@@ -1,54 +1,58 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatTabLink, MatTabNav, MatTabNavPanel } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { UserService } from '@dasch-swiss/vre/core/session';
+import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-system-page',
   template: `
-    <div class="content large middle">
-      @if (isSysAdmin$ | async) {
-        <div>
-          <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="navigation tab-bar margin-from-top">
-            <mat-tab-nav-panel #tabPanel />
-            @for (link of links; track link) {
-              <a
-                mat-tab-link
-                [routerLink]="link.url"
-                (click)="activeLink = link.name"
-                routerLinkActive
-                #rla="routerLinkActive"
-                [active]="rla.isActive">
-                <mat-icon class="tab-icon">{{ link.icon }}</mat-icon>
-                {{ link.name }}
-              </a>
-            }
-          </nav>
-          <router-outlet />
-        </div>
-      } @else {
-        <div class="content large middle">
-          <app-status [status]="403" />
-        </div>
-      }
-    </div>
+    <app-centered-layout>
+      <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="navigation margin-from-top">
+        <mat-tab-nav-panel #tabPanel />
+        @for (link of links; track link) {
+          <a
+            mat-tab-link
+            [routerLink]="link.url"
+            (click)="activeLink = link.name"
+            routerLinkActive
+            #rla="routerLinkActive"
+            [active]="rla.isActive">
+            <mat-icon class="tab-icon">{{ link.icon }}</mat-icon>
+            {{ link.name | translate }}
+          </a>
+        }
+      </nav>
+      <router-outlet />
+    </app-centered-layout>
   `,
   styleUrls: ['./system-page.component.scss'],
+  imports: [
+    MatIcon,
+    MatTabNav,
+    MatTabNavPanel,
+    MatTabLink,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+    TranslatePipe,
+    CenteredLayoutComponent,
+  ],
 })
 export class SystemPageComponent {
-  isSysAdmin$ = this._userService.isSysAdmin$;
+  private readonly _titleService = inject(Title);
 
   links = [
-    { name: 'All Projects', url: RouteConstants.systemProjects, icon: 'assignment' },
-    { name: 'All Users', url: RouteConstants.systemUsers, icon: 'group' },
+    { name: 'pages.system.allProjects', url: RouteConstants.systemProjects, icon: 'assignment' },
+    { name: 'pages.system.allUsers', url: RouteConstants.systemUsers, icon: 'group' },
   ];
 
   activeLink = '';
 
-  constructor(
-    private readonly _userService: UserService,
-    private readonly _titleService: Title
-  ) {
+  constructor() {
     this._titleService.setTitle('System administration');
   }
 }

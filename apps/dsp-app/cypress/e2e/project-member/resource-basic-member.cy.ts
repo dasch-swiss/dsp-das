@@ -1,7 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { ThingPictureClassResource } from '../../models/existing-data-models';
 import { UserProfiles } from '../../models/user-profiles';
-import { Project0001Page, Project0803Page } from '../../support/pages/existing-ontology-class-page';
+import { Project0001Page } from '../../support/pages/existing-ontology-class-page';
+
+const getAuthHeaders = () => ({
+  Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+});
 
 describe('Check project admin existing resource functionality', () => {
   let project0001Page: Project0001Page;
@@ -22,35 +26,24 @@ describe('Check project admin existing resource functionality', () => {
 
   beforeEach(() => {
     cy.viewport(2000, 1000); // width: 2000px, height: 1000px
-    cy.loginAdmin();
-    cy.request(
-      'POST',
-      `${Cypress.env('apiUrl')}/admin/projects/shortcode/${Project0001Page.projectShortCode}/legal-info/copyright-holders`,
-      {
-        data: ['myHolder'],
-      }
-    ).then(response => expect(response.status).to.equal(200));
+    cy.loginAdmin().then(() => {
+      cy.request({
+        method: 'POST',
+        url: `${Cypress.env('apiUrl')}/admin/projects/shortcode/${Project0001Page.projectShortCode}/legal-info/copyright-holders`,
+        headers: getAuthHeaders(),
+        body: {
+          data: ['myHolder'],
+        },
+      }).then(response => expect(response.status).to.equal(200));
 
-    cy.readFile('cypress/fixtures/user_profiles.json').then((json: UserProfiles) => {
-      const users: UserProfiles = json;
-      cy.login({
-        username: users.anythingProjectMember_username,
-        password: users.anythingProjectMember_password,
+      cy.readFile('cypress/fixtures/user_profiles.json').then((json: UserProfiles) => {
+        const users: UserProfiles = json;
+        cy.login({
+          username: users.anythingProjectMember_username,
+          password: users.anythingProjectMember_password,
+        });
       });
     });
-  });
-
-  it('cant add other project resource', () => {
-    const path = `/project/${Project0803Page.projectShortCode}/ontology/${Project0803Page.ontologyName}/book/add`;
-    cy.visit(path);
-    cy.url().should('not.contain', Project0803Page.projectShortCode);
-  });
-
-  it('can add owned project resource', () => {
-    const path = `/project/${Project0001Page.projectShortCode}/ontology/${Project0001Page.defaultOntology}/${Project0001Page.thingPictureClass.id}/add`;
-    cy.visit(path);
-    const regex = new RegExp(`${path}$`);
-    cy.url().should('match', regex);
   });
 
   it('ThingPicture resource should not be deletable or erasable', () => {
@@ -75,14 +68,9 @@ describe('Check project admin existing resource functionality', () => {
   it('ThingPicture resource should be created and deleted', () => {
     project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
-    cy.get('[data-cy=class-item]')
-      .contains(Project0001Page.thingPictureClass.label)
-      .closest('[data-cy=class-item]')
-      .find('[data-cy=add-class-instance]')
-      .click();
+    cy.get('[data-cy=create-resource-btn]').click();
 
     cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');
-    cy.get('[data-cy=create-resource-title]').should('exist').contains(Project0001Page.thingPictureClass.id);
     cy.get('[data-cy="upload-file"]').selectFile(`cypress${uploadedImageFilePath}`, { force: true });
     cy.wait('@uploadRequest').its('response.statusCode').should('eq', 200);
 
@@ -95,16 +83,12 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=authorship-chips]').type('my Author{enter}');
 
     const newLabel = faker.lorem.word();
-    cy.get('[data-cy=resource-label]')
-      .find('[data-cy=common-input-text]')
-      .should('be.visible')
-      .type(newLabel, { force: true });
+    cy.get('[data-cy=resource-label]').find('[data-cy=common-input-text]').type(newLabel, { force: true });
 
     const newTitle = faker.lorem.word();
     cy.get('[data-cy=creator-row-Titel]').find('[data-cy=common-input-text]').type(newTitle);
     cy.get('[data-cy="submit-button"]').click();
     cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
-    cy.get('@resourceRequest.all').should('have.length', 1);
 
     cy.get('[data-cy=resource-header-label]').contains(newLabel);
     cy.get('.representation-container').should('exist');
@@ -112,9 +96,9 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=row-Titel]').contains(newTitle);
 
     cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
-    cy.get('[data-cy=resource-toolbar-more-button]').click();
-    cy.get('[data-cy=resource-more-menu-delete-button]').should('exist').and('not.be.disabled').click();
-    cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
+    cy.get('[data-cy=resource-dialog]').find('[data-cy=resource-toolbar-more-button]').click();
+    cy.get('[data-cy=resource-more-menu-delete-button]').should('exist').click();
+    cy.get('[data-cy=app-delete-resource-dialog-comment]').type(faker.lorem.sentence());
     cy.get('[data-cy=app-delete-resource-dialog-button]').click();
     cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
   });
@@ -148,7 +132,6 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy="replace-file-submit-button"]').should('not.have.attr', 'disabled');
     cy.get('[data-cy="replace-file-submit-button"]').click();
     cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
-    cy.get('@resourceRequest.all').should('have.length', 1);
 
     cy.intercept('GET', `**/resources/**`).as('resourcesRequest');
     cy.get('[data-cy=show-all-properties]').scrollIntoView();

@@ -1,10 +1,19 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTabsModule } from '@angular/material/tabs';
 import { Constants, ReadResource } from '@dasch-swiss/dsp-js';
-import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
-import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
+import { AnnotationTabComponent } from './annotation-tab.component';
 import { CompoundService } from './compound/compound.service';
+import { IncomingResourceHeaderComponent } from './incoming-resource-header.component';
+import { PropertiesDisplayComponent } from './properties-display/properties-display.component';
+import { PropertiesToggleComponent } from './properties-display/properties-toggle.component';
+import { RegionService } from './representations/region.service';
+import { SegmentsService } from './segment-support/segments.service';
+import { SegmentTabComponent } from './segment-tab.component';
 
 @Component({
   selector: 'app-resource-tabs',
@@ -12,16 +21,15 @@ import { CompoundService } from './compound/compound.service';
     <mat-tab-group animationDuration="0ms" [selectedIndex]="selectedTab" (selectedTabChange)="onTabChange($event)">
       <mat-tab #matTabProperties [label]="'resourceEditor.properties' | translate">
         @if (resource) {
+          <app-properties-toggle [properties]="resource.resProps" />
           <app-properties-display [resource]="resource" />
         }
       </mat-tab>
 
       @if (incomingResource) {
         <mat-tab #matTabIncoming [label]="resourceClassLabel(incomingResource.res)">
-          <app-properties-display
-            [resource]="incomingResource"
-            [displayLabel]="true"
-            [parentResourceId]="resource.res.id" />
+          <app-incoming-resource-header [resource]="incomingResource.res" />
+          <app-properties-display [resource]="incomingResource" [parentResourceId]="resource.res.id" />
         </mat-tab>
       }
 
@@ -29,10 +37,16 @@ import { CompoundService } from './compound/compound.service';
       @if (displayAnnotations) {
         <mat-tab label="Annotations">
           <ng-template matTabLabel>
-            {{ 'resourceEditor.labelAnnotations' | translate }}
+            <span>{{ 'resourceEditor.labelAnnotations' | translate }}</span>
             @if (regionsCount > 0) {
-              <span [matBadge]="regionsCount" matBadgeColor="primary" matBadgeOverlap="false"> </span>
+              <span
+                style="margin-left: 0.5em;"
+                [matBadge]="regionsCount"
+                matBadgeColor="primary"
+                matBadgeOverlap="false">
+              </span>
             }
+            <span [ngClass]="['dots-container', (regionService.regionsLoading$ | async) ? 'dots' : '']"> </span>
           </ng-template>
           <app-annotation-tab [resource]="resource.res" />
         </mat-tab>
@@ -54,16 +68,49 @@ import { CompoundService } from './compound/compound.service';
   styles: [
     `
       :host ::ng-deep {
-        .mat-mdc-tab-body {
-          width: 100%;
+        .mat-mdc-tab-body,
+        .mat-mdc-tab-body-content {
+          height: auto !important;
+          overflow: visible !important;
         }
-        .mat-mdc-tab-body.mat-mdc-tab-body-active,
-        .mat-mdc-tab-body-content,
-        .mat-mdc-tab-body-wrapper {
-          overflow: visible;
+      }
+      .dots-container {
+        margin-left: 1.5em;
+        min-width: 3ch;
+      }
+      .dots {
+        position: relative;
+        display: inline-block;
+        color: var(--primary);
+      }
+      .dots::after {
+        content: '...';
+        display: inline-block;
+        overflow: hidden;
+        width: 0;
+        vertical-align: bottom;
+
+        animation: dots 1s steps(3, end) infinite;
+      }
+
+      @keyframes dots {
+        to {
+          width: 3ch;
         }
       }
     `,
+  ],
+  imports: [
+    AsyncPipe,
+    NgClass,
+    MatBadgeModule,
+    MatTabsModule,
+    TranslatePipe,
+    AnnotationTabComponent,
+    IncomingResourceHeaderComponent,
+    PropertiesDisplayComponent,
+    PropertiesToggleComponent,
+    SegmentTabComponent,
   ],
 })
 export class ResourceTabsComponent implements OnInit, OnDestroy {
@@ -84,9 +131,9 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private _cdr: ChangeDetectorRef,
+    private readonly _cdr: ChangeDetectorRef,
     public regionService: RegionService,
-    private _compoundService: CompoundService,
+    private readonly _compoundService: CompoundService,
     public segmentsService: SegmentsService
   ) {}
 

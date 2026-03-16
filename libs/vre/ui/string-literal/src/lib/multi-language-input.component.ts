@@ -5,13 +5,13 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { HumanReadableErrorPipe } from './human-readable-error.pipe';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MultiLanguageFormArray } from './multi-language-form-array.type';
 import { MultiLanguageFormService } from './multi-language-form.service';
 
 @Component({
   selector: 'app-multi-language-input',
-  standalone: true,
   providers: [MultiLanguageFormService],
   imports: [
     MatButtonModule,
@@ -22,7 +22,9 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     FormsModule,
     ReactiveFormsModule,
     HumanReadableErrorPipe,
+    TranslatePipe,
   ],
+
   template: `
     <mat-form-field style="width: 100%">
       <mat-label>{{ placeholder }}</mat-label>
@@ -58,7 +60,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     @if (formService.formArray.invalid && formService.formArray.touched) {
       <mat-error>
         @if (formService.invalidErrors?.language) {
-          Language {{ formService.invalidErrors.language }}:
+          {{ 'ui.common.fields.language' | translate }} {{ formService.invalidErrors.language }}:
           {{ formService.invalidErrors.error | humanReadableError }}
         }
         @if (!formService.invalidErrors?.language) {
@@ -87,14 +89,14 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     `,
   ],
 })
-export class MutiLanguageInputComponent implements OnInit, OnChanges {
+export class MultiLanguageInputComponent implements OnInit, OnChanges {
   @Input({ required: true }) formArray!: MultiLanguageFormArray;
   @Input({ required: true }) placeholder!: string;
   @Input() editable = true;
   @Input() validators: ValidatorFn[] = [];
   @Input({ required: true }) isRequired!: boolean;
 
-  constructor(public formService: MultiLanguageFormService) {}
+  constructor(public readonly formService: MultiLanguageFormService) {}
 
   ngOnInit() {
     this.initialize();

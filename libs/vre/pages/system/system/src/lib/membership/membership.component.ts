@@ -1,11 +1,14 @@
+import { AsyncPipe, I18nPluralPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
+import { MatFormField } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatTooltip } from '@angular/material/tooltip';
 import { Constants, StoredProject } from '@dasch-swiss/dsp-js';
-import {
-  AdminUsersApiService,
-  PermissionsDataADM,
-  Project,
-  UserDto,
-} from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminAPIApiService, PermissionsDataADM, Project, UserDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { BehaviorSubject, combineLatest, map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { AutocompleteItem } from '../autocomplete-item.interface';
@@ -64,6 +67,18 @@ import { AutocompleteItem } from '../autocomplete-item.interface';
     }
   `,
   styleUrls: ['./membership.component.scss'],
+  imports: [
+    AsyncPipe,
+    FormsModule,
+    I18nPluralPipe,
+    MatDivider,
+    MatFormField,
+    MatIcon,
+    MatIconButton,
+    MatOption,
+    MatSelect,
+    MatTooltip,
+  ],
 })
 export class MembershipComponent implements OnDestroy, OnChanges {
   @Input({ required: true }) userId!: string;
@@ -86,15 +101,18 @@ export class MembershipComponent implements OnDestroy, OnChanges {
   };
 
   constructor(
-    private _allProjectsService: AllProjectsService,
-    private _adminUsersApi: AdminUsersApiService
+    private readonly _adminApiService: AdminAPIApiService,
+    private readonly _allProjectsService: AllProjectsService
   ) {}
 
   ngOnChanges() {
     this.user$ = this._refreshSubject.pipe(
-      switchMap(() => this._adminUsersApi.getAdminUsersIriUseriri(this.userId)),
+      switchMap(() => this._adminApiService.getAdminUsersIriUseriri(this.userId)),
       map(response => response.user)
     );
+
+    this.userProjects$ = this.user$.pipe(map(user => user.projects || []));
+
     this.projects$ = combineLatest([this._allProjectsService.allProjects$, this.user$]).pipe(
       map(([projects, user]) => this._getProjects(projects, user)),
       takeUntil(this._ngUnsubscribe)
@@ -107,7 +125,7 @@ export class MembershipComponent implements OnDestroy, OnChanges {
   }
 
   removeFromProject(project: Project) {
-    this._adminUsersApi
+    this._adminApiService
       .deleteAdminUsersIriUseririProjectMembershipsProjectiri(this.userId, project.id as unknown as string)
       .subscribe(() => {
         this._refreshUserProjects();
@@ -115,9 +133,11 @@ export class MembershipComponent implements OnDestroy, OnChanges {
   }
 
   addToProject(projectIri: string) {
-    this._adminUsersApi.postAdminUsersIriUseririProjectMembershipsProjectiri(this.userId, projectIri).subscribe(() => {
-      this._refreshUserProjects();
-    });
+    this._adminApiService
+      .postAdminUsersIriUseririProjectMembershipsProjectiri(this.userId, projectIri)
+      .subscribe(() => {
+        this._refreshUserProjects();
+      });
   }
 
   isUserProjectAdmin(permissions: PermissionsDataADM, project: Project): boolean {

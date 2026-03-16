@@ -1,15 +1,23 @@
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
 
 @Component({
   selector: 'app-ontology-form',
   template: `
     <form [formGroup]="ontologyForm">
-      <app-common-input [control]="ontologyForm.controls.label" [label]="'Label'" data-cy="label-input" />
+      <app-common-input
+        [control]="ontologyForm.controls.label"
+        [label]="'pages.ontology.ontologyForm.label' | translate"
+        data-cy="label-input" />
 
       <mat-form-field style="width: 100%">
-        <mat-label>Comment</mat-label>
+        <mat-label>{{ 'pages.ontology.ontologyForm.comment' | translate }}</mat-label>
         <textarea
           matInput
           data-cy="comment-textarea"
@@ -21,6 +29,15 @@ import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
       </mat-form-field>
     </form>
   `,
+  imports: [
+    CdkTextareaAutosize,
+    CommonInputComponent,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    ReactiveFormsModule,
+    TranslatePipe,
+  ],
 })
 export class OntologyFormComponent implements OnInit {
   @Input({ required: true }) mode!: 'create' | 'edit';
@@ -29,7 +46,7 @@ export class OntologyFormComponent implements OnInit {
 
   ontologyForm!: OntologyForm;
 
-  constructor(private _fb: FormBuilder) {}
+  constructor(private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
     this._buildForm();

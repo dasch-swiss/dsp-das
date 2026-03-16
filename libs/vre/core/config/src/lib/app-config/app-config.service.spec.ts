@@ -1,8 +1,3 @@
-/*
- * Copyright © 2021 - 2023 Swiss National Data and Service Center for the Humanities and/or DaSCH Service Platform contributors.
- *  SPDX-License-Identifier: Apache-2.0
- */
-
 import { TestBed } from '@angular/core/testing';
 import { AppConfig } from './app-config';
 import { AppConfigService } from './app-config.service';
@@ -30,6 +25,21 @@ describe('AppConfigService with dev config', () => {
       environment: 'dev-server',
       rollbar: {
         enabled: false,
+      },
+      faro: {
+        enabled: false,
+        collectorUrl: 'http://localhost:12345/collect',
+        appName: 'dsp-app',
+        sessionTracking: {
+          enabled: true,
+          persistent: true,
+          samplingRate: 1.0,
+        },
+        console: {
+          enabled: true,
+          disabledLevels: [],
+        },
+        tracingCorsUrls: [],
       },
     },
     featureFlags: {
@@ -99,6 +109,21 @@ describe('AppConfigService with prod config', () => {
       rollbar: {
         enabled: true,
         accessToken: 'rollbar_token',
+      },
+      faro: {
+        enabled: true,
+        collectorUrl: 'https://faro-collector-prod-eu-west-2.grafana.net/collect/test',
+        appName: 'dsp-app',
+        sessionTracking: {
+          enabled: true,
+          persistent: true,
+          samplingRate: 0.1,
+        },
+        console: {
+          enabled: false,
+          disabledLevels: ['log', 'info'],
+        },
+        tracingCorsUrls: [],
       },
     },
     featureFlags: {

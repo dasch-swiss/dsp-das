@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-progress-spinner',
+  imports: [MatProgressSpinnerModule],
+
   template: ` <mat-progress-spinner
     diameter="20"
     strokeWidth="2"

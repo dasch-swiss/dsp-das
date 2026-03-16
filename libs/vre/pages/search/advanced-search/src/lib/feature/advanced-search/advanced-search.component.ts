@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
@@ -30,16 +29,15 @@ export interface QueryObject {
 
 @Component({
   selector: 'app-advanced-search',
-  standalone: true,
   imports: [
-    CommonModule,
-    OrderByComponent,
-    OntologyResourceFormComponent,
-    PropertyFormComponent,
+    AsyncPipe,
     FormActionsComponent,
     MatButtonModule,
     MatIconModule,
-    TranslateModule,
+    OntologyResourceFormComponent,
+    OrderByComponent,
+    PropertyFormComponent,
+    RouterModule,
   ],
   providers: [AdvancedSearchStoreService],
   templateUrl: './advanced-search.component.html',
@@ -82,7 +80,7 @@ export class AdvancedSearchComponent implements OnInit {
   constants = Constants;
   previousSearchObject: AdvancedSearchStateSnapshot | null = null;
 
-  constructor(private _dialogService: DialogService) {}
+  constructor(private readonly _dialogService: DialogService) {}
 
   ngOnInit(): void {
     const projectIri = `http://rdfh.ch/projects/${this.uuid}`;

@@ -1,12 +1,20 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { ReadUser, UpdateUserRequest } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { UserService } from '@dasch-swiss/vre/core/session';
+import { UserForm, UserFormComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslateService } from '@ngx-translate/core';
-import { UserForm } from '../user-form/user-form.type';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 export interface EditUserDialogProps {
   user: ReadUser;
@@ -16,30 +24,46 @@ export interface EditUserDialogProps {
 @Component({
   selector: 'app-edit-user-dialog',
   template: `
-    <app-dialog-header [title]="data.isOwnAccount ? 'Edit my profile' : 'Edit user'" />
+    <app-dialog-header
+      [title]="
+        data.isOwnAccount
+          ? ('pages.userSettings.editUserDialog.editMyProfile' | translate)
+          : ('pages.userSettings.editUserDialog.editUser' | translate)
+      " />
     @if (data.user; as user) {
-      <app-user-form [data]="user" (afterFormInit)="afterFormInit($event)" />
+      <div mat-dialog-content>
+        <app-user-form [data]="user" (afterFormInit)="afterFormInit($event)" />
+      </div>
     }
 
     <div mat-dialog-actions align="end">
-      <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+      <button color="primary" mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button mat-raised-button color="primary" (click)="updateUser()">
-        {{ 'ui.form.action.update' | translate }}
+        {{ 'ui.common.actions.update' | translate }}
       </button>
     </div>
   `,
+  imports: [
+    DialogHeaderComponent,
+    TranslatePipe,
+    MatDialogContent,
+    UserFormComponent,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+  ],
 })
 export class EditUserDialogComponent {
   form!: UserForm;
 
   constructor(
-    private _dialogRef: MatDialogRef<EditUserDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditUserDialogProps,
-    private _notification: NotificationService,
-    private _userService: UserService,
-    private _localizationsService: LocalizationService,
-    private _translateService: TranslateService,
-    private _userApiService: UserApiService
+    private readonly _dialogRef: MatDialogRef<EditUserDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public readonly data: EditUserDialogProps,
+    private readonly _notification: NotificationService,
+    private readonly _userService: UserService,
+    private readonly _localizationsService: LocalizationService,
+    private readonly _translateService: TranslateService,
+    private readonly _userApiService: UserApiService
   ) {}
 
   afterFormInit(form: UserForm) {

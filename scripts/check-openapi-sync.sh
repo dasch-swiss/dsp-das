@@ -46,12 +46,12 @@ check_dependencies() {
         log "Install with: brew install yq (macOS) or apt-get install yq (Ubuntu)"
         exit 1
     fi
-    
+
     if ! command -v curl &> /dev/null; then
         log "${RED}❌ Error: curl is required but not installed.${NC}"
         exit 1
     fi
-    
+
     if ! command -v diff &> /dev/null; then
         log "${RED}❌ Error: diff is required but not installed.${NC}"
         exit 1
@@ -61,9 +61,12 @@ check_dependencies() {
 clean_spec() {
     local input_file="$1"
     local output_file="$2"
-    
+
     log_verbose "Cleaning spec: $input_file -> $output_file"
-    
+
+    # Remove metadata and unused endpoints from comparison
+    # - Metadata: version, descriptions, examples, tags (changes frequently, not meaningful)
+    # - Unused endpoints: SHACL validation (backend-only tool, not used in frontend)
     yq eval '
         del(.info.version, .info.title, .info.description, .info.contact) |
         del(.servers) |
@@ -71,7 +74,9 @@ clean_spec() {
         del(.. | .summary?) |
         del(.. | .examples?) |
         del(.. | .example?) |
-        del(.. | .tags?)
+        del(.. | .tags?) |
+        del(.paths."/shacl/validate") |
+        del(.components.schemas.ValidationFormData)
     ' "$input_file" > "$output_file"
 }
 
@@ -147,13 +152,13 @@ main() {
         log "${YELLOW}Or manually:${NC}"
         log "  curl -o $LOCAL_SPEC $REMOTE_URL"
         log "  npm run generate-openapi-module"
-        
+
         if [ "$VERBOSE" = true ]; then
             log ""
             log "${YELLOW}Meaningful changes detected:${NC}"
             diff "$TEMP_DIR/clean-local.yaml" "$TEMP_DIR/clean-remote.yaml" | head -20 || true
         fi
-        
+
         exit 1
     fi
 }

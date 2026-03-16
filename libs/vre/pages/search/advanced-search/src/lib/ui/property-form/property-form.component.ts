@@ -31,7 +31,6 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
 
 @Component({
   selector: 'app-property-form',
-  standalone: true,
   imports: [
     MatButtonModule,
     MatIconModule,

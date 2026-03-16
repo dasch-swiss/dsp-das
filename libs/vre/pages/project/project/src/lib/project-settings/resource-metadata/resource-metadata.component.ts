@@ -1,9 +1,11 @@
-import { HttpResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ExportFormat, V2MetadataApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { APIV2ApiService, ExportFormat } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, finalize, Subject, switchMap, takeUntil } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 
@@ -11,10 +13,12 @@ import { ProjectPageService } from '../../project-page.service';
   selector: 'app-resource-metadata',
   templateUrl: './resource-metadata.component.html',
   styleUrl: './resource-metadata.component.scss',
+  imports: [MatButton, AppProgressIndicatorComponent, TranslatePipe],
 })
 export class ResourceMetadataComponent implements OnDestroy {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
   private readonly _destroy$ = new Subject<void>();
+  private _translateService = inject(TranslateService);
 
   readonly project$ = this._reloadSubject.asObservable().pipe(
     switchMap(() => this._projectPageService.currentProject$),
@@ -24,11 +28,11 @@ export class ResourceMetadataComponent implements OnDestroy {
   isDownloadingFile = false;
 
   constructor(
-    private _ats: AccessTokenService,
-    private _cdr: ChangeDetectorRef,
-    private _ms: V2MetadataApiService,
-    private _snackBar: MatSnackBar,
-    private _projectPageService: ProjectPageService
+    private readonly _ats: AccessTokenService,
+    private readonly _cdr: ChangeDetectorRef,
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _snackBar: MatSnackBar,
+    private readonly _v2ApiService: APIV2ApiService
   ) {}
 
   ngOnDestroy() {
@@ -50,10 +54,9 @@ export class ResourceMetadataComponent implements OnDestroy {
 
     const mimeType = this._getMimeType(format);
     const classIris: string[] | undefined = undefined;
-    const authToken = this._ats.getAccessToken() ?? undefined;
 
-    this._ms
-      .getV2MetadataProjectsProjectshortcodeResources(shortcode, authToken, format, classIris, 'response', false, {
+    this._v2ApiService
+      .getV2MetadataProjectsProjectshortcodeResources(shortcode, format, classIris, undefined, false, {
         httpHeaderAccept: 'text/plain',
       })
       .pipe(
@@ -64,24 +67,27 @@ export class ResourceMetadataComponent implements OnDestroy {
         })
       )
       .subscribe(
-        (response: HttpResponse<string>) => {
-          if (response.status === 200) {
-            this._showSuccess(`Metadata for project ${shortcode} downloaded successfully.`);
-            setTimeout(() => {
-              this._handleDownload(response, shortcode, mimeType);
-            }, 1000);
-          } else {
-            this._showError(`Failed to download metadata for project ${shortcode}.`);
-          }
+        response => {
+          this._showSuccess(
+            this._translateService.instant('pages.project.resourceMetadata.downloadSuccess', { shortcode })
+          );
+          setTimeout(() => {
+            this._handleDownload(response, shortcode, mimeType);
+          }, 1000);
         },
         error => {
-          this._showError(`Error downloading metadata for project ${shortcode}: ${error.message}`);
+          this._showError(
+            this._translateService.instant('pages.project.resourceMetadata.downloadErrorWithMessage', {
+              shortcode,
+              errorMessage: error.message,
+            })
+          );
         }
       );
   }
 
-  private _handleDownload(response: HttpResponse<string>, shortcode: string, mimeType: string): void {
-    const blob = new Blob([response.body!], { type: mimeType });
+  private _handleDownload(response: string, shortcode: string, mimeType: string): void {
+    const blob = new Blob([response], { type: mimeType });
     const filename = `project_${shortcode}_metadata`;
 
     const link = document.createElement('a');

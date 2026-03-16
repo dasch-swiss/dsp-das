@@ -1,5 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { HumanReadableErrorPipe } from './human-readable-error.pipe';
 
 @Component({
   selector: 'app-common-input',
@@ -25,8 +29,7 @@ import { FormControl } from '@angular/forms';
     </mat-form-field>
   `,
   styles: [':host { display: block;}'],
-  /** TODO can't mark as OnPush because it does not detect touched / pristine changes.
-   This should be fixed with angular 18 form touchedChangedEvent. * */
+  imports: [HumanReadableErrorPipe, MatFormFieldModule, MatIconModule, MatInputModule, ReactiveFormsModule],
 })
 export class CommonInputComponent {
   @Input({ required: true }) control!: FormControl<string | number>;

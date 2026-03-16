@@ -1,20 +1,31 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
+import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { combineLatest, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-advanced-search-results-page',
+  imports: [AsyncPipe, MatButton, MatIcon, CenteredBoxComponent, NoResultsFoundComponent, ResourceBrowserComponent],
   template: `
     @if (resources$ | async; as resources) {
-      <app-resource-browser
-        [data]="{ resources: resources, selectFirstResource: true }"
-        [showBackToFormButton]="true"
-        [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
+      @if (resources.length === 0) {
+        <app-centered-box>
+          <app-no-results-found [message]="noResultMessage" />
+          <a mat-stroked-button (click)="navigate()"><mat-icon>chevron_left</mat-icon>Back to search form</a>
+        </app-centered-box>
+      } @else {
+        <app-resource-browser
+          [data]="{ resources: resources, selectFirstResource: true }"
+          [showBackToFormButton]="true" />
+      }
     }
   `,
   providers: [ResourceResultService],
@@ -35,13 +46,14 @@ export class AdvancedSearchResultsPageComponent {
     })
   );
 
+  readonly noResultMessage = `We couldn't find any resources matching your search criteria. Try adjusting your search parameters.`;
+
   constructor(
-    private _route: ActivatedRoute,
-    private _titleService: Title,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _resourceResultService: ResourceResultService,
-    public projectPageService: ProjectPageService
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _resourceResultService: ResourceResultService,
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _titleService: Title
   ) {
     this._titleService.setTitle(`Advanced search results`);
   }
@@ -60,4 +72,9 @@ export class AdvancedSearchResultsPageComponent {
 
   private _numberOfAllResults$ = (params: Params) =>
     this._dspApiConnection.v2.search.doExtendedSearchCountQuery(`${this._getQuery(params)}OFFSET 0`);
+
+  navigate() {
+    const projectUuid = this._route.parent?.snapshot.params['uuid'];
+    this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.advancedSearch]);
+  }
 }

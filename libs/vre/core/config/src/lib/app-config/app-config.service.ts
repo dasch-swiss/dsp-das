@@ -1,8 +1,3 @@
-/*
- * Copyright © 2021 - 2023 Swiss National Data and Service Center for the Humanities and/or DaSCH Service Platform contributors.
- *  SPDX-License-Identifier: Apache-2.0
- */
-
 import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConfig } from '@dasch-swiss/dsp-js';
 import { AppConfig } from './app-config';
@@ -12,7 +7,7 @@ import { DspConfig } from './dsp-config';
 import { DspFeatureFlagsConfig } from './dsp-feature-config';
 import { DspIiifConfig } from './dsp-iiif-config';
 import { DspIngestConfig } from './dsp-ingest-config';
-import { DspInstrumentationConfig, DspRollbarConfig } from './dsp-instrumentation-config';
+import { DspInstrumentationConfig, DspRollbarConfig, DspFaroConfig } from './dsp-instrumentation-config';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +25,7 @@ export class AppConfigService {
    * Watch out for AppConfig. The config.json is simply pressed into
    * this type without type checking!!!
    */
-  constructor(@Inject(AppConfigToken) private _configJson: unknown) {
+  constructor(@Inject(AppConfigToken) private readonly _configJson: unknown) {
     // parses the config and
     // throws an error if config is not valid
     const c = AppConfig.parse(_configJson);
@@ -72,7 +67,23 @@ export class AppConfigService {
     // init instrumentation configuration
     this._dspInstrumentationConfig = new DspInstrumentationConfig(
       c.instrumentation.environment,
-      new DspRollbarConfig(c.instrumentation.rollbar.enabled, c.instrumentation.rollbar.accessToken)
+      new DspRollbarConfig(c.instrumentation.rollbar.enabled, c.instrumentation.rollbar.accessToken),
+      new DspFaroConfig(
+        c.instrumentation.faro.enabled,
+        c.instrumentation.faro.collectorUrl,
+        c.instrumentation.faro.appName,
+        c.instrumentation.faro.sessionTracking as {
+          enabled: boolean;
+          persistent: boolean;
+          samplingRate: number;
+        },
+        c.instrumentation.faro.console as {
+          enabled: boolean;
+          disabledLevels: ('log' | 'info' | 'warn' | 'error' | 'debug')[];
+        },
+        c.instrumentation.faro.tracingCorsUrls,
+        c.instrumentation.faro.otlp
+      )
     );
 
     this._dspFeatureFlagsConfig = new DspFeatureFlagsConfig(c.featureFlags.allowEraseProjects);

@@ -5,7 +5,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   name: 'internalLinkReplacer',
 })
 export class InternalLinkReplacerPipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private readonly _sanitizer: DomSanitizer) {}
 
   transform(value: null | string | SafeHtml): SafeHtml | null {
     if (value === null) {
@@ -13,7 +13,12 @@ export class InternalLinkReplacerPipe implements PipeTransform {
     }
 
     // Convert SafeHtml back to string if needed
-    const htmlString = typeof value === 'string' ? value : value['changingThisBreaksApplicationSecurity'];
+    const htmlString =
+      typeof value === 'string'
+        ? value
+        : (value as unknown as { changingThisBreaksApplicationSecurity: string })[
+            'changingThisBreaksApplicationSecurity'
+          ];
 
     // Create a temporary div element to parse and manipulate the HTML
     const div = document.createElement('div');
@@ -37,6 +42,6 @@ export class InternalLinkReplacerPipe implements PipeTransform {
     const updatedHtml = div.innerHTML;
 
     // Sanitize and return the updated HTML string as SafeHtml
-    return this.sanitizer.bypassSecurityTrustHtml(updatedHtml);
+    return this._sanitizer.bypassSecurityTrustHtml(updatedHtml);
   }
 }

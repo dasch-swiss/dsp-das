@@ -1,6 +1,14 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
 import { ReadProject } from '@dasch-swiss/dsp-js';
-import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { TranslatePipe } from '@ngx-translate/core';
+
+export interface LicenseToggleEvent {
+  licenseId: string;
+  enabled: boolean;
+}
 
 @Component({
   selector: 'app-licenses-enabled-table',
@@ -20,9 +28,7 @@ import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swis
             </a>
           </td>
           <td>
-            <mat-checkbox
-              [checked]="license.isEnabled"
-              (change)="$event.checked ? enable(license.id) : disable(license.id)" />
+            <mat-checkbox [checked]="license.isEnabled" (change)="onLicenseToggle($event, license.id)" />
           </td>
         </tr>
       }
@@ -57,32 +63,22 @@ import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swis
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatCheckbox, MatIcon, TranslatePipe],
 })
 export class LicensesEnabledTableComponent {
   @Input({ required: true }) licenses!: ProjectLicenseDto[];
   @Input({ required: true }) project!: ReadProject;
   @Input({ required: true }) label!: string;
-  @Output() refresh = new EventEmitter<void>();
+  @Output() licenseToggle = new EventEmitter<LicenseToggleEvent>();
 
   get enabledLicensesNumber() {
     return this.licenses.filter(license => license.isEnabled).length;
   }
 
-  constructor(private _copyrightApi: AdminProjectsLegalInfoApiService) {}
-
-  enable(licenseIri: string) {
-    this._copyrightApi
-      .putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriEnable(this.project.shortcode, licenseIri)
-      .subscribe(() => {
-        this.refresh.emit();
-      });
-  }
-
-  disable(licenseIri: string) {
-    this._copyrightApi
-      .putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriDisable(this.project.shortcode, licenseIri)
-      .subscribe(() => {
-        this.refresh.emit();
-      });
+  onLicenseToggle(event: MatCheckboxChange, licenseId: string): void {
+    this.licenseToggle.emit({
+      licenseId,
+      enabled: event.checked,
+    });
   }
 }

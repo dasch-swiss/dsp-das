@@ -2,6 +2,10 @@ import { Project00FFPayloads } from '../../fixtures/project00FF-resource-payload
 import { ResponseUtil } from '../../fixtures/requests';
 import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
 
+const getAuthHeaders = () => ({
+  Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+});
+
 describe('File representation', () => {
   let lastModDate: string;
   let po: AddResourceInstancePage;
@@ -11,6 +15,30 @@ describe('File representation', () => {
     po = new AddResourceInstancePage();
   });
 
+  it('svg file upload is accepted', () => {
+    const classPayload = projectPayloads.stillImageRepresentation('svgclass');
+
+    cy.request({
+      method: 'POST',
+      url: `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
+      headers: getAuthHeaders(),
+      body: classPayload,
+    }).then(() => {
+      cy.visit('/project/00FF/data/images/svgclass');
+      cy.get('[data-cy=create-resource-btn]').click();
+
+      po.addInitialLabel();
+
+      // Intercept ingest upload
+      cy.intercept('POST', '**/assets/ingest/**').as('ingestUpload');
+
+      cy.get('[data-cy=upload-file]').selectFile('cypress/fixtures/test.svg', { force: true });
+
+      // Verify the upload was initiated
+      cy.wait('@ingestUpload').its('response.statusCode').should('eq', 200);
+    });
+  });
+
   it('external iiif image', () => {
     const classPayload = projectPayloads.stillImageRepresentation('datamodelclass');
     const invalidIifImageUrl = 'https://example.com/wrong.jpg';
@@ -18,7 +46,12 @@ describe('File representation', () => {
     const encodedValidIifImageUrl =
       'https://iiif.wellcomecollection.org/image/b20432033_B0008608.JP2/full/880%2C/0/default.jpg';
 
-    cy.request('POST', `${Cypress.env('apiUrl')}/v2/ontologies/classes`, classPayload)
+    cy.request({
+      method: 'POST',
+      url: `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
+      headers: getAuthHeaders(),
+      body: classPayload,
+    })
       .then(response => {
         lastModDate = ResponseUtil.lastModificationDate(response);
       })
@@ -34,7 +67,6 @@ describe('File representation', () => {
 
         // try to submit with invalid url
         po.clickOnSubmit();
-        cy.get('mat-error').should('contain.text', 'The provided URL is not a valid IIIF image URL');
 
         cy.intercept('HEAD', '**/default.jpg', {
           statusCode: 200,

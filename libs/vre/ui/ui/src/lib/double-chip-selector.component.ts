@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MatChipListbox, MatChipListboxChange } from '@angular/material/chips';
+import { MatChipsModule, MatChipListbox, MatChipListboxChange } from '@angular/material/chips';
 
 @Component({
   selector: 'app-double-chip-selector',
@@ -12,6 +12,7 @@ import { MatChipListbox, MatChipListboxChange } from '@angular/material/chips';
     <mat-chip-option [value]="true">{{ options[0] }}</mat-chip-option>
     <mat-chip-option [value]="false">{{ options[1] }}</mat-chip-option>
   </mat-chip-listbox>`,
+  imports: [MatChipsModule],
 })
 export class DoubleChipSelectorComponent {
   @Input({ required: true }) value!: boolean;

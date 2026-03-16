@@ -24,6 +24,11 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    if: |
+      (github.event.head_commit == null ||
+       !startsWith(github.event.head_commit.message, 'chore(main): release')) &&
+      (github.event.head_commit == null ||
+       github.event.head_commit.author.username != 'daschbot')
     permissions:
       actions: read
       contents: read
@@ -38,11 +43,11 @@ jobs:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
         # If you wish to specify custom queries, you can do so here or in a config file.
@@ -53,7 +58,7 @@ jobs:
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
+      uses: github/codeql-action/autobuild@v4
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
@@ -67,4 +72,4 @@ jobs:
     #   make release
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@v4

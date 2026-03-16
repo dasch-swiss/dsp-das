@@ -1,9 +1,20 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, inject, Inject, OnInit } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { OntologyEditService } from '../../services/ontology-edit.service';
+import { PropertyFormComponent } from './property-form.component';
 import {
   CreatePropertyData,
   CreatePropertyDialogData,
@@ -17,7 +28,7 @@ import {
   template: ` <app-dialog-header [title]="title" [subtitle]="data.propType.group + ': ' + data.propType.label || ''" />
     <app-property-form mat-dialog-content (afterFormInit)="form = $event" [propertyData]="data" />
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         mat-raised-button
         color="primary"
@@ -26,31 +37,45 @@ import {
         [isLoading]="loading"
         [disabled]="form.invalid"
         (click)="onSubmit()">
-        Submit
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>`,
+  imports: [
+    DialogHeaderComponent,
+    LoadingButtonDirective,
+    MatButton,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    PropertyFormComponent,
+    TranslatePipe,
+  ],
 })
 export class EditPropertyFormDialogComponent implements OnInit {
   loading = false;
   form!: PropertyForm;
+
+  protected readonly _translate = inject(TranslateService);
 
   isPropertyEditData(data: EditPropertyDialogData | CreatePropertyDialogData): data is EditPropertyDialogData {
     return 'id' in data;
   }
 
   get title(): string {
-    return this.isPropertyEditData(this.data) ? 'Edit property' : 'Create new property';
+    return this.isPropertyEditData(this.data)
+      ? this._translate.instant('pages.ontology.propertyForm.editTitle')
+      : this._translate.instant('pages.ontology.propertyForm.createTitle');
   }
 
   constructor(
-    private dialogRef: MatDialogRef<EditPropertyFormDialogComponent>,
+    private readonly _dialogRef: MatDialogRef<EditPropertyFormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CreatePropertyDialogData | EditPropertyDialogData,
     private _oes: OntologyEditService,
     private _projectPageService: ProjectPageService
   ) {}
 
   ngOnInit() {
-    this.dialogRef.updateSize('800px', '');
+    this._dialogRef.updateSize('800px', '');
   }
 
   onSubmit() {
@@ -68,7 +93,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
         .updateProperty$(propertyData)
         .pipe(take(1))
         .subscribe(_ => {
-          this.dialogRef.close();
+          this._dialogRef.close();
         });
     } else {
       propertyData = {
@@ -84,7 +109,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
         .pipe(take(1))
         .subscribe(_ => {
           this._projectPageService.reloadProject();
-          this.dialogRef.close();
+          this._dialogRef.close();
         });
     }
   }

@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatTabLink, MatTabNav, MatTabNavPanel } from '@angular/material/tabs';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { MenuItem } from '@dasch-swiss/vre/pages/user-settings/user';
+import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -33,13 +37,23 @@ import { TranslateService } from '@ngx-translate/core';
       </mat-tab-nav-panel>
     </app-centered-layout>
   `,
+  imports: [
+    CenteredLayoutComponent,
+    MatIcon,
+    MatTabLink,
+    MatTabNav,
+    MatTabNavPanel,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+  ],
 })
 export class SettingsPageComponent {
   private _translateService = inject(TranslateService);
 
   navigation = [
     {
-      label: 'Description',
+      label: this._translateService.instant('ui.common.fields.description'),
       route: RouteConstants.edit,
       icon: 'edit_square',
     },
@@ -49,7 +63,7 @@ export class SettingsPageComponent {
       icon: 'code_blocks',
     },
     {
-      label: 'Image',
+      label: this._translateService.instant('pages.project.settingsPage.image'),
       route: RouteConstants.imageSettings,
       icon: 'branding_watermark',
     },
@@ -59,7 +73,7 @@ export class SettingsPageComponent {
       icon: 'gavel',
     },
     {
-      label: 'Members',
+      label: this._translateService.instant('ui.common.entities.members'),
       route: RouteConstants.collaboration,
       icon: 'group',
     },

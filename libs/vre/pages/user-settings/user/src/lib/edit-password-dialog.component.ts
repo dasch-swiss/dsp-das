@@ -1,11 +1,22 @@
 import { Component, Inject, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatStepper } from '@angular/material/stepper';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { MatStep, MatStepper } from '@angular/material/stepper';
 import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
+import { PasswordConfirmFormComponent, PasswordFormFieldComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
 export interface EditPasswordDialogProps {
@@ -17,36 +28,44 @@ export interface EditPasswordDialogProps {
   template: `
     <app-dialog-header [title]="data.user.username" [subtitle]="'pages.system.users.changePassword' | translate" />
 
-    <mat-stepper orientation="vertical" linear #stepper>
-      <mat-step
-        [label]="'For security reasons, please enter your current password'"
-        [stepControl]="adminPasswordControl"
-        [editable]="false">
-        <app-password-form-field
-          [control]="adminPasswordControl"
-          [placeholder]="'Your current password'"
-          [showToggleVisibility]="true"
-          [validatorErrors]="[{ errorKey: 'incorrect', message: 'The password entered is incorrect' }]" />
+    <div mat-dialog-content>
+      <mat-stepper orientation="vertical" linear #stepper>
+        <mat-step
+          [label]="'pages.userSettings.passwordForm.currentPasswordStep' | translate"
+          [stepControl]="adminPasswordControl"
+          [editable]="false">
+          <app-password-form-field
+            [control]="adminPasswordControl"
+            [placeholder]="'pages.userSettings.passwordForm.currentPasswordPlaceholder' | translate"
+            [showToggleVisibility]="true"
+            [validatorErrors]="[
+              { errorKey: 'incorrect', message: 'pages.userSettings.passwordForm.incorrectPassword' | translate },
+            ]" />
 
-        <button mat-raised-button color="primary" (click)="checkAdminPassword()">Next</button>
-      </mat-step>
+          <button mat-raised-button color="primary" (click)="checkAdminPassword()">
+            {{ 'ui.common.actions.next' | translate }}
+          </button>
+        </mat-step>
 
-      <mat-step [label]="'Enter the new password'">
-        <app-password-confirm-form (afterFormInit)="newPasswordControl = $event" />
+        <mat-step [label]="'pages.userSettings.passwordForm.newPasswordStep' | translate">
+          <app-password-confirm-form (afterFormInit)="newPasswordFormGroup = $event" />
 
-        <button
-          mat-raised-button
-          color="primary"
-          appLoadingButton
-          [isLoading]="updateLoading"
-          (click)="updateNewPassword()"
-          style="margin-top: 16px">
-          Update
-        </button>
-      </mat-step>
-    </mat-stepper>
+          <button
+            mat-raised-button
+            color="primary"
+            appLoadingButton
+            [isLoading]="updateLoading"
+            (click)="updateNewPassword()"
+            style="margin-top: 16px">
+            {{ 'ui.common.actions.update' | translate }}
+          </button>
+        </mat-step>
+      </mat-stepper>
+    </div>
 
-    <div mat-dialog-actions align="end"><button mat-button color="primary" matDialogClose>Cancel</button></div>
+    <div mat-dialog-actions align="end">
+      <button mat-button color="primary" matDialogClose>{{ 'ui.common.actions.cancel' | translate }}</button>
+    </div>
   `,
   styles: [
     `
@@ -55,22 +74,36 @@ export interface EditPasswordDialogProps {
       }
     `,
   ],
+  imports: [
+    DialogHeaderComponent,
+    TranslatePipe,
+    MatDialogContent,
+    MatStepper,
+    MatStep,
+    PasswordFormFieldComponent,
+    MatButton,
+    PasswordConfirmFormComponent,
+    LoadingButtonDirective,
+    MatDialogActions,
+    MatDialogClose,
+    ReactiveFormsModule,
+  ],
 })
 export class EditPasswordDialogComponent {
   @ViewChild('stepper') stepper!: MatStepper;
 
   adminPasswordControl = this._fb.nonNullable.control('', [Validators.required]);
-  newPasswordControl!: FormControl<string>;
+  newPasswordFormGroup!: FormGroup;
 
   updateLoading = false;
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: EditPasswordDialogProps,
-    public dialogRef: MatDialogRef<EditPasswordDialogComponent>,
-    private _userApiService: UserApiService,
+    @Inject(MAT_DIALOG_DATA) public readonly data: EditPasswordDialogProps,
+    public readonly dialogRef: MatDialogRef<EditPasswordDialogComponent>,
+    private readonly _userApiService: UserApiService,
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _fb: FormBuilder,
-    private _userService: UserService
+    private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _fb: FormBuilder,
+    private readonly _userService: UserService
   ) {}
 
   checkAdminPassword() {
@@ -87,16 +120,18 @@ export class EditPasswordDialogComponent {
   }
 
   updateNewPassword() {
-    this.newPasswordControl.markAllAsTouched();
+    this.newPasswordFormGroup.markAllAsTouched();
 
-    if (!this.newPasswordControl.valid) {
+    if (!this.newPasswordFormGroup.valid) {
       return;
     }
 
     this.updateLoading = true;
 
+    const newPassword = this.newPasswordFormGroup.get('password')?.value;
+
     this._userApiService
-      .updatePassword(this.data.user.id, this.adminPasswordControl.value, this.newPasswordControl.value)
+      .updatePassword(this.data.user.id, this.adminPasswordControl.value, newPassword)
       .pipe(
         finalize(() => {
           this.updateLoading = false;

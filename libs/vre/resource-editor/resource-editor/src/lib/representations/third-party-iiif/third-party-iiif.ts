@@ -1,0 +1,93 @@
+export class IIIFUrl {
+  private _url: URL;
+
+  private readonly _qualform_ex = /^(color|gray|grey|bitonal|default|native)\.(jpg|tif|png|jp2|jpeg)$/;
+  private readonly _rotation_ex = /^[-+]?[0-9]*\.?[0-9]+$|^![-+]?[0-9]*\.?[0-9]+$/;
+  private readonly _size_ex =
+    /^(full|(\^?max)|(\^?pct:[0-9]*\.?[0-9]*)|(\^?[0-9]*,)|(\^?,[0-9]*)|(\^?!?[0-9]*,[0-9]*))$/;
+  private readonly _region_ex =
+    /^(full)|(square)|([0-9]+,[0-9]+,[0-9]+,[0-9]+)|(pct:[0-9]*\.?[0-9]*,[0-9]*\.?[0-9]*,[0-9]*\.?[0-9]*,[0-9]*\.?[0-9]*)$/;
+
+  private constructor(url: string) {
+    this._url = new URL(url);
+  }
+
+  static createUrl(url: string): IIIFUrl | null {
+    try {
+      return new IIIFUrl(url);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  private get _baseUrl(): string {
+    return `${this._url.protocol}//${this._url.host}`;
+  }
+
+  private get _segments(): string[] {
+    return this._url.pathname.split('/').slice(1);
+  }
+
+  private get _qualitySegment(): string {
+    return this._segments[this._segments.length - 1];
+  }
+
+  private get _quality(): string {
+    return this._qualitySegment.split('.')[0];
+  }
+
+  private get _rotationSegment(): string {
+    return this._segments[this._segments.length - 2];
+  }
+
+  private get _sizeSegment(): string {
+    return this._segments[this._segments.length - 3];
+  }
+
+  private get _regionSegment(): string {
+    return this._segments[this._segments.length - 4];
+  }
+
+  get isValidIiifUrl(): boolean {
+    if (this._segments.length < 5) {
+      return false;
+    }
+
+    if (!this._qualform_ex.test(this._qualitySegment)) {
+      return false;
+    }
+
+    if (
+      !this._rotation_ex.test(this._rotationSegment) &&
+      !this._rotation_ex.test(decodeURIComponent(this._rotationSegment))
+    ) {
+      return false;
+    }
+
+    if (!this._size_ex.test(this._sizeSegment) && !this._size_ex.test(decodeURIComponent(this._sizeSegment))) {
+      return false;
+    }
+
+    if (!this._region_ex.test(this._regionSegment) && !this._region_ex.test(decodeURIComponent(this._regionSegment))) {
+      return false;
+    }
+
+    return true;
+  }
+
+  get iiifImageInstanceUrl(): string {
+    return `${this._baseUrl}/${this._segments.slice(0, this._segments.length - 4).join('/')}`;
+  }
+
+  get infoJsonUrl() {
+    return `${this.iiifImageInstanceUrl}/info.json`;
+  }
+
+  get previewImageUrl() {
+    return `${this.iiifImageInstanceUrl}/${this._regionSegment}/${this._sizeSegment}/${this._rotationSegment}/${this._quality}.jpg`;
+  }
+
+  get isExternalHost(): boolean {
+    return !this._url.host.endsWith('dasch.swiss');
+  }
+}

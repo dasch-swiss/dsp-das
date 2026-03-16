@@ -1,8 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
-import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
+import {
+  DEFAULT_MULTILANGUAGE_FORM,
+  MultiLanguages,
+  MultiLanguageTextareaComponent,
+} from '@dasch-swiss/vre/ui/string-literal';
+import { ChipListInputComponent, CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { ProjectForm } from './project-form.type';
 import { shortcodeExistsValidator } from './shortcode-exists.validator';
@@ -30,7 +36,7 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
           [control]="form.controls.longname"
           data-cy="longname-input" />
         <app-multi-language-textarea
-          [placeholder]="'pages.project.reusableProjectForm.description' | translate"
+          [placeholder]="'ui.common.fields.description' | translate"
           [formArray]="form.controls.description"
           [validators]="descriptionValidators"
           [isRequired]="true"
@@ -42,6 +48,13 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
       </form>
     }
   `,
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    CommonInputComponent,
+    MultiLanguageTextareaComponent,
+    ChipListInputComponent,
+  ],
 })
 export class ReusableProjectFormComponent implements OnInit {
   @Input({ required: true }) formData!: {
@@ -54,17 +67,26 @@ export class ReusableProjectFormComponent implements OnInit {
   @Output() afterFormInit = new EventEmitter<ProjectForm>();
 
   form?: ProjectForm;
-  readonly shortcodePatternError = {
-    errorKey: 'pattern',
-    message: 'This field must contain letters from A to F and 0 to 9',
-  };
-  readonly shortCodeExistsError = { errorKey: 'shortcodeExists', message: 'This shortcode already exists' };
+
+  get shortcodePatternError() {
+    return {
+      errorKey: 'pattern',
+      message: this._translateService.instant('pages.project.reusableProjectForm.errors.shortcodePattern'),
+    };
+  }
+  get shortCodeExistsError() {
+    return {
+      errorKey: 'shortcodeExists',
+      message: this._translateService.instant('pages.project.reusableProjectForm.errors.shortcodeExists'),
+    };
+  }
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
   readonly descriptionValidators = [Validators.minLength(3), Validators.maxLength(40960)];
 
   constructor(
-    private _fb: FormBuilder,
-    private _allProjectsService: AllProjectsService
+    private readonly _fb: FormBuilder,
+    private readonly _allProjectsService: AllProjectsService,
+    private readonly _translateService: TranslateService
   ) {}
 
   ngOnInit() {
@@ -76,9 +98,14 @@ export class ReusableProjectFormComponent implements OnInit {
       });
   }
 
-  public noWhitespaceValidator(control: FormControl) {
-    return (control.value || '').trim().length ? null : { errorKey: 'whitespace', message: 'no whitespace' };
-  }
+  public noWhitespaceValidator = (control: FormControl) => {
+    return (control.value || '').trim().length
+      ? null
+      : {
+          errorKey: 'whitespace',
+          message: this._translateService.instant('pages.project.reusableProjectForm.errors.whitespace'),
+        };
+  };
 
   private _buildForm(shortcodes: string[]) {
     this.form = this._fb.group({

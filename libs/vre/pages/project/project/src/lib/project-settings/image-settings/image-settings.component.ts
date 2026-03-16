@@ -1,14 +1,21 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectRestrictedViewSettings } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { AdminProjectsApiService, RestrictedViewResponse, Size } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminAPIApiService, RestrictedViewResponse, Size } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ReplaceAnimation } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslateService } from '@ngx-translate/core';
-import { IMask } from 'angular-imask';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { IMask, IMaskDirective } from 'angular-imask';
+import { ImageDisplayAbsoluteComponent } from './image-display-absolute.component';
+import { ImageDisplayRatioComponent } from './image-display-ratio.component';
 
 enum ImageSettingsEnum {
   Off = 'Off',
@@ -21,6 +28,19 @@ enum ImageSettingsEnum {
   styleUrls: ['./image-settings.component.scss'],
   templateUrl: './image-settings.component.html',
   animations: [ReplaceAnimation.animation],
+  imports: [
+    FormsModule,
+    ImageDisplayAbsoluteComponent,
+    ImageDisplayRatioComponent,
+    IMaskDirective,
+    MatButton,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatRadioButton,
+    MatRadioGroup,
+    TranslatePipe,
+  ],
 })
 export class ImageSettingsComponent implements OnInit {
   readonly minWidth = 128;
@@ -29,7 +49,7 @@ export class ImageSettingsComponent implements OnInit {
 
   currentSettings?: ProjectRestrictedViewSettings | RestrictedViewResponse;
   imageSettings: ImageSettingsEnum = ImageSettingsEnum.Off;
-  projectUuid = this.route.parent?.parent?.snapshot.paramMap.get(RouteConstants.uuidParameter);
+  projectUuid = this._route.parent?.parent?.snapshot.paramMap.get(RouteConstants.uuidParameter);
   percentage: string | null = '99';
   fixedWidth: string | null = null;
 
@@ -55,14 +75,13 @@ export class ImageSettingsComponent implements OnInit {
   }
 
   constructor(
-    private _projectService: ProjectService,
-    private route: ActivatedRoute,
-    private projectApiService: ProjectApiService,
-    private _notification: NotificationService,
-    private translateService: TranslateService,
-    private _cd: ChangeDetectorRef,
-    private projectService: ProjectService,
-    private adminProjectsApiService: AdminProjectsApiService
+    private readonly _adminApiService: AdminAPIApiService,
+    private readonly _cd: ChangeDetectorRef,
+    private readonly _notification: NotificationService,
+    private readonly _projectApiService: ProjectApiService,
+    private readonly _projectService: ProjectService,
+    private readonly _route: ActivatedRoute,
+    private readonly _translateService: TranslateService
   ) {}
 
   ngOnInit() {
@@ -70,15 +89,15 @@ export class ImageSettingsComponent implements OnInit {
   }
 
   onSubmit() {
-    this.adminProjectsApiService
+    this._adminApiService
       .postAdminProjectsIriProjectiriRestrictedviewsettings(
-        this.projectService.uuidToIri(this.projectUuid!),
+        this._projectService.uuidToIri(this.projectUuid!),
         this.getRequest()
       )
       .subscribe(response => {
         this.currentSettings = response;
         this._notification.openSnackBar(
-          this.translateService.instant('pages.project.imageSettings.updateConfirmation')
+          this._translateService.instant('pages.project.imageSettings.updateConfirmation')
         );
       });
   }
@@ -98,7 +117,7 @@ export class ImageSettingsComponent implements OnInit {
   }
 
   private getImageSettings() {
-    this.projectApiService
+    this._projectApiService
       .getRestrictedViewSettingsForProject(this._projectService.uuidToIri(this.projectUuid!))
       .subscribe(response => {
         const settings = response.settings;

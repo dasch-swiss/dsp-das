@@ -1,7 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Inject, OnInit } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 import { Cardinality, Constants, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { ProgressIndicatorOverlayComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { PropertyInfo } from '../../../ontology.types';
 
@@ -16,17 +21,20 @@ export interface CardinalityInfo {
   selector: 'cardinality-change-dialog',
   template: `
     <app-dialog-header
-      title="Update cardinality"
+      [title]="_translate.instant('pages.ontology.cardinalityDialog.title')"
       [subtitle]="
-        'Set the cardinality for property ' + data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label
+        _translate.instant('pages.ontology.cardinalityDialog.subtitle', {
+          group: data.propertyInfo.propType.group,
+          label: data.propertyInfo.propType.label,
+        })
       " />
     <mat-dialog-content>
       <div class="cando-headline">
         @if (canSetCardinality === undefined) {
-          <app-progress-indicator class="floating-center" />
+          <app-progress-indicator-overlay class="floating-center" />
         }
         @if (canSetCardinality === false) {
-          <div class="mat-headline-6">Changing the cardinality is not possible.</div>
+          <div class="mat-headline-6">{{ 'pages.ontology.cardinalityDialog.notPossible' | translate }}</div>
         }
       </div>
       @if (canSetCardinality === false) {
@@ -39,21 +47,23 @@ export interface CardinalityInfo {
         <div>
           <div class="cando-headline">
             <mat-icon aria-label="warn icon" fontIcon="warning_amber" color="accent" />
-            <div class="mat-headline-6">Attention</div>
+            <div class="mat-headline-6">{{ 'pages.ontology.cardinalityDialog.attention' | translate }}</div>
           </div>
-          <div>Please note that this change may not be reversible. Do you want to change the cardinality?</div>
+          <div>{{ 'pages.ontology.cardinalityDialog.confirmMessage' | translate }}</div>
         </div>
       }
       <div mat-dialog-actions align="end">
         @if (canSetCardinality) {
-          <button mat-button (click)="dialogRef.close(false)">No</button>
+          <button mat-button (click)="dialogRef.close(false)">{{ 'ui.common.actions.no' | translate }}</button>
         }
         @if (canSetCardinality) {
-          <button mat-raised-button (click)="dialogRef.close(true)" data-cy="confirmation-button">Yes</button>
+          <button mat-raised-button (click)="dialogRef.close(true)" data-cy="confirmation-button">
+            {{ 'ui.common.actions.yes' | translate }}
+          </button>
         }
         @if (canSetCardinality === false) {
           <button mat-button (click)="dialogRef.close(false)">
-            {{ 'ui.form.action.close' | translate }}
+            {{ 'ui.common.actions.close' | translate }}
           </button>
         }
       </div>
@@ -77,6 +87,15 @@ export interface CardinalityInfo {
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    DialogHeaderComponent,
+    MatButton,
+    MatDialogActions,
+    MatDialogContent,
+    MatIcon,
+    ProgressIndicatorOverlayComponent,
+    TranslatePipe,
+  ],
 })
 export class CardinalityChangeDialogComponent implements OnInit {
   canSetCardinality: boolean | undefined = undefined;
@@ -84,6 +103,8 @@ export class CardinalityChangeDialogComponent implements OnInit {
     detail: '',
     hint: '',
   };
+
+  protected readonly _translate = inject(TranslateService);
 
   get changeToMultiple() {
     return this.data.targetCardinality && this.data?.targetCardinality > 1 && this.data.currentCardinality < 2;
@@ -105,10 +126,10 @@ export class CardinalityChangeDialogComponent implements OnInit {
   }
 
   constructor(
-    protected dialogRef: MatDialogRef<CardinalityChangeDialogComponent, boolean>,
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
     @Inject(MAT_DIALOG_DATA) public data: CardinalityInfo,
-    @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-    private _cdr: ChangeDetectorRef
+    private readonly _cdr: ChangeDetectorRef,
+    protected dialogRef: MatDialogRef<CardinalityChangeDialogComponent, boolean>
   ) {}
 
   ngOnInit() {
@@ -147,12 +168,24 @@ export class CardinalityChangeDialogComponent implements OnInit {
       // data contradicting the change
       if (!this.changeToMultiple) {
         // there are resources which have that property multiple times, so we do not allow to set multiple to false
-        reason.detail = `At least one resource of the class "${this.classLabel}" has multiple "${this.propertyLabel}" properties in your data.`;
-        reason.hint = `In order to set the cardinality of "${this.propertyLabel}" to single, every resource "${this.classLabel}" must have only one "${this.propertyLabel}" value prior to this change.`;
+        reason.detail = this._translate.instant('pages.ontology.cardinalityDialog.multiplePropertiesError', {
+          className: this.classLabel,
+          propertyLabel: this.propertyLabel,
+        });
+        reason.hint = this._translate.instant('pages.ontology.cardinalityDialog.multiplePropertiesHint', {
+          propertyLabel: this.propertyLabel,
+          className: this.classLabel,
+        });
       }
       if (this.changeToRequired) {
-        reason.detail = `At least one resource of the class "${this.classLabel}" does not have a "${this.propertyLabel}" property in your data.`;
-        reason.hint = `In order to set the cardinality of "${this.propertyLabel}" to required every resource "${this.classLabel}" needs to have a "${this.propertyLabel}" value prior to this change.`;
+        reason.detail = this._translate.instant('pages.ontology.cardinalityDialog.missingPropertyError', {
+          className: this.classLabel,
+          propertyLabel: this.propertyLabel,
+        });
+        reason.hint = this._translate.instant('pages.ontology.cardinalityDialog.missingPropertyHint', {
+          propertyLabel: this.propertyLabel,
+          className: this.classLabel,
+        });
       }
     }
     return reason;

@@ -10,7 +10,6 @@ import { PropertyFormItem } from '../../../data-access/advanced-search-store/adv
 
 @Component({
   selector: 'app-property-form-link-value',
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

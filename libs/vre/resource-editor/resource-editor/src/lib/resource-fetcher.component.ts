@@ -1,53 +1,72 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponseError, Constants, ReadResource } from '@dasch-swiss/dsp-js';
-import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslateService } from '@ngx-translate/core';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { filter, Subject, takeUntil } from 'rxjs';
+import { ResourceFetcherService } from './representations/resource-fetcher.service';
+import { ResourceUtil } from './representations/resource.util';
+import { ResourceVersionWarningComponent } from './resource-version-warning.component';
+import { ResourceComponent } from './resource.component';
 
 type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
 
 @Component({
   selector: 'app-resource-fetcher',
   template: `
-    @if (resourceVersion) {
-      <app-resource-version-warning
-        [resourceVersion]="resourceVersion"
-        (navigateToCurrentVersion)="navigateToCurrentVersion()" />
-    }
-
-    @if (!hideStatus) {
-      @if (resource) {
-        <app-resource [resource]="resource" />
-      } @else {
-        <app-progress-indicator />
+    <div #scrollTarget>
+      @if (resourceVersion) {
+        <app-resource-version-warning
+          [resourceVersion]="resourceVersion"
+          (navigateToCurrentVersion)="navigateToCurrentVersion()" />
       }
-    } @else {
-      <div style="display: flex; justify-content: center; padding: 16px">
-        @if (hideStatus === 'NotFound') {
-          <h3>{{ 'resourceEditor.notFound' | translate }}</h3>
+
+      @if (!hideStatus) {
+        @if (resource) {
+          <app-resource [resource]="resource" />
+        } @else {
+          <app-progress-indicator />
         }
-        @if (hideStatus === 'Unauthorized') {
-          <h3>{{ 'resourceEditor.unauthorized' | translate }}</h3>
-        }
-        @if (hideStatus === 'Deleted') {
-          <div style="text-align: center">
-            <h3>{{ 'resourceEditor.deleted' | translate }}</h3>
-            @if (resource?.res.deleteComment; as comment) {
-              <h4>"{{ comment }}"</h4>
-            }
-          </div>
-        }
-      </div>
-    }
+      } @else {
+        <div style="display: flex; justify-content: center; padding: 16px">
+          @if (hideStatus === 'NotFound') {
+            <h3>{{ 'resourceEditor.notFound' | translate }}</h3>
+          }
+          @if (hideStatus === 'Unauthorized') {
+            <h3>{{ 'resourceEditor.unauthorized' | translate }}</h3>
+          }
+          @if (hideStatus === 'Deleted') {
+            <div style="text-align: center">
+              <h3>{{ 'resourceEditor.deleted' | translate }}</h3>
+              @if (resource?.res.deleteComment; as comment) {
+                <h4>"{{ comment }}"</h4>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
   `,
   providers: [ResourceFetcherService],
+  imports: [TranslatePipe, ResourceVersionWarningComponent, ResourceComponent, AppProgressIndicatorComponent],
 })
 export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
   @Output() afterResourceDeleted = new EventEmitter<ReadResource>();
+  @ViewChild('scrollTarget') scrollTarget!: ElementRef;
 
   resource?: DspResource;
   hideStatus: HideReason = null;
@@ -59,11 +78,12 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   constructor(
-    private _resourceFetcherService: ResourceFetcherService,
-    private _notification: NotificationService,
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _translateService: TranslateService
+    private readonly _resourceFetcherService: ResourceFetcherService,
+    private readonly _notification: NotificationService,
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _translateService: TranslateService,
+    private readonly _cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -89,6 +109,8 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
 
           this.hideStatus = null;
           this.resource = resource;
+
+          this._cdr.detectChanges();
 
           const normalizeToCompactFormat = (isoDate: string): string => {
             return isoDate.replace(/[-:.]/g, '');
@@ -117,6 +139,13 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
           throw err;
         },
       });
+
+    this._resourceFetcherService.scrollToTop$.pipe(takeUntil(this._destroy$)).subscribe(() => {
+      this.scrollTarget?.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
   }
 
   ngOnChanges() {

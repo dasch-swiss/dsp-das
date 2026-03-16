@@ -1,11 +1,15 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ListNode } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DIALOG_LARGE, DialogService } from '@dasch-swiss/vre/ui/ui';
+import { TranslateService } from '@ngx-translate/core';
 import { filter, switchMap } from 'rxjs';
 import { ListItemService } from '../list-item/list-item.service';
 import {
@@ -24,7 +28,7 @@ import {
       @if (position > 0) {
         <button
           mat-button
-          matTooltip="move up"
+          [matTooltip]="_translate.instant('pages.ontology.list.actionBubble.moveUp')"
           (click)="$event.stopPropagation(); repositionNode('up')"
           class="reposition up">
           <mat-icon>arrow_upward</mat-icon>
@@ -33,7 +37,7 @@ import {
       @if (position < length - 1) {
         <button
           mat-button
-          matTooltip="move down"
+          [matTooltip]="_translate.instant('pages.ontology.list.actionBubble.moveDown')"
           (click)="$event.stopPropagation(); repositionNode('down')"
           class="reposition down">
           <mat-icon>arrow_downward</mat-icon>
@@ -41,15 +45,23 @@ import {
       }
       <button
         mat-button
-        matTooltip="insert new child above"
+        [matTooltip]="_translate.instant('pages.ontology.list.actionBubble.insertChild')"
         (click)="$event.stopPropagation(); askToInsertNode()"
         class="insert">
         <mat-icon>vertical_align_top</mat-icon>
       </button>
-      <button mat-button class="edit" matTooltip="edit" (click)="$event.stopPropagation(); askToEditNode()">
+      <button
+        mat-button
+        class="edit"
+        [matTooltip]="_translate.instant('pages.ontology.list.actionBubble.edit')"
+        (click)="$event.stopPropagation(); askToEditNode()">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-button class="delete" matTooltip="delete" (click)="$event.stopPropagation(); askToDeleteListNode()">
+      <button
+        mat-button
+        class="delete"
+        [matTooltip]="_translate.instant('pages.ontology.list.actionBubble.delete')"
+        (click)="$event.stopPropagation(); askToDeleteListNode()">
         <mat-icon>delete</mat-icon>
       </button>
     </div>
@@ -63,6 +75,7 @@ import {
     ]),
   ],
   styleUrls: ['./action-bubble.component.scss'],
+  imports: [MatButton, MatIcon, MatTooltip],
 })
 export class ActionBubbleComponent {
   @Input({ required: true }) position!: number;
@@ -70,16 +83,21 @@ export class ActionBubbleComponent {
   @Input({ required: true }) node!: ListNode;
   @Input({ required: true }) parentNodeIri!: string;
 
+  protected readonly _translate = inject(TranslateService);
+
   constructor(
-    private _dialog: DialogService,
-    private _matDialog: MatDialog,
-    private _listItemService: ListItemService,
-    private _listApiService: ListApiService
+    private readonly _dialog: DialogService,
+    private readonly _matDialog: MatDialog,
+    private readonly _listItemService: ListItemService,
+    private readonly _listApiService: ListApiService
   ) {}
 
   askToDeleteListNode() {
     this._dialog
-      .afterConfirmation('Do you want to delete this node?', this.node.labels[0].value)
+      .afterConfirmation(
+        this._translate.instant('pages.ontology.list.actionBubble.deleteNode'),
+        this.node.labels[0].value
+      )
       .pipe(switchMap(() => this._listApiService.deleteListNode(this.node.id)))
       .subscribe(() => {
         this._listItemService.onUpdate$.next();

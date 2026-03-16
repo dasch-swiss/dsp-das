@@ -1,30 +1,53 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, ListResponse } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { ProgressIndicatorOverlayComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { CenteredLayoutComponent, DialogService, TruncatePipe } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, map, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { ListInfoFormComponent } from './list-info-form/list-info-form.component';
+import { ListItemComponent } from './list-item/list-item.component';
 import { ListItemService } from './list-item/list-item.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-list-page',
   templateUrl: './list-page.component.html',
-  styleUrls: ['./list-page.component.scss'],
   providers: [ListItemService],
+  imports: [
+    AsyncPipe,
+    MatAnchor,
+    MatButton,
+    MatIcon,
+    MatToolbar,
+    MatToolbarRow,
+    MatTooltip,
+    TranslatePipe,
+    ProgressIndicatorOverlayComponent,
+    ListItemComponent,
+    StringifyStringLiteralPipe,
+    TruncatePipe,
+    CenteredLayoutComponent,
+  ],
 })
 export class ListPageComponent implements OnInit, OnDestroy {
   private _reloadMainListSubject = new BehaviorSubject<null>(null);
-  private readonly routeListIri$ = this._reloadMainListSubject.pipe(
+  private readonly _routeListIri$ = this._reloadMainListSubject.pipe(
     switchMap(() => this._route.paramMap),
     map(params => params.get(RouteConstants.listParameter))
   );
 
-  rootListNodeInfo$ = combineLatest([this.routeListIri$, this._projectPageService.currentProject$]).pipe(
+  rootListNodeInfo$ = combineLatest([this._routeListIri$, this._projectPageService.currentProject$]).pipe(
     switchMap(([listIri, project]) =>
       this._listApiService.get(`http://rdfh.ch/lists/${project.shortcode}/${listIri!}`)
     ),
@@ -37,16 +60,17 @@ export class ListPageComponent implements OnInit, OnDestroy {
   isListsLoading$ = of(false);
 
   private _destroy = new Subject<void>();
+  private readonly _translate = inject(TranslateService);
 
   constructor(
-    private _dialog: DialogService,
-    private _listItemService: ListItemService,
-    private _matDialog: MatDialog,
-    private _projectPageService: ProjectPageService,
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _viewContainerRef: ViewContainerRef,
-    private _listApiService: ListApiService
+    private readonly _dialog: DialogService,
+    private readonly _listItemService: ListItemService,
+    private readonly _matDialog: MatDialog,
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _viewContainerRef: ViewContainerRef,
+    private readonly _listApiService: ListApiService
   ) {}
 
   ngOnInit() {
@@ -71,7 +95,7 @@ export class ListPageComponent implements OnInit, OnDestroy {
 
   askToDeleteList(list: ListNodeInfo): void {
     this._dialog
-      .afterConfirmation('Do you want to delete this controlled vocabulary?', list.labels[0].value)
+      .afterConfirmation(this._translate.instant('pages.ontology.list.deleteConfirmation'), list.labels[0].value)
       .pipe(switchMap(() => this._listApiService.deleteListNode(list.id)))
       .subscribe(() => {
         this.navigateToDataModels();
@@ -79,9 +103,8 @@ export class ListPageComponent implements OnInit, OnDestroy {
   }
 
   navigateToDataModels() {
-    this._projectPageService.currentProjectUuid$.subscribe(projectUuid => {
-      this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
-    });
+    const projectUuid = this._projectPageService.currentProjectUuid;
+    this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
   }
 
   ngOnDestroy() {

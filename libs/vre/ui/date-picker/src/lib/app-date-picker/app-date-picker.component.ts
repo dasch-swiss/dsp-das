@@ -30,27 +30,15 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import {
-  _AbstractConstructor,
-  _Constructor,
-  CanUpdateErrorState,
-  ErrorStateMatcher,
-  MatOptionModule,
-  mixinErrorState,
-} from '@angular/material/core';
+import { ErrorStateMatcher, MatOptionModule } from '@angular/material/core';
 import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { KnoraDate } from '@dasch-swiss/dsp-js';
-import {
-  CalendarDate,
-  CalendarPeriod,
-  GregorianCalendarDate,
-  IslamicCalendarDate,
-  JulianCalendarDate,
-} from '@dasch-swiss/jdnconvertiblecalendar';
+import { getCalendar } from '@dasch-swiss/vre/shared/calendar';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 
 /** error when invalid control is dirty, touched, or submitted. */
@@ -60,8 +48,6 @@ export class DatePickerErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
-
-type CanUpdateErrorStateCtor = _Constructor<CanUpdateErrorState> & _AbstractConstructor<CanUpdateErrorState>;
 
 interface FormErrors {
   [key: string]: string;
@@ -73,20 +59,7 @@ interface ValidationMessages {
   };
 }
 
-class MatInputBase {
-  constructor(
-    public _defaultErrorStateMatcher: ErrorStateMatcher,
-    public _parentForm: NgForm,
-    public _parentFormGroup: FormGroupDirective,
-    public ngControl: NgControl,
-    public stateChanges: Subject<void>
-  ) {}
-}
-
-const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);
-
 @Component({
-  standalone: true,
   selector: 'app-date-picker',
   templateUrl: './app-date-picker.component.html',
   styleUrls: ['./app-date-picker.component.scss'],
@@ -101,19 +74,22 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinE
     MatButtonModule,
     MatButtonToggleModule,
     MatSelectModule,
+    TranslatePipe,
   ],
-  providers: [Subject],
 })
 export class AppDatePickerComponent
-  extends _MatInputMixinBase
-  implements ControlValueAccessor, MatFormFieldControl<KnoraDate>, OnChanges, DoCheck, CanUpdateErrorState, OnDestroy
+  implements ControlValueAccessor, MatFormFieldControl<KnoraDate>, OnChanges, DoCheck, OnDestroy
 {
   static nextId = 0;
 
+  // Required for MatFormFieldControl interface
+  stateChanges = new Subject<void>();
+  errorState = false;
+
   @ViewChild(MatMenuTrigger) popover!: MatMenuTrigger;
-  @Output() closed: EventEmitter<void> = new EventEmitter();
+  @Output() datePickerClosed: EventEmitter<void> = new EventEmitter();
   @Output() emitDateChanged: EventEmitter<string> = new EventEmitter();
-  @Input() override errorStateMatcher!: ErrorStateMatcher;
+  @Input() errorStateMatcher!: ErrorStateMatcher;
 
   // disable calendar selector in case of end date in a period date value
   @Input() disableCalendarSelector!: boolean;
@@ -127,7 +103,6 @@ export class AppDatePickerComponent
   @HostBinding('attr.aria-describedby') describedBy = '';
   dateForm: UntypedFormGroup;
   focused = false;
-  override errorState = false;
   controlType = 'app-date-picker';
   matcher = new DatePickerErrorStateMatcher();
 
@@ -259,17 +234,14 @@ export class AppDatePickerComponent
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   constructor(
-    _defaultErrorStateMatcher: ErrorStateMatcher,
-    @Optional() _parentForm: NgForm,
-    @Optional() _parentFormGroup: FormGroupDirective,
-    @Optional() @Self() public override ngControl: NgControl,
-    private _stateChanges: Subject<void>,
+    public readonly defaultErrorStateMatcher: ErrorStateMatcher,
+    @Optional() public readonly parentForm: NgForm,
+    @Optional() public readonly parentFormGroup: FormGroupDirective,
+    @Optional() @Self() public readonly ngControl: NgControl,
     fb: UntypedFormBuilder,
-    private _elRef: ElementRef<HTMLElement>,
-    private _fm: FocusMonitor
+    private readonly _elRef: ElementRef<HTMLElement>,
+    private readonly _fm: FocusMonitor
   ) {
-    super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl, _stateChanges);
-
     this.dateForm = fb.group({
       date: [null, Validators.required],
       knoraDate: [null, Validators.required],
@@ -309,6 +281,19 @@ export class AppDatePickerComponent
   ngDoCheck() {
     if (this.ngControl) {
       this.updateErrorState();
+    }
+  }
+
+  updateErrorState() {
+    const oldState = this.errorState;
+    const parent = this.parentFormGroup || this.parentForm;
+    const matcher = this.defaultErrorStateMatcher;
+    const control = this.ngControl ? this.ngControl.control : null;
+    const newState = matcher.isErrorState(control, parent);
+
+    if (newState !== oldState) {
+      this.errorState = newState;
+      this.stateChanges.next();
     }
   }
 
@@ -623,7 +608,9 @@ export class AppDatePickerComponent
     } else {
       this.form.controls['calendar'].enable();
     }
-    this._setDays(this.calendar, this.era, this.year, this.month);
+    if (this.month) {
+      this._setDays(this.calendar, this.era, this.year, this.month);
+    }
   }
 
   /**
@@ -649,19 +636,9 @@ export class AppDatePickerComponent
    * @param month the date's month.
    */
   calculateDaysInMonth(calendar: string, year: number, month: number): number {
-    const date = new CalendarDate(year, month, 1);
-    if (calendar === 'GREGORIAN') {
-      const calDate = new GregorianCalendarDate(new CalendarPeriod(date, date));
-      return calDate.daysInMonth(date);
-    } else if (calendar === 'JULIAN') {
-      const calDate = new JulianCalendarDate(new CalendarPeriod(date, date));
-      return calDate.daysInMonth(date);
-    } else if (calendar === 'ISLAMIC') {
-      const calDate = new IslamicCalendarDate(new CalendarPeriod(date, date));
-      return calDate.daysInMonth(date);
-    } else {
-      throw Error(`Unknown calendar ${calendar}`);
-    }
+    const calendarSystem = calendar.toUpperCase() as 'GREGORIAN' | 'JULIAN' | 'ISLAMIC';
+    const cal = getCalendar(calendarSystem);
+    return cal.daysInMonth(year, month);
   }
 
   /**

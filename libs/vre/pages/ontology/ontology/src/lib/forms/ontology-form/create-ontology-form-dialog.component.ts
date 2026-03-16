@@ -1,33 +1,41 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, OntologyMetadata } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { existingNamesAsyncValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { finalize, map, Subject, switchMap, takeUntil } from 'rxjs';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { CommonInputComponent, DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
+import { map, Subject, takeUntil } from 'rxjs';
 import { MakeOntologyFor } from '../../services/make-ontology-for';
+import { OntologyFormComponent } from './ontology-form.component';
 import { OntologyForm } from './ontology-form.type';
 
 @Component({
   selector: 'app-create-ontology-form-dialog',
   template: ` <app-dialog-header [title]="'pages.ontology.ontologyForm.create' | translate" />
 
-    <form>
-      @if (form) {
-        <app-common-input
-          [control]="form.controls.name"
-          [validatorErrors]="[ontoNamePatternErrorMsg, ontoNameExistsErrorMsg]"
-          [label]="'pages.ontology.ontologyForm.name' | translate"
-          data-cy="name-input" />
-      }
+    <div mat-dialog-content>
+      <form>
+        @if (form) {
+          <app-common-input
+            [control]="form.controls.name"
+            [validatorErrors]="[ontoNamePatternErrorMsg, ontoNameExistsErrorMsg]"
+            [label]="'pages.ontology.ontologyForm.name' | translate"
+            data-cy="name-input" />
+        }
 
-      <app-ontology-form mode="create" (afterFormInit)="afterFormInit($event)" />
-    </form>
+        <app-ontology-form mode="create" (afterFormInit)="afterFormInit($event)" />
+      </form>
+    </div>
+
     <div mat-dialog-actions align="end">
-      <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+      <button color="primary" mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         mat-raised-button
         color="primary"
@@ -35,9 +43,21 @@ import { OntologyForm } from './ontology-form.type';
         [isLoading]="loading"
         data-cy="submit-button"
         (click)="onSubmit()">
-        {{ 'ui.form.action.submit' | translate }}
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>`,
+  imports: [
+    CommonInputComponent,
+    DialogHeaderComponent,
+    LoadingButtonDirective,
+    MatButton,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    OntologyFormComponent,
+    ReactiveFormsModule,
+    TranslatePipe,
+  ],
 })
 export class CreateOntologyFormDialogComponent implements OnDestroy {
   private _destroy$ = new Subject<void>();
@@ -48,13 +68,12 @@ export class CreateOntologyFormDialogComponent implements OnDestroy {
 
   readonly ontoNamePatternErrorMsg = {
     errorKey: 'pattern',
-    message:
-      "Name shouldn't start with a number or v + number and spaces or special characters (except dash, dot and underscore) are not allowed.",
+    message: 'pages.ontology.ontologyForm.namePatternError',
   };
 
   readonly ontoNameExistsErrorMsg = {
     errorKey: 'pattern',
-    message: 'This name is not allowed or exists already.',
+    message: 'pages.ontology.ontologyForm.nameExistsError',
   };
 
   get blackListedNames() {
@@ -68,10 +87,10 @@ export class CreateOntologyFormDialogComponent implements OnDestroy {
 
   constructor(
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    public dialogRef: MatDialogRef<CreateOntologyFormDialogComponent, OntologyMetadata>,
-    private _projectPageService: ProjectPageService,
-    private _fb: FormBuilder
+    private readonly _dspApiConnection: KnoraApiConnection,
+    public readonly dialogRef: MatDialogRef<CreateOntologyFormDialogComponent, OntologyMetadata>,
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _fb: FormBuilder
   ) {}
 
   afterFormInit(form: OntologyForm) {
@@ -103,25 +122,17 @@ export class CreateOntologyFormDialogComponent implements OnDestroy {
     }
     this.loading = true;
 
-    this._projectPageService.currentProject$
-      .pipe(
-        switchMap(project => {
-          const createOntology = MakeOntologyFor.createOntology(
-            { projectId: project.id, projectShort: '' },
-            this.form.controls.name.value,
-            this.form.controls.label.value,
-            this.form.controls.comment.value
-          );
+    const createOntology = MakeOntologyFor.createOntology(
+      this._projectPageService.currentProject.id,
+      this.form.controls.name.value,
+      this.form.controls.label.value,
+      this.form.controls.comment.value
+    );
 
-          return this._dspApiConnection.v2.onto.createOntology(createOntology);
-        }),
-        finalize(() => {
-          this.loading = false;
-        })
-      )
-      .subscribe(ontology => {
-        this.dialogRef.close(ontology);
-      });
+    this._dspApiConnection.v2.onto.createOntology(createOntology).subscribe(ontology => {
+      this.loading = false;
+      this.dialogRef.close(ontology);
+    });
   }
 
   ngOnDestroy() {

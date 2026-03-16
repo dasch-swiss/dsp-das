@@ -1,3 +1,4 @@
+import { NgStyle } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -78,6 +79,7 @@ import { Component, Input } from '@angular/core';
       }
     `,
   ],
+  imports: [NgStyle],
 })
 export class ImageDisplayAbsoluteComponent {
   @Input({ required: true }) widthPx!: number;

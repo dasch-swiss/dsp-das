@@ -1,23 +1,30 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
-import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
+import {
+  DEFAULT_MULTILANGUAGE_FORM,
+  MultiLanguageInputComponent,
+  MultiLanguageTextareaComponent,
+  MultiLanguages,
+} from '@dasch-swiss/vre/ui/string-literal';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ListItemForm } from './list-item-form.type';
 
 @Component({
   selector: 'app-reusable-list-item-form',
   template: `
     <app-multi-language-input
-      placeholder="Child node label"
+      [placeholder]="'pages.ontology.list.reusableForm.labelPlaceholder' | translate"
       [formArray]="form.controls.labels"
       [validators]="labelsValidators"
       [isRequired]="true" />
     <app-multi-language-textarea
-      placeholder="Child node description"
+      [placeholder]="'pages.ontology.list.reusableForm.commentPlaceholder' | translate"
       [formArray]="form.controls.comments"
       [validators]="commentsValidators"
       [isRequired]="false" />
   `,
+  imports: [TranslatePipe, MultiLanguageInputComponent, MultiLanguageTextareaComponent],
 })
 export class ReusableListItemFormComponent implements OnInit {
   @Input() formData: {
@@ -31,7 +38,7 @@ export class ReusableListItemFormComponent implements OnInit {
   readonly labelsValidators = [Validators.required, Validators.maxLength(2000)];
   readonly commentsValidators = [Validators.required, Validators.maxLength(2000)];
 
-  constructor(private _fb: FormBuilder) {}
+  constructor(private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
     this.form = this._fb.group({

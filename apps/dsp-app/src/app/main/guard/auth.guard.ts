@@ -1,18 +1,17 @@
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { DOCUMENT, Inject, Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AutoLoginService, UserService } from '@dasch-swiss/vre/core/session';
-import { Observable, filter, switchMap, tap } from 'rxjs';
+import { filter, Observable, switchMap, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
   constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private _autoLoginService: AutoLoginService,
-    private _userService: UserService
+    @Inject(DOCUMENT) private readonly _document: Document,
+    private readonly _autoLoginService: AutoLoginService,
+    private readonly _userService: UserService
   ) {}
 
   canActivate(): Observable<boolean> {
@@ -28,6 +27,8 @@ export class AuthGuard implements CanActivate {
   }
 
   private _goToHomePage() {
-    this.document.defaultView.location.href = `${RouteConstants.home}?returnLink=${this.document.defaultView.location.href}`;
+    // Navigate to home without returnLink query parameter
+    // Users should log in from the main login page rather than being redirected back
+    this._document.defaultView.location.href = RouteConstants.home;
   }
 }

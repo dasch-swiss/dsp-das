@@ -1,5 +1,13 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, ViewContainerRef } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatTabLink, MatTabNav, MatTabNavPanel } from '@angular/material/tabs';
+import { MatTooltip } from '@angular/material/tooltip';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import {
@@ -9,6 +17,7 @@ import {
   DefaultResourceClasses,
   PropertyCategory,
 } from '@dasch-swiss/vre/shared/app-helper-services';
+import { TranslatePipe } from '@ngx-translate/core';
 import { EditPropertyFormDialogComponent } from './forms/property-form/edit-property-form-dialog.component';
 import { CreatePropertyDialogData } from './forms/property-form/property-form.type';
 import { CreateResourceClassDialogComponent } from './forms/resource-class-form/create-resource-class-dialog.component';
@@ -24,7 +33,7 @@ import { OntologyPageService } from './ontology-page.service';
         routerLinkActive
         #rla1="routerLinkActive"
         [active]="rla1.isActive">
-        Classes
+        {{ 'pages.ontology.sidenav.classes' | translate }}
       </a>
       <a
         mat-tab-link
@@ -32,7 +41,7 @@ import { OntologyPageService } from './ontology-page.service';
         routerLinkActive
         #rla2="routerLinkActive"
         [active]="rla2.isActive">
-        Properties
+        {{ 'pages.ontology.sidenav.properties' | translate }}
       </a>
     </nav>
     <mat-divider />
@@ -42,7 +51,11 @@ import { OntologyPageService } from './ontology-page.service';
           <!-- Classes tab content -->
           <button mat-button (click)="ops.toggleExpandClasses()">
             <mat-icon>{{ (ops.expandClasses$ | async) ? 'compress' : 'expand' }}</mat-icon>
-            {{ (ops.expandClasses$ | async) ? 'Collapse all' : 'Expand all' }}
+            {{
+              (ops.expandClasses$ | async)
+                ? ('pages.ontology.sidenav.collapseAll' | translate)
+                : ('pages.ontology.sidenav.expandAll' | translate)
+            }}
           </button>
           @if (hasProjectAdminRights$ | async) {
             <button
@@ -51,7 +64,7 @@ import { OntologyPageService } from './ontology-page.service';
               data-cy="create-class-button"
               [matMenuTriggerFor]="addResClassMenu">
               <mat-icon>add</mat-icon>
-              Create new class
+              {{ 'pages.ontology.sidenav.createNewClass' | translate }}
             </button>
           }
           <mat-menu #addResClassMenu="matMenu" xPosition="before">
@@ -79,7 +92,7 @@ import { OntologyPageService } from './ontology-page.service';
               [disabled]="!(project$ | async)?.status"
               [matMenuTriggerFor]="newFromPropType">
               <mat-icon>add</mat-icon>
-              Add Property
+              {{ 'pages.ontology.sidenav.addProperty' | translate }}
             </button>
           }
           <mat-menu #newFromPropType="matMenu">
@@ -120,6 +133,22 @@ import { OntologyPageService } from './ontology-page.service';
       }
     `,
   ],
+  imports: [
+    AsyncPipe,
+    MatButton,
+    MatDivider,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    MatTabLink,
+    MatTabNav,
+    MatTabNavPanel,
+    MatTooltip,
+    RouterLink,
+    RouterLinkActive,
+    TranslatePipe,
+  ],
 })
 export class OntologySidenavComponent {
   project$ = this._projectPageService.currentProject$;
@@ -130,9 +159,9 @@ export class OntologySidenavComponent {
 
   constructor(
     public ops: OntologyPageService,
-    private _projectPageService: ProjectPageService,
-    private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _dialog: MatDialog,
+    private readonly _viewContainerRef: ViewContainerRef
   ) {}
 
   openCreateResourceClass(defaultClass: DefaultClass) {

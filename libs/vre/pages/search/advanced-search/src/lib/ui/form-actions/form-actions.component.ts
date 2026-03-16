@@ -4,7 +4,6 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-form-actions',
-  standalone: true,
   imports: [MatButtonModule, MatIconModule],
   templateUrl: './form-actions.component.html',
   styleUrls: ['./form-actions.component.scss'],

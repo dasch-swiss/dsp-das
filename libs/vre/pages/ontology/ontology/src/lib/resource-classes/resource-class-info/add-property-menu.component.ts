@@ -1,6 +1,13 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatList, MatListItem, MatListItemIcon, MatListItemTitle } from '@angular/material/list';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
+import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Observable, Subject, BehaviorSubject, combineLatest, map, takeUntil } from 'rxjs';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { CreatePropertyDialogData } from '../../forms/property-form/property-form.type';
@@ -13,17 +20,17 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
     <mat-list style="border-top: 1px solid rgba(0, 0, 0, .12);">
       <mat-list-item class="property link" data-cy="add-property-button" [matMenuTriggerFor]="addPropertyMenu">
         <mat-icon matListItemIcon class="list-icon">add</mat-icon>
-        <span matListItemTitle>Add property</span>
+        <span matListItemTitle>{{ 'pages.ontology.addPropertyMenu.addProperty' | translate }}</span>
       </mat-list-item>
     </mat-list>
 
     <mat-menu #addPropertyMenu="matMenu" xPosition="after">
       <button data-cy="create-new-from-type-button" mat-menu-item [matMenuTriggerFor]="newFromPropType">
-        Create new from type
+        {{ 'pages.ontology.addPropertyMenu.createNewFromType' | translate }}
       </button>
       @if (resourceClass) {
         <button data-cy="add-existing-property-button" mat-menu-item [matMenuTriggerFor]="addExistingProp">
-          Add existing property
+          {{ 'pages.ontology.addPropertyMenu.addExistingProperty' | translate }}
         </button>
       }
     </mat-menu>
@@ -82,6 +89,20 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AsyncPipe,
+    MatIcon,
+    MatList,
+    MatListItem,
+    MatListItemIcon,
+    MatListItemTitle,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    MatTooltip,
+    StringifyStringLiteralPipe,
+    TranslatePipe,
+  ],
 })
 export class AddPropertyMenuComponent implements OnChanges {
   @Input({ required: true }) resourceClass!: ResourceClassInfo;
@@ -119,9 +140,9 @@ export class AddPropertyMenuComponent implements OnChanges {
   );
 
   constructor(
-    private _dialog: MatDialog,
-    private _oes: OntologyEditService,
-    private _viewContainerRef: ViewContainerRef
+    private readonly _dialog: MatDialog,
+    private readonly _oes: OntologyEditService,
+    private readonly _viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnChanges() {

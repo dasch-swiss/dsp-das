@@ -1,10 +1,21 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { MultiLanguages, StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { OntologyEditService } from '../../services/ontology-edit.service';
+import { ResourceClassFormComponent } from './resource-class-form.component';
 import { ResourceClassForm, ResourceClassFormData, UpdateResourceClassData } from './resource-class-form.type';
 
 export interface EditResourceClassDialogProps {
@@ -15,12 +26,14 @@ export interface EditResourceClassDialogProps {
 @Component({
   selector: 'app-edit-resource-class-dialog',
   template: `
-    <app-dialog-header [title]="data.labels | appStringifyStringLiteral" subtitle="Customize resource class" />
+    <app-dialog-header
+      [title]="data.labels | appStringifyStringLiteral"
+      [subtitle]="'pages.ontology.resourceClassForm.editSubtitle' | translate" />
     <div mat-dialog-content>
       <app-resource-class-form [formData]="formData" (afterFormInit)="afterFormInit($event)" />
     </div>
     <div mat-dialog-actions align="end">
-      <button data-cy="cancel-button" mat-button mat-dialog-close>Cancel</button>
+      <button data-cy="cancel-button" mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         data-cy="submit-button"
         mat-raised-button
@@ -29,11 +42,22 @@ export interface EditResourceClassDialogProps {
         [isLoading]="loading"
         [disabled]="form?.invalid"
         (click)="onSubmit()">
-        Update
+        {{ 'ui.common.actions.update' | translate }}
       </button>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    DialogHeaderComponent,
+    LoadingButtonDirective,
+    MatButton,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    ResourceClassFormComponent,
+    StringifyStringLiteralPipe,
+    TranslatePipe,
+  ],
 })
 export class EditResourceClassDialogComponent implements OnInit {
   loading = false;

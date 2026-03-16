@@ -1,27 +1,32 @@
 import { Component, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cookie-banner',
   template: ` @if (showCookieBanner) {
     <div class="cookie-banner">
       <p class="note">
-        This web-application uses cookies to provide you with a greater user experience. By using the application you
-        accept our
-        <span class="link" (click)="goToCookiePolicy()">use of cookies</span>.
+        {{ 'app.cookieBanner.message' | translate }}
+        <span class="link" (click)="goToCookiePolicy()">{{ 'app.cookieBanner.useOfCookies' | translate }}</span
+        >.
       </p>
       <div class="action">
-        <button mat-flat-button color="primary" (click)="closeCookieBanner()" data-cy="accept-cookies">ACCEPT</button>
+        <button mat-flat-button color="primary" (click)="closeCookieBanner()" data-cy="accept-cookies">
+          {{ 'app.cookieBanner.accept' | translate }}
+        </button>
       </div>
     </div>
   }`,
   styleUrls: [`./cookie-banner.component.scss`],
+  imports: [MatButtonModule, TranslatePipe],
 })
 export class CookieBannerComponent implements OnInit {
   showCookieBanner = true;
 
-  constructor(private _router: Router) {}
+  constructor(private readonly _router: Router) {}
 
   ngOnInit() {
     if (localStorage.getItem('cookieBanner') === null) {

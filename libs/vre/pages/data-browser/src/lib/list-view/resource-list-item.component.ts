@@ -1,33 +1,39 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { map } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
+import { map, Observable } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
+import { ProjectShortnameService } from '../project-shortname.service';
 
 @Component({
   selector: 'app-resource-list-item',
   template: `
     <div
-      style="padding: 8px 16px; cursor: pointer; border-bottom: 1px solid #ebebeb"
-      [ngStyle]="{
-        'background-color': (isHighlighted$ | async) ? '#D6E0E8' : 'inherit',
-      }"
+      class="item"
+      [ngClass]="{ highlighted: isHighlighted$ | async, search: multipleViewerService.searchKeyword !== undefined }"
       data-cy="resource-list-item"
       (mouseenter)="showCheckbox = true"
       (mouseleave)="showCheckbox = false"
       (click)="multipleViewerService.selectOneResource(resource)">
       <div style="display: flex; align-items: center; min-height: 40px">
         <div style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-          <div
-            style="    color: #979797;
-    font-size: 12px">
-            {{ resource.resourceClassLabel }}
-          </div>
           <div style="color: black">
             {{ resource.label }}
           </div>
           @if (foundIn.length > 0) {
-            <div class="found-in">Found in: {{ foundIn.join(', ') }}</div>
+            <div class="found-in">
+              <span>
+                {{ 'pages.dataBrowser.resourceListItem.foundIn' | translate
+                }}<span class="semibold">{{ foundIn.join(', ') }}</span></span
+              >
+              @if (showProjectShortname && (projectShortname$ | async); as shortname) {
+                <span>
+                  | Project: <span class="semibold">{{ shortname }}</span></span
+                >
+              }
+            </div>
           }
         </div>
 
@@ -43,6 +49,20 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
+      .item {
+        padding: 0 16px;
+        cursor: pointer;
+        &:hover {
+          background-color: #ebebeb;
+        }
+        &.search {
+          padding: 8px 16px;
+        }
+      }
+      .highlighted {
+        border-left: 2px solid #33678f;
+        background-color: #d6e0e8;
+      }
       mat-list-item {
         border-bottom: 1px solid #ebebeb;
       }
@@ -53,11 +73,16 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
         margin-top: 8px;
         font-size: 12px;
       }
+      .semibold {
+        font-weight: 500;
+      }
     `,
   ],
+  imports: [AsyncPipe, NgClass, MatCheckbox, TranslatePipe],
 })
 export class ResourceListItemComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;
+  @Input() showProjectShortname = false;
 
   showCheckbox = false;
   foundIn: string[] = [];
@@ -76,12 +101,21 @@ export class ResourceListItemComponent implements OnInit {
     map(resources => resources.map(r => r.id).includes(this.resource.id) && this.multipleViewerService.selectMode)
   );
 
-  constructor(public multipleViewerService: MultipleViewerService) {}
+  projectShortname$!: Observable<string>;
+
+  constructor(
+    public readonly multipleViewerService: MultipleViewerService,
+    private readonly _projectShortnameService: ProjectShortnameService
+  ) {}
 
   ngOnInit() {
-    if (this.multipleViewerService.searchKeyword) {
-      this._searchInResource(this.multipleViewerService.searchKeyword);
+    const searchKeyword = this.multipleViewerService.searchKeyword;
+    if (searchKeyword) {
+      this._searchInResourceLabel(searchKeyword);
+      this._searchInResourceProperty(searchKeyword);
     }
+
+    this.projectShortname$ = this._projectShortnameService.getProjectShortname(this.resource.attachedToProject);
   }
 
   onCheckboxChanged(event: MatCheckboxChange) {
@@ -92,15 +126,25 @@ export class ResourceListItemComponent implements OnInit {
     }
   }
 
-  private _searchInResource(keyword: string) {
+  private _searchInResourceLabel(keyword: string) {
+    if (this.resource.label.toLowerCase().includes(keyword.toLowerCase())) {
+      this.foundIn.push('Label');
+    }
+  }
+
+  private _searchInResourceProperty(keyword: string) {
     Object.values(this.resource.properties).forEach(values => {
       values.forEach(value => {
+        if (!value.propertyLabel) {
+          return;
+        }
+
         if (
           value.strval &&
           value.strval.toLowerCase().includes(keyword.toLowerCase()) &&
-          !this.foundIn.includes(value.propertyLabel!)
+          !this.foundIn.includes(value.propertyLabel)
         ) {
-          this.foundIn.push(value.propertyLabel!);
+          this.foundIn.push(value.propertyLabel);
         }
       });
     });

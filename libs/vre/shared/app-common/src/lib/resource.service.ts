@@ -7,7 +7,7 @@ import { AppConfigService } from '@dasch-swiss/vre/core/config';
 export class ResourceService {
   iriBase: string;
 
-  constructor(private _acs: AppConfigService) {
+  constructor(private readonly _acs: AppConfigService) {
     this.iriBase = this._getIriBaseWithoutTrailingSlash(this._acs.dspAppConfig.iriBase);
   }
 
@@ -27,6 +27,15 @@ export class ResourceService {
    */
   getResourceUuid(iri: string): string {
     return this.getResourcePath(iri).split('/')[2];
+  }
+
+  /**
+   * gets project shortcode from resource iri
+   * @param iri e.g. http://rdfh.ch/082B/SQkTPdHdTzq_gqbwj6QR-A
+   * @returns project shortcode --> 082B
+   */
+  getProjectShortcode(iri: string): string {
+    return this.getResourcePath(iri).split('/')[1];
   }
 
   /**

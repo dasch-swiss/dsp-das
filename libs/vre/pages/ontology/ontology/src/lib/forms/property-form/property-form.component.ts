@@ -1,10 +1,23 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatOption, MatOptgroup } from '@angular/material/core';
+import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { Constants } from '@dasch-swiss/dsp-js';
+import { ensureWithDefaultLanguage } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { existingNamesAsyncValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { DefaultProperties, LocalizationService, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
+import {
+  MultiLanguageInputComponent,
+  MultiLanguageTextareaComponent,
+  DEFAULT_MULTILANGUAGE_FORM,
+} from '@dasch-swiss/vre/ui/string-literal';
+import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { OntologyEditService } from '../../services/ontology-edit.service';
+import { GuiAttrLinkComponent } from './gui-attr-link.component';
+import { GuiAttrListComponent } from './gui-attr-list.component';
 import { PropertyForm, EditPropertyDialogData } from './property-form.type';
 
 @Component({
@@ -14,7 +27,7 @@ import { PropertyForm, EditPropertyDialogData } from './property-form.type';
       <span matPrefix>
         <mat-icon>{{ propertyData.propType.icon }}</mat-icon>
       </span>
-      <mat-label>Property type</mat-label>
+      <mat-label>{{ 'pages.ontology.propertyForm.type' | translate }}</mat-label>
       <mat-select [formControl]="form.controls.guiElement">
         <mat-select-trigger>
           {{ propertyData.propType.group }}
@@ -34,7 +47,7 @@ import { PropertyForm, EditPropertyDialogData } from './property-form.type';
       </mat-select>
     </mat-form-field>
     <app-common-input
-      label="Property name"
+      [label]="'pages.ontology.propertyForm.name' | translate"
       data-cy="name-input"
       prefixIcon="fingerprint"
       [control]="form.controls.name" />
@@ -42,7 +55,7 @@ import { PropertyForm, EditPropertyDialogData } from './property-form.type';
       [formArray]="form.controls.labels"
       [isRequired]="true"
       data-cy="label-input"
-      placeholder="Property label" />
+      [placeholder]="'pages.ontology.propertyForm.labelPlaceholder' | translate" />
 
     @if (propertyData.propType.objectType === Constants.ListValue) {
       <app-gui-attr-list data-cy="object-attribute-list" [control]="form.controls.guiAttr" />
@@ -55,9 +68,26 @@ import { PropertyForm, EditPropertyDialogData } from './property-form.type';
     <app-multi-language-textarea
       [formArray]="form.controls.comments"
       data-cy="comment-textarea"
-      placeholder="Comment"
+      [placeholder]="'pages.ontology.propertyForm.commentPlaceholder' | translate"
       [isRequired]="true" />
   </form>`,
+  imports: [
+    CommonInputComponent,
+    GuiAttrLinkComponent,
+    GuiAttrListComponent,
+    MatFormField,
+    MatIcon,
+    MatLabel,
+    MatOption,
+    MatOptgroup,
+    MatPrefix,
+    MatSelect,
+    MatSelectTrigger,
+    MultiLanguageInputComponent,
+    MultiLanguageTextareaComponent,
+    ReactiveFormsModule,
+    TranslatePipe,
+  ],
 })
 export class PropertyFormComponent implements OnInit {
   @Input() propertyData!: EditPropertyDialogData;
@@ -80,9 +110,9 @@ export class PropertyFormComponent implements OnInit {
   }
 
   constructor(
-    private _fb: FormBuilder,
-    private _localizationService: LocalizationService,
-    private _oes: OntologyEditService
+    private readonly _fb: FormBuilder,
+    private readonly _localizationService: LocalizationService,
+    private readonly _oes: OntologyEditService
   ) {}
 
   ngOnInit() {
@@ -115,8 +145,18 @@ export class PropertyFormComponent implements OnInit {
           asyncValidators: [existingNamesAsyncValidator(this._oes.currentOntologyEntityNames$)],
         }
       ),
-      labels: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.label ?? defaultData, [Validators.required]),
-      comments: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.comment ?? defaultData, [Validators.required]),
+      labels: DEFAULT_MULTILANGUAGE_FORM(
+        this.propertyData.label
+          ? ensureWithDefaultLanguage(this.propertyData.label, this._localizationService.getCurrentLanguage())
+          : defaultData,
+        [Validators.required]
+      ),
+      comments: DEFAULT_MULTILANGUAGE_FORM(
+        this.propertyData.comment
+          ? ensureWithDefaultLanguage(this.propertyData.comment, this._localizationService.getCurrentLanguage())
+          : defaultData,
+        [Validators.required]
+      ),
       guiAttr: this._fb.control<string>(
         {
           value: this.propertyData.guiAttribute!,

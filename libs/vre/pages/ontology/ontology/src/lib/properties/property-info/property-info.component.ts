@@ -1,10 +1,17 @@
-import { ChangeDetectionStrategy, Component, Input, ViewContainerRef } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, Input, ViewContainerRef } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { SplitPipe } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
+import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, startWith, switchMap } from 'rxjs';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { EditPropertyDialogData } from '../../forms/property-form/property-form.type';
@@ -16,6 +23,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   templateUrl: './property-info.component.html',
   styleUrls: ['./property-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AsyncPipe, MatButton, MatIcon, MatTooltip, SplitPipe, StringifyStringLiteralPipe, TranslatePipe],
 })
 export class PropertyInfoComponent {
   @Input({ required: true }) property!: PropertyInfo;
@@ -34,12 +42,15 @@ export class PropertyInfoComponent {
 
   isLockHovered = false;
   project$ = this._projectPageService.currentProject$;
+
+  protected readonly _translate = inject(TranslateService);
+
   constructor(
-    private _dialog: MatDialog,
-    private _oes: OntologyEditService,
-    private _dialogService: DialogService,
-    private _projectPageService: ProjectPageService,
-    private _viewContainerRef: ViewContainerRef
+    private readonly _dialog: MatDialog,
+    private readonly _oes: OntologyEditService,
+    private readonly _dialogService: DialogService,
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _viewContainerRef: ViewContainerRef
   ) {}
 
   openEditProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
@@ -61,7 +72,7 @@ export class PropertyInfoComponent {
 
   openDeleteProperty(id: string) {
     this._dialogService
-      .afterConfirmation('Do you want to delete this resource class ?')
+      .afterConfirmation(this._translate.instant('pages.ontology.propertyInfo.deleteConfirmation'))
       .pipe(switchMap(_del => this._oes.deleteProperty$(id)))
       .subscribe();
   }

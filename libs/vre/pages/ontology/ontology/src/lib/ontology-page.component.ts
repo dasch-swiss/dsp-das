@@ -1,61 +1,65 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { ProgressIndicatorOverlayComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { combineLatest, take } from 'rxjs';
+import { OntologyEditorHeaderComponent } from './ontology-editor-header.component';
 import { OntologyPageService } from './ontology-page.service';
+import { OntologySidenavComponent } from './ontology-sidenav.component';
 import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({
   selector: 'app-ontology',
   template: `
-    @if (!disableContent) {
-      <div class="ontology-editor">
-        @if (isTransacting$ | async) {
-          <div class="overlay-blocker">
-            <app-progress-indicator [size]="'large'" class="floating-center" />
+    <div class="ontology-editor">
+      @if (isTransacting$ | async) {
+        <div class="overlay-blocker">
+          <app-progress-indicator-overlay class="floating-center" />
+        </div>
+      }
+      <mat-sidenav-container class="ontology-editor-container">
+        <mat-sidenav class="ontology-editor-sidenav" mode="side" position="end" opened>
+          <app-ontology-sidenav />
+        </mat-sidenav>
+        <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
+          <app-ontology-editor-header class="sticky-header" />
+          <div class="scroll">
+            <router-outlet />
           </div>
-        }
-        <mat-sidenav-container class="ontology-editor-container">
-          <mat-sidenav class="ontology-editor-sidenav" mode="side" position="end" opened>
-            <app-ontology-sidenav />
-          </mat-sidenav>
-          <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
-            <app-ontology-editor-header class="sticky-header" />
-            <div class="scroll">
-              <router-outlet />
-            </div>
-          </mat-sidenav-content>
-        </mat-sidenav-container>
-      </div>
-    }
-
-    @if (disableContent) {
-      <app-status [status]="204" />
-    }
+        </mat-sidenav-content>
+      </mat-sidenav-container>
+    </div>
   `,
   styleUrls: ['./ontology-page.component.scss'],
   providers: [OntologyPageService, OntologyEditService],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AsyncPipe,
+    MatSidenav,
+    MatSidenavContainer,
+    MatSidenavContent,
+    OntologyEditorHeaderComponent,
+    OntologySidenavComponent,
+    ProgressIndicatorOverlayComponent,
+    RouterOutlet,
+  ],
 })
 export class OntologyPageComponent implements OnInit {
   project$ = this._projectPageService.currentProject$;
   ontology$ = this._oes.currentOntology$;
 
-  disableContent = false;
   isTransacting$ = this._oes.isTransacting$;
 
   constructor(
-    private _route: ActivatedRoute,
-    private _titleService: Title,
-    private _projectPageService: ProjectPageService,
-    private _oes: OntologyEditService
+    private readonly _route: ActivatedRoute,
+    private readonly _titleService: Title,
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _oes: OntologyEditService
   ) {}
-
-  @HostListener('window:resize', ['$event']) onWindowResize() {
-    this.disableContent = window.innerWidth <= 768;
-  }
 
   ngOnInit() {
     this._setupPage();
@@ -65,8 +69,6 @@ export class OntologyPageComponent implements OnInit {
   }
 
   private _setupPage() {
-    this.disableContent = window.innerWidth <= 768;
-
     combineLatest([this.project$, this.ontology$])
       .pipe(take(1))
       .subscribe(([project, currentOntology]) => {

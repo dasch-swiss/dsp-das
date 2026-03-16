@@ -1,5 +1,10 @@
+import { AsyncPipe, I18nPluralPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatChip, MatChipListbox } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { Constants, StoredProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
@@ -10,9 +15,9 @@ import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { filter, map, Observable, Subject, switchMap, take, takeUntil } from 'rxjs';
-import { SortProp } from '../../sort-button/sort-button.component';
+import { SortButtonComponent, SortProp } from '../../sort-button/sort-button.component';
 import {
   EraseProjectDialogComponent,
   IEraseProjectDialogProps,
@@ -22,7 +27,30 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-projects-list',
   templateUrl: './projects-list.component.html',
-  styleUrls: ['./projects-list.component.scss'],
+  imports: [
+    AsyncPipe,
+    I18nPluralPipe,
+    MatButton,
+    MatChip,
+    MatChipListbox,
+    MatIcon,
+    MatIconButton,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    SortButtonComponent,
+    TranslatePipe,
+  ],
+  styles: [
+    `
+      table {
+        border-spacing: 0;
+      }
+      tr:hover {
+        background-color: #d6e0e8;
+      }
+    `,
+  ],
 })
 export class ProjectsListComponent implements OnInit, OnDestroy {
   private _ngUnsubscribe = new Subject<void>();
@@ -40,8 +68,8 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
   itemPluralMapping = {
     project: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      '=1': `1 ${this._translateService.instant('pages.system.projectsList.project')}`,
-      other: `# ${this._translateService.instant('pages.system.projectsList.projects')}`,
+      '=1': `1 ${this._translateService.instant('ui.common.entities.project')}`,
+      other: `# ${this._translateService.instant('ui.common.entities.projects')}`,
     },
   };
 
@@ -66,15 +94,14 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
   isSysAdmin$ = this._userService.isSysAdmin$;
 
   constructor(
-    private _appConfigService: AppConfigService,
-    private _dialog: MatDialog,
-    private _dialogService: DialogService,
-    private _notification: NotificationService,
-    private _projectApiService: ProjectApiService,
-    private _router: Router,
-    private _userService: UserService,
-    private _translateService: TranslateService,
-    private _projectService: ProjectService
+    private readonly _appConfigService: AppConfigService,
+    private readonly _dialog: MatDialog,
+    private readonly _dialogService: DialogService,
+    private readonly _notification: NotificationService,
+    private readonly _projectApiService: ProjectApiService,
+    private readonly _router: Router,
+    private readonly _userService: UserService,
+    private readonly _translateService: TranslateService
   ) {}
 
   ngOnInit() {
@@ -122,7 +149,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
   createNewProject() {
     const queryParams = this.isUsersProjects ? { [RouteConstants.assignCurrentUser]: true } : {};
-    this._router.navigate([RouteConstants.project, RouteConstants.createNew], { queryParams });
+    this._router.navigate([RouteConstants.createNew, RouteConstants.project], { queryParams });
   }
 
   editProject(iri: string) {

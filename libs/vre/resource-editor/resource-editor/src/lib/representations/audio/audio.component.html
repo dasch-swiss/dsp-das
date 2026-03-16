@@ -1,0 +1,28 @@
+@if (failedToLoad) {
+<app-representation-error-message />
+} @else {
+
+<div style="height: 100%; display: flex; justify-content: center; align-items: center">
+  <mat-icon style="color: white; transform: scale(4)"> audio_file</mat-icon>
+  @if (audioFileUrl) {
+  <div class="audio-player">
+    <audio
+      #audioPlayer
+      [src]="audioFileUrl"
+      preload="auto"
+      (loadedmetadata)="onAudioPlayerReady()"
+      (error)="onAudioError($event)"></audio>
+  </div>
+  }
+</div>
+
+@if (isPlayerReady) {
+<app-media-slider
+  [max]="mediaPlayer.duration()"
+  [currentTime]="currentTime"
+  (afterNavigation)="mediaPlayer.navigate($event)" />
+@if (segmentsService.segments.length > 0 && duration > 0 && isPlayerReady) {
+<app-segments-display [segments]="segmentsService.segments" [videoLengthSecs]="duration" />
+}
+<app-audio-toolbar [parentResource]="parentResource" />
+} }

@@ -1,24 +1,40 @@
 import { Inject, Injectable } from '@angular/core';
-import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadOntology, ReadProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { filterNull, UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { BehaviorSubject, combineLatest, map, ReplaySubject, shareReplay, switchMap, take } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, of, shareReplay, switchMap, tap } from 'rxjs';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ProjectPageService {
-  private _currentProjectUuidSubject = new ReplaySubject<string>(1);
   private _reloadProjectSubject = new BehaviorSubject<null>(null);
 
-  currentProjectUuid$ = this._currentProjectUuidSubject.pipe(take(1));
+  private _currentProject?: ReadProject;
+  private _currentProjectIdSubject = new BehaviorSubject<string>('');
 
-  currentProject$ = this._reloadProjectSubject.pipe(
-    switchMap(() => this._currentProjectUuidSubject),
-    switchMap(projectUuid => this.projectApiService.get(this._projectService.uuidToIri(projectUuid))),
+  get currentProject(): ReadProject {
+    if (!this._currentProject) {
+      throw new Error('ProjectPageService: setup() must be called before accessing currentProjectId');
+    }
+    return this._currentProject;
+  }
+
+  get currentProjectUuid(): string {
+    return ProjectService.IriToUuid(this.currentProject.id);
+  }
+
+  readonly currentProject$ = combineLatest([
+    this._reloadProjectSubject,
+    this._currentProjectIdSubject.asObservable(),
+  ]).pipe(
+    switchMap(([, projectId]) => this._projectApiService.get(projectId)),
     map(response => response.project),
-    shareReplay(1)
+    tap((project: ReadProject) => {
+      this._currentProject = project;
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   private _user$ = this._userService.user$.pipe(filterNull());
@@ -38,20 +54,24 @@ export class ProjectPageService {
   );
 
   ontologies$ = this.ontologiesMetadata$.pipe(
-    switchMap(ontologies =>
-      combineLatest(ontologies.map(onto => this._dspApiConnection.v2.onto.getOntology(onto.id, true)))
-    )
+    switchMap(ontologies => {
+      if (ontologies.length > 0) {
+        return combineLatest(ontologies.map(onto => this._dspApiConnection.v2.onto.getOntology(onto.id, true)));
+      } else {
+        return of([] as ReadOntology[]);
+      }
+    })
   );
   constructor(
-    private projectApiService: ProjectApiService,
-    private _userService: UserService,
+    private readonly _projectApiService: ProjectApiService,
+    private readonly _userService: UserService,
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _projectService: ProjectService
+    private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _projectService: ProjectService
   ) {}
 
-  setCurrentProjectUuid(projectUuid: string): void {
-    this._currentProjectUuidSubject.next(projectUuid);
+  setup(projectUuid: string): void {
+    this._currentProjectIdSubject.next(this._projectService.uuidToIri(projectUuid));
   }
 
   reloadProject() {

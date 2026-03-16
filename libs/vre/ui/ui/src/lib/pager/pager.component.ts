@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -14,13 +13,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pager',
-  imports: [MatIconModule, MatButtonModule, TranslateModule, MatInputModule, MatTooltipModule, AsyncPipe],
+  imports: [MatIconModule, MatButtonModule, TranslatePipe, MatInputModule, MatTooltipModule],
   templateUrl: './pager.component.html',
   styleUrls: ['./pager.component.scss'],
 })
@@ -61,7 +59,7 @@ export class PagerComponent implements OnChanges {
     return `${itemRangeStart} - ${itemRangeEnd} ${this._translate.instant('ui.pager.rangeLabelOf')} ${this.numberOfAllResults}`;
   }
 
-  constructor(private _translate: TranslateService) {}
+  constructor(private readonly _translate: TranslateService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['numberOfAllResults']) {

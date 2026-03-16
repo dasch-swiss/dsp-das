@@ -2,21 +2,84 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Important: Permission Protocol
+## Claude Code Operating Rules
 
-**ALWAYS ask for explicit permission before:**
-- Making any code changes or modifications
-- Creating new files or directories  
-- Deleting or removing any files
-- Running commands that modify the codebase
-- Installing or updating dependencies
-- Making commits or pushing changes
+### 1. Permission & Safety
+- The assistant may freely **propose** changes, but must obtain **explicit, unambiguous user approval** before:
+  - Modifying code or files  
+  - Creating, deleting, modifying or moving files/directories  
+  - Running commands that modify the codebase  
+  - Installing or updating dependencies  
+  - Running migrations or commands with side effects  
+  - Executing long-running or resource-intensive operations  
+  - Making commits or pushing changes  
+- Read-only actions (searching, linting, listing, analysis) **do not require** permission, shouldn't be however overused.  
+- If approval is unclear, the assistant must ask for clarification.
 
-Only proceed with changes after receiving clear approval from the user.
+### 2. Non-Repository File System Safety
+- The assistant must **not** modify, create, move, or delete files or directories **outside the project repository** unless explicitly instructed by the user.
+- If the assistant detects that a requested operation would affect the broader system (e.g., user home directory, OS configuration, global environment files, unrelated projects), it must:
+  - Clearly **highlight** this fact to the user  
+  - Explain potential risks or side effects  
+  - Request explicit, unambiguous permission before proceeding  
+- If the user does not explicitly grant permission, the assistant must refuse to perform the operation and propose safe alternatives when possible.
+
+### 3. Minimal & Efficient Actions
+- The assistant should avoid performing unnecessary operations, analyses, or commands.
+- Whether read-only or modifying, actions should be taken **only when they are needed** to fulfill the current task or when explicitly requested by the user.
+- Before initiating multiple, expensive, or broad operations (e.g., scanning the entire repository, running several analyses, generating large outputs), the assistant should:
+  - briefly explain why these actions might be needed, and
+  - ask whether the user wants them executed.
+- The assistant should avoid verbose or redundant outputs and prefer concise summaries unless more detail is requested.
+
+### 4. Planning & Execution
+- For multi-step tasks, propose a **step-by-step plan** and request approval before starting.  
+- After approval of the plan, ask before executing **each step**, unless the user explicitly authorizes executing all steps without further prompts.  
+- If a task includes multiple scopes (e.g., refactor + feature + tests), confirm whether to treat them separately.
+
+### 5. Proposing Solutions
+- Always propose the **best-practice solution first**, followed by clearly labeled alternatives (e.g., “quick fix”, “minimal change”).  
+- When proposing changes, provide **diffs/patch-style output** by default; provide full files only if requested.  
+- If repository conventions conflict with best practices, ask which to prioritize.  
+- If user instructions conflict with conventions or principles, seek clarification.
+
+### 6. Design Principles
+- Use established principles (SOLID, DRY, KISS, YAGNI) when appropriate to the task.  
+- Avoid introducing complexity or over-engineering.  
+- If applying a principle requires major structural changes, propose the idea first and wait for explicit approval.  
+- When a proposal is influenced by a principle, state which one for transparency.
+
+### 7. Testing Guidelines
+- Add tests only within the **scope of the task**.  
+- Avoid over-testing or redundant tests; check existing coverage first.  
+- Cover meaningful edge cases and ensure regression safety.  
+- Follow repository test conventions unless directed otherwise.  
+- Suggest tests for unrelated components only as follow-up items.
+
+### 8. Refactoring & Cleanup
+- After refactoring or moving code, perform relevant cleanup such as:
+  - Removing unused imports  
+  - Deleting deprecated files  
+  - Removing orphan tests or unused code  
+  - Consolidating duplicate logic  
+  - Updating documentation  
+- Before cleanup, verify whether any remaining issues **within the task scope** still need improvement.  
+- Do not expand cleanup or refactoring beyond the approved scope without permission.
+
+### 9. Risk & Limitations
+- If something is risky, unclear, or cannot be performed safely:
+  - Explain the issue  
+  - Provide safe alternatives  
+  - Ask whether to proceed  
+
+### 10. Clarity, Context & Output Management
+- If repository context or file state is incomplete or ambiguous, ask clarifying questions before proposing or performing changes.  
+- For large diffs or multi-file updates, summarize first and ask whether to show the full details.  
+- Ensure all actions are transparent, scoped, and reversible.
 
 ## Project Overview
 
-This is DaSCH Service Platform (DSP) monorepo - a digital humanities platform for storing, sharing, and working with primary research resources and data. Built with Angular 18.2.9, NX 19.8.9, and Node.js 20.11.1.
+This is DaSCH Service Platform (DSP) monorepo - a digital humanities platform for storing, sharing, and working with primary research resources and data. Built with Angular, NX, and Node.js (see [package.json](package.json) for current versions).
 
 The main application is **DSP-APP** - a user interface for the Swiss National Data and Service Center for the Humanities (DaSCH) research data repository, connecting to DSP-API backend and implementing DSP-JS client library.
 
@@ -24,7 +87,7 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 
 ### Local Development
 - `npm run start-local` or `nx run dsp-app:serve` - Start local development server
-- `npm run start-test` - Start with test server configuration
+- `npm run start-local-with-observability` - Start local dev server with Grafana observability stack (Loki, Tempo, Grafana UI)
 - `npm run start-dev` - Start with dev server configuration
 
 ### Testing
@@ -36,8 +99,8 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 ### Building and Linting
 - `npm run build` or `nx run dsp-app:build` - Build for development
 - `npm run build-prod` or `nx run dsp-app:build:production` - Build for production
-- `npm run lint-local` or `nx run dsp-app:lint --fix` - Lint with auto-fix
-- `npm run lint-ci` or `nx run dsp-app:lint` - Lint without auto-fix
+- `npm run lint-all` or `nx run-many --all --target=lint` - Lint all libs without auto-fix
+- `npm run lint-fix-all` or `nx run-many --all --target=lint --fix` - Lint all libs with auto-fix
 
 ### OpenAPI Code Generation
 - `npm run generate-openapi-module` - Generate TypeScript client from OpenAPI spec
@@ -52,6 +115,16 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 - `nx run [library-name]:test` - Test specific library
 - `nx run [library-name]:lint` - Lint specific library
 - `nx run [library-name]:build` - Build specific library
+
+### Code Coverage
+- `npm run unit-test-coverage` - Generate combined unit test coverage for all projects
+- `npm run unit-test-coverage-ci` - CI-mode coverage with reports
+- `npm run e2e-coverage` - E2E test coverage with instrumentation
+- Coverage merging via `tools/merge-coverage.js` and `tools/lcov-parser.js`
+
+### Additional Commands
+- `npm run lint-fix-all` - Lint and fix all projects in monorepo
+- `npm run lint-ci-all` - Lint all projects without auto-fix
 
 ## Architecture Overview
 
@@ -72,26 +145,25 @@ The `libs/vre/` directory follows domain-driven design with clear separation:
 - **shared/** - Common utilities and services
 - **ui/** - Reusable UI components
 
-### State Management
-Uses **NGXS** for state management with domain-specific states:
-- User, Projects, Ontologies, Lists, OntologyClass, Resource, Config states
-- Actions and selectors co-located with state files
-
 ### Key Patterns
-- **Barrel exports** via `*.components.ts` files
 - **exposing exported files** via `*.index.ts` files
 - **TypeScript path mapping** with `@dasch-swiss/vre/*` aliases
 - **Feature-based organization** by domain
 - **Reactive programming** with RxJS observables
+- **Component Store** for local state management
+
+### Project Images
+- Project cover images live in `apps/dsp-app/src/assets/images/project/width-500/` as `{shortcode}.webp` files
+- Use the `/format-project-image` skill to add or update project images (handles resize, conversion, optimization)
+- See [`apps/dsp-app/src/assets/images/project/CLAUDE.md`](apps/dsp-app/src/assets/images/project/CLAUDE.md) for detailed guidelines
+- License captions are managed in `libs/vre/pages/project/project/src/lib/description/license-captions-mapping.ts`
 
 ## Environment Configurations
 
 Multiple environment configurations available:
 - `development` - Local development
-- `test-server` - Test server environment
 - `dev-server` - Development server environment
 - `ls-test-server` - LS test server environment
-- `0845-test-server` - Specific test server environment
 - `stage-server` - Staging environment
 - `production` - Production environment
 
@@ -103,12 +175,22 @@ Multiple environment configurations available:
 - Import ordering enforced alphabetically
 - Focus tests (fit, fdescribe) are banned in CI
 - Self-closing tags for component selectors in templates
+- no usage of ::ng-deep
+- Control Flow syntax
 
 ### Testing Framework
 - **Jest** for unit tests with Angular-specific preset
 - **Cypress** for E2E tests with multiple configurations
-- **Karma** as fallback test runner for some configurations
 - Code coverage reporting available
+- **ng-mocks** for advanced Angular component mocking
+
+### TypeScript Configuration
+- **Target:** ES2022 with ES2020 modules
+- **Library support:** ES2021 + DOM APIs
+- **Strict template checking** enabled via Angular compiler
+- **Path aliases** for all VRE libraries (see [tsconfig.base.json](tsconfig.base.json))
+- **Skip lib check** enabled for faster compilation
+- **Experimental decorators** and decorator metadata enabled for Angular
 
 ### NX Integration  
 - Libraries can be tested/built independently
@@ -127,9 +209,34 @@ Application handles various file types and representations:
 - IIIF integration for image viewing
 - Media segment annotations for time-based resources
 
+## Observability and Monitoring
+
+### Grafana Faro Integration
+The application includes comprehensive observability using Grafana Faro:
+- **@grafana/faro-web-sdk** - Web observability SDK for real user monitoring
+- **@grafana/faro-web-tracing** - Distributed tracing integration
+- **@grafana/faro-transport-otlp-http** - OTLP transport for telemetry data
+- Start with observability stack: `npm run start-local-with-observability`
+- Includes Loki (logs), Tempo (traces), and Grafana UI dashboard
+- Configuration defined in environment-specific config files
+
+### Sentry Error Tracking
+Error tracking and performance monitoring with Sentry:
+- **@sentry/angular** - Angular-specific Sentry integration
+- **@sentry/cli** - Command-line tool for sourcemap uploads
+- Upload sourcemaps: `npm run sentry:sourcemaps`
+- Integrated into application bootstrap in `main.ts`
+- Provides real-time error reporting and performance metrics
+
+### Docker Integration
+Local observability infrastructure via Docker Compose:
+- `docker-compose.observability.yml` - Defines observability stack
+- Automatically started with observability development command
+- Grafana dashboard accessible at localhost after startup
+
 ## DSP-JS Client Library (Most Crucial Dependency)
 
-**@dasch-swiss/dsp-js v10.8.0** is the primary API client library for communicating with DSP-API backend. It's deeply integrated throughout the application and essential for all data operations.
+**@dasch-swiss/dsp-js** is the primary API client library for communicating with DSP-API backend. It's deeply integrated throughout the application and essential for all data operations. See [package.json](package.json) for the current version.
 
 ### Configuration and Setup
 
@@ -216,14 +323,6 @@ DSP-JS `Constants` are extensively used throughout the codebase:
 )
 ```
 
-### State Management Integration
-
-DSP-JS is integrated with NGXS state management:
-- **ProjectsState** - Project data, members, groups
-- **OntologiesState** - Ontology loading with caching
-- **UserState** - Authentication and profile management  
-- **ResourceState** - Current resource data
-
 ### Key Features
 
 **Caching Strategy:**
@@ -247,8 +346,8 @@ DSP-JS is integrated with NGXS state management:
 
 ### Development Commands for DSP-JS
 
-- `npm run yalc-add-lib` - Add local DSP-JS development version
-- Check `package.json` for current version: `@dasch-swiss/dsp-js: 10.8.0`
+- `npm run yalc-add-lib` - Add local DSP-JS development version for testing
+- Check [package.json](package.json) for current version
 
 ## Working with APIs
 
@@ -262,7 +361,6 @@ DSP-JS is integrated with NGXS state management:
 Key external libraries:
 - **@dasch-swiss/dsp-js** - DSP API client library (see detailed section above)
 - **@angular/material** - UI components
-- **@ngxs/store** - State management
 - **openseadragon** - Image viewer
 - **ckeditor5-custom-build** - Rich text editing
 - **cypress** - E2E testing
