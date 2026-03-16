@@ -54,7 +54,10 @@ describe('PdfToolbarComponent', () => {
         { provide: TranslateService, useValue: translateServiceMock },
         { provide: Clipboard, useValue: { copy: jest.fn() } },
         { provide: NotificationService, useValue: { openSnackBar: jest.fn() } },
-        { provide: RepresentationService, useValue: { getIngestOriginalUrl: jest.fn().mockReturnValue(of('http://example.com/original')) } },
+        {
+          provide: RepresentationService,
+          useValue: { getIngestOriginalUrl: jest.fn().mockReturnValue(of('http://example.com/original')) },
+        },
       ],
     }).compileComponents();
 
