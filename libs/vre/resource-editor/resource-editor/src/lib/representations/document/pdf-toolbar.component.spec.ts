@@ -76,7 +76,7 @@ describe('PdfToolbarComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('onSearchInput', () => {
+  describe('onSearchInput method', () => {
     it('should emit searchQuery with input value', () => {
       const searchQuerySpy = jest.spyOn(component.searchQuery, 'emit');
       const mockEvent = { target: { value: 'test query' } } as any;
