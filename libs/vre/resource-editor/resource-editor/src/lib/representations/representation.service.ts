@@ -74,6 +74,19 @@ export class RepresentationService {
     );
   }
 
+  getIngestOriginalUrl(
+    fileValue:
+      | ReadAudioFileValue
+      | ReadDocumentFileValue
+      | ReadMovingImageFileValue
+      | ReadStillImageFileValue
+      | ReadStillImageExternalFileValue
+      | ReadArchiveFileValue,
+    resource: ReadResource
+  ) {
+    return this.getIngestUrl(fileValue, resource).pipe(map(url => `${url}/original`));
+  }
+
   private downloadFile(url: string, userCanView = true) {
     let headers = {};
     const isLoggedIn = !!this._userService.currentUser;

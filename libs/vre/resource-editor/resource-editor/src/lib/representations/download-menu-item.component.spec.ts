@@ -30,7 +30,7 @@ describe('DownloadMenuItemComponent', () => {
   beforeEach(async () => {
     representationServiceMock = {
       downloadProjectFile: jest.fn(),
-      getIngestUrl: jest.fn().mockReturnValue(of('http://example.com/test-archive.zip')),
+      getIngestOriginalUrl: jest.fn().mockReturnValue(of('http://example.com/test-archive.zip/original')),
     };
 
     await TestBed.configureTestingModule({
@@ -73,8 +73,8 @@ describe('DownloadMenuItemComponent', () => {
 
       component.copyUrl();
 
-      expect(representationServiceMock.getIngestUrl).toHaveBeenCalledWith(mockFileValue, mockParentResource);
-      expect(clipboardSpy.copy).toHaveBeenCalledWith('http://example.com/test-archive.zip');
+      expect(representationServiceMock.getIngestOriginalUrl).toHaveBeenCalledWith(mockFileValue, mockParentResource);
+      expect(clipboardSpy.copy).toHaveBeenCalledWith('http://example.com/test-archive.zip/original');
       expect(notificationSpy.openSnackBar).toHaveBeenCalled();
     });
   });

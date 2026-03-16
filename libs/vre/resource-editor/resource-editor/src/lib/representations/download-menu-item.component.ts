@@ -42,7 +42,7 @@ export class DownloadMenuItemComponent {
   }
 
   copyUrl() {
-    this._rs.getIngestUrl(this.src, this.parentResource).subscribe(link => {
+    this._rs.getIngestOriginalUrl(this.src, this.parentResource).subscribe(link => {
       this._clipboard.copy(link);
       this._notification.openSnackBar(this._translateService.instant('resourceEditor.representations.fileLinkCopied'));
     });
