@@ -8,7 +8,6 @@
             #ontologiesList
             (selectionChange)="onSelectedOntologyChanged()"
             name="ontologies"
-            appearance="fill"
             [compareWith]="compareApiDataObjects">
             @if (ontologiesLoading) {
             <mat-option disabled="true">Loading...</mat-option>
@@ -27,7 +26,6 @@
             #resourceClassesList
             (selectionChange)="onSelectedResourceClassChanged()"
             name="resourceClass"
-            appearance="fill"
             [compareWith]="compareApiDataObjects">
             @if (resourceClassesLoading) {
             <mat-option disabled="true">Loading...</mat-option>

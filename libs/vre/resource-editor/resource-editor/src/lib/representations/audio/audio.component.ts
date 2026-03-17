@@ -43,6 +43,16 @@ import { MediaSliderComponent } from './media-slider.component';
         display: flex;
         flex-direction: column;
       }
+      .audio-icon-container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .audio-icon {
+        color: var(--mat-sys-on-primary);
+        transform: scale(4);
+      }
     `,
   ],
 })

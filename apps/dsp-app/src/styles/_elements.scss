@@ -13,7 +13,7 @@
 
 // Link
 a {
-  color: $primary;
+  color: var(--mat-sys-primary);
   text-decoration: none;
 }
 
@@ -54,7 +54,7 @@ a {
       padding: 4px;
       outline: none;
       background-color: transparent;
-      color: $primary;
+      color: var(--mat-sys-primary);
       margin: 0 4px;
       border-radius: 50%;
       transition: background-color ease-out 0.5s;
@@ -98,8 +98,8 @@ a {
 .annotation-tooltip {
   display: none;
   position: fixed;
-  background-color: $black-60-opacity;
-  color: $bright;
+  background-color: color-mix(in srgb, var(--mat-sys-shadow) 60%, transparent);
+  color: var(--mat-sys-on-primary);
   padding: 8px;
   border-radius: $border-radius;
   min-height: 24px;
@@ -121,9 +121,9 @@ a {
 }
 
 :root {
-  --primary: #{$primary_700};
-  --element-active-hover: #{$primary_100};
-  --gray-500: #{$cool_gray_500};
+  --primary: var(--mat-sys-primary);
+  --element-active-hover: var(--mat-sys-primary-container);
+  --gray-500: var(--mat-sys-outline);
 }
 
 .tab-icon {
