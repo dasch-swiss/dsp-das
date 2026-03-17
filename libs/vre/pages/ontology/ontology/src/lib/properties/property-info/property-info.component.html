@@ -2,8 +2,8 @@
   data-cy="property-info"
   (mouseenter)="mouseEnter()"
   (mouseleave)="mouseLeave()"
-  style="padding: 16px; position: relative">
-  <div style="display: flex; align-items: center; gap: 8px">
+  class="property-info-host">
+  <div class="property-info-header">
     @if (property.propType) {
     <mat-icon
       [matTooltip]="property.propType?.group + ': ' + property.propType?.label + ' (' + property.propDef!.id.split('#')[1] + ')'"
@@ -42,7 +42,7 @@
       [matTooltip]="'id: ' + property.propDef!.id"
       matTooltipPosition="above"
       matTooltipClass="wide-tooltip"
-      class="mat-caption"
+      class="mat-body-small"
       [matTooltipDisabled]="isLockHovered">
       {{ property.propDef!.id | split: '#':1 }}
     </span>
@@ -50,7 +50,7 @@
     <span class="white-space">
       @if (property.usedByClasses.length) {
       <span>
-        <span class="mat-caption">&gt; {{ 'pages.ontology.propertyInfo.usedIn' | translate }} </span>
+        <span class="mat-body-small">&gt; {{ 'pages.ontology.propertyInfo.usedIn' | translate }} </span>
         @for (c of property.usedByClasses; track trackByFn($index, c); let last = $last) {
         <span>
           <span
@@ -76,7 +76,7 @@
         }
       </span>
       } @else {
-      <span class="mat-caption"
+      <span class="mat-body-small"
         >&gt;
         <span class="not-used">{{ 'pages.ontology.propertyInfo.notUsed' | translate }}</span>
       </span>
