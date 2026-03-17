@@ -3,40 +3,11 @@
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined");
 
 // --------------------------------------
-// default colors and default contrast colors
-
-// TODO!!
-$primary: map.get($m3-dsp-blue-palette, 40);
-
-$secondary: map.get($m3-dsp-teal-palette, 40);
-
-$yellow: rgb(255, 255, 0);
-$red: rgb(255, 0, 0);
-$red_contrast: rgb(255, 0, 255);
-$cool_gray: #2f2f2f;
-$primary_700: $primary;
-$primary_800: $primary;
-$primary_900: $primary;
-$yellow_100: $yellow;
-$yellow_500: $yellow;
-$yellow_contrast: $yellow;
-$cool_gray_50: $cool_gray;
-$cool_gray_100: $cool_gray;
-$cool_gray_300: $cool_gray;
-$cool_gray_500: $cool_gray;
-$primary_50: $primary;
-$primary_100: $primary;
-
-// --------------------------------------
 // color variables
-$white: rgb(255, 255, 255);
-$bright: rgb(249, 249, 249);
-$grey: rgb(184, 184, 184);
 $black: rgb(11, 11, 11);
 $black-12-opacity: rgba($black, 0.12);
 $black-14-opacity: rgba($black, 0.14);
 $black-20-opacity: rgba($black, 0.2);
-$black-60-opacity: rgba($black, 0.6);
 
 // --------------------------------------
 // other variables
