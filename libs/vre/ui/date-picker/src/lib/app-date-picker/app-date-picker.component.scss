@@ -88,10 +88,8 @@
   padding: 2px;
 
   &.selected {
-    // $primary_700 in _config.scss of dsp-app
-    background-color: #336790;
-    // $bright in _config.scss of dsp-app
-    color: rgb(249, 249, 249);
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
     border-radius: 50%;
   }
 

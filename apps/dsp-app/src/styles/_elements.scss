@@ -41,10 +41,10 @@ a {
   position: absolute;
   right: 56px;
   top: 3px;
-  border: 1px solid #e4e4e4;
+  border: 1px solid var(--mat-sys-surface-container-high);
   border-radius: 14px;
   padding: 4px;
-  background-color: #e4e4e4;
+  background-color: var(--mat-sys-surface-container-high);
   z-index: 2;
   @include box-shadow();
 
@@ -89,7 +89,7 @@ a {
     }
 
     button:hover {
-      background-color: #c7c7c7;
+      background-color: var(--mat-sys-surface-container-highest);
     }
   }
 }

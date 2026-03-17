@@ -1,11 +1,9 @@
-@use '../../../../../../../apps/dsp-app/src/styles/config' as *;
-
 .segment {
   position: absolute;
   height: 6px;
   cursor: pointer;
-  background: $primary;
-  color: white;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
   display: flex;
   justify-content: center;
   border-radius: 5px;
@@ -22,13 +20,13 @@
   width: 40px;
   top: 0;
   height: 30px;
-  background: $primary;
-  color: white;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
   display: flex;
   justify-content: center;
   align-items: center;
 
   &:hover {
-    background: $primary_800;
+    background: var(--mat-sys-primary-container);
   }
 }

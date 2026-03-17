@@ -75,30 +75,30 @@
   }
 
   button:disabled {
-    border: 1px solid #bdbfc1;
+    border: 1px solid var(--mat-sys-outline);
 
     &.reset-button {
-      color: #bdbfc1;
+      color: var(--mat-sys-outline);
     }
 
     &.search-button,
     &.previous-search-button {
-      background-color: #bdbfc1;
-      color: white;
+      background-color: var(--mat-sys-outline);
+      color: var(--mat-sys-on-primary);
     }
   }
 
   button:not(:disabled) {
-    border: 1px solid #336790;
+    border: 1px solid var(--mat-sys-primary);
 
     &.reset-button {
-      color: #336790;
+      color: var(--mat-sys-primary);
     }
 
     &.search-button,
     &.previous-search-button {
-      background-color: #336790;
-      color: white;
+      background-color: var(--mat-sys-primary);
+      color: var(--mat-sys-on-primary);
     }
   }
 }
@@ -111,15 +111,15 @@
   }
 
   button:disabled {
-    border: 1px solid #bdbfc1;
-    background-color: #bdbfc1;
-    color: white;
+    border: 1px solid var(--mat-sys-outline);
+    background-color: var(--mat-sys-outline);
+    color: var(--mat-sys-on-primary);
   }
 
   button:not(:disabled) {
-    border: 1px solid #336790;
-    background-color: white;
-    color: #336790;
+    border: 1px solid var(--mat-sys-primary);
+    background-color: var(--mat-sys-surface);
+    color: var(--mat-sys-primary);
   }
 }
 
@@ -127,7 +127,7 @@
   height: 44px;
   width: 44px;
   padding: 0px;
-  color: #e11d48;
+  color: var(--mat-sys-error);
 
   mat-icon {
     height: 44px;

@@ -1,11 +1,9 @@
-$comment-color: #ededed;
-
 div {
   position: relative;
-  border: 2px solid $comment-color;
+  border: 2px solid var(--mat-sys-surface-variant);
   border-radius: 4px;
   padding: 8px;
-  background-color: whitesmoke;
+  background-color: var(--mat-sys-surface-container);
 }
 
 div:after,
@@ -19,15 +17,15 @@ div:before {
 div:after {
   top: -9px;
   left: 8px;
-  border-bottom: 10px solid whitesmoke;
-  border-left: 2px solid whitesmoke;
+  border-bottom: 10px solid var(--mat-sys-surface-container);
+  border-left: 2px solid var(--mat-sys-surface-container);
   border-right: 10px solid transparent;
 }
 
 div:before {
   top: -15px;
   left: 5px;
-  border-bottom: 15px solid $comment-color;
-  border-left: 2px solid $comment-color;
+  border-bottom: 15px solid var(--mat-sys-surface-variant);
+  border-left: 2px solid var(--mat-sys-surface-variant);
   border-right: 15px solid transparent;
 }
