@@ -27,6 +27,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-projects-list',
   templateUrl: './projects-list.component.html',
+  styleUrl: './projects-list.component.scss',
   imports: [
     AsyncPipe,
     I18nPluralPipe,
