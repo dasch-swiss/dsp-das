@@ -12,6 +12,7 @@ import {
   ReadResource,
   ReadStillImageExternalFileValue,
   ReadStillImageFileValue,
+  ReadStillImageVectorFileValue,
   UpdateFileValue,
   UpdateResource,
 } from '@dasch-swiss/dsp-js';
@@ -50,14 +51,25 @@ export class StillImageToolbarComponent {
   @Input({ required: true }) compoundMode!: boolean;
   @Input({ required: true }) isPng!: boolean;
   @Output() imageIsPng = new EventEmitter<boolean>();
+  @Output() svgBackgroundChange = new EventEmitter<'default' | 'white' | 'transparent'>();
 
-  get imageFileValue() {
-    const image = this.resource.properties[Constants.HasStillImageFileValue][0];
+  get imageFileValue():
+    | ReadStillImageFileValue
+    | ReadStillImageExternalFileValue
+    | ReadStillImageVectorFileValue
+    | null {
+    const imageValues = this.resource.properties[Constants.HasStillImageFileValue];
+    if (!imageValues?.length) {
+      return null;
+    }
+    const image = imageValues[0];
     switch (image.type) {
       case Constants.StillImageFileValue:
         return image as ReadStillImageFileValue;
       case Constants.StillImageExternalFileValue:
         return image as ReadStillImageExternalFileValue;
+      case Constants.StillImageVectorFileValue:
+        return image as ReadStillImageVectorFileValue;
       default:
         throw new AppError('Unknown image type');
     }
@@ -65,6 +77,15 @@ export class StillImageToolbarComponent {
 
   get isReadStillImageExternalFileValue(): boolean {
     return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageExternalFileValue;
+  }
+
+  get isReadStillImageVectorFileValue(): boolean {
+    return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageVectorFileValue;
+  }
+
+  /** Only raster still images support polygon region annotations. */
+  get isAnnotatable(): boolean {
+    return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageFileValue;
   }
 
   get userCanView() {
@@ -93,6 +114,7 @@ export class StillImageToolbarComponent {
   }
 
   download() {
+    if (!this.imageFileValue) return;
     this._rs.downloadProjectFile(this.imageFileValue, this.resource);
   }
 
@@ -106,6 +128,10 @@ export class StillImageToolbarComponent {
       }),
       viewContainerRef: this._viewContainerRef,
     });
+  }
+
+  setSvgBackground(bg: 'default' | 'white' | 'transparent') {
+    this.svgBackgroundChange.emit(bg);
   }
 
   private _replaceFile(file: UpdateFileValue) {

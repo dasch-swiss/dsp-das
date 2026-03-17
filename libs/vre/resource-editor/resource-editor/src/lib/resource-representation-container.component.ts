@@ -16,6 +16,8 @@ import { Component, Input } from '@angular/core';
         height: var(--height);
         border-radius: 8px;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
         background: var(--mat-sys-inverse-surface);
         color: var(--mat-sys-on-surface);
       }
