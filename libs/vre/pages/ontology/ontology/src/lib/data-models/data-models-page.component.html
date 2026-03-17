@@ -1,16 +1,16 @@
 <app-centered-layout data-cy="data-models-container">
-  <div style="display: flex; justify-content: space-between; align-items: center">
-    <div class="mat-headline-small" style="margin-bottom: 0; display: flex; align-items: center">
+  <div class="section-header">
+    <div class="mat-headline-small section-title">
       <span>{{ 'pages.ontology.dataModels.title' | translate }}</span>
       <mat-icon
         [matTooltip]="'pages.ontology.dataModels.info' | translate"
         matTooltipPosition="above"
-        style="margin-left: 8px; color: var(--mat-sys-primary)">
+        class="info-icon">
         info
       </mat-icon>
     </div>
     @if (hasProjectAdminRights$ | async) {
-    <div style="display: flex; gap: 8px">
+    <div class="action-row">
       <a
         matButton="tonal"
         class="docs"
@@ -39,13 +39,13 @@
   </app-clickable-list-card>
   }
 
-  <div style="margin-top: 80px; display: flex; justify-content: space-between">
-    <div class="mat-headline-small" style="display: flex; align-items: center">
+  <div class="section-header section-header--spaced">
+    <div class="mat-headline-small section-title">
       <span>{{ 'pages.ontology.dataModels.vocabularies.title' | translate }}</span>
       <mat-icon
         [matTooltip]="'pages.ontology.dataModels.vocabularies.info' | translate"
         matTooltipPosition="above"
-        style="margin-left: 8px; color: var(--mat-sys-primary)">
+        class="info-icon">
         info
       </mat-icon>
     </div>

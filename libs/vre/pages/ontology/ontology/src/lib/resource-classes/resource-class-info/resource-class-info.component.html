@@ -7,16 +7,16 @@
   cdkDrag
   cdkDragBoundary=".drag-drop-stop">
   <mat-card-header cdkDragHandle>
-    <div style="flex: 1">
+    <div class="card-header-content">
       <mat-card-title [matTooltip]="this.resourceClass.comments | appStringifyStringLiteral" matTooltipPosition="above">
         {{ this.resourceClass.labels | appStringifyStringLiteral | appTruncate: 56 }}
       </mat-card-title>
-      <mat-card-subtitle style="color: var(--mat-sys-outline)" class="mat-body-medium">
+      <mat-card-subtitle class="mat-body-medium card-subtitle">
         <span> {{ resourceClass.name }} </span>
         <span>&nbsp;&middot;&nbsp;</span>
         <span data-cy="class-type-label"
           >@if (resourceClass.defaultClassIcon) {
-          <mat-icon style="width: 14px; height: 14px; font-size: 14px; line-height: 14px; position: relative; top: 2px"
+          <mat-icon class="class-type-icon"
             >{{ resourceClass.defaultClassIcon }}</mat-icon
           >
           } {{ resourceClass.defaultClassLabel }}
@@ -25,9 +25,9 @@
     </div>
 
     @if ((project$ | async)?.status) {
-    <div style="display: flex; gap: 8px">
+    <div class="card-actions">
       @if (classHovered || menuOpen || addPropertyMenuOpen) {
-      <div style="display: flex; gap: 8px">
+      <div class="card-actions">
         @if ((hasProjectAdminRights$ | async)) {
         <app-add-property-menu
           [resourceClass]="resourceClass"

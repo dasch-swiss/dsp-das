@@ -1,3 +1,25 @@
 .class-card {
   padding-bottom: 16px;
 }
+
+.card-header-content {
+  flex: 1;
+}
+
+.card-subtitle {
+  color: var(--mat-sys-outline);
+}
+
+.class-type-icon {
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
+  line-height: 14px;
+  position: relative;
+  top: 2px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}

@@ -21,6 +21,7 @@ import { CreateOntologyFormDialogComponent } from '../forms/ontology-form/create
 @Component({
   selector: 'app-data-models-page',
   templateUrl: './data-models-page.component.html',
+  styleUrl: './data-models-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,

@@ -2,9 +2,20 @@
 
 :host {
   display: block;
-  border: 1px solid #ebebeb;
+  border: 1px solid var(--mat-sys-outline-variant);
   padding: 0 8px;
   border-radius: 10px;
+}
+
+.pager-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pager-controls {
+  display: flex;
+  align-items: center;
 }
 
 .page-input {
