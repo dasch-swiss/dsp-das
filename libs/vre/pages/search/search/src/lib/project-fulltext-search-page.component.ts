@@ -40,7 +40,7 @@ import { SearchResultComponent } from './search-result.component';
         {{ 'pages.search.fullTextSearch.switchToAdvancedSearch' | translate }}
       </a>
       <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" style="width: 600px">
+        <mat-form-field subscriptSizing="dynamic" style="width: 600px">
           <input
             #searchInput
             matInput

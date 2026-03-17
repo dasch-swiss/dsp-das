@@ -41,6 +41,7 @@ import { PropertyItemComponent } from './property-item.component';
 @Component({
   selector: 'app-resource-class-info',
   templateUrl: './resource-class-info.component.html',
+  styleUrl: './resource-class-info.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AddPropertyMenuComponent,

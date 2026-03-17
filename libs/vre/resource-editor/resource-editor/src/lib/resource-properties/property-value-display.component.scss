@@ -1,7 +1,6 @@
-@use '../../../../../../../apps/dsp-app/src/styles/config' as *;
-
-:host ::ng-deep .app-progress-indicator {
-  margin: 0 auto !important;
+app-progress-indicator {
+  margin: 0 auto;
+  display: block;
 }
 
 .pos-relative {

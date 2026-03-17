@@ -7,7 +7,6 @@
           <mat-select
             #propertiesList
             (selectionChange)="onSelectedPropertyChanged($event)"
-            appearance="fill"
             name="properties"
             data-cy="property-select"
             [compareWith]="compareObjects">
@@ -31,7 +30,6 @@
           <mat-select
             #operatorsList
             (selectionChange)="onSelectedOperatorChanged($event)"
-            appearance="fill"
             data-cy="comparison-operator-select"
             name="operators">
             @for (operator of propertyFormItem?.operators; track operator) {
@@ -52,7 +50,6 @@
             (selectionChange)="
                             onSelectedMatchPropertyResourceClassChanged($event)
                         "
-            appearance="fill"
             name="resource-classes"
             data-cy="resource-class-select"
             [compareWith]="compareObjects">
