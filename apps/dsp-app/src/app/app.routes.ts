@@ -127,6 +127,11 @@ export const routes: Routes = [
         component: ProjectFulltextSearchPageComponent,
       },
       { path: RouteConstants.advancedSearch, component: AdvancedSearchPageComponent },
+      {
+        path: RouteConstants.advancedSearchMockup,
+        loadComponent: () =>
+          import('@dasch-swiss/vre/pages/search/advanced-search').then(m => m.FilterChipsMockupComponent),
+      },
     ],
   },
   {
