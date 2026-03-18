@@ -35,7 +35,7 @@ import { PropertyValueService } from './property-value.service';
       class="pos-relative row"
       (mouseenter)="showBubble = true"
       (mouseleave)="showBubble = false">
-      @if (true || (showBubble && (propertyValueService.lastOpenedItem$ | async) !== index)) {
+      @if (showBubble && (propertyValueService.lastOpenedItem$ | async) !== index) {
         <app-property-value-action-bubble
           [date]="propertyValueService.editModeData.values[index].valueCreationDate"
           (editAction)="propertyValueService.toggleOpenedValue(index)"
