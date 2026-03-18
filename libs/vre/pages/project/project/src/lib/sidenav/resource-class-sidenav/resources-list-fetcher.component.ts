@@ -23,10 +23,9 @@ import { ProjectPageService } from '../../project-page.service';
           <app-centered-message [message]="'pages.dataBrowser.resourcesListFetcher.noResourcesFound' | translate" />
         }
       } @else {
-        <div style="margin-top: 80px; align-items: center; text-align: center">
-          <h3>{{ 'pages.dataBrowser.resourcesListFetcher.noPermissions' | translate }}</h3>
-          <p>{{ 'pages.dataBrowser.resourcesListFetcher.checkPermissions' | translate }}</p>
-        </div>
+        <app-centered-message
+          [title]="'pages.dataBrowser.resourcesListFetcher.noPermissions' | translate"
+          [message]="'pages.dataBrowser.resourcesListFetcher.checkPermissions' | translate" />
       }
     } @else {
       <app-progress-indicator />

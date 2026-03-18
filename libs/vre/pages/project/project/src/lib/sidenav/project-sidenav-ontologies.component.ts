@@ -29,7 +29,7 @@ import { ResourceClassSidenavComponent } from './resource-class-sidenav/resource
           @for (onto of projectOntologies; let first = $first; track onto) {
             <mat-expansion-panel
               class="ontology-panel"
-              [togglePosition]="'before'"
+              [togglePosition]="'after'"
               data-cy="sidenav-ontology"
               [expanded]="shouldExpand(onto.ontology.iri, projectOntologies.length === 1 && first)">
               <mat-expansion-panel-header>
@@ -42,7 +42,7 @@ import { ResourceClassSidenavComponent } from './resource-class-sidenav/resource
                   {{ onto.ontology.label }}
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <app-resource-class-sidenav class="resource-class-sidenav" [ontology]="onto" />
+              <app-resource-class-sidenav [ontology]="onto" />
             </mat-expansion-panel>
           }
         </mat-accordion>
@@ -64,11 +64,6 @@ import { ResourceClassSidenavComponent } from './resource-class-sidenav/resource
 
       .ontology-panel {
         box-shadow: none !important;
-      }
-
-      .resource-class-sidenav {
-        display: block;
-        margin-left: 40px;
       }
     `,
   ],

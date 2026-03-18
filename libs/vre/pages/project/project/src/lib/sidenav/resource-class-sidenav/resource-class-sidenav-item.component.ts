@@ -27,7 +27,7 @@ import { ProjectPageService } from '../../project-page.service';
       .item {
         display: flex;
         align-items: center;
-        padding: 8px 16px;
+        padding: 8px 16px 8px 24px;
         cursor: pointer;
 
         &:hover {

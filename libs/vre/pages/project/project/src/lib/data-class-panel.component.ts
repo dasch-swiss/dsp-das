@@ -28,7 +28,7 @@ interface CreateResourceDialogProps {
   template: `
     <div style="padding: 16px; margin-bottom: 16px;">
       <div style="display: flex; align-items: center; gap: 8px">
-        <h3 class="mat-headline-medium" style="flex: 1; margin: 0">
+        <h3 class="mat-title-medium" style="flex: 1; margin: 0">
           {{ classSelected.resClass.labels | appStringifyStringLiteral }}
         </h3>
         <button matButton="tonal" (click)="openDownloadDialog()" data-cy="download-btn">
