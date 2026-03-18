@@ -1,5 +1,21 @@
 @use "config" as *;
 
+.overlay-blocker {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: all;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.floating-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
 .ontology-editor {
   width: auto;
   min-height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 100px);

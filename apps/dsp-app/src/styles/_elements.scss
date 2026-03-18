@@ -1,6 +1,4 @@
 @use 'config' as *;
-@use 'mixins' as *;
-@use 'sass:math';
 @use '@angular/material' as mat;
 
 .fill-remaining-space {
@@ -19,23 +17,6 @@ a {
 
 // --------------------------------------
 
-.overlay-blocker {
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  pointer-events: all; // catch all events, no interaction possible
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-// overlay the progress indicator and block all user interaction
-.floating-center {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-}
-
 // action bubble
 .action-bubble {
   position: absolute;
@@ -46,7 +27,7 @@ a {
   padding: 4px;
   background-color: var(--mat-sys-surface-container-high);
   z-index: 2;
-  @include box-shadow();
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 
   .button-container {
     button {

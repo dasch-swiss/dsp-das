@@ -23,6 +23,7 @@ import { ListItemService } from './list-item/list-item.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-list-page',
   templateUrl: './list-page.component.html',
+  styleUrl: './list-page.component.scss',
   providers: [ListItemService],
   imports: [
     AsyncPipe,
