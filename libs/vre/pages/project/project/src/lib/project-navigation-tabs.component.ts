@@ -41,6 +41,10 @@ import { ProjectPageService } from './project-page.service';
   `,
   styles: [
     `
+      :host {
+        --mat-tab-divider-height: 0;
+      }
+
       .tab-icon {
         margin-right: 8px;
       }

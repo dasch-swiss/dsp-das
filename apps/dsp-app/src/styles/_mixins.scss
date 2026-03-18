@@ -3,6 +3,6 @@
 // Header Host Styles
 @mixin header-host-styles() {
   display: block;
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
-  background-color: var(--mat-sys-surface-container-low);
+  border-bottom: 1px solid var(--mat-sys-surface-container-high);
+  background-color: var(--mat-sys-surface-bright);
 }
