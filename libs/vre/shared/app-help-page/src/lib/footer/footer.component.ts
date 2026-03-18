@@ -9,7 +9,7 @@ import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
   styles: `
     footer {
       padding: 32px 0 0;
-      background: var(--mat-sys-primary);
+      background: var(--mat-sys-on-primary-container);
       color: var(--mat-sys-surface);
     }
 
