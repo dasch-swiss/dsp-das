@@ -30,9 +30,11 @@ a {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 
   .button-container {
+    align-items: center;
+
     button {
       border: none;
-      padding: 4px;
+      padding: 4px 5px;
       outline: none;
       background-color: transparent;
       color: var(--mat-sys-primary);
