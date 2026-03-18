@@ -8,9 +8,9 @@ import { TranslatePipe } from '@ngx-translate/core';
   template: ` @if (showRestrictedMessage) {
     <div>
       <app-alert-info>
-        <p>
+        <div style="flex: 1">
           {{ 'resourceEditor.restricted' | translate }}
-        </p>
+        </div>
         <mat-icon class="close" data-cy="close-restricted-button" (click)="showRestrictedMessage = false"
           >clear
         </mat-icon>
