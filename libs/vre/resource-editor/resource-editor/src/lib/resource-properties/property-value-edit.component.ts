@@ -91,6 +91,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <app-progress-indicator [size]="'xsmall'" />
     }
   `,
+  styles: `
+    button {
+      color: var(--mat-sys-primary);
+    }
+  `,
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
   @Input({ required: true }) readValue!: ReadValue | undefined;
