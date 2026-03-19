@@ -10,11 +10,20 @@ import {
 
 @Injectable()
 export class SearchStateStorageService {
-  private readonly STORAGE_KEY = 'advanced-search-previous-search';
+  private readonly STORAGE_KEY_PREFIX = 'advanced-search-';
 
   private readonly MAX_STORED_SEARCHES = 20;
 
   private _statementMap = new Map<string, StatementElement>();
+  private _projectUuid?: string;
+
+  setProjectUuid(projectUuid: string): void {
+    this._projectUuid = projectUuid;
+  }
+
+  private get storageKey(): string {
+    return this._projectUuid ? `${this.STORAGE_KEY_PREFIX}${this._projectUuid}` : `${this.STORAGE_KEY_PREFIX}global`;
+  }
 
   private _reconstructStatementElements(plainObjects: any[] = []): StatementElement[] {
     this._statementMap.clear();
@@ -61,7 +70,7 @@ export class SearchStateStorageService {
   }
 
   getPreviousSearchForQuery(query?: string): AdvancedSearchStateSnapshot | undefined {
-    const storedSearches = localStorage.getItem(this.STORAGE_KEY) || '{}';
+    const storedSearches = localStorage.getItem(this.storageKey) || '{}';
     const previousSearchObject = query
       ? (JSON.parse(storedSearches)[query] as AdvancedSearchStateSnapshot) || ({} as AdvancedSearchStateSnapshot) // simply the first one if no query provided
       : this.getLatestSearchSnapshot() || undefined;
@@ -74,7 +83,7 @@ export class SearchStateStorageService {
   }
 
   getLatestSearchSnapshot(): AdvancedSearchStateSnapshot | undefined {
-    const storedSearches = localStorage.getItem(this.STORAGE_KEY) || '{}';
+    const storedSearches = localStorage.getItem(this.storageKey) || '{}';
     const snapshots = Object.values(JSON.parse(storedSearches) as Record<string, AdvancedSearchStateSnapshot>);
     if (snapshots.length === 0) return undefined;
 
@@ -95,7 +104,7 @@ export class SearchStateStorageService {
       dateOfSnapshot: new Date().toISOString(),
     };
 
-    const storedSearch = localStorage.getItem(this.STORAGE_KEY);
+    const storedSearch = localStorage.getItem(this.storageKey);
     const previousSearches: Record<string, SearchFormsState> = storedSearch ? JSON.parse(storedSearch) : {};
     previousSearches[query] = snapshot;
 
@@ -109,6 +118,6 @@ export class SearchStateStorageService {
       dates.sort((a, b) => a.dateOfSnapshot.localeCompare(b.dateOfSnapshot));
       delete previousSearches[dates[0].key];
     }
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(previousSearches));
+    localStorage.setItem(this.storageKey, JSON.stringify(previousSearches));
   }
 }

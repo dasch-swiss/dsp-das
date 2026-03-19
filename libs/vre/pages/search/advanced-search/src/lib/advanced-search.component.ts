@@ -82,10 +82,21 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._searchStateStorageService.setProjectUuid(this.projectUuid);
+
     if (this.queryToLoad) {
       this.restoreSearchFromSnapshot();
     } else {
-      this._dataService.init(this.projectIri);
+      // Always try to restore the most recent search state
+      const latestSnapshot = this._searchStateStorageService.getLatestSearchSnapshot();
+      if (latestSnapshot) {
+        this._dataService.selectedOntology$.pipe(take(1)).subscribe(() => {
+          this.searchState.patchState(latestSnapshot);
+        });
+        this._dataService.init(this.projectIri, latestSnapshot.selectedOntology);
+      } else {
+        this._dataService.init(this.projectIri);
+      }
     }
   }
 
