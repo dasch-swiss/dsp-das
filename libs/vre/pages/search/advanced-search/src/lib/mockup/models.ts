@@ -2,6 +2,8 @@ import { IriLabelPair } from '../model';
 
 export interface FilterChipData {
   id: string;
+  resourceClassIri: string;
+  resourceClassLabel: string;
   propertyIri: string;
   propertyLabel: string;
   propertyType: PropertyType;
@@ -35,3 +37,8 @@ export const PROPERTY_TYPE_COLORS: Record<PropertyType, string> = {
   link: 'rgba(233, 30, 99, 0.15)',
   uri: 'rgba(121, 85, 72, 0.15)',
 };
+
+export const RESOURCE_CLASS_COLORS = {
+  unselected: 'rgba(0, 0, 0, 0.08)',
+  selected: 'rgba(103, 58, 183, 0.15)',
+} as const;

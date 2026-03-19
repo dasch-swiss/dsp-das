@@ -11,12 +11,11 @@ import {
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { Operator } from '../../operators.config';
-import { FilterChipData, PropertyType } from '../models';
+import { ChipSelectorComponent, ChipSelectorOption } from '../chip-selector/chip-selector.component';
+import { FilterChipData, PropertyType, PROPERTY_TYPE_ICONS } from '../models';
 
 export interface PropertyOption {
   iri: string;
@@ -36,46 +35,43 @@ export interface OperatorOption {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    ChipSelectorComponent,
   ],
   template: `
     <div class="editor-panel">
-      <div class="editor-content">
-        <mat-form-field appearance="outline" class="property-select">
-          <mat-label>Property</mat-label>
-          <mat-select [(ngModel)]="selectedPropertyIri" (selectionChange)="onPropertyChange()">
-            @for (prop of availableProperties; track prop.iri) {
-              <mat-option [value]="prop.iri">{{ prop.label }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+      <div class="editor-chips">
+        <app-chip-selector
+          [value]="selectedPropertyIri"
+          [options]="propertyChipOptions"
+          placeholder="Property"
+          (selectionChange)="onPropertyChipChange($event)" />
 
-        <mat-form-field appearance="outline" class="operator-select">
-          <mat-label>Operator</mat-label>
-          <mat-select [(ngModel)]="selectedOperator" [disabled]="!selectedPropertyIri">
-            @for (op of availableOperators; track op.value) {
-              <mat-option [value]="op.value">{{ op.label }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+        <app-chip-selector
+          [value]="selectedOperator"
+          [options]="operatorChipOptions"
+          placeholder="Operator"
+          [disabled]="!selectedPropertyIri"
+          (selectionChange)="onOperatorChipChange($event)" />
 
         @if (showValueInput) {
-          <mat-form-field appearance="outline" class="value-input">
-            <mat-label>Value</mat-label>
-            <input matInput [(ngModel)]="inputValue" [placeholder]="valuePlaceholder" />
-          </mat-form-field>
+          <input
+            class="chip-input"
+            [(ngModel)]="inputValue"
+            [placeholder]="valuePlaceholder"
+            (keydown.enter)="onApply()" />
         }
-      </div>
 
-      <div class="editor-actions">
-        <button mat-button (click)="onCancel()">Cancel</button>
-        <button mat-flat-button color="primary" [disabled]="!isValid" (click)="onApply()">
-          {{ isEditMode ? 'Update' : 'Add' }} Filter
-        </button>
+        <div class="editor-actions">
+          <button mat-icon-button color="primary" [disabled]="!isValid" (click)="onApply()" title="Apply filter">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button (click)="onCancel()" title="Cancel">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
   `,
@@ -84,8 +80,7 @@ export interface OperatorOption {
       .editor-panel {
         display: flex;
         flex-direction: column;
-        gap: 16px;
-        padding: 16px;
+        padding: 12px 16px;
         background: var(--mat-app-surface, #fff);
         border: 1px solid rgba(0, 0, 0, 0.12);
         border-radius: 8px;
@@ -93,33 +88,52 @@ export interface OperatorOption {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
 
-      .editor-content {
+      .editor-chips {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
-        align-items: flex-start;
+        gap: 8px;
+        align-items: center;
       }
 
-      .property-select {
-        min-width: 200px;
-        flex: 1;
+      .chip-input {
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 13px;
+        line-height: 1.4;
+        background: rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        outline: none;
+        min-width: 120px;
+        max-width: 200px;
+        transition:
+          border-color 0.15s ease,
+          box-shadow 0.15s ease;
       }
 
-      .operator-select {
-        min-width: 150px;
+      .chip-input:focus {
+        border-color: rgba(63, 81, 181, 0.5);
+        box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.1);
       }
 
-      .value-input {
-        min-width: 200px;
-        flex: 1;
+      .chip-input::placeholder {
+        color: rgba(0, 0, 0, 0.4);
       }
 
       .editor-actions {
         display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-        padding-top: 8px;
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        gap: 4px;
+        margin-left: auto;
+      }
+
+      .editor-actions button {
+        width: 32px;
+        height: 32px;
+      }
+
+      .editor-actions button mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
       }
     `,
   ],
@@ -151,6 +165,21 @@ export class EditorPanelComponent implements OnChanges {
 
   get selectedProperty(): PropertyOption | undefined {
     return this.availableProperties.find(p => p.iri === this.selectedPropertyIri);
+  }
+
+  get propertyChipOptions(): ChipSelectorOption[] {
+    return this.availableProperties.map(p => ({
+      value: p.iri,
+      label: p.label,
+      icon: PROPERTY_TYPE_ICONS[p.objectType] ?? 'help_outline',
+    }));
+  }
+
+  get operatorChipOptions(): ChipSelectorOption[] {
+    return this.availableOperators.map(op => ({
+      value: op.value,
+      label: op.label,
+    }));
   }
 
   get showValueInput(): boolean {
@@ -201,9 +230,14 @@ export class EditorPanelComponent implements OnChanges {
     this.onCancel();
   }
 
-  onPropertyChange(): void {
+  onPropertyChipChange(propertyIri: string): void {
+    this.selectedPropertyIri = propertyIri;
     this.selectedOperator = Operator.Equals;
     this.inputValue = '';
+  }
+
+  onOperatorChipChange(operator: string): void {
+    this.selectedOperator = operator as Operator;
   }
 
   onCancel(): void {

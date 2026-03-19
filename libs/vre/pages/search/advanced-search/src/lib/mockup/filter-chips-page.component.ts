@@ -5,119 +5,93 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
-import { Constants } from '@dasch-swiss/dsp-js';
-import { combineLatest, map, startWith } from 'rxjs';
+import { Constants, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
+import { combineLatest, map, startWith, switchMap, take } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { IriLabelPair, Predicate, ResourceClassData } from '../model';
+import { GravsearchService } from '../service/gravsearch.service';
 import { OntologyDataService } from '../service/ontology-data.service';
 import { PropertyOption } from './editor-panel/editor-panel.component';
 import { FilterChipData, PropertyType } from './models';
 import { ResourceClassChipsComponent } from './resource-class-chips/resource-class-chips.component';
-import { ResultsPlaceholderComponent } from './results-placeholder.component';
 
 @Component({
-  selector: 'app-filter-chips-mockup',
+  selector: 'app-filter-chips-page',
   standalone: true,
   imports: [
     CommonModule,
-    ResultsPlaceholderComponent,
     ResourceClassChipsComponent,
+    ResourceBrowserComponent,
     MatDialogModule,
     MatIconModule,
     MatProgressBarModule,
     MatSelectModule,
   ],
   template: `
-    <div class="mockup-container">
-      <div class="mockup-header">
-        <h2>Advanced Search (Filter Chips Mockup)</h2>
-        <span class="mockup-badge">Mockup</span>
+    <div class="filter-chips-page">
+      <!-- Filter section -->
+      <div class="filter-section">
+        @if (ontologyLoading$ | async) {
+          <mat-progress-bar mode="indeterminate" />
+        } @else {
+          <div class="ontology-selector">
+            <mat-form-field appearance="outline">
+              <mat-label>Ontology</mat-label>
+              <mat-select
+                [value]="(selectedOntology$ | async)?.iri"
+                (selectionChange)="onOntologyChange($event.value)">
+                @for (ont of ontologies$ | async; track ont.iri) {
+                  <mat-option [value]="ont.iri">{{ ont.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          @if ((resourceClasses$ | async)?.length) {
+            <app-resource-class-chips
+              [resourceClasses]="resourceClasses$ | async"
+              [selectedClasses]="selectedClasses"
+              [statements]="statements"
+              [propertiesByClass]="propertiesByClass"
+              (classSelect)="onClassSelect($event)"
+              (classDeselect)="onClassDeselect($event)"
+              (clearAll)="onClearAll()"
+              (statementApply)="onStatementApply($event)"
+              (statementRemove)="onStatementRemove($event)" />
+          }
+        }
       </div>
 
-      @if (ontologyLoading$ | async) {
-        <div class="loading-state">
-          <mat-progress-bar mode="indeterminate" />
-          <p class="loading-hint">Loading ontologies...</p>
-        </div>
-      } @else {
-        <div class="ontology-selector">
-          <mat-form-field appearance="outline">
-            <mat-label>Ontology</mat-label>
-            <mat-select [value]="(selectedOntology$ | async)?.iri" (selectionChange)="onOntologyChange($event.value)">
-              @for (ont of ontologies$ | async; track ont.iri) {
-                <mat-option [value]="ont.iri">{{ ont.label }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <div class="search-instruction">
-          <span class="instruction-text">
-            Click a resource class to add it to your search.
-            @if (selectedClasses.size > 0 || statements.length > 0) {
-              <span class="active-count">
-                {{ selectedClasses.size + statementsClassCount }} class(es) selected,
-                {{ statements.length }} statement(s)
-              </span>
-            }
-          </span>
-        </div>
-
-        @if ((resourceClasses$ | async)?.length) {
-          <app-resource-class-chips
-            [resourceClasses]="resourceClasses$ | async"
-            [selectedClasses]="selectedClasses"
-            [statements]="statements"
-            [propertiesByClass]="propertiesByClass"
-            (classSelect)="onClassSelect($event)"
-            (classDeselect)="onClassDeselect($event)"
-            (clearAll)="onClearAll()"
-            (statementApply)="onStatementApply($event)"
-            (statementRemove)="onStatementRemove($event)" />
-        }
-
+      <!-- Results section -->
+      <div class="results-section">
         @if (isLoading) {
-          <mat-progress-bar mode="indeterminate" class="loading-bar" />
+          <mat-progress-bar mode="indeterminate" />
         }
-
-        <app-results-placeholder
-          [resultCount]="mockResultCount"
-          [hasFilters]="selectedClasses.size > 0 || statements.length > 0" />
-      }
+        @if (resources && resources.length > 0) {
+          <app-resource-browser [data]="{ resources: resources, selectFirstResource: false }" />
+        } @else if (!isLoading) {
+          <div class="no-results">
+            <mat-icon>search</mat-icon>
+            <p>Select a resource class or add filters to search</p>
+          </div>
+        }
+      </div>
     </div>
   `,
   styles: [
     `
-      .mockup-container {
-        padding: 24px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .mockup-header {
+      .filter-chips-page {
         display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 24px;
+        flex-direction: column;
+        height: 100%;
+        padding: 24px;
+        gap: 24px;
       }
 
-      .mockup-header h2 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: 400;
-      }
-
-      .mockup-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 2px 8px;
-        font-size: 11px;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        background: rgba(255, 152, 0, 0.15);
-        color: #f57c00;
-        border-radius: 4px;
+      .filter-section {
+        flex-shrink: 0;
       }
 
       .ontology-selector {
@@ -128,47 +102,42 @@ import { ResultsPlaceholderComponent } from './results-placeholder.component';
         width: 300px;
       }
 
-      .search-instruction {
-        margin-bottom: 12px;
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.6);
+      .results-section {
+        flex: 1;
+        overflow: auto;
+        min-height: 0;
       }
 
-      .instruction-text {
+      .no-results {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 8px;
-      }
-
-      .active-count {
-        padding: 2px 8px;
-        background: rgba(103, 58, 183, 0.1);
-        color: #673ab7;
-        border-radius: 4px;
-        font-size: 12px;
-      }
-
-      .loading-bar {
-        margin-top: 8px;
-      }
-
-      .loading-state {
-        text-align: center;
-        padding: 24px;
-      }
-
-      .loading-hint {
-        margin-top: 12px;
+        justify-content: center;
+        padding: 48px;
         color: rgba(0, 0, 0, 0.54);
-        font-size: 14px;
+      }
+
+      .no-results mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+
+      .no-results p {
+        font-size: 16px;
+        margin: 0;
       }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [OntologyDataService],
+  providers: [OntologyDataService, GravsearchService],
 })
-export class FilterChipsMockupComponent implements OnInit {
+export class FilterChipsPageComponent implements OnInit {
   private readonly ontologyService = inject(OntologyDataService);
+  private readonly gravsearchService = inject(GravsearchService);
+  private readonly dspApiConnection = inject<KnoraApiConnection>(DspApiConnectionToken);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -176,7 +145,7 @@ export class FilterChipsMockupComponent implements OnInit {
   selectedClasses: Set<string> = new Set();
   propertiesByClass: Map<string, PropertyOption[]> = new Map();
   isLoading = false;
-  mockResultCount = 0;
+  resources: any[] = [];
 
   ontologies$ = this.ontologyService.ontologies$;
   selectedOntology$ = this.ontologyService.selectedOntology$.pipe(
@@ -185,41 +154,36 @@ export class FilterChipsMockupComponent implements OnInit {
 
   resourceClasses$ = this.ontologyService.resourceClasses$;
 
-  // Loading is true until either ontologyLoading$ is false, OR we have ontologies loaded
-  ontologyLoading$ = combineLatest([this.ontologyService.ontologyLoading$, this.ontologies$.pipe(startWith([]))]).pipe(
-    map(([loading, ontologies]) => loading && ontologies.length === 0)
-  );
-
-  get hasAnySelection(): boolean {
-    return this.selectedClasses.size > 0 || this.statements.length > 0;
-  }
-
-  // Count unique classes that have statements
-  get statementsClassCount(): number {
-    const classesWithStatements = new Set(this.statements.map(s => s.resourceClassIri));
-    // Only count classes that are not already in selectedClasses
-    let count = 0;
-    for (const classIri of classesWithStatements) {
-      if (!this.selectedClasses.has(classIri)) {
-        count++;
-      }
-    }
-    return count;
-  }
+  ontologyLoading$ = combineLatest([
+    this.ontologyService.ontologyLoading$,
+    this.ontologies$.pipe(startWith([])),
+  ]).pipe(map(([loading, ontologies]) => loading && ontologies.length === 0));
 
   ngOnInit(): void {
-    // UUID is on the parent route (project/:uuid), not this route
     const projectUuid = this.route.parent?.snapshot.params['uuid'];
     if (projectUuid) {
       this.ontologyService.init(`http://rdfh.ch/projects/${projectUuid}`);
     }
 
-    // Subscribe to resource classes to load properties for each
+    // Load properties for each resource class
     this.resourceClasses$.subscribe(classes => {
       for (const rc of classes) {
         this.loadPropertiesForClass(rc.iri);
       }
     });
+
+    // Do an initial search when ontology loads
+    this.ontologyService.selectedOntology$
+      .pipe(
+        switchMap(() => this.resourceClasses$.pipe(take(1)))
+      )
+      .subscribe(classes => {
+        if (classes.length > 0) {
+          // Auto-select first class and search
+          this.selectedClasses.add(classes[0].iri);
+          this.executeSearch();
+        }
+      });
   }
 
   onOntologyChange(ontologyIri: string): void {
@@ -227,39 +191,37 @@ export class FilterChipsMockupComponent implements OnInit {
     this.statements = [];
     this.selectedClasses.clear();
     this.propertiesByClass.clear();
+    this.resources = [];
   }
 
   onClassSelect(resourceClass: ResourceClassData): void {
     this.selectedClasses.add(resourceClass.iri);
     this.loadPropertiesForClass(resourceClass.iri);
-    this.simulateAutoExecute();
+    this.executeSearch();
     this.cdr.markForCheck();
   }
 
   onClassDeselect(classIri: string): void {
     this.selectedClasses.delete(classIri);
-    // Don't remove statements - they persist independently
-    this.simulateAutoExecute();
+    this.executeSearch();
     this.cdr.markForCheck();
   }
 
   onClearAll(): void {
     this.selectedClasses.clear();
     this.statements = [];
-    this.mockResultCount = 0;
+    this.resources = [];
     this.cdr.markForCheck();
   }
 
   onStatementApply(statementData: Partial<FilterChipData>): void {
     if (statementData.id) {
-      // Update existing statement
       const index = this.statements.findIndex(s => s.id === statementData.id);
       if (index !== -1) {
         this.statements[index] = { ...this.statements[index], ...statementData } as FilterChipData;
         this.statements = [...this.statements];
       }
     } else {
-      // Add new statement
       const newStatement: FilterChipData = {
         id: uuidv4(),
         resourceClassIri: statementData.resourceClassIri!,
@@ -274,19 +236,18 @@ export class FilterChipsMockupComponent implements OnInit {
       };
       this.statements = [...this.statements, newStatement];
 
-      // Ensure the class is marked as selected
       if (!this.selectedClasses.has(newStatement.resourceClassIri)) {
         this.selectedClasses.add(newStatement.resourceClassIri);
       }
     }
 
-    this.simulateAutoExecute();
+    this.executeSearch();
     this.cdr.markForCheck();
   }
 
   onStatementRemove(statementId: string): void {
     this.statements = this.statements.filter(s => s.id !== statementId);
-    this.simulateAutoExecute();
+    this.executeSearch();
     this.cdr.markForCheck();
   }
 
@@ -306,16 +267,47 @@ export class FilterChipsMockupComponent implements OnInit {
       });
   }
 
-  private simulateAutoExecute(): void {
+  private executeSearch(): void {
+    if (this.selectedClasses.size === 0) {
+      this.resources = [];
+      return;
+    }
+
     this.isLoading = true;
     this.cdr.markForCheck();
 
-    setTimeout(() => {
-      this.isLoading = false;
-      const hasFilters = this.selectedClasses.size > 0 || this.statements.length > 0;
-      this.mockResultCount = hasFilters ? Math.floor(Math.random() * 100) + 1 : 0;
-      this.cdr.markForCheck();
-    }, 800);
+    // Build a simple gravsearch query for the selected classes
+    const classIri = Array.from(this.selectedClasses)[0]; // For now, just use first selected class
+    const query = this.buildSimpleQuery(classIri);
+
+    this.dspApiConnection.v2.search
+      .doExtendedSearch(query)
+      .pipe(take(1))
+      .subscribe({
+        next: response => {
+          this.resources = response.resources;
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.resources = [];
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  private buildSimpleQuery(classIri: string): string {
+    return `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+
+CONSTRUCT {
+  ?mainRes knora-api:isMainResource true .
+} WHERE {
+  ?mainRes a <${classIri}> .
+}
+OFFSET 0
+    `.trim();
   }
 
   private predicateToPropertyOption(predicate: Predicate): PropertyOption {

@@ -6,3 +6,4 @@ export * from './lib/providers';
 export * from './lib/advanced-search-page.component';
 export * from './lib/advanced-search-results.component';
 export * from './lib/mockup/filter-chips-mockup.component';
+export * from './lib/mockup/filter-chips-page.component';

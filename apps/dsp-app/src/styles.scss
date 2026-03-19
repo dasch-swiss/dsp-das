@@ -86,3 +86,22 @@ body {
   border-radius: 4px;
   background: white;
 }
+
+// Statement dialog panel styles (filter chips mockup)
+.statement-dialog-panel {
+  .mat-mdc-dialog-container {
+    padding: 0;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  }
+
+  .mat-mdc-dialog-surface {
+    padding: 0 !important;
+    overflow: visible !important;
+    border-radius: 16px !important;
+  }
+}
+
+.transparent-backdrop {
+  background-color: rgba(0, 0, 0, 0.1);
+}

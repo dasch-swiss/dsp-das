@@ -26,7 +26,7 @@ import { FilterChipComponent } from './filter-chip/filter-chip.component';
         </div>
       }
 
-      <app-add-filter-button [isExpanded]="isAddingFilter" (toggle)="onToggleAdd()" />
+      <app-add-filter-button [isExpanded]="isAddingFilter" (toggleAdd)="onToggleAdd()" />
     </div>
   `,
   styles: [

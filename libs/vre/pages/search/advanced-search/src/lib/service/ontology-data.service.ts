@@ -8,9 +8,10 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { DefaultResourceClasses } from '@dasch-swiss/vre/shared/app-helper-services';
 import { BehaviorSubject, combineLatest, filter, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
 import { RDFS_LABEL, ResourceLabel, SEARCH_ALL_RESOURCE_CLASSES_OPTION } from '../constants';
-import { IriLabelPair, Predicate } from '../model';
+import { IriLabelPair, Predicate, ResourceClassData } from '../model';
 
 @Injectable()
 export class OntologyDataService {
@@ -71,14 +72,25 @@ export class OntologyDataService {
     )
   );
 
-  resourceClasses$: Observable<IriLabelPair[]> = this._resourceClassDefinitions$.pipe(
+  resourceClasses$: Observable<ResourceClassData[]> = this._resourceClassDefinitions$.pipe(
     startWith([]),
     map(resClasses =>
       resClasses.map((resClassDef: ResourceClassDefinitionWithAllLanguages) => {
-        return { iri: resClassDef.id, label: resClassDef.label || '' };
+        const icon = this._getIconFromSubClassOf(resClassDef.subClassOf);
+        return { iri: resClassDef.id, label: resClassDef.label || '', icon };
       })
     )
   );
+
+  private _getIconFromSubClassOf(subClassOf: string[]): string {
+    for (const superIri of subClassOf) {
+      const icon = DefaultResourceClasses.getIcon(superIri);
+      if (icon) {
+        return icon;
+      }
+    }
+    return 'insert_drive_file'; // default icon for resources without representation
+  }
 
   getResourceClassObjectsForProperty$(propertyIri?: string): Observable<IriLabelPair[]> {
     if (!propertyIri) {

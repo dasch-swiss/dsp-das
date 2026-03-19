@@ -23,6 +23,10 @@ export interface IriLabelPair {
   label: string;
 }
 
+export interface ResourceClassData extends IriLabelPair {
+  icon: string;
+}
+
 abstract class StatementValue {
   constructor(public statementId: string) {}
   abstract get writeValue(): string | undefined;
