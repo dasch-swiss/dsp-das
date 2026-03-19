@@ -402,6 +402,8 @@
         "selectedCount": "{{count}} von {{total}} Eigenschaften ausgewählt",
         "includeIrisLabel": "Ressourcen-IRIs für Referenz-Eigenschaften einschliessen",
         "includeIrisExplanation": "Wenn aktiviert, exportieren Referenz-Eigenschaften sowohl menschenlesbare Werte (z. B. 'Alice') als auch Ressourcen-IRIs für eine korrekte Datenreferenzierung.",
+        "includeArkUrlsLabel": "ARK-Identifikatoren einschliessen",
+        "includeArkUrlsExplanation": "Fügt eine ARK-URL-Spalte als erste Spalte in der CSV für jede Ressource hinzu.",
         "downloadCsv": "CSV herunterladen",
         "downloadSuccess": "CSV erfolgreich heruntergeladen.",
         "downloadError": "Fehler beim Herunterladen der CSV. Bitte versuchen Sie es erneut."
@@ -463,6 +465,10 @@
         "zoomIn": "Hineinzoomen",
         "resetZoom": "Zoom zurücksetzen",
         "openInFullscreen": "Im Vollbildmodus öffnen",
+        "backgroundColor": "Hintergrundfarbe",
+        "bgDefault": "Standard",
+        "bgWhite": "Weiss",
+        "bgTransparent": "Transparent",
         "errors": {
           "unknownImageType": "Unbekannter Bildtyp.",
           "failedToLoadImage": "Bild konnte nicht geladen werden.",
@@ -473,6 +479,8 @@
         }
       },
       "downloadFile": "Datei herunterladen",
+      "copyLink": "Link kopieren",
+      "fileLinkCopied": "Dateilink in die Zwischenablage kopiert",
       "replaceFile": "Datei ersetzen",
       "archive": {
         "title": "Archiv"

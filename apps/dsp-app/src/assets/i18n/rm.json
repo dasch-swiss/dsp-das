@@ -402,6 +402,8 @@
         "selectedCount": "{{count}} of {{total}} properties selected",
         "includeIrisLabel": "Include Resource IRIs for reference properties",
         "includeIrisExplanation": "When enabled, reference properties export both human-readable values (e.g., 'Alice') and Resource IRIs for proper data referencing.",
+        "includeArkUrlsLabel": "Include ARK identifiers",
+        "includeArkUrlsExplanation": "Adds an ARK URL column as the first column in the CSV for each resource.",
         "downloadCsv": "Download CSV",
         "downloadSuccess": "CSV downloaded successfully.",
         "downloadError": "Failed to download CSV. Please try again."
@@ -475,6 +477,8 @@
         "comment": "Comment"
       },
       "downloadFile": "Download file",
+      "copyLink": "Copy link",
+      "fileLinkCopied": "File link copied to clipboard",
       "replaceFile": "Replace file",
       "archive": {
         "title": "Archive"
@@ -526,6 +530,10 @@
         "zoomIn": "Zoom in",
         "resetZoom": "Reset zoom",
         "openInFullscreen": "Open in fullscreen",
+        "backgroundColor": "Background colour",
+        "bgDefault": "Default",
+        "bgWhite": "White",
+        "bgTransparent": "Transparent",
         "errors": {
           "unknownImageType": "Unknown image type.",
           "failedToLoadImage": "Failed to load image.",

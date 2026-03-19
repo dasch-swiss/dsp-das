@@ -402,6 +402,8 @@
         "selectedCount": "{{count}} di {{total}} proprietà selezionate",
         "includeIrisLabel": "Includi IRI delle risorse per le proprietà di riferimento",
         "includeIrisExplanation": "Quando attivata, le proprietà di riferimento esportano sia valori leggibili (ad es. 'Alice') che IRI delle risorse per un corretto riferimento ai dati.",
+        "includeArkUrlsLabel": "Includi identificatori ARK",
+        "includeArkUrlsExplanation": "Aggiunge una colonna ARK URL come prima colonna nel CSV per ogni risorsa.",
         "downloadCsv": "Scarica CSV",
         "downloadSuccess": "CSV scaricato con successo.",
         "downloadError": "Impossibile scaricare il CSV. Riprova."
@@ -475,6 +477,8 @@
         "comment": "Commento"
       },
       "downloadFile": "Scarica file",
+      "copyLink": "Copia link",
+      "fileLinkCopied": "Link del file copiato negli appunti",
       "replaceFile": "Sostituisci file",
       "archive": {
         "title": "Archivio"
@@ -526,6 +530,10 @@
         "zoomIn": "Aumenta zoom",
         "resetZoom": "Reimposta zoom",
         "openInFullscreen": "Apri a schermo intero",
+        "backgroundColor": "Colore di sfondo",
+        "bgDefault": "Predefinito",
+        "bgWhite": "Bianco",
+        "bgTransparent": "Trasparente",
         "errors": {
           "unknownImageType": "Tipo di immagine sconosciuto.",
           "failedToLoadImage": "Impossibile caricare l'immagine.",
