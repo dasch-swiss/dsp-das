@@ -75,6 +75,7 @@ export { KeywordsResponse } from './models/admin/keywords-response';
 
 export { User } from './models/admin/user';
 export { ReadUser } from './models/admin/read-user';
+export { PermissionsData } from './models/admin/permissions-data';
 export { StoredUser } from './models/admin/stored-user';
 export { UpdateUserRequest } from './models/admin/update-user-request';
 export { UserResponse } from './models/admin/user-response';
@@ -128,7 +129,8 @@ export { DeleteResourceClassComment } from './models/v2/ontologies/delete/delete
 export { DeleteResourceProperty } from './models/v2/ontologies/delete/delete-resource-property';
 export { DeleteResourcePropertyComment } from './models/v2/ontologies/delete/delete-resource-property-comment';
 export { DeleteOntologyResponse } from './models/v2/ontologies/delete/delete-ontology-response';
-export { CreateResourceClass } from './models/v2/ontologies/create/create-resource-class';
+export { CreateResourceClass, CreateResourceClassPayload } from './models/v2/ontologies/create/create-resource-class';
+export { UpdateEntityCommentOrLabel } from './models/v2/ontologies/update/update-entity-comment-or-label';
 export { UpdateResourceClassLabel } from './models/v2/ontologies/update/update-resource-class-label';
 export { UpdateResourceClassComment } from './models/v2/ontologies/update/update-resource-class-comment';
 export { UpdateResourcePropertyLabel } from './models/v2/ontologies/update/update-resource-property-label';
