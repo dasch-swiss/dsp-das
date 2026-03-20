@@ -61,6 +61,7 @@ export class AdvancedSearchComponent implements OnInit {
   @Input({ required: true }) projectUuid!: string;
   @Input({ required: true }) isVerticalDirection: boolean | undefined;
   @Input() queryToLoad?: string;
+  @Input() restoreState = false;
   @Output() toggleDirection = new EventEmitter<any>();
   @Output() gravsearchQuery = new EventEmitter<string>();
 
@@ -86,8 +87,8 @@ export class AdvancedSearchComponent implements OnInit {
 
     if (this.queryToLoad) {
       this.restoreSearchFromSnapshot();
-    } else {
-      // Always try to restore the most recent search state
+    } else if (this.restoreState) {
+      // Only restore when explicitly requested (e.g., coming back from results page)
       const latestSnapshot = this._searchStateStorageService.getLatestSearchSnapshot();
       if (latestSnapshot) {
         this._dataService.selectedOntology$.pipe(take(1)).subscribe(() => {
@@ -97,6 +98,9 @@ export class AdvancedSearchComponent implements OnInit {
       } else {
         this._dataService.init(this.projectIri);
       }
+    } else {
+      // Fresh start - don't auto-restore
+      this._dataService.init(this.projectIri);
     }
   }
 

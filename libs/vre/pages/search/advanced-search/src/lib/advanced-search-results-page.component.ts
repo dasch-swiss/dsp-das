@@ -12,7 +12,7 @@ import { QueryExecutionService } from './service/query-execution.service';
   template: `
     <app-centered-layout>
       <div class="results-header">
-        <a mat-stroked-button [routerLink]="['..']">
+        <a mat-stroked-button [routerLink]="['..']" [queryParams]="{ restore: true }">
           <mat-icon>arrow_back</mat-icon>
           {{ 'pages.dataBrowser.resourcesList.backToSearchForm' | translate }}
         </a>
