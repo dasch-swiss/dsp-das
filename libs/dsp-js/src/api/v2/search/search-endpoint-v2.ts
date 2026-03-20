@@ -96,7 +96,7 @@ export class SearchEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       mergeMap((jsonldobj: object) => {
         // console.log(JSON.stringify(jsonldobj));
@@ -130,7 +130,7 @@ export class SearchEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map((jsonldobj: object) => {
         // console.log(JSON.stringify(jsonldobj));
@@ -161,7 +161,7 @@ export class SearchEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       mergeMap((jsonldobj: object) => {
         // console.log(JSON.stringify(jsonldobj));
@@ -191,7 +191,7 @@ export class SearchEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map((jsonldobj: object) => {
         // console.log(JSON.stringify(jsonldobj));
@@ -217,7 +217,7 @@ export class SearchEndpointV2 extends Endpoint {
 
     return this.httpGet(`/searchIncomingLinks/${encodeURIComponent(resourceIri)}?offset=${offset}`).pipe(
       mergeMap(response => {
-        return jsonld.compact(response.response, {});
+        return jsonld.compact(response.response, {}) as Promise<object>;
       }),
       mergeMap((jsonld: object) => {
         return ResourcesConversionUtil.createReadResourceSequence(
@@ -247,7 +247,7 @@ export class SearchEndpointV2 extends Endpoint {
 
     return this.httpGet(`/searchStillImageRepresentations/${encodeURIComponent(resourceIri)}?offset=${offset}`).pipe(
       mergeMap(response => {
-        return jsonld.compact(response.response, {});
+        return jsonld.compact(response.response, {}) as Promise<object>;
       }),
       mergeMap((jsonld: object) => {
         return ResourcesConversionUtil.createReadResourceSequence(
@@ -271,7 +271,7 @@ export class SearchEndpointV2 extends Endpoint {
   doSearchStillImageRepresentationsCount(resourceIri: string) {
     return this.httpGet(`/searchStillImageRepresentationsCount/${encodeURIComponent(resourceIri)}`).pipe(
       mergeMap(response => {
-        return jsonld.compact(response.response, {});
+        return jsonld.compact(response.response, {}) as Promise<object>;
       }),
       map((jsonld: object) => {
         return ResourcesConversionUtil.createCountQueryResponse(jsonld, this.jsonConvert);
@@ -296,7 +296,7 @@ export class SearchEndpointV2 extends Endpoint {
 
     return this.httpGet(`/searchIncomingRegions/${encodeURIComponent(resourceIri)}?offset=${offset}`).pipe(
       mergeMap(response => {
-        return jsonld.compact(response.response, {});
+        return jsonld.compact(response.response, {}) as Promise<object>;
       }),
       mergeMap((jsonld: object) => {
         return ResourcesConversionUtil.createReadResourceSequence(
@@ -334,7 +334,7 @@ export class SearchEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       mergeMap((jsonldobj: object) => {
         // console.log(JSON.stringify(jsonldobj));
@@ -363,7 +363,7 @@ export class SearchEndpointV2 extends Endpoint {
     ).pipe(
       mergeMap(ajaxResponse => {
         // console.log(JSON.stringify(ajaxResponse.response));
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map((jsonldobj: object) => {
         // console.log(JSON.stringify(jsonldobj));

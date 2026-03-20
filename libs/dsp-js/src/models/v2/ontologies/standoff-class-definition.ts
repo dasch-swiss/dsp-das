@@ -34,13 +34,13 @@ export class StandoffClassDefinition extends ClassDefinition {
 @JsonObject('StandoffClassDefinitionWithAllLanguages')
 export class StandoffClassDefinitionWithAllLanguages extends StandoffClassDefinition {
   @JsonProperty(Constants.Comment, StringLiteralToStringConverter, true)
-  comment?: string = undefined;
+  override comment?: string = undefined;
 
   @JsonProperty(Constants.Comment, StringLiteralToStringLiteralArrayConverter, true)
   comments: StringLiteralV2[] = [];
 
   @JsonProperty(Constants.Label, StringLiteralToStringConverter, true)
-  label?: string = undefined;
+  override label?: string = undefined;
 
   @JsonProperty(Constants.Label, StringLiteralToStringLiteralArrayConverter, true)
   labels: StringLiteralV2[] = [];

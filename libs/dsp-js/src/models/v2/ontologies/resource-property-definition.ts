@@ -54,13 +54,13 @@ export class ResourcePropertyDefinition extends PropertyDefinition {
 @JsonObject('ResourcePropertyDefinitionWithAllLanguages')
 export class ResourcePropertyDefinitionWithAllLanguages extends ResourcePropertyDefinition {
   @JsonProperty(Constants.Comment, StringLiteralToStringConverter, true)
-  comment?: string = undefined;
+  override comment?: string = undefined;
 
   @JsonProperty(Constants.Comment, StringLiteralToStringLiteralArrayConverter, true)
   comments: StringLiteralV2[] = [];
 
   @JsonProperty(Constants.Label, StringLiteralToStringConverter, true)
-  label?: string = undefined;
+  override label?: string = undefined;
 
   @JsonProperty(Constants.Label, StringLiteralToStringLiteralArrayConverter, true)
   labels: StringLiteralV2[] = [];

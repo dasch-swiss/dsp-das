@@ -11,5 +11,5 @@ export abstract class UpdateDeleteEntity {
   id: string = '';
 
   @JsonProperty(Constants.LastModificationDate, DateTimeStampConverter, true)
-  lastModificationDate: string;
+  lastModificationDate!: string;
 }

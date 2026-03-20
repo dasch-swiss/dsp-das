@@ -54,7 +54,7 @@ export class ReadResource extends ReadWriteResource {
 
   resourceClassComment?: string;
 
-  entityInfo: ResourceClassAndPropertyDefinitions;
+  entityInfo!: ResourceClassAndPropertyDefinitions;
 
   properties: { [index: string]: ReadValue[] } = {};
 

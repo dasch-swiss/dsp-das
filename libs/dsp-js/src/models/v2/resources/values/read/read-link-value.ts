@@ -10,7 +10,7 @@ import { ReadValue } from './read-value';
 export class ReadLinkValue extends ReadValue implements IBaseLinkValue {
   linkedResource?: ReadResource;
 
-  linkedResourceIri: string;
+  linkedResourceIri!: string;
 
-  incoming: boolean;
+  incoming!: boolean;
 }

@@ -16,5 +16,5 @@ export class UpdateOntology<
   @JsonProperty('@type', String)
   type: string = Constants.Ontology;
 
-  entity: T;
+  entity!: T;
 }

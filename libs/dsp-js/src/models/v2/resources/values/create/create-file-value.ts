@@ -13,13 +13,13 @@ export abstract class CreateFileValue extends CreateValue implements IBaseFileVa
   filename: string = '';
 
   @JsonProperty(Constants.hasCopyrightHolder, String, true)
-  copyrightHolder: string;
+  copyrightHolder!: string;
 
   @JsonProperty(Constants.hasAuthorship, [String], true)
-  authorship: string[];
+  authorship!: string[];
 
   @JsonProperty(Constants.hasLicense, License, true)
-  license: License;
+  license!: License;
 }
 
 /**

@@ -83,7 +83,7 @@ export abstract class GenericCache<T> {
    * @param isDependency true if the requested key is a dependency of another item.
    * @return the items received from DSP-API.
    */
-  protected abstract requestItemFromKnora(key: string, isDependency: boolean): Observable<T[] | ApiResponseError>;
+  protected abstract requestItemFromKnora(key: string, isDependency: boolean): Observable<T[]>;
 
   /**
    * Given an item, determines its key.

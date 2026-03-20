@@ -23,7 +23,7 @@ export class ListsEndpointV2 extends Endpoint {
       mergeMap(ajaxResponse => {
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map(res => {
         return this.jsonConvert.deserialize(res as object, ListNodeV2) as ListNodeV2;
@@ -45,7 +45,7 @@ export class ListsEndpointV2 extends Endpoint {
       mergeMap(ajaxResponse => {
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map(res => {
         return this.jsonConvert.deserialize(res as object, ListNodeV2) as ListNodeV2;

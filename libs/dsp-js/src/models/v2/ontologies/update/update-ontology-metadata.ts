@@ -11,7 +11,7 @@ export class UpdateOntologyMetadata {
   id: string = '';
 
   @JsonProperty(Constants.LastModificationDate, DateTimeStampConverter, true)
-  lastModificationDate: string;
+  lastModificationDate!: string;
 
   @JsonProperty(Constants.Label, String, true)
   label?: string = undefined;

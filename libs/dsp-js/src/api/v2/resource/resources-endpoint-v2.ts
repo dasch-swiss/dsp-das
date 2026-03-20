@@ -68,7 +68,7 @@ export class ResourcesEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       mergeMap((jsonldobj: object) => {
         // console.log(JSON.stringify(jsonldobj));
@@ -137,7 +137,7 @@ export class ResourcesEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       mergeMap((jsonldobj: object) => {
         // console.log(JSON.stringify(jsonldobj));
@@ -179,7 +179,7 @@ export class ResourcesEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map(jsonldobj => {
         return this.jsonConvert.deserializeObject(jsonldobj as object, UpdateResourceMetadataResponse);
@@ -197,7 +197,7 @@ export class ResourcesEndpointV2 extends Endpoint {
 
     return this.httpGet(`/candelete?jsonLd=${encodeURIComponent(res)}`).pipe(
       mergeMap(ajaxResponse => {
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map(jsonldobj => {
         return this.jsonConvert.deserializeObject(jsonldobj as object, CanDoResponse);
@@ -219,7 +219,7 @@ export class ResourcesEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map(jsonldobj => {
         return this.jsonConvert.deserializeObject(jsonldobj as object, DeleteResourceResponse);
@@ -241,7 +241,7 @@ export class ResourcesEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map(jsonldobj => {
         return this.jsonConvert.deserializeObject(jsonldobj as object, DeleteResourceResponse);

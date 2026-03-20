@@ -41,7 +41,7 @@ export class ReadValue extends BaseValue {
 
   propertyComment?: string;
 
-  property: string;
+  property!: string;
 
   strval?: string;
 

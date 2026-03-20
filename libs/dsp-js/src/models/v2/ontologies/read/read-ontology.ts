@@ -26,7 +26,7 @@ export class ReadOntology extends ClassAndPropertyDefinitions {
   properties: { [index: string]: PropertyDefinition } = {};
   classes: { [index: string]: ClassDefinition } = {};
 
-  dependsOnOntologies: Set<string>;
+  dependsOnOntologies!: Set<string>;
 
   /**
    * Gets all class definitions from the ontology's entity info.

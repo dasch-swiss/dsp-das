@@ -13,13 +13,13 @@ export abstract class UpdateFileValue extends UpdateValue implements IBaseFileVa
   filename: string = '';
 
   @JsonProperty(Constants.hasCopyrightHolder, String, true)
-  copyrightHolder: string;
+  copyrightHolder!: string;
 
   @JsonProperty(Constants.hasAuthorship, [String], true)
-  authorship: string[];
+  authorship!: string[];
 
   @JsonProperty(Constants.hasLicense, License, true)
-  license: License;
+  license!: License;
 }
 
 /**
@@ -68,7 +68,7 @@ export class UpdateStillImageFileValue extends UpdateFileValue {
 @JsonObject('UpdateStillImageExternalFileValue')
 export class UpdateExternalStillImageFileValue extends UpdateFileValue {
   @JsonProperty(Constants.StillImageFileValueHasExternalUrl, String, true)
-  externalUrl: string;
+  externalUrl!: string;
   constructor() {
     super(Constants.StillImageExternalFileValue);
   }

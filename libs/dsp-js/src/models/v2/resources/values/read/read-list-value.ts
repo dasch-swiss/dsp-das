@@ -12,5 +12,5 @@ export class ReadListValue extends ReadValue implements IBaseListValue {
   @JsonProperty(Constants.ListValueAsListNode, IdConverter)
   listNode: string = '';
 
-  listNodeLabel: string;
+  listNodeLabel!: string;
 }

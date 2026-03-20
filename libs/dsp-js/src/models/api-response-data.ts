@@ -25,12 +25,12 @@ export class ApiResponseData<T> extends ApiResponse {
   /**
    * The returned data from the body
    */
-  body: T;
+  body!: T;
 
   /**
    * Detailed AjaxResponse, if applicable
    */
-  response: AjaxResponse<T>;
+  response!: AjaxResponse<T>;
 
   // </editor-fold>
 
@@ -78,8 +78,9 @@ export class ApiResponseData<T> extends ApiResponse {
       try {
         responseData.body = jsonConvert.deserializeObject(ajaxResponse.response as object, dataType);
       } catch (error) {
-        const responseError = ApiResponseError.fromErrorString(error, responseData);
-        throw new DataError(error, responseError);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        const responseError = ApiResponseError.fromErrorString(errorMessage, responseData);
+        throw new DataError(errorMessage, responseError);
       }
     }
 

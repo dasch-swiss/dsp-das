@@ -11,5 +11,5 @@ export abstract class UpdatePermissionGroup {
    * The group that the permission applies to.
    */
   @JsonProperty('forGroup', String)
-  forGroup: string;
+  forGroup!: string;
 }

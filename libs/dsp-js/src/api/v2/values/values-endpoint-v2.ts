@@ -55,7 +55,7 @@ export class ValuesEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       mergeMap((jsonldobj: object) => {
         // console.log(JSON.stringify(jsonldobj));
@@ -90,7 +90,7 @@ export class ValuesEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map(jsonldobj => {
         return this.jsonConvert.deserializeObject(jsonldobj as object, WriteValueResponse);
@@ -120,7 +120,7 @@ export class ValuesEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map(jsonldobj => {
         return this.jsonConvert.deserializeObject(jsonldobj as object, WriteValueResponse);
@@ -146,7 +146,7 @@ export class ValuesEndpointV2 extends Endpoint {
         // console.log(JSON.stringify(ajaxResponse.response));
         // TODO: @rosenth Adapt context object
         // TODO: adapt getOntologyIriFromEntityIri
-        return jsonld.compact(ajaxResponse.response, {});
+        return jsonld.compact(ajaxResponse.response, {}) as Promise<object>;
       }),
       map(jsonldobj => {
         return this.jsonConvert.deserializeObject(jsonldobj as object, DeleteValueResponse);
