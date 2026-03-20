@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
 import { AdvancedSearchComponent } from './advanced-search.component';
 
@@ -17,12 +17,13 @@ import { AdvancedSearchComponent } from './advanced-search.component';
   imports: [CenteredLayoutComponent, AdvancedSearchComponent],
 })
 export class AdvancedSearchPageComponent {
-  uuid = this._route.parent?.snapshot.params[RouteConstants.uuidParameter] ?? '';
+  private readonly _route = inject(ActivatedRoute);
+  private readonly _router = inject(Router);
+  private readonly _projectPageService = inject(ProjectPageService);
 
-  constructor(
-    private readonly _route: ActivatedRoute,
-    private readonly _router: Router
-  ) {}
+  get uuid(): string {
+    return this._projectPageService.currentProjectUuid;
+  }
 
   onSearch(query: string): void {
     this._router.navigate(['results'], {
