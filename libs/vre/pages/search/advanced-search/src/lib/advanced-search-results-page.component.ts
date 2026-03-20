@@ -14,7 +14,7 @@ import { QueryExecutionService } from './service/query-execution.service';
       <div class="results-header">
         <a mat-stroked-button [routerLink]="['..']">
           <mat-icon>arrow_back</mat-icon>
-          {{ 'pages.search.resourcesList.backToSearchForm' | translate }}
+          {{ 'pages.dataBrowser.resourcesList.backToSearchForm' | translate }}
         </a>
       </div>
       @if (query) {

@@ -24,7 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
       }
       <a mat-stroked-button [routerLink]="['..', 'search']">
         <mat-icon>swap_horiz</mat-icon>
-        Switch to Fulltext search
+        Switch to regular search
       </a>
     </div>
   `,
