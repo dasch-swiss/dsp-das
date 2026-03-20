@@ -79,7 +79,7 @@ interface ResourceGroup {
         }
         @if (showGroupHeaders) {
           @for (group of groupedResources; track group.classIri) {
-            <mat-optgroup [label]="group.classLabel">
+            <mat-optgroup [label]="group.classLabel" class="link-value-class-group">
               @for (res of group.resources; track res.id) {
                 <mat-option [value]="res.id">
                   {{ res.label }}
