@@ -53,7 +53,7 @@ import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality
             [(ngModel)]="multipleCheckboxState"
             (change)="onCheckboxChange()" />
         }
-        <label>{{ 'pages.ontology.cardinality.multipleValues' | translate }}</label>
+        <label>{{ 'pages.ontology.cardinality.multipleValues' | translate }}@if (!isHovered && requiredCheckboxState) {,}</label>
       </div>
     }
     @if (isHovered || requiredCheckboxState) {
