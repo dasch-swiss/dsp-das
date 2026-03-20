@@ -19,8 +19,8 @@ const jsonld = require('jsonld/dist/jsonld.js');
  */
 export class SearchEndpointV2 extends Endpoint {
   constructor(
-    protected readonly knoraApiConfig: KnoraApiConfig,
-    protected readonly path: string,
+    protected override readonly knoraApiConfig: KnoraApiConfig,
+    protected override readonly path: string,
     private readonly v2Endpoint: V2Endpoint
   ) {
     super(knoraApiConfig, path);

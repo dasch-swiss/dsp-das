@@ -60,8 +60,8 @@ export class V2Endpoint extends Endpoint {
    * @category Internal
    */
   constructor(
-    protected readonly knoraApiConfig: KnoraApiConfig,
-    protected readonly path: string
+    protected override readonly knoraApiConfig: KnoraApiConfig,
+    protected override readonly path: string
   ) {
     super(knoraApiConfig, path);
 

@@ -33,8 +33,8 @@ export class ResourcesEndpointV2 extends Endpoint {
    * @param v2Endpoint a reference to the v2 endpoint.
    */
   constructor(
-    protected readonly knoraApiConfig: KnoraApiConfig,
-    protected readonly path: string,
+    protected override readonly knoraApiConfig: KnoraApiConfig,
+    protected override readonly path: string,
     private readonly v2Endpoint: V2Endpoint
   ) {
     super(knoraApiConfig, path);

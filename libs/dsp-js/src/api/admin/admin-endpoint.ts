@@ -46,8 +46,8 @@ export class AdminEndpoint extends Endpoint {
    * @param path
    */
   constructor(
-    protected readonly knoraApiConfig: KnoraApiConfig,
-    protected readonly path: string
+    protected override readonly knoraApiConfig: KnoraApiConfig,
+    protected override readonly path: string
   ) {
     super(knoraApiConfig, path);
 
