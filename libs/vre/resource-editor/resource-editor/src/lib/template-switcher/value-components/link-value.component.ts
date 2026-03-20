@@ -276,18 +276,17 @@ export class LinkValueComponent implements OnInit {
   private groupByClass(resources: ReadResource[]): ResourceGroup[] {
     const groups = new Map<string, ResourceGroup>();
 
-    for (const res of resources) {
-      const classIri = res.type;
-      if (!groups.has(classIri)) {
-        groups.set(classIri, {
-          classIri,
-          classLabel: res.resourceClassLabel ?? '',
-          resources: [],
-        });
-      }
-      groups.get(classIri)!.resources.push(res);
-    }
+    resources.forEach(res => {
+      const group = groups.get(res.type) ?? {
+        classIri: res.type,
+        classLabel: res.resourceClassLabel ?? '',
+        resources: [],
+      };
 
-    return Array.from(groups.values());
+      group.resources.push(res);
+      groups.set(res.type, group);
+    });
+
+    return [...groups.values()];
   }
 }
