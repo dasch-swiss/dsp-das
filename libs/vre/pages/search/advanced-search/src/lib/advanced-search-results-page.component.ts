@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
 import { AdvancedSearchResultsComponent } from './advanced-search-results.component';
 import { QueryExecutionService } from './service/query-execution.service';
@@ -13,7 +14,7 @@ import { QueryExecutionService } from './service/query-execution.service';
       <div class="results-header">
         <a mat-stroked-button [routerLink]="['..']">
           <mat-icon>arrow_back</mat-icon>
-          Back to search
+          {{ 'pages.search.resourcesList.backToSearchForm' | translate }}
         </a>
       </div>
       @if (query) {
@@ -28,7 +29,7 @@ import { QueryExecutionService } from './service/query-execution.service';
       }
     `,
   ],
-  imports: [CenteredLayoutComponent, AdvancedSearchResultsComponent, MatButtonModule, MatIconModule, RouterLink],
+  imports: [CenteredLayoutComponent, AdvancedSearchResultsComponent, MatButtonModule, MatIconModule, RouterLink, TranslateModule],
   providers: [QueryExecutionService],
 })
 export class AdvancedSearchResultsPageComponent implements OnInit {
