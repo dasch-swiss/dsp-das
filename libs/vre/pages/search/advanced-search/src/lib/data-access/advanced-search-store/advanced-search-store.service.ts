@@ -11,6 +11,7 @@ import {
 } from '../advanced-search-service/advanced-search.service';
 import { GravsearchService } from '../gravsearch-service/gravsearch.service';
 import { Operators } from './operators';
+
 export { Operators } from './operators';
 
 export interface AdvancedSearchState {
@@ -77,7 +78,6 @@ export interface ParentChildPropertyPair {
   parentProperty: PropertyFormItem;
   childProperty: PropertyFormItem;
 }
-
 
 export enum PropertyFormListOperations {
   Add = 'add',
