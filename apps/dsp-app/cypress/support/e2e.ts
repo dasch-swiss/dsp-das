@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { UserProfiles } from '../models/user-profiles';
 import './commands/api-commands';
 import './commands/auth-commands';
