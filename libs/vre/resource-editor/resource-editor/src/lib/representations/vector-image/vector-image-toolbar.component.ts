@@ -2,24 +2,20 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, Inject, inject, Input, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIcon, MatIconRegistry } from '@angular/material/icon';
+import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
-import { DomSanitizer } from '@angular/platform-browser';
 import {
   Constants,
   KnoraApiConnection,
   ReadResource,
-  ReadStillImageExternalFileValue,
-  ReadStillImageFileValue,
+  ReadStillImageVectorFileValue,
   UpdateFileValue,
   UpdateResource,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { CompoundNavigationComponent } from '../../compound/compound-navigation.component';
 import {
   ReplaceFileDialogComponent,
   ReplaceFileDialogProps,
@@ -27,60 +23,38 @@ import {
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { ResourceUtil } from '../resource.util';
-import { OpenSeaDragonService } from './open-sea-dragon.service';
 
 @Component({
-  selector: 'app-still-image-toolbar',
-  templateUrl: './still-image-toolbar.component.html',
-  styleUrls: ['./still-image-toolbar.component.scss'],
-  imports: [
-    MatMenuTrigger,
-    MatTooltip,
-    TranslatePipe,
-    MatIcon,
-    AsyncPipe,
-    CompoundNavigationComponent,
-    MatMenu,
-    MatMenuItem,
-    ClipboardModule,
-  ],
+  selector: 'app-vector-image-toolbar',
+  templateUrl: './vector-image-toolbar.component.html',
+  styleUrls: ['./vector-image-toolbar.component.scss'],
+  imports: [MatMenuTrigger, MatTooltip, TranslatePipe, MatIcon, AsyncPipe, MatMenu, MatMenuItem, ClipboardModule],
 })
-export class StillImageToolbarComponent {
+export class VectorImageToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
-  @Input({ required: true }) compoundMode!: boolean;
-  @Input({ required: true }) isPng!: boolean;
-  @Output() imageIsPng = new EventEmitter<boolean>();
+  @Output() zoomIn = new EventEmitter<void>();
+  @Output() zoomOut = new EventEmitter<void>();
+  @Output() resetZoom = new EventEmitter<void>();
+  @Output() fullscreen = new EventEmitter<void>();
+  @Output() backgroundChange = new EventEmitter<'default' | 'white' | 'transparent'>();
 
-  get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | null {
+  readonly _translateService = inject(TranslateService);
+
+  get imageFileValue(): ReadStillImageVectorFileValue | null {
     const imageValues = this.resource.properties[Constants.HasStillImageFileValue];
     if (!imageValues?.length) {
       return null;
     }
     const image = imageValues[0];
-    switch (image.type) {
-      case Constants.StillImageFileValue:
-        return image as ReadStillImageFileValue;
-      case Constants.StillImageExternalFileValue:
-        return image as ReadStillImageExternalFileValue;
-      default:
-        throw new AppError('Unknown image type');
+    if (image.type === Constants.StillImageVectorFileValue) {
+      return image as ReadStillImageVectorFileValue;
     }
-  }
-
-  get isReadStillImageExternalFileValue(): boolean {
-    return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageExternalFileValue;
-  }
-
-  /** Only internal raster still images support polygon region annotations. */
-  get isAnnotatable(): boolean {
-    return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageFileValue;
+    return null;
   }
 
   get userCanView() {
     return this.imageFileValue && ResourceUtil.userCanView(this.imageFileValue);
   }
-
-  readonly _translateService = inject(TranslateService);
 
   constructor(
     public notification: NotificationService,
@@ -89,17 +63,8 @@ export class StillImageToolbarComponent {
     public resourceFetcherService: ResourceFetcherService,
     private _rs: RepresentationService,
     private _dialog: MatDialog,
-    private _domSanitizer: DomSanitizer,
-    private _matIconRegistry: MatIconRegistry,
-    public osd: OpenSeaDragonService,
     private _viewContainerRef: ViewContainerRef
-  ) {
-    this._setupCssMaterialIcon();
-  }
-
-  toggleDrawMode(): void {
-    this.osd.toggleDrawing();
-  }
+  ) {}
 
   download() {
     if (!this.imageFileValue) return;
@@ -118,6 +83,10 @@ export class StillImageToolbarComponent {
     });
   }
 
+  setBackground(bg: 'default' | 'white' | 'transparent') {
+    this.backgroundChange.emit(bg);
+  }
+
   private _replaceFile(file: UpdateFileValue) {
     const updateRes = new UpdateResource();
     updateRes.id = this.resource.id;
@@ -125,12 +94,5 @@ export class StillImageToolbarComponent {
     updateRes.property = Constants.HasStillImageFileValue;
     updateRes.value = file;
     return this._dspApiConnection.v2.values.updateValue(updateRes as UpdateResource<UpdateFileValue>);
-  }
-
-  private _setupCssMaterialIcon() {
-    this._matIconRegistry.addSvgIcon(
-      'draw_region_icon',
-      this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/draw-region-icon.svg')
-    );
   }
 }
