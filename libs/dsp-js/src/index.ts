@@ -1,3 +1,6 @@
+// reflect-metadata must be imported before any json2typescript decorated classes
+import 'reflect-metadata';
+
 // Globally necessary files
 import { DefaultObjectAccessPermissionsResponse } from './models/admin/default-object-access-permissions-response';
 import { DefaultObjectAccessPermission } from './models/admin/default-object-access-permission';
