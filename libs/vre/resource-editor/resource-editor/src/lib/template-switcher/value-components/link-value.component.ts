@@ -107,6 +107,13 @@ interface ResourceGroup {
     </mat-form-field>
   `,
   providers: [LinkValueDataService],
+  styles: `
+    .link-value-class-group {
+      --mat-optgroup-label-text-size: 0.85em;
+      --mat-optgroup-label-text-weight: 500;
+      --mat-optgroup-label-text-color: rgba(0, 0, 0, 0.6);
+    }
+  `,
 })
 export class LinkValueComponent implements OnInit {
   private cancelPreviousSearchRequest$ = new Subject<void>();
