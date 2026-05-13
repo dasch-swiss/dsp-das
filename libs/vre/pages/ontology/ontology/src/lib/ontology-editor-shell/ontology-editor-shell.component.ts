@@ -1,6 +1,9 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
+import { OntologyClassNavigatorComponent } from '../ontology-class-navigator/ontology-class-navigator.component';
+import { OntologyClassWorkspaceComponent } from '../ontology-class-workspace/ontology-class-workspace.component';
+import { OntologyPropertyLibraryComponent } from '../ontology-property-library/ontology-property-library.component';
 import { OntologyEditorViewService } from '../services/ontology-editor-view.service';
 
 /**
@@ -14,14 +17,19 @@ import { OntologyEditorViewService } from '../services/ontology-editor-view.serv
  * while a property card is being dragged, the splitter gutters are disabled
  * so the CDK drag overlay isn't intercepted by `<as-split>`'s gutter logic.
  *
- * The three `<as-split-area>` children are currently placeholders — the
- * navigator / workspace / library components land in Phase 2 (Tasks #6+).
+ * Layout: left navigator (25%), center workspace (50%), right library (25%).
  */
 @Component({
   selector: 'app-ontology-editor-shell',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AngularSplitModule, AsyncPipe],
+  imports: [
+    AngularSplitModule,
+    AsyncPipe,
+    OntologyClassNavigatorComponent,
+    OntologyClassWorkspaceComponent,
+    OntologyPropertyLibraryComponent,
+  ],
   providers: [OntologyEditorViewService],
   templateUrl: './ontology-editor-shell.component.html',
 })

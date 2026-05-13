@@ -1,11 +1,11 @@
 <as-split direction="horizontal" [disabled]="(viewService.isPropertyDragging$ | async) ?? false">
   <as-split-area [size]="25">
-    <div class="pane-placeholder" data-testid="navigator-pane">Class navigator (Phase 2)</div>
+    <app-ontology-class-navigator data-testid="navigator-pane" />
   </as-split-area>
   <as-split-area [size]="50">
-    <div class="pane-placeholder" data-testid="workspace-pane">Class workspace (Phase 2)</div>
+    <app-ontology-class-workspace data-testid="workspace-pane" />
   </as-split-area>
   <as-split-area [size]="25">
-    <div class="pane-placeholder" data-testid="library-pane">Property library (Phase 2)</div>
+    <app-ontology-property-library data-testid="library-pane" />
   </as-split-area>
 </as-split>

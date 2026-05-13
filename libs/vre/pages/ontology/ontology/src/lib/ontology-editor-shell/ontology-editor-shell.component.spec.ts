@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { MockComponent } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
+import { OntologyClassNavigatorComponent } from '../ontology-class-navigator/ontology-class-navigator.component';
+import { OntologyClassWorkspaceComponent } from '../ontology-class-workspace/ontology-class-workspace.component';
+import { OntologyPropertyLibraryComponent } from '../ontology-property-library/ontology-property-library.component';
 import type { ResourceClassInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
 import { OntologyEditorViewService } from '../services/ontology-editor-view.service';
@@ -9,9 +13,9 @@ import { OntologyEditorShellComponent } from './ontology-editor-shell.component'
 /**
  * Smoke tests for the three-pane shell.
  *
- * The shell is intentionally thin in this task — child components land in
- * Phase 2. The contract covered here:
- *   1. Renders three `<as-split-area>` placeholder regions.
+ * Contract:
+ *   1. Renders the navigator, workspace, and library components inside three
+ *      `<as-split-area>` regions.
  *   2. Provides `OntologyEditorViewService` at the component level (so the
  *      shell owns the lifetime of view state).
  *   3. The `<as-split>` `disabled` host class reflects `isPropertyDragging$`,
@@ -40,17 +44,28 @@ describe('OntologyEditorShellComponent', () => {
           useValue: { hasProjectAdminRights$ },
         },
       ],
+    }).overrideComponent(OntologyEditorShellComponent, {
+      remove: {
+        imports: [OntologyClassNavigatorComponent, OntologyClassWorkspaceComponent, OntologyPropertyLibraryComponent],
+      },
+      add: {
+        imports: [
+          MockComponent(OntologyClassNavigatorComponent),
+          MockComponent(OntologyClassWorkspaceComponent),
+          MockComponent(OntologyPropertyLibraryComponent),
+        ],
+      },
     });
 
     fixture = TestBed.createComponent(OntologyEditorShellComponent);
     fixture.detectChanges();
   });
 
-  it('renders three pane placeholders', () => {
+  it('renders the navigator, workspace, and library components in three split areas', () => {
     const host: HTMLElement = fixture.nativeElement;
-    expect(host.querySelector('[data-testid="navigator-pane"]')).not.toBeNull();
-    expect(host.querySelector('[data-testid="workspace-pane"]')).not.toBeNull();
-    expect(host.querySelector('[data-testid="library-pane"]')).not.toBeNull();
+    expect(host.querySelector('app-ontology-class-navigator')).not.toBeNull();
+    expect(host.querySelector('app-ontology-class-workspace')).not.toBeNull();
+    expect(host.querySelector('app-ontology-property-library')).not.toBeNull();
 
     const areas = host.querySelectorAll('as-split-area');
     expect(areas.length).toBe(3);
