@@ -10,13 +10,20 @@
   } @else {
   <div
     class="workspace__grid"
-    cdkDropList
-    [cdkDropListDisabled]="true"
     data-cy="class-workspace-grid"
     role="list"
     [attr.aria-label]="'pages.ontology.editor.workspaceGrid' | translate">
     @for (klass of classes; track trackByClassIri($index, klass)) {
-    <div class="workspace__card" role="listitem" [attr.data-iri]="klass.id">
+    <div
+      class="workspace__card"
+      role="listitem"
+      [attr.data-iri]="klass.id"
+      cdkDropList
+      [cdkDropListConnectedTo]="[propertyLibraryDropListId]"
+      [cdkDropListData]="klass.resourceClassDefinition"
+      [cdkDropListDisabled]="(isTransacting$ | async) ?? false"
+      (cdkDropListEntered)="onDragEntered($event, klass.id, klass.label)"
+      (cdkDropListDropped)="onDrop($event)">
       <app-resource-class-info [resourceClass]="klass" />
     </div>
     }
