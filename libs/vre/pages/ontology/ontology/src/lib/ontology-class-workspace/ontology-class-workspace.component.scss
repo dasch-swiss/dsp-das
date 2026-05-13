@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  height: 100%;
+  min-width: 0;
+  overflow: auto;
+}
+
+.workspace {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 12px;
+  gap: 12px;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 12px;
+    align-content: start;
+  }
+
+  &__card {
+    min-width: 0;
+  }
+
+  &__empty {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: rgba(0, 0, 0, 0.6);
+    font-style: italic;
+    text-align: center;
+  }
+
+  &__empty-text {
+    margin: 0;
+    max-width: 360px;
+  }
+}
