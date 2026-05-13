@@ -2,10 +2,8 @@
   (mouseenter)="classHovered = true"
   (mouseleave)="classHovered = false"
   data-cy="class-card"
-  appearance="outlined"
-  cdkDrag
-  cdkDragBoundary=".drag-drop-stop">
-  <mat-card-header cdkDragHandle>
+  appearance="outlined">
+  <mat-card-header>
     <div style="flex: 1">
       <mat-card-title [matTooltip]="this.resourceClass.comments | appStringifyStringLiteral" matTooltipPosition="above">
         {{ this.resourceClass.labels | appStringifyStringLiteral | appTruncate: 56 }}
@@ -39,20 +37,9 @@
         </button>
         }
       </span>
-      <span
-        [matTooltip]="
-          expandClasses
-            ? (_translate.instant('pages.ontology.resourceClassInfo.collapse'))
-            : (_translate.instant('pages.ontology.resourceClassInfo.expand'))
-        ">
-        <button mat-icon-button (click)="expandClasses = !expandClasses">
-          <mat-icon>{{ expandClasses ? "expand_less" : "expand_more" }}</mat-icon>
-        </button>
-      </span>
     </span>
   </mat-card-header>
   <!-- resource class card content with list of properties -->
-  @if (expandClasses) {
   <mat-card-content>
     @if (resourceClass.properties?.length) {
     <mat-list cdkDropList (cdkDropListDropped)="onPropertyDropped($event)">
@@ -69,7 +56,6 @@
     <app-add-property-menu [resourceClass]="resourceClass" />
     }
   </mat-card-content>
-  }
 </mat-card>
 
 <mat-menu #resClassMenu="matMenu" xPosition="before">

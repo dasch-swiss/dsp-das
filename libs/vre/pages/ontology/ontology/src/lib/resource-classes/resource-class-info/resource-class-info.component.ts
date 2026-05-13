@@ -1,17 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Inject, Input, ViewContainerRef } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,12 +17,11 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService, TruncatePipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription, switchMap, take } from 'rxjs';
+import { Observable, switchMap, take } from 'rxjs';
 import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
 } from '../../forms/resource-class-form/edit-resource-class-dialog.component';
-import { OntologyPageService } from '../../ontology-page.service';
 import { ClassPropertyInfo, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 import { AddPropertyMenuComponent } from './add-property-menu.component';
@@ -45,8 +34,6 @@ import { PropertyItemComponent } from './property-item.component';
   imports: [
     AddPropertyMenuComponent,
     AsyncPipe,
-    CdkDrag,
-    CdkDragHandle,
     CdkDropList,
     MatCard,
     MatCardContent,
@@ -66,7 +53,7 @@ import { PropertyItemComponent } from './property-item.component';
     TruncatePipe,
   ],
 })
-export class ResourceClassInfoComponent implements OnInit, OnDestroy {
+export class ResourceClassInfoComponent {
   @Input({ required: true }) resourceClass!: ResourceClassInfo;
 
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
@@ -75,8 +62,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   menuOpen = false;
 
   classCanBeDeleted = false;
-  subscription!: Subscription;
-  expandClasses = true;
 
   trackByPropToDisplayFn = (index: number, item: ClassPropertyInfo) => `${index}-${item.propDef.id}`;
 
@@ -85,26 +70,13 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
     private _viewContainerRef: ViewContainerRef,
-    private readonly _cd: ChangeDetectorRef,
     private readonly _clipboard: Clipboard,
     private readonly _dialog: MatDialog,
     private readonly _dialogService: DialogService,
     private readonly _notification: NotificationService,
     private readonly _oes: OntologyEditService,
-    private readonly _projectPageService: ProjectPageService,
-    public ops: OntologyPageService
+    private readonly _projectPageService: ProjectPageService
   ) {}
-
-  ngOnInit() {
-    this.subscription = this.ops.expandClasses$.subscribe(expandClasses => {
-      this.expandClasses = expandClasses;
-      this._cd.detectChanges();
-    });
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
 
   setCanBeDeleted() {
     this._canDeleteResourceClass$(this.resourceClass.id)
