@@ -1,0 +1,218 @@
+import { CdkDropList } from '@angular/cdk/drag-drop';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
+import { MatChipListbox, MatChipOption } from '@angular/material/chips';
+import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import type { ClassDefinition } from '@dasch-swiss/dsp-js';
+import { DefaultProperties, LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs';
+import { PROPERTY_LIBRARY_DROP_LIST_ID } from '../ontology-editor-shell/property-library-drop-list';
+import type { PropertyInfo, ResourceClassInfo } from '../ontology.types';
+import { OntologyEditService } from '../services/ontology-edit.service';
+import { OntologyEditorViewService } from '../services/ontology-editor-view.service';
+import { AssignTarget, PropertyRowComponent } from './property-row.component';
+
+/**
+ * Right pane of the ontology editor shell.
+ *
+ * Lists the project's properties with a debounced text filter, an
+ * "Unused only" toggle (driven by `PropertyInfo.usedByClasses.length`),
+ * and a multi-select category chip-listbox sourced from the static
+ * `DefaultProperties.data` catalog.
+ *
+ * Drag scaffolding:
+ * - The container is a `cdkDropList` with the static
+ *   `PROPERTY_LIBRARY_DROP_LIST_ID` so workspace cards can declare
+ *   `cdkDropListConnectedTo` symbolically.
+ * - Each row signals drag start / end via `<app-property-row>` outputs;
+ *   the library flips `OntologyEditorViewService.isPropertyDragging$` so
+ *   the shell can disable the `<as-split>` gutters mid-drag.
+ *
+ * Assign-to-class keyboard fallback:
+ * - Each row exposes an "Assign to class…" menu listing classes the
+ *   property isn't yet on; selecting one calls
+ *   `OntologyEditService.assignPropertyToClass$` directly so users
+ *   without a pointing device can still reach the same call path as the
+ *   drop handler (task #6).
+ */
+@Component({
+  selector: 'app-ontology-property-library',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AsyncPipe,
+    CdkDropList,
+    MatChipListbox,
+    MatChipOption,
+    MatFormField,
+    MatIcon,
+    MatIconButton,
+    MatInput,
+    MatLabel,
+    MatPrefix,
+    MatSlideToggle,
+    MatSuffix,
+    PropertyRowComponent,
+    ReactiveFormsModule,
+    TranslatePipe,
+  ],
+  templateUrl: './ontology-property-library.component.html',
+  styleUrls: ['./ontology-property-library.component.scss'],
+})
+export class OntologyPropertyLibraryComponent {
+  readonly dropListId = PROPERTY_LIBRARY_DROP_LIST_ID;
+
+  /** All available property category labels (Text, Number, Link / Relation, ...). */
+  readonly categories = DefaultProperties.data.map(c => c.group);
+
+  readonly filterControl = new FormControl<string>('', { nonNullable: true });
+  readonly unusedOnlyControl = new FormControl<boolean>(false, { nonNullable: true });
+  readonly activeCategories$ = new BehaviorSubject<Set<string>>(new Set());
+
+  private readonly _view = inject(OntologyEditorViewService);
+  private readonly _ontologyEdit = inject(OntologyEditService);
+  private readonly _localization = inject(LocalizationService);
+  private readonly _notification = inject(NotificationService);
+  private readonly _translate = inject(TranslateService);
+  private readonly _destroyRef = inject(DestroyRef);
+
+  readonly isEditingEnabled$ = this._view.isEditingEnabled$;
+
+  /**
+   * Classes available as assign targets — always the current ontology's
+   * classes (the assign menu narrows further based on per-property
+   * `usedByClasses`).
+   */
+  readonly assignableClasses$ = this._ontologyEdit.currentOntologyClasses$;
+
+  /**
+   * Filtered + categorized property list. Recomputes on locale change so
+   * label-based filtering matches what the user sees.
+   */
+  readonly visibleProperties$ = this._localization.currentLanguage$.pipe(
+    switchMap(() =>
+      combineLatest([
+        this._ontologyEdit.currentProjectsProperties$,
+        this.filterControl.valueChanges.pipe(
+          startWith(this.filterControl.value),
+          debounceTime(150),
+          distinctUntilChanged()
+        ),
+        this.unusedOnlyControl.valueChanges.pipe(startWith(this.unusedOnlyControl.value), distinctUntilChanged()),
+        this.activeCategories$,
+      ]).pipe(map(([props, query, unusedOnly, categories]) => this._applyFilter(props, query, unusedOnly, categories)))
+    )
+  );
+
+  constructor() {
+    // Mirror "unused only" to the shared view state so other panes can
+    // react in the future without re-implementing the same control.
+    this.unusedOnlyControl.valueChanges
+      .pipe(startWith(this.unusedOnlyControl.value), takeUntilDestroyed(this._destroyRef))
+      .subscribe(value => this._view.setUnusedPropertiesOnly(value));
+
+    this.filterControl.valueChanges
+      .pipe(startWith(this.filterControl.value), takeUntilDestroyed(this._destroyRef))
+      .subscribe(value => this._view.setPropertyFilter(value ?? ''));
+
+    this.activeCategories$
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(set => this._view.setPropertyCategoryFilters(set));
+  }
+
+  clearFilter(): void {
+    this.filterControl.setValue('');
+  }
+
+  /**
+   * Toggle handler bound to each `<mat-chip-option>` (selectionChange).
+   * Selection is stored locally as a `Set<string>` so the chip listbox's
+   * multi-select model stays straightforward.
+   */
+  toggleCategory(group: string, selected: boolean): void {
+    const next = new Set(this.activeCategories$.value);
+    if (selected) {
+      next.add(group);
+    } else {
+      next.delete(group);
+    }
+    this.activeCategories$.next(next);
+  }
+
+  /** True if the chip is currently in the active set — used for `[selected]` binding. */
+  isCategoryActive(group: string): boolean {
+    return this.activeCategories$.value.has(group);
+  }
+
+  onPropertyDragStarted(): void {
+    this._view.setPropertyDragging(true);
+  }
+
+  onPropertyDragEnded(): void {
+    this._view.setPropertyDragging(false);
+  }
+
+  onAssignToClass(propertyId: string, target: AssignTarget, classes: ResourceClassInfo[]): void {
+    const klass = classes.find(c => c.id === target.iri);
+    if (!klass) {
+      // Stale menu — class disappeared since the menu was opened.
+      this._notification.openSnackBar(this._translate.instant('pages.ontology.editor.notify.assignFailed'), 'error');
+      return;
+    }
+    const classDef: ClassDefinition = klass.resourceClassDefinition;
+    this._ontologyEdit.assignPropertyToClass$(propertyId, classDef).subscribe({
+      next: () => {
+        this._notification.openSnackBar(
+          this._translate.instant('pages.ontology.editor.notify.assigned', { class: target.label }),
+          'success'
+        );
+      },
+      error: () => {
+        this._notification.openSnackBar(this._translate.instant('pages.ontology.editor.notify.assignFailed'), 'error');
+      },
+    });
+  }
+
+  trackByPropertyId(_: number, prop: PropertyInfo): string {
+    return prop.propDef.id;
+  }
+
+  // ───── private ───────────────────────────────────────────────────────
+
+  private _applyFilter(
+    props: PropertyInfo[],
+    rawQuery: string | null,
+    unusedOnly: boolean,
+    categories: Set<string>
+  ): PropertyInfo[] {
+    const query = (rawQuery ?? '').trim().toLowerCase();
+    return props.filter(p => {
+      if (unusedOnly && p.usedByClasses.length > 0) return false;
+      if (categories.size > 0 && !categories.has(p.propType?.group ?? '')) return false;
+      if (!query) return true;
+      const label = this._resolveLabel(p) || p.propDef.id;
+      return label.toLowerCase().includes(query);
+    });
+  }
+
+  private _resolveLabel(prop: PropertyInfo): string {
+    const labels = prop.propDef.labels;
+    const fallback = prop.propDef.label || '';
+    if (!labels || labels.length === 0) return fallback;
+    const lang = this._localization.getCurrentLanguage();
+    return (
+      labels.find(l => l.language === lang)?.value ??
+      labels.find(l => !l.language)?.value ??
+      labels[0]?.value ??
+      fallback
+    );
+  }
+}

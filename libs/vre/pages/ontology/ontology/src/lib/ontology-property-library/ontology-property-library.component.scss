@@ -1,0 +1,50 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+}
+
+.library {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 12px 0;
+    flex-shrink: 0;
+  }
+
+  &__filter {
+    width: 100%;
+  }
+
+  &__unused-toggle {
+    align-self: flex-start;
+  }
+
+  &__categories {
+    margin-top: 4px;
+  }
+
+  &__empty {
+    padding: 16px 12px;
+    color: rgba(0, 0, 0, 0.6);
+    font-style: italic;
+    text-align: center;
+  }
+
+  &__list {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+}

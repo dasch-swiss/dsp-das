@@ -1,0 +1,73 @@
+<div class="library">
+  <header class="library__header">
+    <mat-form-field appearance="outline" class="library__filter">
+      <mat-label>{{ 'pages.ontology.editor.propertyFilterPlaceholder' | translate }}</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        type="search"
+        [formControl]="filterControl"
+        data-cy="property-library-filter"
+        [attr.aria-label]="'pages.ontology.editor.propertyFilterPlaceholder' | translate" />
+      @if (filterControl.value) {
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="clearFilter()"
+        [attr.aria-label]="'ui.common.actions.clear' | translate"
+        data-cy="property-library-filter-clear">
+        <mat-icon>close</mat-icon>
+      </button>
+      }
+    </mat-form-field>
+
+    <mat-slide-toggle
+      [formControl]="unusedOnlyControl"
+      data-cy="property-library-unused-only"
+      class="library__unused-toggle">
+      {{ 'pages.ontology.editor.unusedOnly' | translate }}
+    </mat-slide-toggle>
+
+    <mat-chip-listbox
+      multiple
+      class="library__categories"
+      data-cy="property-library-categories"
+      [attr.aria-label]="'pages.ontology.editor.propertyCategoriesLabel' | translate">
+      @for (group of categories; track group) {
+      <mat-chip-option
+        [selected]="isCategoryActive(group)"
+        (selectionChange)="toggleCategory(group, $event.selected)"
+        [attr.data-group]="group">
+        {{ group }}
+      </mat-chip-option>
+      }
+    </mat-chip-listbox>
+  </header>
+
+  @if (visibleProperties$ | async; as props) { @if (assignableClasses$ | async; as classes) { @if (props.length === 0) {
+  <p class="library__empty" data-cy="property-library-empty">
+    {{ 'pages.ontology.editor.emptyProperties' | translate }}
+  </p>
+  } @else {
+  <div
+    class="library__list"
+    cdkDropList
+    [id]="dropListId"
+    [cdkDropListSortingDisabled]="true"
+    [cdkDropListData]="props"
+    role="list"
+    data-cy="property-library-list">
+    @for (prop of props; track trackByPropertyId($index, prop)) {
+    <app-property-row
+      role="listitem"
+      [property]="prop"
+      [assignableClasses]="classes"
+      [editingEnabled]="(isEditingEnabled$ | async) ?? false"
+      (dragStarted)="onPropertyDragStarted()"
+      (dragEnded)="onPropertyDragEnded()"
+      (assignToClass)="onAssignToClass(prop.propDef.id, $event, classes)" />
+    }
+  </div>
+  } } }
+</div>

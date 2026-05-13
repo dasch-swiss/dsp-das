@@ -1,0 +1,49 @@
+<div
+  class="property-row"
+  cdkDrag
+  [cdkDragDisabled]="!editingEnabled"
+  [cdkDragData]="property"
+  (cdkDragStarted)="onDragStarted()"
+  (cdkDragEnded)="onDragEnded()"
+  [attr.data-iri]="property.propDef.id"
+  data-cy="property-row">
+  @if (editingEnabled) {
+  <button
+    type="button"
+    cdkDragHandle
+    class="property-row__handle"
+    mat-icon-button
+    [attr.aria-label]="'pages.ontology.editor.dragProperty' | translate"
+    [matTooltip]="'pages.ontology.editor.dragProperty' | translate"
+    data-cy="property-row-drag">
+    <mat-icon>drag_indicator</mat-icon>
+  </button>
+  }
+
+  <mat-icon class="property-row__icon" aria-hidden="true">{{ icon }}</mat-icon>
+
+  <span class="property-row__label" [attr.title]="label">{{ label }}</span>
+
+  @if (group) {
+  <span class="property-row__group" [attr.aria-label]="group">{{ group }}</span>
+  } @if (editingEnabled) {
+  <button
+    type="button"
+    mat-button
+    class="property-row__assign"
+    [matMenuTriggerFor]="assignMenu"
+    [disabled]="unassignedClasses.length === 0"
+    [attr.aria-label]="'pages.ontology.editor.assignToClass' | translate"
+    data-cy="property-row-assign">
+    <mat-icon>add_link</mat-icon>
+    <span>{{ 'pages.ontology.editor.assignToClass' | translate }}</span>
+  </button>
+  <mat-menu #assignMenu="matMenu">
+    @for (target of unassignedClasses; track target.iri) {
+    <button mat-menu-item type="button" (click)="onAssign(target)" [attr.data-iri]="target.iri">
+      {{ target.label }}
+    </button>
+    }
+  </mat-menu>
+  }
+</div>
