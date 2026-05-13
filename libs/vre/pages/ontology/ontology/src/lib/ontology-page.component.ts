@@ -8,7 +8,6 @@ import { ProgressIndicatorOverlayComponent } from '@dasch-swiss/vre/ui/progress-
 import { combineLatest, take } from 'rxjs';
 import { OntologyEditorHeaderComponent } from './ontology-editor-header.component';
 import { OntologyEditorShellComponent } from './ontology-editor-shell/ontology-editor-shell.component';
-import { OntologyPageService } from './ontology-page.service';
 import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({
@@ -25,7 +24,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
     </div>
   `,
   styleUrls: ['./ontology-page.component.scss'],
-  providers: [OntologyPageService, OntologyEditService],
+  providers: [OntologyEditService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AsyncPipe, OntologyEditorHeaderComponent, OntologyEditorShellComponent, ProgressIndicatorOverlayComponent],
 })
