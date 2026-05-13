@@ -6,7 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, distinctUntilChanged } from 'rxjs';
 import { PROPERTY_LIBRARY_DROP_LIST_ID } from '../ontology-editor-shell/property-library-drop-list';
 import type { PropertyInfo } from '../ontology.types';
 import { ResourceClassInfoComponent } from '../resource-classes/resource-class-info/resource-class-info.component';
@@ -52,6 +52,21 @@ export class OntologyClassWorkspaceComponent {
 
   readonly isTransacting$ = this._ontologyEdit.isTransacting$;
 
+  /**
+   * Permission gate: drop targets are disabled when the user lacks
+   * project-admin rights. Wired from `OntologyEditorViewService` which in
+   * turn reads `ProjectPageService.hasProjectAdminRights$`.
+   */
+  readonly isEditingEnabled$ = this._view.isEditingEnabled$.pipe(distinctUntilChanged());
+
+  /**
+   * Computed drop-disabled flag: true when either a transaction is in
+   * flight or the user is not allowed to edit. Templated as `[cdkDropListDisabled]`.
+   */
+  readonly isDropDisabled$ = combineLatest([this.isTransacting$, this.isEditingEnabled$]).pipe(
+    map(([transacting, editing]) => transacting || !editing)
+  );
+
   /** Static drop-list ID exposed for the template's `cdkDropListConnectedTo`. */
   readonly propertyLibraryDropListId = PROPERTY_LIBRARY_DROP_LIST_ID;
 
@@ -86,6 +101,19 @@ export class OntologyClassWorkspaceComponent {
   private readonly _lastAnnouncedTargetIri$ = new BehaviorSubject<string | null>(null);
 
   /**
+   * Synchronous mirror of `isEditingEnabled$` so `onDrop` can defensively
+   * short-circuit without piping the observable. Defaults to `true` so the
+   * happy-path tests (which don't mock the permission stream) keep working.
+   */
+  private _isEditingEnabledNow = true;
+
+  constructor() {
+    this.isEditingEnabled$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(v => {
+      this._isEditingEnabledNow = v;
+    });
+  }
+
+  /**
    * trackBy for the card @for — keeps Angular's diff stable when classes
    * are re-emitted with the same identity (e.g. property edits upstream).
    */
@@ -115,6 +143,10 @@ export class OntologyClassWorkspaceComponent {
    */
   onDrop(event: CdkDragDrop<ResourceClassDefinitionWithAllLanguages, unknown, PropertyInfo>): void {
     if (event.previousContainer === event.container) return;
+    // Defensive: ignore drops while editing is disabled. The template also
+    // sets `cdkDropListDisabled` based on `isDropDisabled$`, but the guard
+    // here makes the contract explicit for tests and future callers.
+    if (!this._isEditingEnabledNow) return;
 
     const cls = event.container.data;
     const prop = event.item.data;

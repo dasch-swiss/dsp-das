@@ -45,6 +45,7 @@ describe('OntologyClassWorkspaceComponent', () => {
   let currentOntologyClasses$: BehaviorSubject<ResourceClassInfo[]>;
   let selectedClassIris$: BehaviorSubject<Set<string>>;
   let isTransacting$: BehaviorSubject<boolean>;
+  let isEditingEnabled$: BehaviorSubject<boolean>;
   let assignPropertyToClass$: jasmine.Spy | jest.Mock;
   let setPropertyDragging: jest.Mock;
   let openSnackBar: jest.Mock;
@@ -54,6 +55,7 @@ describe('OntologyClassWorkspaceComponent', () => {
     currentOntologyClasses$ = new BehaviorSubject<ResourceClassInfo[]>([]);
     selectedClassIris$ = new BehaviorSubject<Set<string>>(new Set());
     isTransacting$ = new BehaviorSubject<boolean>(false);
+    isEditingEnabled$ = new BehaviorSubject<boolean>(true);
     assignPropertyToClass$ = jest.fn(() => of(undefined));
     setPropertyDragging = jest.fn();
     openSnackBar = jest.fn();
@@ -64,7 +66,7 @@ describe('OntologyClassWorkspaceComponent', () => {
       providers: [
         {
           provide: OntologyEditorViewService,
-          useValue: { selectedClassIris$, setPropertyDragging },
+          useValue: { selectedClassIris$, setPropertyDragging, isEditingEnabled$ },
         },
         {
           provide: OntologyEditService,
@@ -312,6 +314,47 @@ describe('OntologyClassWorkspaceComponent', () => {
     it('returns the IRI as the track-by key', () => {
       setup();
       expect(component.trackByClassIri(0, { id: 'iri:Z' })).toBe('iri:Z');
+    });
+  });
+
+  describe('permission gating', () => {
+    it('disables the drop list when isEditingEnabled$ is false', () => {
+      setup();
+      currentOntologyClasses$.next([makeClass('iri:A')]);
+      selectedClassIris$.next(new Set(['iri:A']));
+      isEditingEnabled$.next(false);
+      fixture.detectChanges();
+
+      const card = fixture.nativeElement.querySelector('.workspace__card') as HTMLElement;
+      // CdkDropList stamps the disabled state via the `cdk-drop-list-disabled`
+      // class on the host element.
+      expect(card.classList.contains('cdk-drop-list-disabled')).toBe(true);
+    });
+
+    it('short-circuits onDrop when editing is disabled', () => {
+      setup();
+      isEditingEnabled$.next(false);
+
+      const cls = makeClass('iri:A', 'Class A').resourceClassDefinition;
+      const prop = makeProp('prop:1', 'Prop One');
+      const event = makeDrop(cls, prop);
+
+      component.onDrop(event);
+
+      expect(assignPropertyToClass$).not.toHaveBeenCalled();
+    });
+
+    it('re-enables drop when editing returns to true and no transaction is in flight', () => {
+      setup();
+      currentOntologyClasses$.next([makeClass('iri:A')]);
+      selectedClassIris$.next(new Set(['iri:A']));
+      isEditingEnabled$.next(false);
+      fixture.detectChanges();
+      isEditingEnabled$.next(true);
+      fixture.detectChanges();
+
+      const card = fixture.nativeElement.querySelector('.workspace__card') as HTMLElement;
+      expect(card.classList.contains('cdk-drop-list-disabled')).toBe(false);
     });
   });
 });

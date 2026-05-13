@@ -21,7 +21,7 @@
       cdkDropList
       [cdkDropListConnectedTo]="[propertyLibraryDropListId]"
       [cdkDropListData]="klass.resourceClassDefinition"
-      [cdkDropListDisabled]="(isTransacting$ | async) ?? false"
+      [cdkDropListDisabled]="(isDropDisabled$ | async) ?? true"
       (cdkDropListEntered)="onDragEntered($event, klass.id, klass.label)"
       (cdkDropListDropped)="onDrop($event)">
       <app-resource-class-info [resourceClass]="klass" />

@@ -29,11 +29,12 @@ const makeProviders = (classes: ResourceClassInfo[], selected: Set<string>) => {
   const currentOntologyClasses$ = new BehaviorSubject<ResourceClassInfo[]>(classes);
   const selectedClassIris$ = new BehaviorSubject<Set<string>>(selected);
   const isTransacting$ = new BehaviorSubject<boolean>(false);
+  const isEditingEnabled$ = new BehaviorSubject<boolean>(true);
 
   return [
     {
       provide: OntologyEditorViewService,
-      useValue: { selectedClassIris$, setPropertyDragging: () => undefined },
+      useValue: { selectedClassIris$, setPropertyDragging: () => undefined, isEditingEnabled$ },
     },
     {
       provide: OntologyEditService,
