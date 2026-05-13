@@ -15,9 +15,8 @@ import { BehaviorSubject, of, throwError } from 'rxjs';
 import { OntologyEditService } from './ontology-edit.service';
 
 /**
- * Focused spec for `assignPropertyToClass$` (Task #4). The legacy void
- * `assignPropertyToClass` and the rest of the service are not covered here —
- * we only validate that the new Observable variant:
+ * Focused spec for `assignPropertyToClass$`. The rest of the service is not
+ * covered here — we only validate that the Observable variant:
  *   1. Forwards the correct `UpdateOntology` shape to dsp-js.
  *   2. Reloads the ontology on success and emits once.
  *   3. Propagates errors and still resets `_isTransacting`.

@@ -6,9 +6,10 @@ import { MatList, MatListItem, MatListItemIcon, MatListItemTitle } from '@angula
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { TranslatePipe } from '@ngx-translate/core';
-import { Observable, Subject, BehaviorSubject, combineLatest, map, takeUntil } from 'rxjs';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Observable, Subject, BehaviorSubject, combineLatest, map, take, takeUntil } from 'rxjs';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { CreatePropertyDialogData } from '../../forms/property-form/property-form.type';
 import { PropertyInfo, PropToAdd, ResourceClassInfo } from '../../ontology.types';
@@ -141,7 +142,9 @@ export class AddPropertyMenuComponent implements OnChanges {
 
   constructor(
     private readonly _dialog: MatDialog,
+    private readonly _notification: NotificationService,
     private readonly _oes: OntologyEditService,
+    private readonly _translate: TranslateService,
     private readonly _viewContainerRef: ViewContainerRef
   ) {}
 
@@ -158,7 +161,16 @@ export class AddPropertyMenuComponent implements OnChanges {
   trackByPropFn = (index: number, item: PropertyInfo) => `${index}-${item.propDef?.id}`;
 
   assignExistingProperty(propertyId: string) {
-    this._oes.assignPropertyToClass(propertyId, this.resourceClass.resourceClassDefinition);
+    this._oes
+      .assignPropertyToClass$(propertyId, this.resourceClass.resourceClassDefinition)
+      .pipe(take(1), takeUntil(this.ngUnsubscribe))
+      .subscribe({
+        error: () =>
+          this._notification.openSnackBar(
+            this._translate.instant('pages.ontology.addPropertyMenu.assignFailed'),
+            'error'
+          ),
+      });
   }
 
   addNewProperty(propType: DefaultProperty) {

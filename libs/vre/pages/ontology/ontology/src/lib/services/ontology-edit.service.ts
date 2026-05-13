@@ -334,41 +334,21 @@ export class OntologyEditService {
         if (!assignToClass) {
           this._loadOntology(this.ontologyId, propDef.id);
         } else {
-          this.assignPropertyToClass(propDef.id, assignToClass);
+          this.assignPropertyToClass$(propDef.id, assignToClass).pipe(take(1)).subscribe();
         }
       })
     );
   }
 
-  assignPropertyToClass(propertyId: string, classDefinition: ClassDefinition) {
-    this._isTransacting.next(true);
-
-    const guiOrder = Math.max(0, ...classDefinition.propertiesList.map(p => p.guiOrder ?? 0)) + 1;
-    const propCard: IHasProperty = {
-      propertyIndex: propertyId,
-      cardinality: 1, // default: not required, not multiple
-      guiOrder,
-    };
-
-    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classDefinition.id, [propCard]);
-    this._dspApiConnection.v2.onto
-      .addCardinalityToResourceClass(updateOntology)
-      .pipe(take(1))
-      .subscribe((_res: ResourceClassDefinitionWithAllLanguages) => {
-        this._loadOntology(this.ontologyId, propertyId);
-      });
-  }
-
   /**
-   * Observable variant of `assignPropertyToClass`. Emits once after the
-   * cardinality has been added and the ontology reloaded; errors are
-   * propagated to the caller. `_isTransacting` is reset in both success and
-   * error paths via `finalize`.
+   * Observable variant of property-to-class cardinality assignment. Emits
+   * once after the cardinality has been added and the ontology reloaded;
+   * errors are propagated to the caller. `_isTransacting` is reset in both
+   * success and error paths via `finalize`.
    *
-   * Used by Phase 2's drag-to-assign flow so the caller can react to
-   * completion / failure (e.g., reset drag state, show a snackbar). The
-   * existing void method is kept for backwards-compatibility with the menu
-   * call site.
+   * Used by the workspace drag-to-assign flow and by `AddPropertyMenu`'s
+   * "Assign to class…" menu, both of which need to react to completion /
+   * failure (snackbar feedback, a11y announcements).
    */
   assignPropertyToClass$(propertyId: string, classDefinition: ClassDefinition): Observable<void> {
     this._isTransacting.next(true);
