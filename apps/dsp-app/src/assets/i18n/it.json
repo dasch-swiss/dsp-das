@@ -401,7 +401,32 @@
         "editInfo": "Modifica info del modello di dati",
         "deleteTooltip": "Elimina modello di dati",
         "cannotDelete": "Questo modello di dati non può essere eliminato perché è in uso!",
-        "deleteConfirmation": "Vuoi eliminare questo modello di dati?"
+        "deleteConfirmation": "Vuoi eliminare questo modello di dati?",
+        "classFilterPlaceholder": "Filtra le classi",
+        "propertyFilterPlaceholder": "Filtra le proprietà",
+        "workspaceGrid": "Schede delle classi selezionate",
+        "dragProperty": "Trascina una proprietà su una scheda di classe per assegnarla",
+        "unusedOnly": "Solo non utilizzate",
+        "selectAll": "Seleziona tutte",
+        "deselectAll": "Deseleziona tutte",
+        "assignToClass": "Assegna a classe…",
+        "propertyCategoriesLabel": "Categorie di proprietà",
+        "emptyFilter": "Nessun risultato",
+        "emptyOntology": "Questo modello di dati non ha ancora classi",
+        "noSelection": "Seleziona delle classi nella navigazione per iniziare la modifica",
+        "emptyProperties": "Ancora nessuna proprietà",
+        "toggleClass": "Attiva/disattiva classe",
+        "a11y": {
+          "dragOver": "Su {{classLabel}}",
+          "assigned": "{{propertyLabel}} assegnata a {{classLabel}}",
+          "assignDuplicate": "{{propertyLabel}} è già assegnata a {{classLabel}}",
+          "assignFailed": "Assegnazione di {{propertyLabel}} a {{classLabel}} non riuscita"
+        },
+        "notify": {
+          "assigned": "{{propertyLabel}} assegnata a {{classLabel}}",
+          "assignFailed": "Assegnazione di {{propertyLabel}} a {{classLabel}} non riuscita",
+          "alreadyAssigned": "{{propertyLabel}} è già su {{classLabel}}"
+        }
       },
       "sidenav": {
         "classes": "Classi",
@@ -465,7 +490,8 @@
       "addPropertyMenu": {
         "addProperty": "Aggiungi proprietà",
         "createNewFromType": "Crea nuovo dal tipo",
-        "addExistingProperty": "Aggiungi proprietà esistente"
+        "addExistingProperty": "Aggiungi proprietà esistente",
+        "assignFailed": "Assegnazione della proprietà non riuscita"
       },
       "resourceClassForm": {
         "createSubtitle": "Crea classe di risorsa",

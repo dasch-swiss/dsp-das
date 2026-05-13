@@ -401,7 +401,32 @@
         "editInfo": "Datenmodell-Info bearbeiten",
         "deleteTooltip": "Datenmodell löschen",
         "cannotDelete": "Dieses Datenmodell kann nicht gelöscht werden, da es verwendet wird!",
-        "deleteConfirmation": "Möchten Sie dieses Datenmodell löschen?"
+        "deleteConfirmation": "Möchten Sie dieses Datenmodell löschen?",
+        "classFilterPlaceholder": "Klassen filtern",
+        "propertyFilterPlaceholder": "Eigenschaften filtern",
+        "workspaceGrid": "Ausgewählte Klassenkarten",
+        "dragProperty": "Ziehen Sie eine Eigenschaft auf eine Klassenkarte, um sie zuzuweisen",
+        "unusedOnly": "Nur ungenutzte",
+        "selectAll": "Alle auswählen",
+        "deselectAll": "Auswahl aufheben",
+        "assignToClass": "Klasse zuweisen…",
+        "propertyCategoriesLabel": "Eigenschaftskategorien",
+        "emptyFilter": "Keine Treffer",
+        "emptyOntology": "Dieses Datenmodell enthält noch keine Klassen",
+        "noSelection": "Wählen Sie Klassen in der Navigation, um mit der Bearbeitung zu beginnen",
+        "emptyProperties": "Noch keine Eigenschaften",
+        "toggleClass": "Klasse umschalten",
+        "a11y": {
+          "dragOver": "Über {{classLabel}}",
+          "assigned": "{{propertyLabel}} zu {{classLabel}} zugewiesen",
+          "assignDuplicate": "{{propertyLabel}} ist bereits {{classLabel}} zugewiesen",
+          "assignFailed": "Zuweisung von {{propertyLabel}} zu {{classLabel}} fehlgeschlagen"
+        },
+        "notify": {
+          "assigned": "{{propertyLabel}} zu {{classLabel}} zugewiesen",
+          "assignFailed": "Zuweisung von {{propertyLabel}} zu {{classLabel}} fehlgeschlagen",
+          "alreadyAssigned": "{{propertyLabel}} ist bereits auf {{classLabel}}"
+        }
       },
       "sidenav": {
         "classes": "Klassen",
@@ -465,7 +490,8 @@
       "addPropertyMenu": {
         "addProperty": "Eigenschaft hinzufügen",
         "createNewFromType": "Neue von Typ erstellen",
-        "addExistingProperty": "Bestehende Eigenschaft hinzufügen"
+        "addExistingProperty": "Bestehende Eigenschaft hinzufügen",
+        "assignFailed": "Zuweisung der Eigenschaft fehlgeschlagen"
       },
       "resourceClassForm": {
         "createSubtitle": "Ressourcenklasse erstellen",

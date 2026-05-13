@@ -401,7 +401,32 @@
         "editInfo": "Modifier les informations du modèle de données",
         "deleteTooltip": "Supprimer le modèle de données",
         "cannotDelete": "Ce modèle de données ne peut pas être supprimé car il est utilisé !",
-        "deleteConfirmation": "Voulez-vous supprimer ce modèle de données ?"
+        "deleteConfirmation": "Voulez-vous supprimer ce modèle de données ?",
+        "classFilterPlaceholder": "Filtrer les classes",
+        "propertyFilterPlaceholder": "Filtrer les propriétés",
+        "workspaceGrid": "Cartes des classes sélectionnées",
+        "dragProperty": "Glissez une propriété sur une carte de classe pour l'assigner",
+        "unusedOnly": "Inutilisées uniquement",
+        "selectAll": "Tout sélectionner",
+        "deselectAll": "Tout désélectionner",
+        "assignToClass": "Assigner à une classe…",
+        "propertyCategoriesLabel": "Catégories de propriétés",
+        "emptyFilter": "Aucun résultat",
+        "emptyOntology": "Ce modèle de données ne contient pas encore de classes",
+        "noSelection": "Sélectionnez des classes dans la navigation pour commencer l'édition",
+        "emptyProperties": "Pas encore de propriétés",
+        "toggleClass": "Basculer la classe",
+        "a11y": {
+          "dragOver": "Sur {{classLabel}}",
+          "assigned": "{{propertyLabel}} assignée à {{classLabel}}",
+          "assignDuplicate": "{{propertyLabel}} est déjà assignée à {{classLabel}}",
+          "assignFailed": "Échec de l'assignation de {{propertyLabel}} à {{classLabel}}"
+        },
+        "notify": {
+          "assigned": "{{propertyLabel}} assignée à {{classLabel}}",
+          "assignFailed": "Échec de l'assignation de {{propertyLabel}} à {{classLabel}}",
+          "alreadyAssigned": "{{propertyLabel}} est déjà sur {{classLabel}}"
+        }
       },
       "sidenav": {
         "classes": "Classes",
@@ -465,7 +490,8 @@
       "addPropertyMenu": {
         "addProperty": "Ajouter une propriété",
         "createNewFromType": "Créer nouveau à partir du type",
-        "addExistingProperty": "Ajouter une propriété existante"
+        "addExistingProperty": "Ajouter une propriété existante",
+        "assignFailed": "Échec de l'assignation de la propriété"
       },
       "resourceClassForm": {
         "createSubtitle": "Créer une classe de ressource",
