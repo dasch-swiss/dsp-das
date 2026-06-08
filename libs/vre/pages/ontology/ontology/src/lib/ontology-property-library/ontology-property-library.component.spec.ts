@@ -1,11 +1,10 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockComponent } from 'ng-mocks';
-import { BehaviorSubject, of, throwError } from 'rxjs';
-import type { PropertyInfo, ResourceClassInfo } from '../ontology.types';
+import { BehaviorSubject } from 'rxjs';
+import type { PropertyInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
 import { OntologyEditorViewService } from '../services/ontology-editor-view.service';
 import { OntologyPropertyLibraryComponent } from './ontology-property-library.component';
@@ -25,22 +24,11 @@ const makeProperty = (
     usedByClasses: options.usedByClasses ?? [],
   }) as unknown as PropertyInfo;
 
-const makeClass = (id: string, label: string): ResourceClassInfo =>
-  ({
-    id,
-    label,
-    labels: [],
-    resourceClassDefinition: { id, propertiesList: [] },
-  }) as unknown as ResourceClassInfo;
-
 describe('OntologyPropertyLibraryComponent', () => {
   let fixture: ComponentFixture<OntologyPropertyLibraryComponent>;
   let component: OntologyPropertyLibraryComponent;
   let currentProjectsProperties$: BehaviorSubject<PropertyInfo[]>;
-  let currentOntologyClasses$: BehaviorSubject<ResourceClassInfo[]>;
   let isEditingEnabled$: BehaviorSubject<boolean>;
-  let assignPropertyToClass$: jest.Mock;
-  let notification: { openSnackBar: jest.Mock };
   let viewService: {
     isEditingEnabled$: BehaviorSubject<boolean>;
     setPropertyDragging: jest.Mock;
@@ -51,10 +39,7 @@ describe('OntologyPropertyLibraryComponent', () => {
 
   const setup = () => {
     currentProjectsProperties$ = new BehaviorSubject<PropertyInfo[]>([]);
-    currentOntologyClasses$ = new BehaviorSubject<ResourceClassInfo[]>([]);
     isEditingEnabled$ = new BehaviorSubject<boolean>(true);
-    assignPropertyToClass$ = jest.fn(() => of(undefined));
-    notification = { openSnackBar: jest.fn() };
 
     viewService = {
       isEditingEnabled$,
@@ -70,11 +55,7 @@ describe('OntologyPropertyLibraryComponent', () => {
         { provide: OntologyEditorViewService, useValue: viewService },
         {
           provide: OntologyEditService,
-          useValue: {
-            currentProjectsProperties$,
-            currentOntologyClasses$,
-            assignPropertyToClass$,
-          },
+          useValue: { currentProjectsProperties$ },
         },
         {
           provide: LocalizationService,
@@ -83,7 +64,6 @@ describe('OntologyPropertyLibraryComponent', () => {
             getCurrentLanguage: () => 'en',
           },
         },
-        { provide: NotificationService, useValue: notification },
       ],
     }).overrideComponent(OntologyPropertyLibraryComponent, {
       remove: { imports: [PropertyRowComponent] },
@@ -195,38 +175,6 @@ describe('OntologyPropertyLibraryComponent', () => {
       setup();
       component.onPropertyDragEnded();
       expect(viewService.setPropertyDragging).toHaveBeenLastCalledWith(false);
-    });
-  });
-
-  describe('assign-to-class menu', () => {
-    it('delegates to assignPropertyToClass$ with the resolved class definition', () => {
-      setup();
-      const klass = makeClass('iri:A', 'Archive');
-      component.onAssignToClass('p:1', { iri: 'iri:A', label: 'Archive' }, [klass]);
-      expect(assignPropertyToClass$).toHaveBeenCalledWith('p:1', klass.resourceClassDefinition);
-    });
-
-    it('shows a success snackbar when the assignment succeeds', () => {
-      setup();
-      const klass = makeClass('iri:A', 'Archive');
-      component.onAssignToClass('p:1', { iri: 'iri:A', label: 'Archive' }, [klass]);
-      expect(notification.openSnackBar).toHaveBeenCalledWith(expect.any(String), 'success');
-    });
-
-    it('shows an error snackbar when the assignment fails', () => {
-      setup();
-      assignPropertyToClass$.mockReturnValueOnce(throwError(() => new Error('boom')));
-      const klass = makeClass('iri:A', 'Archive');
-      component.onAssignToClass('p:1', { iri: 'iri:A', label: 'Archive' }, [klass]);
-      expect(notification.openSnackBar).toHaveBeenCalledWith(expect.any(String), 'error');
-    });
-
-    it('shows an error snackbar when the target class has gone missing', () => {
-      setup();
-      // No classes provided — target IRI is stale.
-      component.onAssignToClass('p:1', { iri: 'iri:gone', label: 'Gone' }, []);
-      expect(assignPropertyToClass$).not.toHaveBeenCalled();
-      expect(notification.openSnackBar).toHaveBeenCalledWith(expect.any(String), 'error');
     });
   });
 

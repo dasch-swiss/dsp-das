@@ -26,24 +26,5 @@
 
   @if (group) {
   <span class="property-row__group" [attr.aria-label]="group">{{ group }}</span>
-  } @if (editingEnabled) {
-  <button
-    type="button"
-    mat-button
-    class="property-row__assign"
-    [matMenuTriggerFor]="assignMenu"
-    [disabled]="unassignedClasses.length === 0"
-    [attr.aria-label]="'pages.ontology.editor.assignToClass' | translate"
-    data-cy="property-row-assign">
-    <mat-icon>add_link</mat-icon>
-    <span>{{ 'pages.ontology.editor.assignToClass' | translate }}</span>
-  </button>
-  <mat-menu #assignMenu="matMenu">
-    @for (target of unassignedClasses; track target.iri) {
-    <button mat-menu-item type="button" (click)="onAssign(target)" [attr.data-iri]="target.iri">
-      {{ target.label }}
-    </button>
-    }
-  </mat-menu>
   }
 </div>

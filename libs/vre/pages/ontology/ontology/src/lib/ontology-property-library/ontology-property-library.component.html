@@ -45,7 +45,7 @@
     </mat-chip-listbox>
   </header>
 
-  @if (visibleProperties$ | async; as props) { @if (assignableClasses$ | async; as classes) { @if (props.length === 0) {
+  @if (visibleProperties$ | async; as props) { @if (props.length === 0) {
   <p class="library__empty" data-cy="property-library-empty">
     {{ 'pages.ontology.editor.emptyProperties' | translate }}
   </p>
@@ -62,12 +62,10 @@
     <app-property-row
       role="listitem"
       [property]="prop"
-      [assignableClasses]="classes"
       [editingEnabled]="(isEditingEnabled$ | async) ?? false"
       (dragStarted)="onPropertyDragStarted()"
-      (dragEnded)="onPropertyDragEnded()"
-      (assignToClass)="onAssignToClass(prop.propDef.id, $event, classes)" />
+      (dragEnded)="onPropertyDragEnded()" />
     }
   </div>
-  } } }
+  } }
 </div>

@@ -9,16 +9,14 @@ import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
-import type { ClassDefinition } from '@dasch-swiss/dsp-js';
 import { DefaultProperties, LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs';
 import { PROPERTY_LIBRARY_DROP_LIST_ID } from '../ontology-editor-shell/property-library-drop-list';
-import type { PropertyInfo, ResourceClassInfo } from '../ontology.types';
+import type { PropertyInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
 import { OntologyEditorViewService } from '../services/ontology-editor-view.service';
-import { AssignTarget, PropertyRowComponent } from './property-row.component';
+import { PropertyRowComponent } from './property-row.component';
 
 /**
  * Right pane of the ontology editor shell.
@@ -36,12 +34,9 @@ import { AssignTarget, PropertyRowComponent } from './property-row.component';
  *   the library flips `OntologyEditorViewService.isPropertyDragging$` so
  *   the shell can disable the `<as-split>` gutters mid-drag.
  *
- * Assign-to-class keyboard fallback:
- * - Each row exposes an "Assign to class…" menu listing classes the
- *   property isn't yet on; selecting one calls
- *   `OntologyEditService.assignPropertyToClass$` directly so users
- *   without a pointing device can still reach the same call path as the
- *   drop handler (task #6).
+ * Assignment to a class happens exclusively by dropping the row onto a
+ * class card in the center pane — see `ResourceClassInfoComponent` for
+ * the drop handler.
  */
 @Component({
   selector: 'app-ontology-property-library',
@@ -80,18 +75,9 @@ export class OntologyPropertyLibraryComponent {
   private readonly _view = inject(OntologyEditorViewService);
   private readonly _ontologyEdit = inject(OntologyEditService);
   private readonly _localization = inject(LocalizationService);
-  private readonly _notification = inject(NotificationService);
-  private readonly _translate = inject(TranslateService);
   private readonly _destroyRef = inject(DestroyRef);
 
   readonly isEditingEnabled$ = this._view.isEditingEnabled$;
-
-  /**
-   * Classes available as assign targets — always the current ontology's
-   * classes (the assign menu narrows further based on per-property
-   * `usedByClasses`).
-   */
-  readonly assignableClasses$ = this._ontologyEdit.currentOntologyClasses$;
 
   /**
    * Filtered + categorized property list. Recomputes on locale change so
@@ -158,27 +144,6 @@ export class OntologyPropertyLibraryComponent {
 
   onPropertyDragEnded(): void {
     this._view.setPropertyDragging(false);
-  }
-
-  onAssignToClass(propertyId: string, target: AssignTarget, classes: ResourceClassInfo[]): void {
-    const klass = classes.find(c => c.id === target.iri);
-    if (!klass) {
-      // Stale menu — class disappeared since the menu was opened.
-      this._notification.openSnackBar(this._translate.instant('pages.ontology.editor.notify.assignFailed'), 'error');
-      return;
-    }
-    const classDef: ClassDefinition = klass.resourceClassDefinition;
-    this._ontologyEdit.assignPropertyToClass$(propertyId, classDef).subscribe({
-      next: () => {
-        this._notification.openSnackBar(
-          this._translate.instant('pages.ontology.editor.notify.assigned', { class: target.label }),
-          'success'
-        );
-      },
-      error: () => {
-        this._notification.openSnackBar(this._translate.instant('pages.ontology.editor.notify.assignFailed'), 'error');
-      },
-    });
   }
 
   trackByPropertyId(_: number, prop: PropertyInfo): string {
