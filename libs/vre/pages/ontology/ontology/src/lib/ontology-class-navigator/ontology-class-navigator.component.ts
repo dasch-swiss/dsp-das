@@ -1,16 +1,21 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, ViewContainerRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import type { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { DefaultClass, DefaultResourceClasses, LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs';
+import { CreateResourceClassDialogComponent } from '../forms/resource-class-form/create-resource-class-dialog.component';
 import type { ResourceClassInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
 import { OntologyEditorViewService } from '../services/ontology-editor-view.service';
@@ -60,8 +65,12 @@ export interface ClassListNode {
     MatIconButton,
     MatInput,
     MatLabel,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
     MatPrefix,
     MatSuffix,
+    MatTooltip,
     ReactiveFormsModule,
     TranslatePipe,
   ],
@@ -73,11 +82,16 @@ export class OntologyClassNavigatorComponent implements OnInit {
   private readonly _ontologyEdit = inject(OntologyEditService);
   private readonly _localization = inject(LocalizationService);
   private readonly _destroyRef = inject(DestroyRef);
+  private readonly _dialog = inject(MatDialog);
+  private readonly _viewContainerRef = inject(ViewContainerRef);
 
   readonly filterControl = new FormControl<string>('', { nonNullable: true });
 
   readonly selectedIris$ = this._view.selectedClassIris$;
   readonly isEditingEnabled$ = this._view.isEditingEnabled$;
+
+  /** Default class catalogue used by the Create-class nested menu. */
+  readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
 
   /**
    * Tracks the latest list snapshot so template helpers (select-all, count)
@@ -133,6 +147,18 @@ export class OntologyClassNavigatorComponent implements OnInit {
 
   clearFilter(): void {
     this.filterControl.setValue('');
+  }
+
+  /**
+   * Open the create-resource-class dialog for a chosen `DefaultClass`.
+   * Mirrors the pattern the old `OntologySidenavComponent` used so the
+   * existing dialog wiring (and its post-create reload) keeps working.
+   */
+  openCreateClass(defaultClass: DefaultClass): void {
+    this._dialog.open<CreateResourceClassDialogComponent, DefaultClass>(CreateResourceClassDialogComponent, {
+      ...DspDialogConfig.mediumDialog(defaultClass),
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   // ───── list helpers ──────────────────────────────────────────────────

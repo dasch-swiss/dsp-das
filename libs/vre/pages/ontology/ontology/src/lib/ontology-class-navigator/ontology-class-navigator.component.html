@@ -22,6 +22,27 @@
         </button>
         }
       </mat-form-field>
+
+      @if (isEditingEnabled$ | async) {
+      <button
+        mat-icon-button
+        type="button"
+        class="navigator__create"
+        [matMenuTriggerFor]="createClassMenu"
+        [attr.aria-label]="'pages.ontology.editor.createNewClass' | translate"
+        [matTooltip]="'pages.ontology.editor.createNewClass' | translate"
+        data-cy="create-class-button">
+        <mat-icon>add</mat-icon>
+      </button>
+      <mat-menu #createClassMenu="matMenu" xPosition="before">
+        @for (type of defaultClasses; track type.iri) {
+        <button mat-menu-item type="button" (click)="openCreateClass(type)" [attr.data-cy]="type.iri.split('#').pop()">
+          <mat-icon>{{ type.icon }}</mat-icon>
+          {{ type.label }}
+        </button>
+        }
+      </mat-menu>
+      }
     </div>
 
     <div class="navigator__bulk-actions">

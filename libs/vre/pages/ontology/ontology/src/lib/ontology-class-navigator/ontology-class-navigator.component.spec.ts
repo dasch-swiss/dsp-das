@@ -1,8 +1,10 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DefaultClass, LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
+import { CreateResourceClassDialogComponent } from '../forms/resource-class-form/create-resource-class-dialog.component';
 import type { ResourceClassInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
 import { OntologyEditorViewService } from '../services/ontology-editor-view.service';
@@ -39,6 +41,7 @@ describe('OntologyClassNavigatorComponent', () => {
     deselectClassIris: jest.Mock;
     setClassFilter: jest.Mock;
   };
+  let dialog: { open: jest.Mock };
 
   const setup = () => {
     currentOntologyClasses$ = new BehaviorSubject<ResourceClassInfo[]>([]);
@@ -70,6 +73,8 @@ describe('OntologyClassNavigatorComponent', () => {
       setClassFilter: jest.fn(),
     };
 
+    dialog = { open: jest.fn() };
+
     TestBed.configureTestingModule({
       imports: [OntologyClassNavigatorComponent, NoopAnimationsModule, TranslateModule.forRoot()],
       providers: [
@@ -82,6 +87,7 @@ describe('OntologyClassNavigatorComponent', () => {
             getCurrentLanguage: () => 'en',
           },
         },
+        { provide: MatDialog, useValue: dialog },
       ],
     });
 
@@ -248,6 +254,25 @@ describe('OntologyClassNavigatorComponent', () => {
 
       expect(viewService.setClassFilter).toHaveBeenCalledWith('arch');
     }));
+  });
+
+  describe('create class', () => {
+    it('opens the create-resource-class dialog with the chosen DefaultClass', () => {
+      setup();
+      const defaultClass = { iri: 'knora:StillImageRepresentation', label: 'Image', icon: 'image' } as DefaultClass;
+
+      component.openCreateClass(defaultClass);
+
+      expect(dialog.open).toHaveBeenCalledTimes(1);
+      const [target, config] = dialog.open.mock.calls[0];
+      expect(target).toBe(CreateResourceClassDialogComponent);
+      expect((config as { data: DefaultClass }).data).toBe(defaultClass);
+    });
+
+    it('exposes DefaultResourceClasses.data as `defaultClasses`', () => {
+      setup();
+      expect(component.defaultClasses.length).toBeGreaterThan(0);
+    });
   });
 
   describe('trackBy helpers', () => {
