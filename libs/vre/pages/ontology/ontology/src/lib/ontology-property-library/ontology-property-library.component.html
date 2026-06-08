@@ -58,13 +58,6 @@
       }
     </div>
 
-    <mat-slide-toggle
-      [formControl]="unusedOnlyControl"
-      data-cy="property-library-unused-only"
-      class="library__unused-toggle">
-      {{ 'pages.ontology.editor.unusedOnly' | translate }}
-    </mat-slide-toggle>
-
     <mat-chip-listbox
       multiple
       class="library__categories"
@@ -78,6 +71,12 @@
         {{ group }}
       </mat-chip-option>
       }
+      <mat-chip-option
+        [selected]="unusedOnlyControl.value"
+        (selectionChange)="unusedOnlyControl.setValue($event.selected)"
+        data-cy="property-library-unused-only">
+        {{ 'pages.ontology.editor.unusedOnly' | translate }}
+      </mat-chip-option>
     </mat-chip-listbox>
   </header>
 

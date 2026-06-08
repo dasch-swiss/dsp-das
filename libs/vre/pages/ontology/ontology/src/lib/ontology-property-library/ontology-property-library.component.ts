@@ -10,7 +10,6 @@ import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatTooltip } from '@angular/material/tooltip';
 import {
   DefaultProperties,
@@ -68,7 +67,6 @@ import { PropertyRowComponent } from './property-row.component';
     MatMenuItem,
     MatMenuTrigger,
     MatPrefix,
-    MatSlideToggle,
     MatSuffix,
     MatTooltip,
     PropertyRowComponent,
