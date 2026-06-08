@@ -22,6 +22,13 @@ import { OntologyEditService } from './ontology-edit.service';
 @Injectable()
 export class OntologyEditorViewService {
   readonly selectedClassIris$ = new BehaviorSubject<Set<string>>(new Set<string>());
+  /**
+   * Tracks whether the initial selection-seed has already run for the
+   * current ontology. Flipped to true on the first non-empty emission of
+   * `currentOntologyClasses$`; flipped back to false on ontology switch
+   * via `reset()` so the next ontology re-seeds.
+   */
+  private _selectionInitialized = false;
   readonly classFilterText$ = new BehaviorSubject<string>('');
   readonly propertyFilterText$ = new BehaviorSubject<string>('');
   readonly activePropertyCategories$ = new BehaviorSubject<Set<string>>(new Set<string>());
@@ -102,11 +109,21 @@ export class OntologyEditorViewService {
     this.unusedPropertiesOnly$.next(false);
     this.keyboardAssignTargetIri$.next(null);
     this.isPropertyDragging$.next(false);
+    this._selectionInitialized = false;
   }
 
   private _wireReconciliation(): void {
     this._ontologyEditService.currentOntologyClasses$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(classes => {
       const validIris = new Set(classes.map((c: ResourceClassInfo) => c.id));
+
+      // Default-select every class on the first non-empty emission for
+      // this ontology. The flag is reset by `reset()` on ontology switch
+      // so the next ontology re-seeds.
+      if (!this._selectionInitialized && classes.length > 0) {
+        this._selectionInitialized = true;
+        this.selectedClassIris$.next(validIris);
+        return;
+      }
 
       const current = this.selectedClassIris$.value;
       let removed = false;

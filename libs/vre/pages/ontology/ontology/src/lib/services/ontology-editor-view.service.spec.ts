@@ -84,6 +84,51 @@ describe('OntologyEditorViewService', () => {
     });
   });
 
+  describe('initial selection seeding', () => {
+    it('default-selects every class on the first non-empty emission', () => {
+      const { service } = setup();
+      expect(service.selectedClassIris$.value.size).toBe(0);
+
+      currentOntologyClasses$.next([makeClass('iri:A'), makeClass('iri:B'), makeClass('iri:C')]);
+
+      const selected = service.selectedClassIris$.value;
+      expect(selected.size).toBe(3);
+      expect(selected.has('iri:A')).toBe(true);
+      expect(selected.has('iri:B')).toBe(true);
+      expect(selected.has('iri:C')).toBe(true);
+    });
+
+    it('does not re-seed on subsequent class emissions for the same ontology', () => {
+      const { service } = setup();
+      currentOntologyClasses$.next([makeClass('iri:A'), makeClass('iri:B')]);
+      service.deselectClassIris(['iri:A']);
+      expect(service.selectedClassIris$.value.has('iri:A')).toBe(false);
+
+      // A subsequent emission must not re-add iri:A — that would reset the user's deselection.
+      currentOntologyClasses$.next([makeClass('iri:A'), makeClass('iri:B')]);
+
+      expect(service.selectedClassIris$.value.has('iri:A')).toBe(false);
+      expect(service.selectedClassIris$.value.has('iri:B')).toBe(true);
+    });
+
+    it('re-seeds after an ontology switch', () => {
+      const { service } = setup();
+      currentOntology$.next({ id: 'onto:1' });
+      currentOntologyClasses$.next([makeClass('iri:A')]);
+      expect(service.selectedClassIris$.value.has('iri:A')).toBe(true);
+
+      // Switch ontology — reset flips the flag and the next class emission re-seeds.
+      currentOntology$.next({ id: 'onto:2' });
+      currentOntologyClasses$.next([makeClass('iri:B'), makeClass('iri:C')]);
+
+      const selected = service.selectedClassIris$.value;
+      expect(selected.has('iri:A')).toBe(false);
+      expect(selected.size).toBe(2);
+      expect(selected.has('iri:B')).toBe(true);
+      expect(selected.has('iri:C')).toBe(true);
+    });
+  });
+
   describe('reconciliation on currentOntologyClasses$ emission', () => {
     it('drops a selected class IRI within one emission when it disappears from the list', () => {
       const { service } = setup();
