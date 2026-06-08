@@ -6,6 +6,10 @@
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.02);
   user-select: none;
+  // Required so CDK can call preventDefault inside its non-passive touchmove
+  // listener. Without this the browser registers the listener as passive and
+  // logs "Unable to preventDefault inside passive event listener invocation".
+  touch-action: none;
 
   &:hover {
     background: rgba(0, 0, 0, 0.06);
