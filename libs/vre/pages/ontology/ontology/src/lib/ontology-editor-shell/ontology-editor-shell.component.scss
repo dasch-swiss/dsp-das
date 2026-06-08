@@ -1,0 +1,16 @@
+// The shell needs a known height context so its <as-split> can fill the
+// remaining space below the editor header. The parent <.ontology-editor>
+// is a flex column with `height: calc(100vh - …)`; flexing the shell
+// host to 1/1 and constraining min-height to 0 lets <as-split> measure
+// itself against the available viewport and each split-area can manage
+// its own overflow independently.
+:host {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+}
+
+as-split {
+  height: 100%;
+}

@@ -8,6 +8,10 @@
 .workspace {
   display: flex;
   flex-direction: column;
+  // Fill the host vertically so the empty state stays centered. With the
+  // shell now giving <as-split> a proper height context, the host's
+  // `overflow: auto` still produces a scroll bar when the grid exceeds
+  // the available area — `min-height` does not block grow.
   min-height: 100%;
   padding: 12px;
   gap: 12px;

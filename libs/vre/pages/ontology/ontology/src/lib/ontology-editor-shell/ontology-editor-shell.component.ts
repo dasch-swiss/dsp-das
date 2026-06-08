@@ -32,6 +32,7 @@ import { OntologyEditorViewService } from '../services/ontology-editor-view.serv
   ],
   providers: [OntologyEditorViewService],
   templateUrl: './ontology-editor-shell.component.html',
+  styleUrls: ['./ontology-editor-shell.component.scss'],
 })
 export class OntologyEditorShellComponent {
   readonly viewService = inject(OntologyEditorViewService);
