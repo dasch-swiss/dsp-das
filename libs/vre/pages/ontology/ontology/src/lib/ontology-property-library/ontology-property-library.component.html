@@ -1,26 +1,62 @@
 <div class="library">
   <header class="library__header">
-    <mat-form-field appearance="outline" class="library__filter">
-      <mat-label>{{ 'pages.ontology.editor.propertyFilterPlaceholder' | translate }}</mat-label>
-      <mat-icon matPrefix>search</mat-icon>
-      <input
-        matInput
-        type="search"
-        [formControl]="filterControl"
-        data-cy="property-library-filter"
-        [attr.aria-label]="'pages.ontology.editor.propertyFilterPlaceholder' | translate" />
-      @if (filterControl.value) {
+    <div class="library__header-row">
+      <mat-form-field appearance="outline" class="library__filter">
+        <mat-label>{{ 'pages.ontology.editor.propertyFilterPlaceholder' | translate }}</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          type="search"
+          [formControl]="filterControl"
+          data-cy="property-library-filter"
+          [attr.aria-label]="'pages.ontology.editor.propertyFilterPlaceholder' | translate" />
+        @if (filterControl.value) {
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="clearFilter()"
+          [attr.aria-label]="'ui.common.actions.clear' | translate"
+          data-cy="property-library-filter-clear">
+          <mat-icon>close</mat-icon>
+        </button>
+        }
+      </mat-form-field>
+
+      @if (isEditingEnabled$ | async) {
       <button
         mat-icon-button
-        matSuffix
         type="button"
-        (click)="clearFilter()"
-        [attr.aria-label]="'ui.common.actions.clear' | translate"
-        data-cy="property-library-filter-clear">
-        <mat-icon>close</mat-icon>
+        class="library__create"
+        [matMenuTriggerFor]="createPropertyMenu"
+        [attr.aria-label]="'pages.ontology.editor.addProperty' | translate"
+        [matTooltip]="'pages.ontology.editor.addProperty' | translate"
+        data-cy="create-property-button">
+        <mat-icon>add</mat-icon>
       </button>
+      <mat-menu #createPropertyMenu="matMenu" xPosition="before">
+        @for (cat of propertyCategories; track cat.group) {
+        <button mat-menu-item [matMenuTriggerFor]="createPropertySubMenu" [attr.data-cy]="cat.group">
+          {{ cat.group }}
+        </button>
+        <mat-menu #createPropertySubMenu="matMenu" class="default-nested-sub-menu">
+          @for (ele of cat.elements; track ele.label) {
+          <button
+            mat-menu-item
+            type="button"
+            (click)="openCreateProperty(ele)"
+            [matTooltip]="ele.description"
+            matTooltipPosition="after"
+            [attr.data-cy]="ele.label">
+            <mat-icon>{{ ele.icon }}</mat-icon>
+            {{ ele.label }}
+          </button>
+          }
+        </mat-menu>
+        }
+      </mat-menu>
       }
-    </mat-form-field>
+    </div>
 
     <mat-slide-toggle
       [formControl]="unusedOnlyControl"

@@ -1,17 +1,29 @@
 import { CdkDropList } from '@angular/cdk/drag-drop';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, ViewContainerRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatChipListbox, MatChipOption } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { DefaultProperties, LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { MatTooltip } from '@angular/material/tooltip';
+import {
+  DefaultProperties,
+  DefaultProperty,
+  LocalizationService,
+  PropertyCategory,
+} from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs';
+import {
+  EditPropertyFormDialogComponent,
+} from '../forms/property-form/edit-property-form-dialog.component';
+import { CreatePropertyDialogData } from '../forms/property-form/property-form.type';
 import { PROPERTY_LIBRARY_DROP_LIST_ID } from '../ontology-editor-shell/property-library-drop-list';
 import type { PropertyInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
@@ -52,9 +64,13 @@ import { PropertyRowComponent } from './property-row.component';
     MatIconButton,
     MatInput,
     MatLabel,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
     MatPrefix,
     MatSlideToggle,
     MatSuffix,
+    MatTooltip,
     PropertyRowComponent,
     ReactiveFormsModule,
     TranslatePipe,
@@ -68,6 +84,9 @@ export class OntologyPropertyLibraryComponent {
   /** All available property category labels (Text, Number, Link / Relation, ...). */
   readonly categories = DefaultProperties.data.map(c => c.group);
 
+  /** Full category catalogue used by the Add-property nested menu. */
+  readonly propertyCategories: PropertyCategory[] = DefaultProperties.data;
+
   readonly filterControl = new FormControl<string>('', { nonNullable: true });
   readonly unusedOnlyControl = new FormControl<boolean>(false, { nonNullable: true });
   readonly activeCategories$ = new BehaviorSubject<Set<string>>(new Set());
@@ -76,6 +95,8 @@ export class OntologyPropertyLibraryComponent {
   private readonly _ontologyEdit = inject(OntologyEditService);
   private readonly _localization = inject(LocalizationService);
   private readonly _destroyRef = inject(DestroyRef);
+  private readonly _dialog = inject(MatDialog);
+  private readonly _viewContainerRef = inject(ViewContainerRef);
 
   readonly isEditingEnabled$ = this._view.isEditingEnabled$;
 
@@ -116,6 +137,19 @@ export class OntologyPropertyLibraryComponent {
 
   clearFilter(): void {
     this.filterControl.setValue('');
+  }
+
+  /**
+   * Open the create-property dialog for a chosen `DefaultProperty`. The
+   * library entry-point is class-agnostic — the property is created on
+   * the current ontology without assignment to a class. Class assignment
+   * happens later via drag-and-drop onto a class card.
+   */
+  openCreateProperty(propType: DefaultProperty): void {
+    this._dialog.open<EditPropertyFormDialogComponent, CreatePropertyDialogData>(EditPropertyFormDialogComponent, {
+      data: { propType },
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   /**

@@ -415,6 +415,8 @@
         "emptyOntology": "Dieses Datenmodell enthält noch keine Klassen",
         "noSelection": "Wählen Sie Klassen in der Navigation, um mit der Bearbeitung zu beginnen",
         "emptyProperties": "Noch keine Eigenschaften",
+        "addProperty": "Eigenschaft hinzufügen",
+        "createNewClass": "Neue Klasse erstellen",
         "toggleClass": "Klasse umschalten",
         "a11y": {
           "dragOver": "Über {{classLabel}}",

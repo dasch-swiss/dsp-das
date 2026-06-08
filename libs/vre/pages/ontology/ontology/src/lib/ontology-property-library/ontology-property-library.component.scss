@@ -20,8 +20,18 @@
     flex-shrink: 0;
   }
 
+  &__header-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   &__filter {
-    width: 100%;
+    flex: 1 1 auto;
+  }
+
+  &__create {
+    flex-shrink: 0;
   }
 
   &__unused-toggle {

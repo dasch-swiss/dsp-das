@@ -415,6 +415,8 @@
         "emptyOntology": "This data model has no classes yet",
         "noSelection": "Select classes in the navigator to start editing",
         "emptyProperties": "No properties yet",
+        "addProperty": "Add property",
+        "createNewClass": "Create new class",
         "toggleClass": "Toggle class",
         "a11y": {
           "dragOver": "Over {{classLabel}}",
