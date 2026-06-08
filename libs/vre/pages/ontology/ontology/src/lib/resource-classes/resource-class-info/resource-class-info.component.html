@@ -41,18 +41,24 @@
   </mat-card-header>
   <!-- resource class card content with list of properties -->
   <mat-card-content>
-    @if (resourceClass.properties?.length) {
-    <mat-list cdkDropList (cdkDropListDropped)="onPropertyDropped($event)">
-      @for (prop of resourceClass.properties; track trackByPropToDisplayFn(i, prop); let i = $index) {
+    <mat-list
+      cdkDropList
+      [cdkDropListConnectedTo]="[propertyLibraryDropListId]"
+      [cdkDropListData]="resourceClass.properties"
+      [cdkDropListDisabled]="(isDropDisabled$ | async) ?? true"
+      [cdkDropListEnterPredicate]="canAcceptDrop"
+      (cdkDropListDropped)="onPropertyDropped($event)">
+      @if (resourceClass.properties?.length) { @for (prop of resourceClass.properties; track trackByPropToDisplayFn(i,
+      prop); let i = $index) {
       <app-property-item
         [classProp]="prop"
         [classLabels]="resourceClass.labels"
         (cardinalityChange)="onCardinalityChange($event)" />
+      } } @else {
+      <p>{{ 'pages.ontology.resourceClassInfo.noProperties' | translate }}</p>
       }
     </mat-list>
-    } @else {
-    <p>{{ 'pages.ontology.resourceClassInfo.noProperties' | translate }}</p>
-    } @if ((hasProjectAdminRights$ | async)) {
+    @if ((hasProjectAdminRights$ | async)) {
     <app-add-property-menu [resourceClass]="resourceClass" />
     }
   </mat-card-content>

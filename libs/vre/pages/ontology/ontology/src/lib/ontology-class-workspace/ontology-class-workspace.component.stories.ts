@@ -1,12 +1,10 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { importProvidersFrom } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import type { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateModule } from '@ngx-translate/core';
 import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { MockComponent } from 'ng-mocks';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import type { ResourceClassInfo } from '../ontology.types';
 import { ResourceClassInfoComponent } from '../resource-classes/resource-class-info/resource-class-info.component';
 import { OntologyEditService } from '../services/ontology-edit.service';
@@ -29,23 +27,19 @@ const makeProviders = (classes: ResourceClassInfo[], selected: Set<string>) => {
   const currentOntologyClasses$ = new BehaviorSubject<ResourceClassInfo[]>(classes);
   const selectedClassIris$ = new BehaviorSubject<Set<string>>(selected);
   const isTransacting$ = new BehaviorSubject<boolean>(false);
-  const isEditingEnabled$ = new BehaviorSubject<boolean>(true);
 
   return [
     {
       provide: OntologyEditorViewService,
-      useValue: { selectedClassIris$, setPropertyDragging: () => undefined, isEditingEnabled$ },
+      useValue: { selectedClassIris$ },
     },
     {
       provide: OntologyEditService,
       useValue: {
         currentOntologyClasses$,
         isTransacting$: isTransacting$.asObservable(),
-        assignPropertyToClass$: () => of(undefined),
       },
     },
-    { provide: NotificationService, useValue: { openSnackBar: () => undefined } },
-    { provide: LiveAnnouncer, useValue: { announce: () => undefined } },
   ];
 };
 

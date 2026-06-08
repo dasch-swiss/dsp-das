@@ -1,7 +1,9 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Inject, Input, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, Inject, Input, ViewContainerRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,13 +19,15 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService, TruncatePipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Observable, switchMap, take } from 'rxjs';
+import { combineLatest, map, Observable, switchMap, take } from 'rxjs';
 import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
 } from '../../forms/resource-class-form/edit-resource-class-dialog.component';
-import { ClassPropertyInfo, ResourceClassInfo } from '../../ontology.types';
+import { PROPERTY_LIBRARY_DROP_LIST_ID } from '../../ontology-editor-shell/property-library-drop-list';
+import { ClassPropertyInfo, PropertyInfo, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
+import { OntologyEditorViewService } from '../../services/ontology-editor-view.service';
 import { AddPropertyMenuComponent } from './add-property-menu.component';
 import { PropertyItemComponent } from './property-item.component';
 
@@ -63,9 +67,22 @@ export class ResourceClassInfoComponent {
 
   classCanBeDeleted = false;
 
+  /** Static ID of the property-library drop list — used as the template's `cdkDropListConnectedTo`. */
+  readonly propertyLibraryDropListId = PROPERTY_LIBRARY_DROP_LIST_ID;
+
+  /**
+   * Disable drops while an ontology transaction is in flight or the user
+   * lacks project-admin rights. Bound to `[cdkDropListDisabled]`.
+   */
+  readonly isDropDisabled$ = combineLatest([this._oes.isTransacting$, this._view.isEditingEnabled$]).pipe(
+    map(([transacting, editing]) => transacting || !editing)
+  );
+
   trackByPropToDisplayFn = (index: number, item: ClassPropertyInfo) => `${index}-${item.propDef.id}`;
 
   protected readonly _translate = inject(TranslateService);
+  private readonly _announcer = inject(LiveAnnouncer);
+  private readonly _destroyRef = inject(DestroyRef);
 
   constructor(
     @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
@@ -75,8 +92,27 @@ export class ResourceClassInfoComponent {
     private readonly _dialogService: DialogService,
     private readonly _notification: NotificationService,
     private readonly _oes: OntologyEditService,
-    private readonly _projectPageService: ProjectPageService
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _view: OntologyEditorViewService
   ) {}
+
+  /**
+   * Hover-time gate for the unified drop list.
+   * - Same container → internal reorder always accepted.
+   * - Cross-container (library → card) → reject when the property is
+   *   already in this class's `propertiesList`. Returning `false` prevents
+   *   CDK from rendering the insertion placeholder, giving the user a
+   *   natural "invalid target" affordance (cursor not-allowed + no drop).
+   *
+   * Declared as an arrow-bound class field so `this` is preserved when CDK
+   * invokes the predicate.
+   */
+  canAcceptDrop = (drag: CdkDrag, drop: CdkDropList): boolean => {
+    if (drag.dropContainer === drop) return true;
+    const data = drag.data as PropertyInfo | undefined;
+    if (!data) return false;
+    return !this.resourceClass.iHasProperties.some(p => p.propertyIndex === data.propDef.id);
+  };
 
   setCanBeDeleted() {
     this._canDeleteResourceClass$(this.resourceClass.id)
@@ -109,16 +145,25 @@ export class ResourceClassInfoComponent {
       .subscribe();
   }
 
-  onPropertyDropped(event: CdkDragDrop<ClassPropertyInfo[]>) {
-    if (event.previousIndex === event.currentIndex) return;
-
-    moveItemInArray(this.resourceClass.properties, event.previousIndex, event.currentIndex);
-    const updated = this.resourceClass.properties.map((p, index) => ({
-      ...p.iHasProperty,
-      guiOrder: index + 1,
-    }));
-
-    this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, updated);
+  /**
+   * Unified drop handler for the card's property list.
+   * - Same container → reorder existing properties (persist via gui-order).
+   * - Different container (drag from property library) → assign the
+   *   property at the dropped index, then persist the new gui-order.
+   */
+  onPropertyDropped(event: CdkDragDrop<ClassPropertyInfo[], unknown, ClassPropertyInfo | PropertyInfo>): void {
+    if (event.previousContainer === event.container) {
+      if (event.previousIndex === event.currentIndex) return;
+      moveItemInArray(this.resourceClass.properties, event.previousIndex, event.currentIndex);
+      const updated = this.resourceClass.properties.map((p, index) => ({
+        ...p.iHasProperty,
+        guiOrder: index + 1,
+      }));
+      this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, updated);
+      return;
+    }
+    const prop = event.item.data as PropertyInfo;
+    this._assignAtPosition(prop, event.currentIndex);
   }
 
   onCardinalityChange(updatedIHasProperty: IHasProperty) {
@@ -137,6 +182,54 @@ export class ResourceClassInfoComponent {
   copyResourceClassId() {
     this._clipboard.copy(this.resourceClass.id);
     this._notification.openSnackBar(this._translate.instant('pages.ontology.resourceClassInfo.idCopied'));
+  }
+
+  /**
+   * Assign a property from the library to this class, then reorder so the
+   * new property lands at `index`. The assign call appends with
+   * `guiOrder = max + 1`; once the ontology reload completes the new entry
+   * is the last element of `resourceClass.properties`, so a `moveItemInArray`
+   * + gui-order write places it at the dropped position.
+   */
+  private _assignAtPosition(prop: PropertyInfo, index: number): void {
+    const propertyLabel = prop.propDef.label ?? prop.propDef.id;
+    const classLabel = this.resourceClass.label || this.resourceClass.id;
+
+    this._oes
+      .assignPropertyToClass$(prop.propDef.id, this.resourceClass.resourceClassDefinition)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: () => {
+          const fromIdx = this.resourceClass.properties.findIndex(
+            p => p.iHasProperty.propertyIndex === prop.propDef.id
+          );
+          if (fromIdx >= 0 && fromIdx !== index) {
+            moveItemInArray(this.resourceClass.properties, fromIdx, index);
+            const updated = this.resourceClass.properties.map((p, i) => ({
+              ...p.iHasProperty,
+              guiOrder: i + 1,
+            }));
+            this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, updated);
+          }
+          this._announcer.announce(
+            this._translate.instant('pages.ontology.editor.a11y.assigned', { propertyLabel, classLabel }),
+            'assertive'
+          );
+          this._notification.openSnackBar(
+            this._translate.instant('pages.ontology.editor.notify.assigned', { propertyLabel, classLabel })
+          );
+        },
+        error: () => {
+          this._announcer.announce(
+            this._translate.instant('pages.ontology.editor.a11y.assignFailed', { propertyLabel, classLabel }),
+            'assertive'
+          );
+          this._notification.openSnackBar(
+            this._translate.instant('pages.ontology.editor.notify.assignFailed', { propertyLabel, classLabel }),
+            'error'
+          );
+        },
+      });
   }
 
   private _canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {
