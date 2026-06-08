@@ -101,8 +101,8 @@ export class PropertyRowComponent {
     if (!labels || labels.length === 0) return fallback;
     const lang = this._localization.getCurrentLanguage();
     return (
-      labels.find(l => l.language === lang)?.value ??
-      labels.find(l => !l.language)?.value ??
+      labels.find(l => 'language' in l && l.language === lang)?.value ??
+      labels.find(l => !('language' in l) || !l.language)?.value ??
       labels[0]?.value ??
       fallback
     );
