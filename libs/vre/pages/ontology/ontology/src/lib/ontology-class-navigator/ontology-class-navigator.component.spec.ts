@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import type { ResourceClassInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
 import { OntologyEditorViewService } from '../services/ontology-editor-view.service';
-import { OntologyClassNavigatorComponent } from './ontology-class-navigator.component';
+import { ClassListNode, OntologyClassNavigatorComponent } from './ontology-class-navigator.component';
 
 /**
  * Builds a minimal `ResourceClassInfo`-shaped stub. The component reads
@@ -21,6 +21,9 @@ const makeClass = (id: string, label: string, properties: { id: string; label: s
       propDef: { id: p.id, label: p.label, labels: [] },
     })),
   }) as unknown as ResourceClassInfo;
+
+const readList = (component: OntologyClassNavigatorComponent): ClassListNode[] =>
+  (component as unknown as { _latestList$: BehaviorSubject<ClassListNode[]> })._latestList$.value;
 
 describe('OntologyClassNavigatorComponent', () => {
   let fixture: ComponentFixture<OntologyClassNavigatorComponent>;
@@ -99,8 +102,9 @@ describe('OntologyClassNavigatorComponent', () => {
       currentOntologyClasses$.next([makeClass('iri:A', 'Archive'), makeClass('iri:B', 'Book')]);
       flushFilter();
 
-      const tree = (component as unknown as { _latestTree$: BehaviorSubject<unknown[]> })._latestTree$.value;
-      expect(tree.length).toBe(2);
+      const list = readList(component);
+      expect(list.length).toBe(2);
+      expect(list.every(n => n.matchedProperties.length === 0)).toBe(true);
     }));
 
     it('matches by class label', fakeAsync(() => {
@@ -109,12 +113,14 @@ describe('OntologyClassNavigatorComponent', () => {
       component.filterControl.setValue('arch');
       flushFilter();
 
-      const tree = (component as unknown as { _latestTree$: BehaviorSubject<{ iri: string }[]> })._latestTree$.value;
-      expect(tree.length).toBe(1);
-      expect(tree[0].iri).toBe('iri:A');
+      const list = readList(component);
+      expect(list.length).toBe(1);
+      expect(list[0].iri).toBe('iri:A');
+      // Class-label match — no matched-properties surfacing.
+      expect(list[0].matchedProperties.length).toBe(0);
     }));
 
-    it('matches by property label (and limits visible properties to the match)', fakeAsync(() => {
+    it('surfaces the matched property labels when only a property matches', fakeAsync(() => {
       setup();
       currentOntologyClasses$.next([
         makeClass('iri:A', 'Archive', [
@@ -123,35 +129,41 @@ describe('OntologyClassNavigatorComponent', () => {
         ]),
         makeClass('iri:B', 'Book'),
       ]);
-      component.filterControl.setValue('archive');
-      flushFilter();
-
-      const tree = (
-        component as unknown as { _latestTree$: BehaviorSubject<{ iri: string; properties: { iri: string }[] }[]> }
-      )._latestTree$.value;
-      // Class A's label also matches 'archive', so it keeps the full property list.
-      expect(tree.find(c => c.iri === 'iri:A')?.properties.length).toBe(2);
-
-      // Filter that ONLY matches a property: full class-label miss, property hit.
+      // 'hasarchive' does NOT match the class label 'Archive' (no 'has' substring there)
+      // — so the class surfaces only via the property match.
       component.filterControl.setValue('hasarchive');
       flushFilter();
 
-      const tree2 = (
-        component as unknown as { _latestTree$: BehaviorSubject<{ iri: string; properties: { iri: string }[] }[]> }
-      )._latestTree$.value;
-      expect(tree2.length).toBe(1);
-      expect(tree2[0].iri).toBe('iri:A');
-      expect(tree2[0].properties.map(p => p.iri)).toEqual(['prop:x']);
+      const list = readList(component);
+      expect(list.length).toBe(1);
+      expect(list[0].iri).toBe('iri:A');
+      expect(list[0].matchedProperties.map(p => p.iri)).toEqual(['prop:x']);
     }));
 
-    it('emits an empty tree when nothing matches', fakeAsync(() => {
+    it('does not surface properties when the class label itself matches', fakeAsync(() => {
+      setup();
+      currentOntologyClasses$.next([
+        makeClass('iri:A', 'Archive', [
+          { id: 'prop:x', label: 'hasArchive' },
+          { id: 'prop:y', label: 'hasOther' },
+        ]),
+      ]);
+      // 'archive' matches the class label, so we don't pollute the row with property surfacing.
+      component.filterControl.setValue('archive');
+      flushFilter();
+
+      const list = readList(component);
+      expect(list.length).toBe(1);
+      expect(list[0].matchedProperties.length).toBe(0);
+    }));
+
+    it('emits an empty list when nothing matches', fakeAsync(() => {
       setup();
       currentOntologyClasses$.next([makeClass('iri:A', 'Archive'), makeClass('iri:B', 'Book')]);
       component.filterControl.setValue('zzz-no-match');
       flushFilter();
 
-      const tree = (component as unknown as { _latestTree$: BehaviorSubject<unknown[]> })._latestTree$.value;
-      expect(tree.length).toBe(0);
+      expect(readList(component).length).toBe(0);
     }));
 
     it('clearFilter resets the filter control', () => {
@@ -169,7 +181,7 @@ describe('OntologyClassNavigatorComponent', () => {
       expect(viewService.toggleClassSelection).toHaveBeenCalledWith('iri:A');
     });
 
-    it('selectAllVisible selects every class IRI currently in the filtered tree', fakeAsync(() => {
+    it('selectAllVisible selects every class IRI currently visible', fakeAsync(() => {
       setup();
       currentOntologyClasses$.next([makeClass('iri:A', 'Archive'), makeClass('iri:B', 'Book')]);
       flushFilter();
@@ -179,7 +191,7 @@ describe('OntologyClassNavigatorComponent', () => {
       expect(viewService.selectClassIris).toHaveBeenCalledWith(['iri:A', 'iri:B']);
     }));
 
-    it('deselectAllVisible deselects every class IRI in the filtered tree', fakeAsync(() => {
+    it('deselectAllVisible deselects every class IRI currently visible', fakeAsync(() => {
       setup();
       currentOntologyClasses$.next([makeClass('iri:A', 'Archive'), makeClass('iri:B', 'Book')]);
       flushFilter();
@@ -209,20 +221,18 @@ describe('OntologyClassNavigatorComponent', () => {
   });
 
   describe('reconciliation', () => {
-    it('drops removed classes from the visible tree on the next emission', fakeAsync(() => {
+    it('drops removed classes from the visible list on the next emission', fakeAsync(() => {
       setup();
       currentOntologyClasses$.next([makeClass('iri:A', 'Archive'), makeClass('iri:B', 'Book')]);
       flushFilter();
-
-      let tree = (component as unknown as { _latestTree$: BehaviorSubject<{ iri: string }[]> })._latestTree$.value;
-      expect(tree.length).toBe(2);
+      expect(readList(component).length).toBe(2);
 
       currentOntologyClasses$.next([makeClass('iri:A', 'Archive')]);
       flushFilter();
 
-      tree = (component as unknown as { _latestTree$: BehaviorSubject<{ iri: string }[]> })._latestTree$.value;
-      expect(tree.length).toBe(1);
-      expect(tree[0].iri).toBe('iri:A');
+      const list = readList(component);
+      expect(list.length).toBe(1);
+      expect(list[0].iri).toBe('iri:A');
     }));
   });
 
@@ -240,19 +250,15 @@ describe('OntologyClassNavigatorComponent', () => {
     }));
   });
 
-  describe('tree helpers', () => {
-    it('isClassNode discriminates class nodes from property nodes', () => {
+  describe('trackBy helpers', () => {
+    it('trackNode returns the class IRI', () => {
       setup();
-      expect(component.isClassNode(0, { iri: 'i', label: 'l', properties: [] })).toBe(true);
-      expect(component.isClassNode(0, { iri: 'i', label: 'l' })).toBe(false);
+      expect(component.trackNode(0, { iri: 'iri:Z', label: 'l', matchedProperties: [] })).toBe('iri:Z');
     });
 
-    it('childrenAccessor returns properties for classes and [] for properties', () => {
+    it('trackProp returns the property IRI', () => {
       setup();
-      const klass = { iri: 'i', label: 'l', properties: [{ iri: 'p', label: 'pl' }] };
-      const prop = { iri: 'p', label: 'pl' };
-      expect(component.childrenAccessor(klass)).toEqual([{ iri: 'p', label: 'pl' }]);
-      expect(component.childrenAccessor(prop)).toEqual([]);
+      expect(component.trackProp(0, { iri: 'prop:Z', label: 'l' })).toBe('prop:Z');
     });
   });
 });

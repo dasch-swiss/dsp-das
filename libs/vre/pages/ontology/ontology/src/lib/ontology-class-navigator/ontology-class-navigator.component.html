@@ -1,26 +1,28 @@
 <div class="navigator">
   <header class="navigator__header">
-    <mat-form-field appearance="outline" class="navigator__filter">
-      <mat-label>{{ 'pages.ontology.editor.classFilterPlaceholder' | translate }}</mat-label>
-      <mat-icon matPrefix>search</mat-icon>
-      <input
-        matInput
-        type="search"
-        [formControl]="filterControl"
-        data-cy="class-navigator-filter"
-        [attr.aria-label]="'pages.ontology.editor.classFilterPlaceholder' | translate" />
-      @if (filterControl.value) {
-      <button
-        mat-icon-button
-        matSuffix
-        type="button"
-        (click)="clearFilter()"
-        [attr.aria-label]="'ui.common.actions.clear' | translate"
-        data-cy="class-navigator-filter-clear">
-        <mat-icon>close</mat-icon>
-      </button>
-      }
-    </mat-form-field>
+    <div class="navigator__header-row">
+      <mat-form-field appearance="outline" class="navigator__filter">
+        <mat-label>{{ 'pages.ontology.editor.classFilterPlaceholder' | translate }}</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          type="search"
+          [formControl]="filterControl"
+          data-cy="class-navigator-filter"
+          [attr.aria-label]="'pages.ontology.editor.classFilterPlaceholder' | translate" />
+        @if (filterControl.value) {
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="clearFilter()"
+          [attr.aria-label]="'ui.common.actions.clear' | translate"
+          data-cy="class-navigator-filter-clear">
+          <mat-icon>close</mat-icon>
+        </button>
+        }
+      </mat-form-field>
+    </div>
 
     <div class="navigator__bulk-actions">
       <button
@@ -28,7 +30,7 @@
         type="button"
         (click)="selectAllVisible()"
         data-cy="class-navigator-select-all"
-        [disabled]="(latestTree$ | async)?.length === 0">
+        [disabled]="(latestList$ | async)?.length === 0">
         {{ 'pages.ontology.editor.selectAll' | translate }}
       </button>
       <button
@@ -36,46 +38,40 @@
         type="button"
         (click)="deselectAllVisible()"
         data-cy="class-navigator-deselect-all"
-        [disabled]="(latestTree$ | async)?.length === 0">
+        [disabled]="(latestList$ | async)?.length === 0">
         {{ 'pages.ontology.editor.deselectAll' | translate }}
       </button>
     </div>
   </header>
 
-  @if (filteredTree$ | async; as tree) { @if (tree.length === 0) {
+  @if (filteredList$ | async; as list) { @if (list.length === 0) {
   <p class="navigator__empty" data-cy="class-navigator-empty">
     @if (filterControl.value) { {{ 'pages.ontology.editor.emptyFilter' | translate }} } @else { {{
     'pages.ontology.editor.emptyOntology' | translate }} }
   </p>
   } @else if (selectedIris$ | async; as selected) {
-  <mat-tree [dataSource]="tree" [childrenAccessor]="childrenAccessor" data-cy="class-navigator-tree">
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle [attr.data-iri]="node.iri">
-      <li class="navigator__property">
-        <span class="navigator__property-label">{{ node.label }}</span>
-      </li>
-    </mat-tree-node>
-
-    <mat-tree-node *matTreeNodeDef="let node; when: isClassNode" [attr.data-iri]="node.iri">
-      <li class="navigator__class">
-        <button
-          mat-icon-button
-          matTreeNodeToggle
-          type="button"
-          [attr.aria-label]="'pages.ontology.editor.toggleClass' | translate"
-          [disabled]="node.properties.length === 0">
-          <mat-icon class="navigator__chevron" [class.navigator__chevron--expanded]="treeRef?.isExpanded(node)">
-            chevron_right
-          </mat-icon>
-        </button>
-        <mat-checkbox
-          [checked]="isSelected(node.iri, selected)"
-          (change)="toggleClass(node.iri)"
-          [attr.data-iri]="node.iri"
-          data-cy="class-navigator-class-checkbox">
-          {{ node.label }}
-        </mat-checkbox>
-      </li>
-    </mat-tree-node>
-  </mat-tree>
+  <ul class="navigator__classes" data-cy="class-navigator-list" role="list">
+    @for (node of list; track trackNode($index, node)) {
+    <li class="navigator__class" [attr.data-iri]="node.iri">
+      <mat-checkbox
+        [checked]="isSelected(node.iri, selected)"
+        (change)="toggleClass(node.iri)"
+        [attr.data-iri]="node.iri"
+        data-cy="class-navigator-class-checkbox">
+        {{ node.label }}
+      </mat-checkbox>
+      @if (node.matchedProperties.length) {
+      <ul class="navigator__matched-properties" data-cy="class-navigator-matched-properties" role="list">
+        @for (prop of node.matchedProperties; track trackProp($index, prop)) {
+        <li class="navigator__matched-property">
+          <mat-icon class="navigator__matched-icon" aria-hidden="true">subdirectory_arrow_right</mat-icon>
+          <span class="navigator__matched-label">{{ prop.label }}</span>
+        </li>
+        }
+      </ul>
+      }
+    </li>
+    }
+  </ul>
   } }
 </div>

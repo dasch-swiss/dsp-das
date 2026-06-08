@@ -89,7 +89,7 @@ export const EmptyOntology: Story = {
 };
 
 export const PopulatedWithClasses: Story = {
-  name: 'Renders class tree with selectable nodes',
+  name: 'Renders flat class list with selectable rows',
   decorators: [
     applicationConfig({
       providers: makeProviders([

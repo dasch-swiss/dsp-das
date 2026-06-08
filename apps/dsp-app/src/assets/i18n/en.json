@@ -417,7 +417,6 @@
         "emptyProperties": "No properties yet",
         "addProperty": "Add property",
         "createNewClass": "Create new class",
-        "toggleClass": "Toggle class",
         "a11y": {
           "dragOver": "Over {{classLabel}}",
           "assigned": "Assigned {{propertyLabel}} to {{classLabel}}",

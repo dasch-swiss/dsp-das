@@ -417,7 +417,6 @@
         "emptyProperties": "Noch keine Eigenschaften",
         "addProperty": "Eigenschaft hinzufügen",
         "createNewClass": "Neue Klasse erstellen",
-        "toggleClass": "Klasse umschalten",
         "a11y": {
           "dragOver": "Über {{classLabel}}",
           "assigned": "{{propertyLabel}} zu {{classLabel}} zugewiesen",
