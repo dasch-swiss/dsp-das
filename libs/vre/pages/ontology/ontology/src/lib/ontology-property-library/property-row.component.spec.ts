@@ -6,11 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import type { PropertyInfo } from '../ontology.types';
 import { PropertyRowComponent } from './property-row.component';
 
-const makeProperty = (
-  id: string,
-  label: string,
-  options: { icon?: string; group?: string } = {}
-): PropertyInfo =>
+const makeProperty = (id: string, label: string, options: { icon?: string; group?: string } = {}): PropertyInfo =>
   ({
     propDef: { id, label, labels: [] },
     propType: { icon: options.icon ?? 'short_text', group: options.group ?? 'Text' },

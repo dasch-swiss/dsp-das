@@ -19,9 +19,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs';
-import {
-  EditPropertyFormDialogComponent,
-} from '../forms/property-form/edit-property-form-dialog.component';
+import { EditPropertyFormDialogComponent } from '../forms/property-form/edit-property-form-dialog.component';
 import { CreatePropertyDialogData } from '../forms/property-form/property-form.type';
 import { PROPERTY_LIBRARY_DROP_LIST_ID } from '../ontology-editor-shell/property-library-drop-list';
 import type { PropertyInfo } from '../ontology.types';
