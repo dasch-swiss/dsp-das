@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, Inject, Input, ViewContainerRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -108,10 +108,26 @@ export class ResourceClassInfoComponent {
    * invokes the predicate.
    */
   canAcceptDrop = (drag: CdkDrag, drop: CdkDropList): boolean => {
-    if (drag.dropContainer === drop) return true;
+    if (drag.dropContainer === drop) {
+      // eslint-disable-next-line no-console
+      console.debug('[dnd] canAcceptDrop same-container -> true', { class: this.resourceClass.id });
+      return true;
+    }
     const data = drag.data as PropertyInfo | undefined;
-    if (!data) return false;
-    return !this.resourceClass.iHasProperties.some(p => p.propertyIndex === data.propDef.id);
+    if (!data) {
+      // eslint-disable-next-line no-console
+      console.debug('[dnd] canAcceptDrop no-data -> false', { class: this.resourceClass.id });
+      return false;
+    }
+    const alreadyOn = this.resourceClass.iHasProperties.some(p => p.propertyIndex === data.propDef.id);
+    // eslint-disable-next-line no-console
+    console.debug('[dnd] canAcceptDrop cross-container', {
+      class: this.resourceClass.id,
+      property: data.propDef.id,
+      alreadyOn,
+      accept: !alreadyOn,
+    });
+    return !alreadyOn;
   };
 
   setCanBeDeleted() {
@@ -152,6 +168,14 @@ export class ResourceClassInfoComponent {
    *   property at the dropped index, then persist the new gui-order.
    */
   onPropertyDropped(event: CdkDragDrop<ClassPropertyInfo[], unknown, ClassPropertyInfo | PropertyInfo>): void {
+    // eslint-disable-next-line no-console
+    console.debug('[dnd] onPropertyDropped', {
+      class: this.resourceClass.id,
+      sameContainer: event.previousContainer === event.container,
+      previousIndex: event.previousIndex,
+      currentIndex: event.currentIndex,
+      itemData: event.item.data,
+    });
     if (event.previousContainer === event.container) {
       if (event.previousIndex === event.currentIndex) return;
       moveItemInArray(this.resourceClass.properties, event.previousIndex, event.currentIndex);
@@ -164,6 +188,21 @@ export class ResourceClassInfoComponent {
     }
     const prop = event.item.data as PropertyInfo;
     this._assignAtPosition(prop, event.currentIndex);
+  }
+
+  // Diagnostic handlers — remove once drag-and-drop is confirmed working.
+  onDropListEntered(event: CdkDragEnter<unknown, unknown>): void {
+    // eslint-disable-next-line no-console
+    console.debug('[dnd] dropList entered', {
+      class: this.resourceClass.id,
+      currentIndex: event.currentIndex,
+      itemData: event.item.data,
+    });
+  }
+
+  onDropListExited(event: CdkDragExit<unknown, unknown>): void {
+    // eslint-disable-next-line no-console
+    console.debug('[dnd] dropList exited', { class: this.resourceClass.id, itemData: event.item.data });
   }
 
   onCardinalityChange(updatedIHasProperty: IHasProperty) {

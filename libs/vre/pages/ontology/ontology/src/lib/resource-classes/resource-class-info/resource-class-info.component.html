@@ -47,6 +47,8 @@
       [cdkDropListData]="resourceClass.properties"
       [cdkDropListDisabled]="(isDropDisabled$ | async) ?? true"
       [cdkDropListEnterPredicate]="canAcceptDrop"
+      (cdkDropListEntered)="onDropListEntered($event)"
+      (cdkDropListExited)="onDropListExited($event)"
       (cdkDropListDropped)="onPropertyDropped($event)">
       @if (resourceClass.properties?.length) { @for (prop of resourceClass.properties; track trackByPropToDisplayFn(i,
       prop); let i = $index) {

@@ -53,10 +53,14 @@ export class PropertyRowComponent {
   }
 
   onDragStarted(): void {
+    // eslint-disable-next-line no-console
+    console.debug('[dnd] property-row dragStarted', { property: this.property.propDef.id });
     this.dragStarted.emit();
   }
 
   onDragEnded(): void {
+    // eslint-disable-next-line no-console
+    console.debug('[dnd] property-row dragEnded', { property: this.property.propDef.id });
     this.dragEnded.emit();
   }
 
