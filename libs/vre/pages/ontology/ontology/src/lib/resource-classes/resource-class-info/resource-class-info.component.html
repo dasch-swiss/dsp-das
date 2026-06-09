@@ -2,7 +2,12 @@
   (mouseenter)="classHovered = true"
   (mouseleave)="classHovered = false"
   data-cy="class-card"
-  appearance="outlined">
+  appearance="outlined"
+  cdkDropList
+  [cdkDropListData]="resourceClass"
+  [cdkDropListDisabled]="(isDropDisabled$ | async) ?? true"
+  [cdkDropListEnterPredicate]="canAcceptLibraryDrop"
+  (cdkDropListDropped)="onLibraryDrop($event)">
   <mat-card-header>
     <div style="flex: 1">
       <mat-card-title [matTooltip]="this.resourceClass.comments | appStringifyStringLiteral" matTooltipPosition="above">
@@ -41,26 +46,21 @@
   </mat-card-header>
   <!-- resource class card content with list of properties -->
   <mat-card-content>
+    @if (resourceClass.properties?.length) {
     <mat-list
       cdkDropList
-      [cdkDropListConnectedTo]="[propertyLibraryDropListId]"
-      [cdkDropListData]="resourceClass.properties"
-      [cdkDropListDisabled]="(isDropDisabled$ | async) ?? true"
-      [cdkDropListEnterPredicate]="canAcceptDrop"
-      (cdkDropListEntered)="onDropListEntered($event)"
-      (cdkDropListExited)="onDropListExited($event)"
+      [cdkDropListEnterPredicate]="onlySameContainer"
       (cdkDropListDropped)="onPropertyDropped($event)">
-      @if (resourceClass.properties?.length) { @for (prop of resourceClass.properties; track trackByPropToDisplayFn(i,
-      prop); let i = $index) {
+      @for (prop of resourceClass.properties; track trackByPropToDisplayFn(i, prop); let i = $index) {
       <app-property-item
         [classProp]="prop"
         [classLabels]="resourceClass.labels"
         (cardinalityChange)="onCardinalityChange($event)" />
-      } } @else {
-      <p>{{ 'pages.ontology.resourceClassInfo.noProperties' | translate }}</p>
       }
     </mat-list>
-    @if ((hasProjectAdminRights$ | async)) {
+    } @else {
+    <p>{{ 'pages.ontology.resourceClassInfo.noProperties' | translate }}</p>
+    } @if ((hasProjectAdminRights$ | async)) {
     <app-add-property-menu [resourceClass]="resourceClass" />
     }
   </mat-card-content>

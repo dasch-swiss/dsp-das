@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, Inject, Input, ViewContainerRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -24,7 +24,6 @@ import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
 } from '../../forms/resource-class-form/edit-resource-class-dialog.component';
-import { PROPERTY_LIBRARY_DROP_LIST_ID } from '../../ontology-editor-shell/property-library-drop-list';
 import { ClassPropertyInfo, PropertyInfo, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 import { OntologyEditorViewService } from '../../services/ontology-editor-view.service';
@@ -67,9 +66,6 @@ export class ResourceClassInfoComponent {
 
   classCanBeDeleted = false;
 
-  /** Static ID of the property-library drop list — used as the template's `cdkDropListConnectedTo`. */
-  readonly propertyLibraryDropListId = PROPERTY_LIBRARY_DROP_LIST_ID;
-
   /**
    * Disable drops while an ontology transaction is in flight or the user
    * lacks project-admin rights. Bound to `[cdkDropListDisabled]`.
@@ -97,30 +93,28 @@ export class ResourceClassInfoComponent {
   ) {}
 
   /**
-   * Hover-time gate for the unified drop list.
-   * - Same container → internal reorder always accepted.
-   * - Cross-container (library → card) → reject when the property is
-   *   already in this class's `propertiesList`. Returning `false` prevents
-   *   CDK from rendering the insertion placeholder, giving the user a
-   *   natural "invalid target" affordance (cursor not-allowed + no drop).
-   *
-   * Declared as an arrow-bound class field so `this` is preserved when CDK
-   * invokes the predicate.
+   * Predicate for the inner property-list cdkDropList: only accepts
+   * drops that originated from the same list (i.e. internal reorder).
+   * Rejects everything else -- cdkDropListGroup connects this list to
+   * every other card and to the library, but those cross-container
+   * drops are handled by the OUTER card-level cdkDropList below.
    */
-  canAcceptDrop = (drag: CdkDrag, drop: CdkDropList): boolean => {
-    // Same container -> internal reorder, always accept.
-    if (drag.dropContainer === drop) return true;
-    // Cross-container: only the property library's drag-data is a
-    // PropertyInfo (carries `propDef`). Class-card internal drags have
-    // no cdkDragData set (drag.data is undefined) -- the
-    // cdkDropListGroup connects every card to every other, and we
-    // reject that cross-card path here. Library-to-card drops are the
-    // only accepted cross-container path.
+  onlySameContainer = (drag: CdkDrag, drop: CdkDropList): boolean => drag.dropContainer === drop;
+
+  /**
+   * Predicate for the OUTER card-level cdkDropList: accepts ONLY
+   * library->card drags (drag.data is a PropertyInfo carrying
+   * `propDef`). Rejects:
+   * - same-container drops (the inner reorder list handles those),
+   * - cross-card class-to-class drags (drag.data has no `propDef`),
+   * - properties already assigned to this class (duplicate guard).
+   */
+  canAcceptLibraryDrop = (drag: CdkDrag, drop: CdkDropList): boolean => {
+    if (drag.dropContainer === drop) return false;
     const data = drag.data as PropertyInfo | undefined;
     if (!data || typeof data !== 'object' || !('propDef' in data)) {
       return false;
     }
-    // Reject if the property is already on this class.
     return !this.resourceClass.iHasProperties.some(p => p.propertyIndex === data.propDef.id);
   };
 
@@ -156,50 +150,30 @@ export class ResourceClassInfoComponent {
   }
 
   /**
-   * Unified drop handler for the card's property list.
-   * - Same container → reorder existing properties (persist via gui-order).
-   * - Different container (drag from property library) → assign the
-   *   property at the dropped index, then persist the new gui-order.
+   * Internal property reordering inside this class card. Connected to
+   * itself only (enterPredicate `onlySameContainer`), so no cross-card
+   * or library drag can ever reach this handler.
    */
-  onPropertyDropped(event: CdkDragDrop<ClassPropertyInfo[], unknown, ClassPropertyInfo | PropertyInfo>): void {
-    // eslint-disable-next-line no-console
-    console.debug('[dnd] onPropertyDropped', {
-      class: this.resourceClass.id,
-      sameContainer: event.previousContainer === event.container,
-      previousIndex: event.previousIndex,
-      currentIndex: event.currentIndex,
-      itemData: event.item.data,
-    });
-    if (event.previousContainer === event.container) {
-      if (event.previousIndex === event.currentIndex) return;
-      moveItemInArray(this.resourceClass.properties, event.previousIndex, event.currentIndex);
-      const updated = this.resourceClass.properties.map((p, index) => ({
-        ...p.iHasProperty,
-        guiOrder: index + 1,
-      }));
-      this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, updated);
-      return;
-    }
-    // Cross-container drop. The enterPredicate only lets through
-    // library-to-card drops (PropertyInfo data), so item.data here is
-    // always a PropertyInfo.
-    const prop = event.item.data as PropertyInfo;
-    this._assignAtPosition(prop, event.currentIndex);
+  onPropertyDropped(event: CdkDragDrop<ClassPropertyInfo[]>): void {
+    if (event.previousIndex === event.currentIndex) return;
+    moveItemInArray(this.resourceClass.properties, event.previousIndex, event.currentIndex);
+    const updated = this.resourceClass.properties.map((p, index) => ({
+      ...p.iHasProperty,
+      guiOrder: index + 1,
+    }));
+    this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, updated);
   }
 
-  // Diagnostic handlers — remove once drag-and-drop is confirmed working.
-  onDropListEntered(event: CdkDragEnter<unknown, unknown>): void {
-    // eslint-disable-next-line no-console
-    console.debug('[dnd] dropList entered', {
-      class: this.resourceClass.id,
-      currentIndex: event.currentIndex,
-      itemData: event.item.data,
-    });
-  }
-
-  onDropListExited(event: CdkDragExit<unknown, unknown>): void {
-    // eslint-disable-next-line no-console
-    console.debug('[dnd] dropList exited', { class: this.resourceClass.id, itemData: event.item.data });
+  /**
+   * Outer card-level drop handler for library->card assignment. The
+   * card's outer cdkDropList accepts only PropertyInfo drags from the
+   * library (enterPredicate `canAcceptLibraryDrop`), so item.data here
+   * is always a PropertyInfo. Position is not preserved -- a single
+   * assignPropertyToClass$ call appends the property; users reorder
+   * afterwards via the inner drag handle.
+   */
+  onLibraryDrop(event: CdkDragDrop<ResourceClassInfo, unknown, PropertyInfo>): void {
+    this._assignAtPosition(event.item.data, event.currentIndex);
   }
 
   onCardinalityChange(updatedIHasProperty: IHasProperty) {
