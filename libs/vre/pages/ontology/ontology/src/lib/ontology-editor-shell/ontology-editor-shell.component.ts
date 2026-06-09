@@ -1,3 +1,4 @@
+import { CdkDropListGroup } from '@angular/cdk/drag-drop';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
@@ -26,6 +27,7 @@ import { OntologyEditorViewService } from '../services/ontology-editor-view.serv
   imports: [
     AngularSplitModule,
     AsyncPipe,
+    CdkDropListGroup,
     OntologyClassNavigatorComponent,
     OntologyClassWorkspaceComponent,
     OntologyPropertyLibraryComponent,

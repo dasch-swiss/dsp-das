@@ -1,4 +1,10 @@
-<as-split direction="horizontal" [disabled]="(viewService.isPropertyDragging$ | async) ?? false">
+<!--
+  cdkDropListGroup auto-connects every cdkDropList rendered inside it,
+  so the property library (right pane) and every class card's
+  property list (center pane) become reachable as drop targets for
+  one another without needing brittle symbolic id wiring.
+-->
+<as-split direction="horizontal" [disabled]="(viewService.isPropertyDragging$ | async) ?? false" cdkDropListGroup>
   <as-split-area [size]="25">
     <app-ontology-class-navigator data-testid="navigator-pane" />
   </as-split-area>
