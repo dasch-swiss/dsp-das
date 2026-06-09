@@ -19,7 +19,7 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService, TruncatePipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { combineLatest, map, Observable, switchMap, take } from 'rxjs';
+import { combineLatest, filter, map, Observable, switchMap, take } from 'rxjs';
 import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
@@ -226,29 +226,49 @@ export class ResourceClassInfoComponent {
   /**
    * Assign a property from the library to this class, then reorder so the
    * new property lands at `index`. The assign call appends with
-   * `guiOrder = max + 1`; once the ontology reload completes the new entry
-   * is the last element of `resourceClass.properties`, so a `moveItemInArray`
-   * + gui-order write places it at the dropped position.
+   * `guiOrder = max + 1`; the post-assign reorder reads the FRESHLY-
+   * reloaded class list (not `this.resourceClass`, which is still the
+   * old Input reference at the point the subscribe-next runs) and
+   * persists a new gui-order with the moved entry.
    */
   private _assignAtPosition(prop: PropertyInfo, index: number): void {
     const propertyLabel = prop.propDef.label ?? prop.propDef.id;
     const classLabel = this.resourceClass.label || this.resourceClass.id;
+    const classId = this.resourceClass.id;
 
     this._oes
       .assignPropertyToClass$(prop.propDef.id, this.resourceClass.resourceClassDefinition)
-      .pipe(takeUntilDestroyed(this._destroyRef))
+      .pipe(
+        // Wait for the next currentOntologyClasses$ emission that
+        // contains the new property on this class. assignPropertyToClass$
+        // triggers _loadOntology internally, so the next emission will
+        // already include the assigned property at the end of the list.
+        switchMap(() =>
+          this._oes.currentOntologyClasses$.pipe(
+            map(classes => classes.find(c => c.id === classId)),
+            filter(
+              (cls): cls is ResourceClassInfo =>
+                !!cls && cls.properties.some(p => p.iHasProperty.propertyIndex === prop.propDef.id)
+            ),
+            take(1)
+          )
+        ),
+        takeUntilDestroyed(this._destroyRef)
+      )
       .subscribe({
-        next: () => {
-          const fromIdx = this.resourceClass.properties.findIndex(
-            p => p.iHasProperty.propertyIndex === prop.propDef.id
-          );
-          if (fromIdx >= 0 && fromIdx !== index) {
-            moveItemInArray(this.resourceClass.properties, fromIdx, index);
-            const updated = this.resourceClass.properties.map((p, i) => ({
+        next: refreshedClass => {
+          const refreshedProps = refreshedClass.properties;
+          const fromIdx = refreshedProps.findIndex(p => p.iHasProperty.propertyIndex === prop.propDef.id);
+          if (fromIdx >= 0 && fromIdx !== index && index <= refreshedProps.length - 1) {
+            // Build a new ordering by moving the just-assigned entry to
+            // the dropped index without mutating the reactive snapshot.
+            const reordered = refreshedProps.slice();
+            moveItemInArray(reordered, fromIdx, index);
+            const updated = reordered.map((p, i) => ({
               ...p.iHasProperty,
               guiOrder: i + 1,
             }));
-            this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, updated);
+            this._oes.updateGuiOrderOfClassProperties(classId, updated);
           }
           this._announcer.announce(
             this._translate.instant('pages.ontology.editor.a11y.assigned', { propertyLabel, classLabel }),
