@@ -108,41 +108,20 @@ export class ResourceClassInfoComponent {
    * invokes the predicate.
    */
   canAcceptDrop = (drag: CdkDrag, drop: CdkDropList): boolean => {
-    if (drag.dropContainer === drop) {
-      // eslint-disable-next-line no-console
-      console.debug('[dnd] canAcceptDrop same-container -> true', { class: this.resourceClass.id });
-      return true;
-    }
-    const data = drag.data;
-    // Cross-card class-to-class drags carry a ClassPropertyInfo (has the
-    // `iHasProperty` discriminator). The unified-drop-list-group connects
-    // every class card to every other class card by default; we reject
-    // that path here so the user can't move an assigned property from
-    // one class onto another by drag. (Removal still goes through the
-    // per-property "remove from class" menu item.)
-    if (data && typeof data === 'object' && 'iHasProperty' in data) {
-      // eslint-disable-next-line no-console
-      console.debug('[dnd] canAcceptDrop reject cross-card move', {
-        class: this.resourceClass.id,
-        property: (data as ClassPropertyInfo).propDef.id,
-      });
+    // Same container -> internal reorder, always accept.
+    if (drag.dropContainer === drop) return true;
+    // Cross-container: only the property library's drag-data is a
+    // PropertyInfo (carries `propDef`). Class-card internal drags have
+    // no cdkDragData set (drag.data is undefined) -- the
+    // cdkDropListGroup connects every card to every other, and we
+    // reject that cross-card path here. Library-to-card drops are the
+    // only accepted cross-container path.
+    const data = drag.data as PropertyInfo | undefined;
+    if (!data || typeof data !== 'object' || !('propDef' in data)) {
       return false;
     }
-    const propInfo = data as PropertyInfo | undefined;
-    if (!propInfo) {
-      // eslint-disable-next-line no-console
-      console.debug('[dnd] canAcceptDrop no-data -> false', { class: this.resourceClass.id });
-      return false;
-    }
-    const alreadyOn = this.resourceClass.iHasProperties.some(p => p.propertyIndex === propInfo.propDef.id);
-    // eslint-disable-next-line no-console
-    console.debug('[dnd] canAcceptDrop cross-container', {
-      class: this.resourceClass.id,
-      property: propInfo.propDef.id,
-      alreadyOn,
-      accept: !alreadyOn,
-    });
-    return !alreadyOn;
+    // Reject if the property is already on this class.
+    return !this.resourceClass.iHasProperties.some(p => p.propertyIndex === data.propDef.id);
   };
 
   setCanBeDeleted() {
@@ -201,14 +180,10 @@ export class ResourceClassInfoComponent {
       this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, updated);
       return;
     }
-    // Cross-container drop. The enterPredicate already rejected cross-
-    // card class-to-class moves, but guard here too so the assign path
-    // only runs for genuine library->card drops.
-    const data = event.item.data;
-    if (data && typeof data === 'object' && 'iHasProperty' in data) {
-      return;
-    }
-    const prop = data as PropertyInfo;
+    // Cross-container drop. The enterPredicate only lets through
+    // library-to-card drops (PropertyInfo data), so item.data here is
+    // always a PropertyInfo.
+    const prop = event.item.data as PropertyInfo;
     this._assignAtPosition(prop, event.currentIndex);
   }
 
