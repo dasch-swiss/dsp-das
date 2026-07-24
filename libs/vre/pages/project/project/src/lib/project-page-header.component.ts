@@ -11,7 +11,7 @@ import { ProjectPageService } from './project-page.service';
 @Component({
   selector: 'app-project-page-header',
   template: ` <mat-toolbar style="background-color: inherit; height: 56px">
-      <span style="flex: 1; display: flex; align-items: center">
+      <span style="flex: 1; display: flex; align-items: center; min-width: 0">
         <app-header-logo />
         <a class="title" [routerLink]="projectLink$ | async">{{ currentProjectName$ | async }}</a>
       </span>
@@ -34,9 +34,17 @@ import { ProjectPageService } from './project-page.service';
         text-decoration: none;
         color: inherit;
         display: inline-block;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         &:hover {
           background-color: #e8e9eb;
         }
+      }
+
+      app-header-user-actions {
+        flex-shrink: 0;
       }
     `,
   ],
