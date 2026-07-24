@@ -158,9 +158,9 @@ import { TimeValueComponent } from './value-components/time-value.component';
       <app-common-input
         [control]="item"
         [withLabel]="false"
-        [label]="'resourceEditor.regionPreview.iriInputLabel' | translate"
+        [label]="'resourceEditor.annotationPreview.iriInputLabel' | translate"
         [validatorErrors]="[
-          { errorKey: 'pattern', message: 'resourceEditor.regionPreview.notAValidIri' | translate },
+          { errorKey: 'pattern', message: 'resourceEditor.annotationPreview.notAValidIri' | translate },
         ]" />
     </ng-template>
   `,
