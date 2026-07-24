@@ -755,7 +755,8 @@
     },
     "legal": {
       "copyrightHolder": "Urheberrechtsinhaber",
-      "authorship": "Autorenschaft"
+      "authorship": "Autorenschaft",
+      "license": "Lizenz"
     },
     "navigation": {
       "firstPage": "Erste Seite",
@@ -843,6 +844,11 @@
         "label": "Ort"
       },
       "example": "z.B."
+    },
+    "regionPreview": {
+      "annotation": "Annotation",
+      "iriInputLabel": "Region-IRI",
+      "notAValidIri": "Die angegebene Ressource ist keine gültige IRI."
     }
   },
   "ui": {
