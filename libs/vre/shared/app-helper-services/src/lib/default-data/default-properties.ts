@@ -200,8 +200,8 @@ export class DefaultProperties {
           // Mirrors knora-base:hasRegionPreview: subPropertyOf hasValue, objectType RegionPreviewValue,
           // guiElement salsah-gui:RegionPreview. The crop_free icon matches the region-preview viewer.
           icon: 'crop_free',
-          label: 'Region preview',
-          description: 'Displays a preview crop of a linked image region',
+          label: 'Annotation preview',
+          description: 'Displays a preview crop of a linked annotation',
           subPropOf: Constants.HasValue,
           objectType: Constants.RegionPreviewValue,
           guiElement: Constants.GuiRegionPreview,

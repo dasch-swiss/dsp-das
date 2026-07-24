@@ -78,7 +78,7 @@ import { ResourceExplorerButtonComponent } from '../../../resource-explorer-butt
         <div class="meta-grid">
           <span class="legal-label">
             <mat-icon class="cap-icon">crop_free</mat-icon>
-            {{ 'resourceEditor.regionPreview.annotation' | translate }}
+            {{ 'resourceEditor.annotationPreview.annotation' | translate }}
           </span>
           <span class="legal-value cap-value">
             <!-- Subdued image label = plain context (which page it is from); the region is the emphasized,
