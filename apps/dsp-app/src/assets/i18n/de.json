@@ -378,7 +378,8 @@
         "commentPlaceholder": "Kommentar"
       },
       "service": {
-        "classCreated": "Die Klasse {{classLabel}} wurde erfolgreich erstellt."
+        "classCreated": "Die Klasse {{classLabel}} wurde erfolgreich erstellt.",
+        "imageAnnotationClass": "Bildannotation"
       }
     },
     "notAllowed": {
@@ -644,7 +645,7 @@
         "yesDelete": "Ja, löschen"
       },
       "annotationToolbar": {
-        "highlightRegion": "Region hervorheben",
+        "highlightAnnotation": "Annotation hervorheben",
         "openInNewTab": "Annotation in neuem Tab öffnen",
         "shareResource": "Annotation teilen: {{arkUrl}}",
         "copyArkUrl": "ARK-URL kopieren",
