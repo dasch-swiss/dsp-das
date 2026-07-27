@@ -845,9 +845,9 @@
       },
       "example": "z.B."
     },
-    "regionPreview": {
+    "annotationPreview": {
       "annotation": "Annotation",
-      "iriInputLabel": "Region-IRI",
+      "iriInputLabel": "Annotation-IRI",
       "notAValidIri": "Die angegebene Ressource ist keine gültige IRI."
     }
   },
