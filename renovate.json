@@ -4,7 +4,8 @@
     "prConcurrentLimit: 2 — allows one automated PR and one unmerged major PR to coexist. A single slot would let a major PR waiting for manual merge block the entire automated queue. rebaseWhen: behind-base-branch on automated rules makes the automated slot effectively serial (each merge triggers a rebase + CI re-run on the next), so two slots do not cause package-lock.json race conditions.",
     "schedule: before 5am on monday through friday — Renovate opens new PRs only during the midnight-to-5am window on weekdays (Europe/Zurich). platformAutomerge merges a PR the moment CI passes, so the last batch (Fri 00:00-05:00) runs CI during Friday and merges before the weekend. lockFileMaintenance keeps its own Monday schedule.",
     "rebaseWhen: conflicted (global) — major PRs sit unmerged intentionally; rebasing them on every automated merge would waste CI runs on a PR nobody is about to merge. Automated rules override this with behind-base-branch to keep the automerge chain moving.",
-    "vulnerabilityAlerts disabled — Dependabot handles security advisories instead. Its native GitHub Security Advisory integration links CVEs to the Security tab with GHSA references and co-locates with secret scanning and code scanning, which Renovate cannot replicate. Tradeoff: Dependabot covers only direct dependencies and is slower than Renovate would be, but the GitHub-native security workflow outweighs that for this project."
+    "vulnerabilityAlerts disabled — Dependabot handles security advisories instead. Its native GitHub Security Advisory integration links CVEs to the Security tab with GHSA references and co-locates with secret scanning and code scanning, which Renovate cannot replicate. Tradeoff: Dependabot covers only direct dependencies and is slower than Renovate would be, but the GitHub-native security workflow outweighs that for this project.",
+    "lockFileMaintenance.postUpdateOptions: npmInstallTwice — lock file maintenance deletes package-lock.json and regenerates it from scratch, and npm 10 gets that single pass wrong for the @noble/hashes conflict: pkijs (via webpack-dev-server > selfsigned) pins 1.4.0 exactly while @exodus/bytes (via jsdom 28, arrived with Angular 21 / NX 23 in #3189) peer-requires ^1.8.0 || ^2.0.0. npm hoists 1.4.0 to the root and drops the nested copy, leaving the peer unsatisfied, so every npm ci in CI fails with EUSAGE. A second install pass converges to the correct tree (2.2.0 hoisted, 1.4.0 nested under pkijs). Not skipInstalls: false — a full install reproduces the same broken lock. npm 11 resolves it correctly in one pass, so this workaround can be dropped once engines.npm moves off ^10.9.0."
   ],
   "extends": ["config:recommended"],
   "semanticCommitType": "chore",
@@ -22,7 +23,8 @@
     "schedule": ["before 9am on Monday"],
     "automerge": true,
     "platformAutomerge": true,
-    "rebaseWhen": "behind-base-branch"
+    "rebaseWhen": "behind-base-branch",
+    "postUpdateOptions": ["npmInstallTwice"]
   },
   "ignorePaths": ["libs/**/package.json"],
   "vulnerabilityAlerts": {
