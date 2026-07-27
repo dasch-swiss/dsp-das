@@ -157,7 +157,8 @@ OFFSET ${page}
           const data = {
             hasSegmentBounds: resource.properties[`${endpoint}hasSegmentBounds`] as ReadIntervalValue[],
             [`has${type}OfValue`]: resource.properties[`${endpoint}has${type}OfValue`] as
-              ReadTextValueAsString[] | undefined,
+              | ReadTextValueAsString[]
+              | undefined,
             hasComment: resource.properties[`${endpoint}hasComment`] as ReadTextValueAsString[] | undefined,
             hasDescription: resource.properties[`${endpoint}hasDescription`] as ReadTextValueAsString[] | undefined,
             hasKeyword: resource.properties[`${endpoint}hasKeyword`] as ReadTextValueAsString[] | undefined,
