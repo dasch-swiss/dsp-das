@@ -560,7 +560,7 @@ export class OntologyEditService {
         if (prop.objectType === Constants.Region) {
           propertyInfo.objectLabels = [
             {
-              value: 'Region',
+              value: this._translate.instant('pages.ontology.service.imageAnnotationClass'),
             } as StringLiteralV2,
           ];
           return propertyInfo;
