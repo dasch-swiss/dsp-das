@@ -378,7 +378,8 @@
         "commentPlaceholder": "Commento"
       },
       "service": {
-        "classCreated": "La classe {{classLabel}} è stata creata con successo."
+        "classCreated": "La classe {{classLabel}} è stata creata con successo.",
+        "imageAnnotationClass": "Annotazione immagine"
       }
     },
     "notAllowed": {
@@ -556,7 +557,6 @@
       "goToSegment": "Vai al segmento"
     },
     "legal": {
-      "title": "Informazioni legali",
       "copyrightHolder": "Titolare del copyright",
       "authorship": "Autore",
       "license": "Licenza"
@@ -689,7 +689,7 @@
         "yesDelete": "Sì, elimina"
       },
       "annotationToolbar": {
-        "highlightRegion": "Evidenzia regione",
+        "highlightAnnotation": "Evidenzia annotazione",
         "openInNewTab": "Apri annotazione in nuova scheda",
         "shareResource": "Condividi annotazione: {{arkUrl}}",
         "copyArkUrl": "Copia URL ARK",

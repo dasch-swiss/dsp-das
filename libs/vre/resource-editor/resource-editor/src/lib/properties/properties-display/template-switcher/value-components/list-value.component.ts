@@ -13,10 +13,10 @@ import { MatError } from '@angular/material/form-field';
 import { KnoraApiConnection, ListNodeV2WithAllLanguages, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NestedMenuComponent } from '@dasch-swiss/vre/ui/nested-menu';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { combineLatest } from 'rxjs';
 import { filter, startWith, switchMap } from 'rxjs/operators';
-import { NestedMenuComponent } from './nested-menu.component';
 
 const HLIST_PREFIX = 'hlist=<';
 

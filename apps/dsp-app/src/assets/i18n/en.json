@@ -378,7 +378,8 @@
         "commentPlaceholder": "Description"
       },
       "service": {
-        "classCreated": "Successfully created the class {{classLabel}}."
+        "classCreated": "Successfully created the class {{classLabel}}.",
+        "imageAnnotationClass": "Image Annotation"
       }
     },
     "notAllowed": {
@@ -556,7 +557,6 @@
       "goToSegment": "Go to segment"
     },
     "legal": {
-      "title": "Legal",
       "copyrightHolder": "Copyright holder",
       "authorship": "Authorship",
       "license": "License"
@@ -689,7 +689,7 @@
         "yesDelete": "Yes, delete"
       },
       "annotationToolbar": {
-        "highlightRegion": "Highlight Region",
+        "highlightAnnotation": "Highlight annotation",
         "openInNewTab": "Open annotation in new tab",
         "shareResource": "Share annotation: {{arkUrl}}",
         "copyArkUrl": "Copy ARK url",

@@ -25,7 +25,7 @@ import { ColorViewerComponent } from './template-switcher/viewer-components/colo
       </span>
       <button
         mat-icon-button
-        [matTooltip]="'resourceEditor.propertiesDisplay.annotationToolbar.highlightRegion' | translate"
+        [matTooltip]="'resourceEditor.propertiesDisplay.annotationToolbar.highlightAnnotation' | translate"
         color="primary"
         matTooltipPosition="above"
         (click)="onPinPointClicked()">

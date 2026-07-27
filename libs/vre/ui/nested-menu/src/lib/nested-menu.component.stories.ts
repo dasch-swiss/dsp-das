@@ -61,8 +61,7 @@ const rootNode = makeNode(
 );
 
 const meta: Meta<NestedMenuComponent> = {
-  title:
-    'Resource Editor / 4. Properties / Resource Default Tabs / Properties Display / Template Switcher / Nested Menu',
+  title: 'UI / Nested Menu / Behavior',
   component: NestedMenuComponent,
   decorators: [
     applicationConfig({
