@@ -8,7 +8,7 @@ import { UserService } from '@dasch-swiss/vre/core/session';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
 import { NEVER, of, throwError } from 'rxjs';
-import { expect } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { SearchResultComponent } from './search-result.component';
 
 const STORY_PROVIDERS = [
@@ -175,9 +175,19 @@ export const Loading: Story = {
 // real AppErrorHandler (and its NotificationService) being wired up.
 const silentErrorHandler = { provide: ErrorHandler, useValue: { handleError: () => {} } };
 
+/**
+ * First attempt fails, the retry succeeds — so one story covers the whole
+ * `(click)` -> `retry.emit()` -> `(retry)` -> `onRetry()` -> search re-runs chain. `beforeEach` resets
+ * the counter, so the sequence is deterministic however many times Storybook renders the story.
+ */
+let searchAttempt = 0;
+
 export const SearchFails: Story = {
-  name: 'Stops the spinner and shows a retryable failure state when the search fails',
+  name: 'Stops the spinner, shows a failure state, and re-runs the search when retried',
   args: { query: 'der' },
+  beforeEach: () => {
+    searchAttempt = 0;
+  },
   decorators: [
     applicationConfig({
       providers: [
@@ -188,7 +198,10 @@ export const SearchFails: Story = {
           useValue: {
             v2: {
               search: {
-                doFulltextSearch: () => throwError(() => new Error('500 from the triplestore')),
+                doFulltextSearch: () =>
+                  searchAttempt++ === 0
+                    ? throwError(() => new Error('500 from the triplestore'))
+                    : of({ resources: [makeReadResource('http://rdfh.ch/0001/res1', 'Test Resource')] }),
                 doFulltextSearchCountQuery: () => of({ numberOfResults: 1 }),
               },
             },
@@ -207,10 +220,12 @@ export const SearchFails: Story = {
     await step('Failure is not mistaken for an empty result set', async () => {
       await expect(canvasElement.querySelector('app-no-results-found')).toBeNull();
     });
-    await step('A retry affordance is offered', async () => {
-      // That clicking it re-runs the search is asserted in search-result.component.spec.ts, which can
-      // sequence a failing then succeeding request without depending on how often Storybook renders.
-      await expect(canvasElement.querySelector('[data-cy="search-failed-retry"]')).not.toBeNull();
+    await step('Clicking Retry re-runs the search and renders the results', async () => {
+      await userEvent.click(canvasElement.querySelector('[data-cy="search-failed-retry"]')!);
+      await waitFor(async () => {
+        await expect(canvasElement.querySelector('app-search-failed')).toBeNull();
+        await expect(canvasElement.querySelector('app-resource-browser')).not.toBeNull();
+      });
     });
   },
 };
