@@ -10,7 +10,7 @@ import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-servic
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, catchError, combineLatest, map, of, startWith, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, map, of, startWith, switchMap } from 'rxjs';
 import { SearchFlowLogger } from './service/search-flow-logger.service';
 
 @Component({
@@ -68,12 +68,13 @@ export class AdvancedSearchResultsComponent implements OnChanges {
         ),
         this._numberOfAllResults$(query),
       ]).pipe(
-        tap(([resourceResponse, countResponse]) => {
-          this.queryIsExecuting.set(false);
-          this._logger.searchSuccess(resourceResponse.resources.length, countResponse.numberOfResults);
-        }),
         map(([resourceResponse, countResponse]) => {
-          this._resourceResultService.numberOfResults = countResponse.numberOfResults;
+          // A failed count degrades to this page's result count: enough for the results text, and it
+          // hides the paginator rather than offering pages whose size we cannot know.
+          const total = countResponse?.numberOfResults ?? resourceResponse.resources.length;
+          this.queryIsExecuting.set(false);
+          this._logger.searchSuccess(resourceResponse.resources.length, total);
+          this._resourceResultService.numberOfResults = total;
           return resourceResponse.resources;
         }),
         catchError(err => {
@@ -110,10 +111,15 @@ export class AdvancedSearchResultsComponent implements OnChanges {
     return query.substring(0, query.lastIndexOf('OFFSET'));
   }
 
+  /**
+   * The count only drives the paginator, but it re-runs the same WHERE clause as the results query
+   * and is the more expensive of the two (DEV-6809). Sharing one `combineLatest` therefore meant a
+   * count timeout errored the whole stream and threw away results that had arrived perfectly well,
+   * so the count absorbs its own failure and degrades to an absent count instead.
+   */
   private _numberOfAllResults$(query_: string) {
-    return this._dspApiConnection.v2.search.doExtendedSearchCountQuery(
-      `${this._getQuery(query_)}OFFSET 0`,
-      this._projectPageService.currentProject.id
-    );
+    return this._dspApiConnection.v2.search
+      .doExtendedSearchCountQuery(`${this._getQuery(query_)}OFFSET 0`, this._projectPageService.currentProject.id)
+      .pipe(catchError(() => of(null)));
   }
 }

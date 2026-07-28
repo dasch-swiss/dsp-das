@@ -109,10 +109,11 @@ export class SearchResultComponent implements OnChanges {
       ),
       this._numberOfAllResults$(this.query),
     ]).pipe(
-      tap(([, countResponse]) => {
-        this._resourceResultService.numberOfResults = countResponse.numberOfResults;
-      }),
-      map(([resourceResponse]) => {
+      map(([resourceResponse, countResponse]) => {
+        // A failed count degrades to this page's result count: enough for the results text, and it
+        // hides the paginator rather than offering pages whose size we cannot know.
+        this._resourceResultService.numberOfResults =
+          countResponse?.numberOfResults ?? resourceResponse.resources.length;
         this.loading.set(false);
         return resourceResponse.resources;
       }),
@@ -125,6 +126,14 @@ export class SearchResultComponent implements OnChanges {
     );
   }
 
+  /**
+   * The count only drives the paginator, but it re-runs the same WHERE clause as the results query
+   * and is the more expensive of the two (DEV-6809). Sharing one `combineLatest` therefore meant a
+   * count timeout errored the whole stream and threw away results that had arrived perfectly well,
+   * so the count absorbs its own failure and degrades to an absent count instead.
+   */
   private _numberOfAllResults$ = (query: string) =>
-    this._dspApiConnection.v2.search.doFulltextSearchCountQuery(query, 0, this.searchInProjectParam);
+    this._dspApiConnection.v2.search
+      .doFulltextSearchCountQuery(query, 0, this.searchInProjectParam)
+      .pipe(catchError(() => of(null)));
 }
