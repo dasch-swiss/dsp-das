@@ -6,6 +6,7 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/con
 import { MultipleViewerService } from '@dasch-swiss/vre/pages/data-browser';
 import { DataBrowserPageService, ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService, ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, of, throwError } from 'rxjs';
 import { ResourcesListFetcherComponent } from './resources-list-fetcher.component';
 
@@ -22,6 +23,19 @@ describe('ResourcesListFetcherComponent', () => {
   const mockResource1 = { id: 'resource-1', label: 'Resource 1' } as ReadResource;
   const mockResource2 = { id: 'resource-2', label: 'Resource 2' } as ReadResource;
   const mockProject = { shortcode: '0001' } as ReadProject;
+
+  /** Shared so the real-template suite below can reuse the same doubles without duplicating them. */
+  const makeProviders = () => [
+    { provide: ActivatedRoute, useValue: { params: routeParamsSubject.asObservable() } },
+    { provide: Router, useValue: { navigate: jest.fn() } },
+    { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
+    { provide: ResourceResultService, useValue: mockResourceResult },
+    { provide: OntologyService, useValue: { getIriBaseUrl: () => 'http://api.knora.org' } },
+    { provide: ProjectPageService, useValue: { currentProject$: currentProjectSubject.asObservable() } },
+    { provide: MultipleViewerService, useValue: mockMultipleViewerService },
+    { provide: DataBrowserPageService, useValue: { onNavigationReload$: of(undefined) } },
+    { provide: ErrorHandler, useValue: { handleError } },
+  ];
 
   beforeEach(async () => {
     routeParamsSubject = new BehaviorSubject({ [RouteConstants.classParameter]: 'TestClass' });
@@ -54,17 +68,7 @@ describe('ResourcesListFetcherComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ResourcesListFetcherComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [
-        { provide: ActivatedRoute, useValue: { params: routeParamsSubject.asObservable() } },
-        { provide: Router, useValue: { navigate: jest.fn() } },
-        { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
-        { provide: ResourceResultService, useValue: mockResourceResult },
-        { provide: OntologyService, useValue: { getIriBaseUrl: () => 'http://api.knora.org' } },
-        { provide: ProjectPageService, useValue: { currentProject$: currentProjectSubject.asObservable() } },
-        { provide: MultipleViewerService, useValue: mockMultipleViewerService },
-        { provide: DataBrowserPageService, useValue: { onNavigationReload$: of(undefined) } },
-        { provide: ErrorHandler, useValue: { handleError } },
-      ],
+      providers: makeProviders(),
     })
       .overrideComponent(ResourcesListFetcherComponent, {
         set: { template: '<div>Mock</div>' },
@@ -145,9 +149,10 @@ describe('ResourcesListFetcherComponent', () => {
       // A count failure must not take down the resource list: the count is decorative, the list is not.
       expect(emitted.at(-1)?.resources).toEqual([mockResource1, mockResource2]);
       expect(component.failed()).toBe(false);
+      // Null, not the page length: substituting a wrong total would have the UI assert it as fact.
       // The component provides its own ResourceResultService, so read that instance rather than the
       // module-level mock, which this component never sees.
-      expect(fixture.debugElement.injector.get(ResourceResultService).numberOfResults).toBe(2);
+      expect(fixture.debugElement.injector.get(ResourceResultService).numberOfResults).toBeNull();
       sub.unsubscribe();
     });
 
@@ -211,6 +216,47 @@ describe('ResourcesListFetcherComponent', () => {
       expect(component.failed()).toBe(false);
       expect(emitted.at(-1)?.resources).toEqual([mockResource1]);
       sub.unsubscribe();
+    });
+  });
+
+  /**
+   * The suites above replace the template, so `(retry)="onRetry()"` is never exercised and a broken
+   * binding would pass every one of them. This component has no stories, so the real template is
+   * mounted here instead to cover the click path end to end.
+   */
+  describe('retry binding with the real template (DEV-6871)', () => {
+    beforeEach(async () => {
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [ResourcesListFetcherComponent, TranslateModule.forRoot()],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        providers: makeProviders(),
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(ResourcesListFetcherComponent);
+      component = fixture.componentInstance;
+      component.ontologyLabel = 'testonto';
+      component.classLabel = 'TestClass';
+    });
+
+    it('re-issues the request when the rendered Retry button is clicked', () => {
+      // The retry is left failing on purpose. A succeeding retry would render the real resource list,
+      // dragging ProjectShortnameService and the generated OpenAPI client into this test; the binding
+      // is what is under test here, and "the request was issued again" proves it.
+      mockDspApiConnection.v2.search.doExtendedSearch.mockReturnValue(throwError(() => new Error('still failing')));
+
+      component.ngOnChanges();
+      fixture.detectChanges();
+
+      const retryButton = fixture.nativeElement.querySelector('[data-cy="search-failed-retry"]') as HTMLButtonElement;
+      expect(retryButton).not.toBeNull();
+      expect(mockDspApiConnection.v2.search.doExtendedSearch).toHaveBeenCalledTimes(1);
+
+      retryButton.click();
+      fixture.detectChanges();
+
+      expect(mockDspApiConnection.v2.search.doExtendedSearch).toHaveBeenCalledTimes(2);
+      expect(component.failed()).toBe(true);
     });
   });
 });

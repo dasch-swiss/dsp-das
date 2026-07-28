@@ -143,9 +143,9 @@ export class ResourcesListFetcherComponent implements OnChanges {
         this.userCanViewResources =
           numberOfResults === null || !(pageIndex === 0 && resources.length === 0 && numberOfResults > 0);
 
-        // Degrades to this page's count, which hides the paginator rather than offering pages whose
-        // size we cannot know.
-        this._resourceResult.numberOfResults = numberOfResults ?? resources.length;
+        // Passed through unchanged, null included: resources-list states that the count is unavailable
+        // rather than asserting a total we do not have.
+        this._resourceResult.numberOfResults = numberOfResults;
         return resources;
       })
     );
