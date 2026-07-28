@@ -1,14 +1,15 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, Inject, Input, OnChanges } from '@angular/core';
+import { Component, ErrorHandler, Inject, Input, OnChanges, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { MultipleViewerService, ResourcesListComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { OntologyService, ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
-import { CenteredMessageComponent } from '@dasch-swiss/vre/ui/ui';
+import { CenteredBoxComponent, CenteredMessageComponent, SearchFailedComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
+  BehaviorSubject,
   catchError,
   combineLatest,
   first,
@@ -26,7 +27,12 @@ import { ProjectPageService } from '../../project-page.service';
 @Component({
   selector: 'app-resources-list-fetcher',
   template: `
-    @if (data$ | async; as data) {
+    @let data = data$ | async;
+    @if (failed()) {
+      <app-centered-box>
+        <app-search-failed (retry)="onRetry()" />
+      </app-centered-box>
+    } @else if (data) {
       @if (userCanViewResources) {
         @if (data.resources.length > 0) {
           <app-resources-list [resources]="data.resources" />
@@ -44,20 +50,31 @@ import { ProjectPageService } from '../../project-page.service';
     }
   `,
   providers: [ResourceResultService],
-  imports: [AsyncPipe, TranslatePipe, ResourcesListComponent, CenteredMessageComponent, AppProgressIndicatorComponent],
+  imports: [
+    AsyncPipe,
+    TranslatePipe,
+    ResourcesListComponent,
+    CenteredBoxComponent,
+    CenteredMessageComponent,
+    AppProgressIndicatorComponent,
+    SearchFailedComponent,
+  ],
 })
 export class ResourcesListFetcherComponent implements OnChanges {
   @Input({ required: true }) ontologyLabel!: string;
   @Input({ required: true }) classLabel!: string;
   userCanViewResources = true;
 
-  private _resources$!: Observable<ReadResource[]>;
+  readonly failed = signal(false);
+
+  /** Re-triggers the load after a failure. Replays on subscribe so the initial load runs too. */
+  private readonly _retrySubject = new BehaviorSubject<void>(undefined);
 
   private readonly _classParam$ = this.route.params.pipe(
     map(params => params[RouteConstants.classParameter] as string)
   );
 
-  data$!: Observable<{ resources: ReadResource[]; selectFirstResource: boolean }>;
+  data$!: Observable<{ resources: ReadResource[]; selectFirstResource: boolean } | null>;
 
   /**
    * The count only drives the paginator and the permissions heuristic below, but it re-runs the same
@@ -81,6 +98,7 @@ export class ResourcesListFetcherComponent implements OnChanges {
     private readonly _multipleViewerService: MultipleViewerService,
     private readonly _ontologyService: OntologyService,
     private readonly _resourceResult: ResourceResultService,
+    private readonly _errorHandler: ErrorHandler,
     protected route: ActivatedRoute,
     protected router: Router,
     public projectPageService: ProjectPageService
@@ -88,8 +106,26 @@ export class ResourcesListFetcherComponent implements OnChanges {
 
   ngOnChanges() {
     this._resourceResult.updatePageIndex(0);
+    this.failed.set(false);
 
-    this._resources$ = this._dataBrowserPageService.onNavigationReload$.pipe(
+    this.data$ = this._retrySubject.pipe(switchMap(() => this._data$()));
+  }
+
+  onRetry() {
+    // The retry subject is the outermost operator of `data$`, so re-entering it rebuilds the whole
+    // chain — including a fresh `pairwise()`. That matters: `catchError` completes the inner stream,
+    // so retrying from anywhere inside it could never emit again.
+    this.failed.set(false);
+    this._retrySubject.next();
+  }
+
+  /**
+   * The `catchError` is what keeps the spinner from spinning forever: with no error handling at all,
+   * any failure left `data$` non-emitting, so the template's `@else` branch rendered the progress
+   * indicator indefinitely — the same dead-end DEV-6866 fixed in the search components.
+   */
+  private _data$(): Observable<{ resources: ReadResource[]; selectFirstResource: boolean } | null> {
+    const resources$ = this._dataBrowserPageService.onNavigationReload$.pipe(
       switchMap(() => this.projectPageService.currentProject$.pipe(first())),
       switchMap(project => {
         const ontologyLabel = this.ontologyLabel;
@@ -114,7 +150,7 @@ export class ResourcesListFetcherComponent implements OnChanges {
       })
     );
 
-    this.data$ = this._resources$.pipe(
+    return resources$.pipe(
       withLatestFrom(this._classParam$),
       startWith([[] as ReadResource[], null]),
       pairwise(),
@@ -129,6 +165,11 @@ export class ResourcesListFetcherComponent implements OnChanges {
           }
         }
         return { resources: currResources!, selectFirstResource };
+      }),
+      catchError((error: unknown) => {
+        this._errorHandler.handleError(error);
+        this.failed.set(true);
+        return of(null);
       })
     );
   }
