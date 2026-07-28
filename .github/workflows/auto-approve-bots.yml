@@ -1,0 +1,66 @@
+name: Auto-approve bot PRs
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  auto-approve:
+    runs-on: ubuntu-latest
+    # Gate on the PR author, not github.actor: on `synchronize` the actor is
+    # whoever pushed, so a maintainer merging main into a bot branch would
+    # otherwise skip the approval (that is what left #3282 blocked).
+    if: contains(fromJSON('["renovate[bot]", "dasch-bot-app[bot]"]'), github.event.pull_request.user.login)
+    steps:
+      # Approval is gated on auto-merge already being armed, which is what keeps
+      # manual review enforced where it matters:
+      #   - Renovate arms it only for rules with automerge:true (patch/minor);
+      #     major PRs (automerge:false) never set autoMergeRequest.
+      #   - The DaSCH Bot App arms it on dsp-api spec-bump PRs (see ci.yml).
+      # Any other bot PR without auto-merge stays unapproved and needs a human.
+      - name: Check if auto-merge was requested
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          # Poll: both bots arm auto-merge in a separate call *after* opening the
+          # PR (ci.yml retries it while GitHub computes mergeability), so on the
+          # `opened` event autoMergeRequest can still be null for a few seconds.
+          # Reading it once would skip the approval and leave the PR blocked.
+          result=false
+          for attempt in 1 2 3 4 5 6; do
+            result=$(gh pr view "${PR_NUMBER}" \
+              --repo "${REPO}" \
+              --json autoMergeRequest \
+              --jq '.autoMergeRequest != null')
+            if [ "$result" = "true" ]; then
+              echo "Auto-merge detected (attempt ${attempt})."
+              break
+            fi
+            if [ "$attempt" -lt 6 ]; then
+              echo "Auto-merge not armed yet (attempt ${attempt}); retrying in 10s…"
+              sleep 10
+            fi
+          done
+          if [ "$result" != "true" ]; then
+            echo "No auto-merge request — leaving this PR for manual review."
+          fi
+          echo "automerge=$result" >> "$GITHUB_OUTPUT"
+
+      - name: Approve PR
+        if: steps.check.outputs.automerge == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh pr review "${PR_NUMBER}" \
+            --repo "${REPO}" \
+            --approve
