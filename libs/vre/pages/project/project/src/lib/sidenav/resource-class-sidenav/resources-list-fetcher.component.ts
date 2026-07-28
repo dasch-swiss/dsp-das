@@ -8,7 +8,18 @@ import { OntologyService, ResourceResultService } from '@dasch-swiss/vre/shared/
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { CenteredMessageComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
-import { combineLatest, first, map, Observable, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  first,
+  map,
+  Observable,
+  of,
+  pairwise,
+  startWith,
+  switchMap,
+  withLatestFrom,
+} from 'rxjs';
 import { DataBrowserPageService } from '../../data-browser-page.service';
 import { ProjectPageService } from '../../project-page.service';
 
@@ -48,12 +59,21 @@ export class ResourcesListFetcherComponent implements OnChanges {
 
   data$!: Observable<{ resources: ReadResource[]; selectFirstResource: boolean }>;
 
+  /**
+   * The count only drives the paginator and the permissions heuristic below, but it re-runs the same
+   * WHERE clause as the paged query and carries the same cost profile (DEV-6809). Sharing one
+   * `combineLatest` meant a count timeout errored the whole stream and threw away resources that had
+   * arrived perfectly well, so the count absorbs its own failure and reports an unknown count.
+   */
   countQuery$ = (project: ReadProject, ontologyLabel: string, classLabel: string) =>
     this._dspApiConnection.v2.search
       .doExtendedSearchCountQuery(
         this._setGravsearch(this._getClassIdFromParams(project.shortcode, ontologyLabel, classLabel))
       )
-      .pipe(map(response => response.numberOfResults));
+      .pipe(
+        map(response => response.numberOfResults),
+        catchError(() => of(null))
+      );
 
   constructor(
     @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
@@ -81,13 +101,15 @@ export class ResourcesListFetcherComponent implements OnChanges {
         ]);
       }),
       map(([{ resources, pageIndex }, numberOfResults]) => {
-        if (pageIndex === 0 && resources.length === 0 && numberOfResults > 0) {
-          this.userCanViewResources = false;
-        } else {
-          this.userCanViewResources = true;
-        }
+        // "The class has resources but none came back" is what distinguishes missing permissions from
+        // an empty class. An unknown count cannot support that inference, so it must fall back to
+        // can-view: a timed-out count must never tell the user they lack permissions.
+        this.userCanViewResources =
+          numberOfResults === null || !(pageIndex === 0 && resources.length === 0 && numberOfResults > 0);
 
-        this._resourceResult.numberOfResults = numberOfResults;
+        // Degrades to this page's count, which hides the paginator rather than offering pages whose
+        // size we cannot know.
+        this._resourceResult.numberOfResults = numberOfResults ?? resources.length;
         return resources;
       })
     );
