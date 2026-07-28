@@ -81,8 +81,8 @@ export class SearchResultComponent implements OnChanges {
   }
 
   onRetry() {
-    this.loading.set(true);
-    this.failed.set(false);
+    // The subject is already subscribed, so this synchronously re-enters `_search$()`, whose `tap`
+    // on `pageIndex$` resets `loading`/`failed` — no need to set them here as well.
     this._retrySubject.next();
   }
 

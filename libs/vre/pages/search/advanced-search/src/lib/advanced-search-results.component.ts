@@ -1,5 +1,14 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ErrorHandler,
+  inject,
+  Input,
+  OnChanges,
+  signal,
+  SimpleChanges,
+} from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -8,7 +17,7 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { filterNull } from '@dasch-swiss/vre/shared/app-common';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
-import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
+import { CenteredBoxComponent, NoResultsFoundComponent, SearchFailedComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, catchError, combineLatest, map, of, startWith, switchMap } from 'rxjs';
 import { SearchFlowLogger } from './service/search-flow-logger.service';
@@ -21,11 +30,16 @@ import { SearchFlowLogger } from './service/search-flow-logger.service';
     CenteredBoxComponent,
     NoResultsFoundComponent,
     ResourceBrowserComponent,
+    SearchFailedComponent,
     TranslateModule,
   ],
   template: `
     @let resources = resources$ | async;
-    @if (!resources && queryIsExecuting()) {
+    @if (failed()) {
+      <app-centered-box>
+        <app-search-failed (retry)="onRetry()" />
+      </app-centered-box>
+    } @else if (!resources && queryIsExecuting()) {
       <app-centered-box>
         <app-progress-indicator />
       </app-centered-box>
@@ -53,15 +67,18 @@ export class AdvancedSearchResultsComponent implements OnChanges {
   private readonly _translateService = inject(TranslateService);
   private readonly _logger = inject(SearchFlowLogger);
   private readonly _projectPageService = inject(ProjectPageService);
+  private readonly _errorHandler = inject(ErrorHandler);
 
   private readonly querySubject = new BehaviorSubject<string | null>(null);
 
   readonly queryIsExecuting = signal(false);
+  readonly failed = signal(false);
 
   readonly resources$ = this.querySubject.pipe(
     filterNull(),
     switchMap(query => {
       this.queryIsExecuting.set(true);
+      this.failed.set(false);
       return combineLatest([
         this._resourceResultService.pageIndex$.pipe(
           switchMap(pageNumber => this._performGravSearch$(query, pageNumber))
@@ -77,10 +94,15 @@ export class AdvancedSearchResultsComponent implements OnChanges {
           this._resourceResultService.numberOfResults = total;
           return resourceResponse.resources;
         }),
-        catchError(err => {
+        // Returning `of([])` here used to render the "no results found" empty state, telling the user
+        // their search legitimately matched nothing when in fact it never completed (DEV-6866).
+        // `of(null)` keeps the stream alive for retry while the `failed` signal drives the real state.
+        catchError((err: unknown) => {
           this._logger.searchError(err);
+          this._errorHandler.handleError(err);
           this.queryIsExecuting.set(false);
-          return of([]);
+          this.failed.set(true);
+          return of(null);
         }),
         startWith(null)
       );
@@ -89,6 +111,12 @@ export class AdvancedSearchResultsComponent implements OnChanges {
 
   constructor() {
     this._titleService.setTitle(this._translateService.instant('pages.search.advancedSearch.resultsTitle'));
+  }
+
+  onRetry() {
+    // Re-emitting the same query is enough: the subject always emits, so `switchMap` re-runs the
+    // search from the current page index.
+    this.querySubject.next(this.query);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
