@@ -110,10 +110,10 @@ export class SearchResultComponent implements OnChanges {
       this._numberOfAllResults$(this.query),
     ]).pipe(
       map(([resourceResponse, countResponse]) => {
-        // A failed count degrades to this page's result count: enough for the results text, and it
-        // hides the paginator rather than offering pages whose size we cannot know.
-        this._resourceResultService.numberOfResults =
-          countResponse?.numberOfResults ?? resourceResponse.resources.length;
+        // A failed count is reported as unknown, never substituted with this page's length: that would
+        // assert "25 results" over a 10,000-hit search and, landing exactly on the page-size boundary,
+        // would also silently drop the paginator.
+        this._resourceResultService.numberOfResults = countResponse?.numberOfResults ?? null;
         this.loading.set(false);
         return resourceResponse.resources;
       }),

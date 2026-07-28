@@ -69,7 +69,7 @@ describe('SearchResultComponent — search failure handling (DEV-6866)', () => {
     sub.unsubscribe();
   });
 
-  it('renders the results when the count query fails, degrading the count to the page length', () => {
+  it('renders the results when the count query fails, reporting the count as unknown', () => {
     doFulltextSearchCountQuery.mockReturnValue(throwError(() => new Error('count query timed out')));
     const { component, resourceResult } = renderComponent();
 
@@ -80,7 +80,8 @@ describe('SearchResultComponent — search failure handling (DEV-6866)', () => {
     expect(emitted).toEqual([[resource]]);
     expect(component.failed()).toBe(false);
     expect(component.loading()).toBe(false);
-    expect(resourceResult.numberOfResults).toBe(1);
+    // Null, not the page length: substituting a wrong total would have the UI assert it as fact.
+    expect(resourceResult.numberOfResults).toBeNull();
     sub.unsubscribe();
   });
 

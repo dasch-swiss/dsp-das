@@ -1,9 +1,10 @@
 import { ErrorHandler, SimpleChange } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateModule } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { AdvancedSearchResultsComponent } from '../advanced-search-results.component';
@@ -42,8 +43,11 @@ describe('AdvancedSearchResultsComponent', () => {
     TestBed.overrideComponent(AdvancedSearchResultsComponent, { set: { template: '', imports: [] } });
   });
 
+  /** Set by renderComponent, so tests can reach the component's own ResourceResultService instance. */
+  let fixture: ComponentFixture<AdvancedSearchResultsComponent>;
+
   const renderComponent = (withQuery = query) => {
-    const fixture = TestBed.createComponent(AdvancedSearchResultsComponent);
+    fixture = TestBed.createComponent(AdvancedSearchResultsComponent);
     const component = fixture.componentInstance;
     component.query = withQuery;
     component.ngOnChanges({ query: new SimpleChange(undefined, withQuery, true) });
@@ -107,7 +111,7 @@ describe('AdvancedSearchResultsComponent', () => {
       sub.unsubscribe();
     });
 
-    it('renders the results when the count query fails, degrading the count to the page length', () => {
+    it('renders the results when the count query fails, reporting the count as unknown', () => {
       doExtendedSearch.mockReturnValue(of({ resources: [resource] }));
       doExtendedSearchCountQuery.mockReturnValue(throwError(() => new Error('count query timed out')));
       const component = renderComponent();
@@ -117,6 +121,9 @@ describe('AdvancedSearchResultsComponent', () => {
 
       expect(emitted.at(-1)).toEqual([resource]);
       expect(component.failed()).toBe(false);
+      // Null, not the page length: substituting a wrong total would have the UI assert it as fact.
+      // Read the component's own instance — it declares providers: [ResourceResultService].
+      expect(fixture.debugElement.injector.get(ResourceResultService).numberOfResults).toBeNull();
       sub.unsubscribe();
     });
 

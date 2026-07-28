@@ -477,7 +477,8 @@
         "resourcesMustBeSameProject": "Le risorse devono appartenere allo stesso progetto"
       },
       "resourcesList": {
-        "resultsCount": "{{count}} risultati"
+        "resultsCount": "{{count}} risultati",
+        "countUnavailable": "Numero di risultati non disponibile"
       },
       "resourcesListFetcher": {
         "noResourcesFound": "Nessuna risorsa trovata per questa classe.",

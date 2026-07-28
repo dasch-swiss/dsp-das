@@ -86,9 +86,9 @@ export class AdvancedSearchResultsComponent implements OnChanges {
         this._numberOfAllResults$(query),
       ]).pipe(
         map(([resourceResponse, countResponse]) => {
-          // A failed count degrades to this page's result count: enough for the results text, and it
-          // hides the paginator rather than offering pages whose size we cannot know.
-          const total = countResponse?.numberOfResults ?? resourceResponse.resources.length;
+          // A failed count is reported as unknown, never substituted with this page's length: that
+          // would assert a wrong total to the user and silently drop the paginator.
+          const total = countResponse?.numberOfResults ?? null;
           this.queryIsExecuting.set(false);
           this._logger.searchSuccess(resourceResponse.resources.length, total);
           this._resourceResultService.numberOfResults = total;
