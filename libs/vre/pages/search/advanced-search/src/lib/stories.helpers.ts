@@ -45,8 +45,19 @@ const searchFlowLoggerStub = {
 // namespace so the `translate` pipe renders the real UI text (not the raw key) in stories and their
 // play() assertions. Keep in sync with apps/dsp-app/src/assets/i18n/en.json.
 const STORY_TRANSLATIONS = {
+  ui: {
+    common: {
+      actions: {
+        retry: 'Retry',
+      },
+    },
+  },
   pages: {
     search: {
+      searchFailed: {
+        title: 'Search failed',
+        message: 'Something went wrong and the search could not be completed. Please try again.',
+      },
       advancedSearch: {
         allResourceClasses: 'All resources',
         dataModel: 'Data model',

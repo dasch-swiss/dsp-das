@@ -17,7 +17,7 @@ import { CenteredMessageComponent } from './centered-message.component';
       [icon]="'error_outline'"
       [title]="'pages.search.searchFailed.title' | translate"
       [message]="'pages.search.searchFailed.message' | translate" />
-    <button mat-stroked-button data-testid="search-failed-retry" (click)="retry.emit()">
+    <button mat-stroked-button data-cy="search-failed-retry" (click)="retry.emit()">
       {{ 'ui.common.actions.retry' | translate }}
     </button>
   `,

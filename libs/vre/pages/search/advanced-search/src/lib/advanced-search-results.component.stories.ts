@@ -1,12 +1,12 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { importProvidersFrom } from '@angular/core';
+import { ErrorHandler, importProvidersFrom } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
-import { NEVER, of } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 import { expect } from 'storybook/test';
 import { AdvancedSearchResultsComponent } from './advanced-search-results.component';
 import { makeDspApiConnectionStub, STORY_PROVIDERS } from './stories.helpers';
@@ -130,6 +130,43 @@ export const Loading: Story = {
     });
     await step('Resource browser is not yet rendered', async () => {
       await expect(canvasElement.querySelector('app-resource-browser')).toBeNull();
+    });
+  },
+};
+
+export const QueryFails: Story = {
+  name: 'Shows a retryable failure state — not the no-results message — when the query fails',
+  args: { query: SAMPLE_QUERY },
+  decorators: [
+    applicationConfig({
+      providers: [
+        ...sharedProviders,
+        // Failures are handed to the ErrorHandler for the snackbar; stub it so the story does not
+        // depend on the real AppErrorHandler (and its NotificationService) being wired up.
+        { provide: ErrorHandler, useValue: { handleError: () => {} } },
+        {
+          provide: DspApiConnectionToken,
+          useValue: makeDspApiConnectionStub({
+            search: {
+              doExtendedSearch: () => throwError(() => new Error('500 from the triplestore')),
+              doExtendedSearchCountQuery: () => of({ numberOfResults: 1 }),
+            },
+          }),
+        },
+      ],
+    }),
+  ],
+  play: async ({ canvasElement, step }) => {
+    await step('Failure state is rendered', async () => {
+      await expect(canvasElement.querySelector('app-search-failed')).not.toBeNull();
+    });
+    await step('Failure is not mistaken for an empty result set', async () => {
+      await expect(canvasElement.querySelector('app-no-results-found')).toBeNull();
+    });
+    await step('A retry affordance is offered', async () => {
+      // That clicking it re-runs the query is asserted in the component spec, which can sequence a
+      // failing then succeeding request without depending on how often Storybook renders.
+      await expect(canvasElement.querySelector('[data-cy="search-failed-retry"]')).not.toBeNull();
     });
   },
 };
