@@ -393,6 +393,10 @@
         "placeholder": "Enter search term..."
       },
       "noResultsFound": "No results found",
+      "searchFailed": {
+        "title": "Search failed",
+        "message": "Something went wrong and the search could not be completed. Please try again."
+      },
       "searchTips": {
         "title": "Search tips",
         "exactPhrases": "Use quotation marks for exact phrases: \"down the rabbit hole\"",
