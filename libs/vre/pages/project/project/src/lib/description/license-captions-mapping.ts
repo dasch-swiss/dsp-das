@@ -7,6 +7,7 @@ Campanile di Aurigeno. © Romeo Dell’Era
 
 Belltower of Aurigeno. © Romeo Dell’Era`,
   ],
+  ['0113', '© Fabrice Ducrest, Unil'],
   [
     '0117',
     'René Sigrist, 2023, Collaborations les plus significatives entre chimistes de la période 1810-1860, CC BY-SA 4.0.',
