@@ -191,7 +191,11 @@ export class StatementElement {
   /**
    * Human-readable label of the selected object when it is a linked resource (`NodeValue`), e.g. "Rita"
    * for an author IRI. Undefined for plain string values (which are their own label) and empty selections.
-   * Persisted alongside the IRI in the URL so a rehydrated link filter can show the name, not the IRI.
+   *
+   * Persistence: the URL writer in `advanced-search-bar.component._writeFiltersToUrl` calls this ONLY for
+   * `LinkValueObject` chips (DEV-6857). List-value and resource-class `Matches` chips deliberately do not
+   * persist their labels — those come from the loaded list tree / ontology at chip-render time and
+   * baking a single-language string into the URL would fossilise the display language.
    */
   get selectedObjectLabel(): string | undefined {
     return this._selectedObjectNode instanceof NodeValue ? this._selectedObjectNode.label : undefined;

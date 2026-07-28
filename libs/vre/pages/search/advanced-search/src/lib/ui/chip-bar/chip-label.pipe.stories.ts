@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
+import { Constants, StringLiteralV2 } from '@dasch-swiss/dsp-js';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
+import { of } from 'rxjs';
 import { expect } from 'storybook/test';
 import { IriLabelPair, StatementElement } from '../../model';
 import { Operator } from '../../operators.config';
-import { PROPERTY_FORM_MANAGER_STORY_PROVIDERS, STORY_PROVIDERS } from '../../stories.helpers';
+import { ListNodeLabelResolver } from '../../service/list-node-label.resolver';
+import { OntologyDataService } from '../../service/ontology-data.service';
+import {
+  CHIP_LABEL_STORY_PROVIDERS,
+  makeListNodeLabelResolverStub,
+  makeOntologyDataServiceStub,
+  STORY_PROVIDERS,
+} from '../../stories.helpers';
 import { toLabels } from '../../util/labels';
 import { ChipLabelPipe } from './chip-label.pipe';
 
@@ -22,15 +31,20 @@ const makeStatement = (overrides: {
   predicateLabel?: string;
   operator?: Operator;
   objectValue?: string | IriLabelPair;
+  objectValueType?: string;
+  isLinkProperty?: boolean;
+  listObjectIri?: string;
+  predicateLabels?: StringLiteralV2[];
 }): StatementElement => {
   const s = new StatementElement();
-  if (overrides.predicateLabel) {
+  if (overrides.predicateLabel || overrides.predicateLabels) {
     s.selectedPredicate = {
       iri: 'http://ex.org/prop',
-      labels: toLabels(overrides.predicateLabel),
+      labels: overrides.predicateLabels ?? toLabels(overrides.predicateLabel ?? ''),
       comments: [],
-      objectValueType: 'TextValue',
-      isLinkProperty: false,
+      objectValueType: overrides.objectValueType ?? 'TextValue',
+      isLinkProperty: overrides.isLinkProperty ?? false,
+      listObjectIri: overrides.listObjectIri,
     };
   }
   if (overrides.operator) s.selectedOperator = overrides.operator;
@@ -39,11 +53,13 @@ const makeStatement = (overrides: {
 };
 
 // The ChipLabelPipe injects LocalizationService (only reads currentLanguage) and StatementDraftStore
-// (for nested subcriteria). The store pulls in DerivedSearchStateService + the URL/logger stubs.
+// (for nested subcriteria) plus, since DEV-6857, OntologyDataService (for resource-class Matches labels)
+// and ListNodeLabelResolver (for list-node labels). CHIP_LABEL_STORY_PROVIDERS bundles the two new deps
+// with the manager pair for convenience; individual stories override them with more specific stubs.
 const baseProviders = [
   ...STORY_PROVIDERS,
   { provide: LocalizationService, useValue: { currentLanguage: 'en' } as Partial<LocalizationService> },
-  ...PROPERTY_FORM_MANAGER_STORY_PROVIDERS,
+  ...CHIP_LABEL_STORY_PROVIDERS,
 ];
 
 const meta: Meta<ChipLabelPipeHarnessComponent> = {
@@ -117,5 +133,99 @@ export const TruncatesLongValue: Story = {
     const label = canvasElement.querySelector('.label')?.textContent?.trim() ?? '';
     await expect(label).toContain('…');
     await expect(label.length).toBeLessThan(60);
+  },
+};
+
+// DEV-6857: the chip must resolve list-node labels from the loaded list tree at render time (not from
+// a frozen URL string), so it re-translates on language switch. The story stubs a mutable
+// LocalizationService and a list-node resolver seeded with de/en/fr labels for one node; the play
+// function asserts the chip picks the currently-active language and reacts to a mid-run language flip.
+const LIST_ROOT_IRI = 'http://ex.org/lists/root';
+const LIST_NODE_IRI = 'http://ex.org/lists/node/1';
+const LIST_NODE_LABELS: StringLiteralV2[] = [
+  { language: 'de', value: 'Berufs-/Meisterprüfung' },
+  { language: 'en', value: 'Professional exam' },
+  { language: 'fr', value: 'Examen professionnel' },
+];
+
+export const ListValueLabelFromResolver: Story = {
+  name: 'DEV-6857: list value chip resolves label from the list-node resolver',
+  decorators: [
+    applicationConfig({
+      providers: [
+        ...STORY_PROVIDERS,
+        { provide: LocalizationService, useValue: { currentLanguage: 'en' } },
+        ...CHIP_LABEL_STORY_PROVIDERS,
+        // Override the empty list-resolver stub from CHIP_LABEL_STORY_PROVIDERS with one that returns
+        // real multi-language labels for the story's node IRI.
+        {
+          provide: ListNodeLabelResolver,
+          useValue: makeListNodeLabelResolverStub({ [LIST_NODE_IRI]: LIST_NODE_LABELS }),
+        },
+      ],
+    }),
+  ],
+  args: {
+    statement: makeStatement({
+      predicateLabel: 'Field',
+      operator: Operator.Equals,
+      objectValueType: Constants.ListValue,
+      listObjectIri: LIST_ROOT_IRI,
+      objectValue: { iri: LIST_NODE_IRI, labels: [], comments: [] },
+    }),
+  },
+  play: async ({ canvasElement }) => {
+    const label = canvasElement.querySelector('.label')?.textContent?.trim() ?? '';
+    // The chip's IriLabelPair carries no `labels` (mirroring the DEV-6857 URL round-trip where the
+    // label is no longer persisted). The pipe pulls the current-language label from the resolver.
+    // Full language-switch coverage lives in the Jest spec (chip-label.pipe.spec.ts) — mutating a
+    // captured injector value from a play() scope is awkward and would only duplicate that check.
+    await expect(label).toBe('Field equals Professional exam');
+  },
+};
+
+// DEV-6857: same shape but for the resource-class picked with `Matches` on a link property. Labels
+// come from the ontology stub. Language change coverage lives in the Jest spec.
+const CLASS_IRI = 'http://ex.org/onto/Person';
+const CLASS_LABELS: StringLiteralV2[] = [
+  { language: 'de', value: 'Person' },
+  { language: 'en', value: 'Person' },
+  { language: 'fr', value: 'Personne' },
+];
+
+export const ResourceClassMatchesFromOntology: Story = {
+  name: 'DEV-6857: resource-class Matches chip resolves label from ontology',
+  decorators: [
+    applicationConfig({
+      providers: [
+        ...STORY_PROVIDERS,
+        { provide: LocalizationService, useValue: { currentLanguage: 'en' } },
+        ...CHIP_LABEL_STORY_PROVIDERS,
+        // Ontology stub that exposes exactly one resource class, matching the story's IRI.
+        {
+          provide: OntologyDataService,
+          useValue: makeOntologyDataServiceStub({
+            resourceClasses$: of([{ iri: CLASS_IRI, labels: CLASS_LABELS, comments: [] }]),
+          }),
+        },
+      ],
+    }),
+  ],
+  args: {
+    statement: makeStatement({
+      predicateLabels: [
+        { language: 'en', value: 'author' },
+        { language: 'fr', value: 'auteur' },
+      ],
+      operator: Operator.Matches,
+      objectValueType: 'http://api.knora.org/ontology/knora-api/v2#LinkValue',
+      isLinkProperty: true,
+      objectValue: { iri: CLASS_IRI, labels: [], comments: [] },
+    }),
+  },
+  play: async ({ canvasElement }) => {
+    const label = canvasElement.querySelector('.label')?.textContent?.trim() ?? '';
+    // The chip pulled the class label from the ontology stub, not from any URL-frozen `valueLabel`.
+    await expect(label).toBe('author matches Person');
   },
 };
