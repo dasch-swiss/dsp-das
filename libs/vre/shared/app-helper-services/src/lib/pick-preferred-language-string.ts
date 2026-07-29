@@ -14,12 +14,13 @@ const DATA_LANGUAGE_FALLBACK_ORDER: readonly AvailableLanguage[] = ['en', 'de', 
  * Pick the displayable label for the preferred language with fallback.
  * Returns the label in `language` if non-empty; otherwise walks the fixed
  * fallback chain (`en > de > fr > it > rm`) and returns the first non-empty
- * label found; otherwise an empty string.
+ * label found; otherwise the first non-empty label in any language
+ * (safety net for untagged labels the app constructs for endpoints that
+ * return no language tag — e.g. `search-by-label`, `ListNodeV2`);
+ * otherwise an empty string.
  *
  * The fixed chain guarantees the same label wins across API endpoints
- * regardless of the order they return language variants in. The chain
- * covers every language the dsp-api model exposes — no other tags reach
- * this function.
+ * regardless of the order they return language variants in.
  *
  * Shared between `StringifyStringLiteralPipe` (display) and any
  * call site that needs the same string for sort-key consistency.
@@ -33,5 +34,5 @@ export function pickPreferredLanguageString(
     const v = value.find(l => l.language === lang)?.value;
     if (v && v.trim() !== '') return v;
   }
-  return '';
+  return value.find(l => l.value && l.value.trim() !== '')?.value ?? '';
 }

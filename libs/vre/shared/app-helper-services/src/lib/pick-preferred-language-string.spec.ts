@@ -103,5 +103,20 @@ describe('pickPreferredLanguageString', () => {
       ];
       expect(pickPreferredLanguageString(labels, 'rm')).toBe('Deutsch');
     });
+
+    it('falls back to untagged labels (language: "") when the chain misses', () => {
+      // `search-by-label` results, ListNodeV2, and other endpoints that expose a
+      // single label with no language tag rely on this safety net.
+      const labels = [{ language: '', value: 'Book' }];
+      expect(pickPreferredLanguageString(labels, 'en')).toBe('Book');
+    });
+
+    it('prefers a chain-language label over an untagged one', () => {
+      const labels = [
+        { language: '', value: 'Untagged' },
+        { language: 'de', value: 'Deutsch' },
+      ];
+      expect(pickPreferredLanguageString(labels, 'rm')).toBe('Deutsch');
+    });
   });
 });
