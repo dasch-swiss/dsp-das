@@ -202,6 +202,25 @@ describe('ResourcesListFetcherComponent', () => {
       sub.unsubscribe();
     });
 
+    it('clears a previously known count when a later page request fails', () => {
+      mockDspApiConnection.v2.search.doExtendedSearch.mockReturnValue(of({ resources: [mockResource1] }));
+      mockDspApiConnection.v2.search.doExtendedSearchCountQuery.mockReturnValue(of({ numberOfResults: 1000 }));
+
+      component.ngOnChanges();
+      const { sub } = collectData();
+      const resourceResult = fixture.debugElement.injector.get(ResourceResultService);
+      expect(resourceResult.numberOfResults).toBe(1000);
+
+      mockDspApiConnection.v2.search.doExtendedSearch.mockReturnValue(throwError(() => new Error('page 2 timed out')));
+      resourceResult.updatePageIndex(1);
+
+      // Leaving 1000 here would have the service report a total for resources that are no longer on
+      // screen, contradicting its own "null means genuinely unknown" contract.
+      expect(component.failed()).toBe(true);
+      expect(resourceResult.numberOfResults).toBeNull();
+      sub.unsubscribe();
+    });
+
     it('re-runs the load when the failure state is retried', () => {
       mockDspApiConnection.v2.search.doExtendedSearch
         .mockReturnValueOnce(throwError(() => new Error('transient failure')))

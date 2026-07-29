@@ -89,6 +89,10 @@ export class ResourcesListFetcherComponent implements OnChanges {
       )
       .pipe(
         map(response => response.numberOfResults),
+        // Swallowed without a snackbar on purpose: the resources rendered fine and an error toast over
+        // a working list is noise. Nothing is reported anywhere either, because no production channel
+        // exists — AppErrorHandler sends only non-HTTP errors to Sentry/Faro, so no ApiResponseError
+        // has ever reached telemetry (DEV-6872).
         catchError(() => of(null))
       );
 
@@ -168,6 +172,10 @@ export class ResourcesListFetcherComponent implements OnChanges {
       }),
       catchError((error: unknown) => {
         this._errorHandler.handleError(error);
+        // Drop any previously known total: after a failed page change the old count describes results
+        // that are no longer on screen, and leaving it would break the service's "null means genuinely
+        // unknown" contract for as long as the failure state lasts.
+        this._resourceResult.numberOfResults = null;
         this.failed.set(true);
         return of(null);
       })
