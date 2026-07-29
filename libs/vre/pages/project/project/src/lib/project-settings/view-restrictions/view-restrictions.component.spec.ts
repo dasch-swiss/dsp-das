@@ -135,4 +135,43 @@ describe('ViewRestrictionsComponent', () => {
     expect(component.visibilityIcon(Visibility.RestrictedView)).toBe('blur_on');
     expect(component.visibilityIcon(Visibility.Visible)).toBe('visibility');
   });
+
+  describe('isCombo (single-item resources render on one line)', () => {
+    const visible = { anonymous: Visibility.Visible, authenticated: Visibility.Visible, projectMember: Visibility.Visible };
+    const item = {
+      type: ItemType.Value,
+      visibility: { anonymous: Visibility.Hidden, authenticated: Visibility.Hidden, projectMember: Visibility.Visible },
+    };
+
+    it('is a combo when the resource is fully visible and has exactly one item', () => {
+      expect(
+        component.isCombo({ resourceIri: 'r', label: 'R', resourceClassIri: 'c', resourceVisibility: visible, items: [item] })
+      ).toBe(true);
+    });
+
+    it('is NOT a combo when the resource has more than one item', () => {
+      expect(
+        component.isCombo({
+          resourceIri: 'r',
+          label: 'R',
+          resourceClassIri: 'c',
+          resourceVisibility: visible,
+          items: [item, item],
+        })
+      ).toBe(false);
+    });
+
+    it('is NOT a combo when the resource itself is restricted', () => {
+      const restricted = { ...visible, anonymous: Visibility.Hidden };
+      expect(
+        component.isCombo({ resourceIri: 'r', label: 'R', resourceClassIri: 'c', resourceVisibility: restricted, items: [item] })
+      ).toBe(false);
+    });
+
+    it('is NOT a combo when the resource has no items (whole-resource restriction)', () => {
+      expect(
+        component.isCombo({ resourceIri: 'r', label: 'R', resourceClassIri: 'c', resourceVisibility: visible, items: [] })
+      ).toBe(false);
+    });
+  });
 });

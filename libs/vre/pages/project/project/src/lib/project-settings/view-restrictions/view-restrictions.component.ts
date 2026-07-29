@@ -8,6 +8,8 @@ import {
   GroupBy,
   ItemType,
   PagedResponseRestrictedResource,
+  RestrictedItem,
+  RestrictedResource,
   RestrictionGroup,
   Visibility,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
@@ -119,6 +121,27 @@ export class ViewRestrictionsComponent {
   isEmptyGroup(group: RestrictionGroup): boolean {
     const c = group.counts;
     return c.anonymous + c.authenticated + c.projectMember === 0;
+  }
+
+  private isResourceVisible(res: RestrictedResource): boolean {
+    const v = res.resourceVisibility;
+    return (
+      v.anonymous === Visibility.Visible &&
+      v.authenticated === Visibility.Visible &&
+      v.projectMember === Visibility.Visible
+    );
+  }
+
+  /**
+   * A resource collapses onto one line (design 1g/1h combo row) when it is itself fully visible and
+   * carries exactly one restricted item — the resource + its single item render inline.
+   */
+  isCombo(res: RestrictedResource): boolean {
+    return this.isResourceVisible(res) && (res.items?.length ?? 0) === 1;
+  }
+
+  itemIcon(item: RestrictedItem): string {
+    return item.type === ItemType.File ? 'image' : item.type === ItemType.Comment ? 'comment' : 'lock';
   }
 
   visibilityIcon(v: Visibility | undefined): string {

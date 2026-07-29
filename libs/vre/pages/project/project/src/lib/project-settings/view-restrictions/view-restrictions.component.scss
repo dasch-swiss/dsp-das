@@ -164,6 +164,22 @@
     border-top: 1px solid #d6e0e8;
   }
 
+  // combo row: resource + single item inline (design 1g/1h)
+  .col-group.combo {
+    .res-name {
+      font-weight: 500;
+      flex: 0 1 auto;
+    }
+
+    .combo-sep {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+      color: rgba(0, 0, 0, 0.4);
+      flex: none;
+    }
+  }
+
   .indent-1 {
     padding-left: 48px;
   }

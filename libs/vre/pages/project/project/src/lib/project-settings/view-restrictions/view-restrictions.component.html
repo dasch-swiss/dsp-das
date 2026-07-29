@@ -78,32 +78,50 @@
           <app-progress-indicator />
         } @else if (expandedGroup(group.id); as eg) {
           @for (res of eg.page.data; track res.resourceIri) {
-            <div class="drill-res">
-              <span class="col-group indent-1">
-                <mat-icon class="kind-icon">description</mat-icon>
-                <span class="link-label">{{ res.label }}</span>
-                @if (res.items?.length) {
-                  <span class="child-info">
-                    {{ res.items.length }} {{ 'pages.project.viewRestrictions.itemsInside' | translate }}
-                  </span>
-                }
-              </span>
-              <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.anonymous)">{{ visibilityIcon(res.resourceVisibility.anonymous) }}</mat-icon></span>
-              <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.authenticated)">{{ visibilityIcon(res.resourceVisibility.authenticated) }}</mat-icon></span>
-              <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.projectMember)">{{ visibilityIcon(res.resourceVisibility.projectMember) }}</mat-icon></span>
-            </div>
-
-            @for (item of res.items; track item.valueIri || $index) {
-              <div class="drill-item">
-                <span class="col-group indent-2">
-                  <mat-icon class="kind-icon">{{ item.type === ItemType.File ? 'image' : item.type === ItemType.Comment ? 'comment' : 'lock' }}</mat-icon>
-                  <span class="link-label">{{ item.propertyLabel || item.type }}</span>
-                  <span class="tag">{{ 'pages.project.viewRestrictions.itemType.' + item.type | translate }}</span>
+            @if (isCombo(res)) {
+              <!-- combo row: fully-visible resource with a single restricted item, on one line (design 1g/1h) -->
+              @let comboItem = res.items[0];
+              <div class="drill-res">
+                <span class="col-group indent-1 combo">
+                  <mat-icon class="kind-icon">description</mat-icon>
+                  <span class="link-label res-name">{{ res.label }}</span>
+                  <mat-icon class="combo-sep">chevron_right</mat-icon>
+                  <mat-icon class="kind-icon">{{ itemIcon(comboItem) }}</mat-icon>
+                  <span class="link-label">{{ comboItem.propertyLabel || comboItem.type }}</span>
+                  <span class="tag">{{ 'pages.project.viewRestrictions.itemType.' + comboItem.type | translate }}</span>
                 </span>
-                <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.anonymous)">{{ visibilityIcon(item.visibility.anonymous) }}</mat-icon></span>
-                <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.authenticated)">{{ visibilityIcon(item.visibility.authenticated) }}</mat-icon></span>
-                <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.projectMember)">{{ visibilityIcon(item.visibility.projectMember) }}</mat-icon></span>
+                <span class="col-aud"><mat-icon [class]="visibilityClass(comboItem.visibility.anonymous)">{{ visibilityIcon(comboItem.visibility.anonymous) }}</mat-icon></span>
+                <span class="col-aud"><mat-icon [class]="visibilityClass(comboItem.visibility.authenticated)">{{ visibilityIcon(comboItem.visibility.authenticated) }}</mat-icon></span>
+                <span class="col-aud"><mat-icon [class]="visibilityClass(comboItem.visibility.projectMember)">{{ visibilityIcon(comboItem.visibility.projectMember) }}</mat-icon></span>
               </div>
+            } @else {
+              <div class="drill-res">
+                <span class="col-group indent-1">
+                  <mat-icon class="kind-icon">description</mat-icon>
+                  <span class="link-label">{{ res.label }}</span>
+                  @if (res.items?.length) {
+                    <span class="child-info">
+                      {{ res.items.length }} {{ 'pages.project.viewRestrictions.itemsInside' | translate }}
+                    </span>
+                  }
+                </span>
+                <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.anonymous)">{{ visibilityIcon(res.resourceVisibility.anonymous) }}</mat-icon></span>
+                <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.authenticated)">{{ visibilityIcon(res.resourceVisibility.authenticated) }}</mat-icon></span>
+                <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.projectMember)">{{ visibilityIcon(res.resourceVisibility.projectMember) }}</mat-icon></span>
+              </div>
+
+              @for (item of res.items; track item.valueIri || $index) {
+                <div class="drill-item">
+                  <span class="col-group indent-2">
+                    <mat-icon class="kind-icon">{{ itemIcon(item) }}</mat-icon>
+                    <span class="link-label">{{ item.propertyLabel || item.type }}</span>
+                    <span class="tag">{{ 'pages.project.viewRestrictions.itemType.' + item.type | translate }}</span>
+                  </span>
+                  <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.anonymous)">{{ visibilityIcon(item.visibility.anonymous) }}</mat-icon></span>
+                  <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.authenticated)">{{ visibilityIcon(item.visibility.authenticated) }}</mat-icon></span>
+                  <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.projectMember)">{{ visibilityIcon(item.visibility.projectMember) }}</mat-icon></span>
+                </div>
+              }
             }
           }
 
