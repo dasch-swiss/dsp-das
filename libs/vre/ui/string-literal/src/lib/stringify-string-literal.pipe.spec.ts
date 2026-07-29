@@ -19,14 +19,14 @@ describe('StringifyStringLiteralPipe', () => {
     expect(pipe.transform(labels)).toBe('Documentation');
   });
 
-  it('falls back to the first non-empty value when the current language is missing', () => {
+  it('falls back through the fixed chain (en > de > fr > it > rm) when the current language is missing', () => {
     localization.currentLanguage = 'fr';
     const labels = [
       { language: 'de', value: 'Dokumentation' },
       { language: 'en', value: 'Documentation' },
     ];
-    // No hardcoded English preference — first non-empty wins.
-    expect(pipe.transform(labels)).toBe('Dokumentation');
+    // Deterministic fallback order — en wins regardless of input array order. See DEV-6875.
+    expect(pipe.transform(labels)).toBe('Documentation');
   });
 
   it('falls back to the only available label regardless of language', () => {
@@ -37,7 +37,7 @@ describe('StringifyStringLiteralPipe', () => {
 
   it('never consults the browser language (regression for DEV-6319 / DEV-6535)', () => {
     // Even when current lang is missing AND English is missing, browser language
-    // must not be used — only the first non-empty value.
+    // must not be used — only the fixed data-language fallback chain (it before rm).
     localization.currentLanguage = 'fr';
     const labels = [
       { language: 'it', value: 'Tomba' },
