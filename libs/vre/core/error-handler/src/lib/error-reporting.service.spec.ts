@@ -12,8 +12,8 @@ const DEDUP_WINDOW_MS = 60_000;
  * has a private constructor, so `fromAjaxError` is the only way in — it copies status off the xhr and
  * method/url off the request, which is exactly what the reporting service reads.
  */
-function apiError(status: number, method: string, url: string): ApiResponseError {
-  const xhr = { status, responseType: 'json', response: {} } as unknown as XMLHttpRequest;
+function apiError(status: number, method: string, url: string, response: unknown = {}): ApiResponseError {
+  const xhr = { status, responseType: 'json', response } as unknown as XMLHttpRequest;
   const ajaxError = new AjaxError('Error', xhr, {
     url,
     method,
@@ -113,6 +113,53 @@ describe('ErrorReportingService', () => {
       expect(second).toEqual(first);
     });
 
+    it("keeps dsp-api's reason on the event, since the status alone is not actionable", () => {
+      // The JSON-LD shape. Without this the issue reads "dsp-api 400 POST /v2/values" and nothing
+      // tells you which constraint the API rejected.
+      service.report(
+        apiError(400, 'POST', '/v2/values', {
+          'knora-api:error': 'dsp.errors.BadRequestException: value type is not supported',
+        })
+      );
+
+      expect(captureException.mock.calls[0][1].extra['dsp.response']).toBe(
+        'dsp.errors.BadRequestException: value type is not supported'
+      );
+    });
+
+    it("keeps an HttpErrorResponse's body reason", () => {
+      service.report(
+        new HttpErrorResponse({
+          status: 400,
+          statusText: 'Bad Request',
+          url: '/admin/projects',
+          error: { message: 'shortcode is already taken' },
+        })
+      );
+
+      expect(captureException.mock.calls[0][1].extra['dsp.response']).toBe('shortcode is already taken');
+    });
+
+    it('omits the reason entirely when the body carries none', () => {
+      // Angular's own composed message is not used as a fallback — it restates the status and URL,
+      // both already on the event. So a present dsp.response means the server really said something.
+      service.report(new HttpErrorResponse({ status: 504, statusText: 'Gateway Timeout', url: '/v2/search/count/x' }));
+
+      expect(captureException.mock.calls[0][1].extra).toEqual({ 'dsp.url': '/v2/search/count/x' });
+    });
+
+    it('truncates a long reason', () => {
+      service.report(apiError(500, 'POST', '/v2/values', { message: 'x'.repeat(5000) }));
+
+      expect(captureException.mock.calls[0][1].extra['dsp.response']).toHaveLength(2000);
+    });
+
+    it('keeps the reason out of the fingerprint, so one endpoint stays one issue', () => {
+      service.report(apiError(400, 'POST', '/v2/values', { message: 'the label is required' }));
+
+      expect(captureException.mock.calls[0][1].fingerprint).toEqual(['dsp-api', 'POST', '400', '/v2/values']);
+    });
+
     it('attaches caller context as tags so a silently swallowed failure names its call site', () => {
       service.report(apiError(504, 'GET', '/v2/search/count/gaga'), {
         component: 'SearchResultComponent',
@@ -151,6 +198,23 @@ describe('ErrorReportingService', () => {
       service.report(apiError(500, 'GET', '/v2/search/count/gaga'));
 
       expect(captureException).toHaveBeenCalledTimes(2);
+    });
+
+    it('does not suppress a different reason behind the same fingerprint', () => {
+      // Two distinct rejections of the same endpoint are two distinct failures. Keying dedup on the
+      // fingerprint alone would report the first and silently discard the second reason.
+      service.report(apiError(400, 'POST', '/v2/values', { message: 'the label is required' }));
+      service.report(apiError(400, 'POST', '/v2/values', { message: 'value type is not supported' }));
+
+      expect(captureException).toHaveBeenCalledTimes(2);
+    });
+
+    it('still suppresses a repeat of the same reason', () => {
+      const body = { message: 'the label is required' };
+      service.report(apiError(400, 'POST', '/v2/values', body));
+      service.report(apiError(400, 'POST', '/v2/values', body));
+
+      expect(captureException).toHaveBeenCalledTimes(1);
     });
   });
 

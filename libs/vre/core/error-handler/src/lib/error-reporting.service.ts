@@ -18,6 +18,9 @@ const UNKNOWN_METHOD = 'UNKNOWN';
 
 const UNKNOWN_ROUTE = 'unknown';
 
+/** Cap on the server's reason. Generous enough for any dsp-api message, far inside the event limits. */
+const MAX_REASON_LENGTH = 2000;
+
 /** The request-shaped fields shared by the types a dsp-api failure can arrive as. */
 interface ApiFailure {
   status: number;
@@ -35,10 +38,13 @@ interface ReportPayload {
   faroError: Error | string;
   /** Set for API failures only — see `_buildPayload`. */
   fingerprint?: string[];
+  /** Deliberately outside the fingerprint, but part of the dedup key — see `_isSuppressed`. */
+  reason?: string;
   tags: Record<string, string>;
   /**
-   * Unindexed event detail. The request URL goes here rather than into a tag: a Gravsearch query runs
-   * to thousands of characters, well past Sentry's 200-character tag limit, and every one is unique.
+   * Unindexed event detail. The request URL and the server's reason go here rather than into tags: a
+   * Gravsearch query runs to thousands of characters, well past Sentry's 200-character tag-value cap,
+   * and every URL is unique, so as a tag it would only inflate the tag index.
    */
   extra?: Record<string, string>;
 }
@@ -65,7 +71,7 @@ export class ErrorReportingService {
   report(error: unknown, context?: Record<string, string>): void {
     const payload = this._buildPayload(error, context);
 
-    if (payload.fingerprint && this._isSuppressed(payload.fingerprint)) {
+    if (payload.fingerprint && this._isSuppressed(payload.fingerprint, payload.reason)) {
       return;
     }
 
@@ -86,6 +92,7 @@ export class ErrorReportingService {
 
     const route = ErrorReportingService._routeOf(failure.url);
     const status = `${failure.status}`;
+    const reason = ErrorReportingService._reasonOf(error)?.slice(0, MAX_REASON_LENGTH);
     // Neither ApiResponseError nor HttpErrorResponse extends Error, so Sentry would file every one of
     // them as "Non-Error exception captured with keys: …" and Faro would reject them outright.
     // Re-express the failure as a real Error whose message is the part worth grouping on.
@@ -99,14 +106,54 @@ export class ErrorReportingService {
       // Gravsearch queries in the URL — left alone that is one issue per request. Group on the coarse
       // route instead; the full URL stays on the event.
       fingerprint: ['dsp-api', failure.method, status, route],
+      reason,
       tags: {
         'dsp.status': status,
         'dsp.method': failure.method,
         'dsp.route': route,
         ...context,
       },
-      extra: { 'dsp.url': failure.url },
+      extra: { 'dsp.url': failure.url, ...(reason ? { 'dsp.response': reason } : {}) },
     };
+  }
+
+  /**
+   * The server's own account of the failure. `AppErrorHandler` reads the same fields to build the
+   * snackbar and then drops them, so without this a Sentry issue records that a 400 happened but not
+   * which constraint dsp-api rejected — the only actionable part of it.
+   *
+   * Angular's own `HttpErrorResponse.message` is not used as a fallback: it is composed from the status
+   * and URL, both already on the event. A present `dsp.response` therefore means the server really did
+   * say something.
+   */
+  private static _reasonOf(error: unknown): string | undefined {
+    if (error instanceof ApiResponseError) {
+      return typeof error.error === 'string'
+        ? error.error || undefined
+        : ErrorReportingService._reasonFromBody(error.error.response);
+    }
+
+    if (error instanceof HttpErrorResponse) {
+      return ErrorReportingService._reasonFromBody(error.error);
+    }
+
+    return undefined;
+  }
+
+  /** dsp-api answers with the JSON-LD `knora-api:error`, a `{ message }`, an `{ error }`, or a bare string. */
+  private static _reasonFromBody(body: unknown): string | undefined {
+    if (typeof body === 'string') {
+      return body || undefined;
+    }
+
+    if (!body || typeof body !== 'object') {
+      return undefined;
+    }
+
+    const shape = body as { 'knora-api:error'?: unknown; message?: unknown; error?: unknown };
+    return [shape['knora-api:error'], shape.message, shape.error].find(
+      (candidate): candidate is string => typeof candidate === 'string' && candidate.length > 0
+    );
   }
 
   private static _asApiFailure(error: unknown): ApiFailure | null {
@@ -155,8 +202,13 @@ export class ErrorReportingService {
     return segments.includes('count') && !head.includes('count') ? `${route}/count` : route;
   }
 
-  private _isSuppressed(fingerprint: string[]): boolean {
-    const key = fingerprint.join('|');
+  /**
+   * Keyed on the reason as well as the fingerprint. Two different rejections on one route are two
+   * different failures and both deserve reporting, while a retry loop against the same one still
+   * collapses. Grouping is unaffected — the reason stays out of the fingerprint.
+   */
+  private _isSuppressed(fingerprint: string[], reason?: string): boolean {
+    const key = [...fingerprint, reason ?? ''].join('|');
     const now = Date.now();
     const previous = this._reportedAt.get(key);
 
