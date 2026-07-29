@@ -265,6 +265,31 @@ describe('ErrorReportingService', () => {
       expect(context.context).toMatchObject({ 'dsp.status': '500' });
     });
 
+    it('gives Faro every field Sentry gets, extra included', () => {
+      service.report(apiError(400, 'POST', '/v2/values/xyz', { message: 'the label is required' }), {
+        component: 'PropertyValueCreatorComponent',
+      });
+
+      // Faro's context has neither a cardinality penalty nor a length cap, so the tag/extra split that
+      // Sentry's 200-character tag values force has no counterpart here. Passing tags only would leave
+      // Faro without the URL or the server's reason — less than Sentry, which is backwards.
+      expect(pushError.mock.calls[0][1].context).toEqual({
+        'dsp.status': '400',
+        'dsp.method': 'POST',
+        'dsp.route': '/v2/values',
+        'dsp.url': '/v2/values/xyz',
+        'dsp.response': 'the label is required',
+        'dsp.severity': 'warning',
+        component: 'PropertyValueCreatorComponent',
+      });
+    });
+
+    it('does not invent a severity for a JS error, which has no graded status', () => {
+      service.report(new Error('boom'));
+
+      expect(pushError.mock.calls[0][1].context).toEqual({});
+    });
+
     it('is a no-op when neither SDK is loaded, which is the normal case locally', () => {
       delete window.Sentry;
       delete window.__FARO__;

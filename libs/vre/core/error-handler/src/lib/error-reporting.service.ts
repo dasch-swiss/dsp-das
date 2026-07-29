@@ -51,6 +51,8 @@ interface ReportPayload {
    * Unindexed event detail. The request URL and the server's reason go here rather than into tags: a
    * Gravsearch query runs to thousands of characters, well past Sentry's 200-character tag-value cap,
    * and every URL is unique, so as a tag it would only inflate the tag index.
+   *
+   * The split is Sentry's constraint alone — Faro receives tags and extra alike.
    */
   extra?: Record<string, string>;
   /** Left unset for JS errors, which Sentry captures at `error` level by default. */
@@ -252,11 +254,25 @@ export class ErrorReportingService {
     }
   }
 
-  /** Faro is lazy loaded by GrafanaFaroService, and currently disabled in every environment. */
+  /**
+   * Faro is lazy loaded by GrafanaFaroService, and currently disabled in every environment.
+   *
+   * It gets the full context, `extra` included: Faro's context is a flat map with neither a
+   * cardinality penalty nor a length cap, so the split Sentry's tag limits force has no counterpart
+   * here, and withholding `extra` would leave Faro with strictly less than Sentry. The severity is
+   * passed as a field of its own because `pushError` has no level — every Faro error is error-level —
+   * and deriving "was this a server fault" from a numeric status is awkward to express in a query.
+   */
   private _sendToFaro(payload: ReportPayload): void {
     try {
       if (window.__FARO__ && typeof window.__FARO__.api?.pushError === 'function') {
-        window.__FARO__.api.pushError(payload.faroError, { context: payload.tags });
+        window.__FARO__.api.pushError(payload.faroError, {
+          context: {
+            ...payload.tags,
+            ...payload.extra,
+            ...(payload.level ? { 'dsp.severity': payload.level } : {}),
+          },
+        });
       }
     } catch (faroError) {
       console.error('Failed to send error to Faro:', faroError);
