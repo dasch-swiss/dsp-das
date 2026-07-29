@@ -127,6 +127,25 @@ describe('AdvancedSearchResultsComponent', () => {
       sub.unsubscribe();
     });
 
+    it('clears a previously known count when a later page request fails', () => {
+      doExtendedSearch.mockReturnValue(of({ resources: [resource] }));
+      doExtendedSearchCountQuery.mockReturnValue(of({ numberOfResults: 1000 }));
+      const component = renderComponent();
+      const resourceResult = fixture.debugElement.injector.get(ResourceResultService);
+
+      const sub = component.resources$.subscribe();
+      expect(resourceResult.numberOfResults).toBe(1000);
+
+      doExtendedSearch.mockReturnValue(throwError(() => new Error('page 2 timed out')));
+      resourceResult.updatePageIndex(1);
+
+      // Leaving 1000 here would have the service report a total for results that are no longer on
+      // screen, contradicting its own "null means genuinely unknown" contract.
+      expect(component.failed()).toBe(true);
+      expect(resourceResult.numberOfResults).toBeNull();
+      sub.unsubscribe();
+    });
+
     it('re-runs the query when the failure state is retried', () => {
       doExtendedSearch
         .mockReturnValueOnce(throwError(() => new Error('transient failure')))

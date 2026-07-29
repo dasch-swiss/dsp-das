@@ -85,6 +85,23 @@ describe('SearchResultComponent — search failure handling (DEV-6866)', () => {
     sub.unsubscribe();
   });
 
+  it('clears a previously known count when a later page request fails', () => {
+    doFulltextSearchCountQuery.mockReturnValue(of({ numberOfResults: 1000 }));
+    const { component, resourceResult } = renderComponent();
+
+    const sub = component.resources$.subscribe();
+    expect(resourceResult.numberOfResults).toBe(1000);
+
+    doFulltextSearch.mockReturnValue(throwError(() => new Error('page 2 timed out')));
+    resourceResult.updatePageIndex(1);
+
+    // Leaving 1000 here would have the service report a total for results that are no longer on
+    // screen, contradicting its own "null means genuinely unknown" contract.
+    expect(component.failed()).toBe(true);
+    expect(resourceResult.numberOfResults).toBeNull();
+    sub.unsubscribe();
+  });
+
   it('re-runs the search when the failure state is retried', () => {
     doFulltextSearch
       .mockReturnValueOnce(throwError(() => new Error('transient failure')))

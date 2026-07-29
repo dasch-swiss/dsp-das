@@ -119,6 +119,10 @@ export class SearchResultComponent implements OnChanges {
       }),
       catchError((error: unknown) => {
         this._errorHandler.handleError(error);
+        // Drop any previously known total: after a failed page change the old count describes results
+        // that are no longer on screen, and leaving it would break the service's "null means genuinely
+        // unknown" contract for as long as the failure state lasts.
+        this._resourceResultService.numberOfResults = null;
         this.loading.set(false);
         this.failed.set(true);
         return of(null);
@@ -133,7 +137,14 @@ export class SearchResultComponent implements OnChanges {
    * so the count absorbs its own failure and degrades to an absent count instead.
    */
   private _numberOfAllResults$ = (query: string) =>
-    this._dspApiConnection.v2.search
-      .doFulltextSearchCountQuery(query, 0, this.searchInProjectParam)
-      .pipe(catchError(() => of(null)));
+    this._dspApiConnection.v2.search.doFulltextSearchCountQuery(query, 0, this.searchInProjectParam).pipe(
+      catchError(() => {
+        // Swallowed without a snackbar on purpose: the results rendered fine and an error toast over a
+        // working result list is noise. Nothing is reported anywhere either, because no production
+        // channel exists — AppErrorHandler sends only non-HTTP errors to Sentry/Faro, so no
+        // ApiResponseError has ever reached telemetry (DEV-6872). Advanced search additionally has a
+        // dev-only SearchFlowLogger; this lib has none.
+        return of(null);
+      })
+    );
 }
