@@ -218,7 +218,11 @@ export const ResourceClassMatchesFromOntology: Story = {
         { language: 'fr', value: 'auteur' },
       ],
       operator: Operator.Matches,
-      objectValueType: 'http://api.knora.org/ontology/knora-api/v2#LinkValue',
+      // Real link predicates carry the target-class IRI as `objectValueType`, not
+      // `knora-api#LinkValue` — see `Predicate` construction in the ontology-data service.
+      // `StatementElement.objectType` derives `RESOURCE_OBJECT` from
+      // (objectValueType !== KnoraApiV2) + Matches, so the value must be an ontology IRI.
+      objectValueType: CLASS_IRI,
       isLinkProperty: true,
       objectValue: { iri: CLASS_IRI, labels: [], comments: [] },
     }),
