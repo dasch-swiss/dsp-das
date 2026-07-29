@@ -58,18 +58,26 @@ describe('ErrorReportingService', () => {
 
   describe('API failures', () => {
     it('reports an ApiResponseError as a real Error, grouped by method, status and route', () => {
-      // Neither ApiResponseError nor HttpErrorResponse extends Error; captured raw, Sentry files them
-      // all as one "Non-Error exception captured with keys: …" issue.
-      service.report(apiError(504, 'GET', 'https://api.dasch.swiss/v2/searchextended/count/PREFIX%20knora'));
+      // The Gravsearch count query dsp-app fires per page: a POST whose query string carries the
+      // project IRI. Neither ApiResponseError nor HttpErrorResponse extends Error, so captured raw
+      // Sentry files them all as one "Non-Error exception captured with keys: …" issue.
+      service.report(
+        apiError(
+          504,
+          'POST',
+          'https://api.dasch.swiss/v2/searchextended/count?limitToProject=http%3A%2F%2Frdfh.ch%2Fprojects%2F0001'
+        )
+      );
 
       expect(captureException).toHaveBeenCalledTimes(1);
       const [reported, context] = captureException.mock.calls[0];
       expect(reported).toBeInstanceOf(Error);
-      expect(reported.message).toBe('dsp-api 504 GET /v2/searchextended/count');
-      expect(context.fingerprint).toEqual(['dsp-api', 'GET', '504', '/v2/searchextended/count']);
+      // The project IRI is dropped with the rest of the query string, so one endpoint stays one issue.
+      expect(reported.message).toBe('dsp-api 504 POST /v2/searchextended/count');
+      expect(context.fingerprint).toEqual(['dsp-api', 'POST', '504', '/v2/searchextended/count']);
       expect(context.tags).toMatchObject({
         'dsp.status': '504',
-        'dsp.method': 'GET',
+        'dsp.method': 'POST',
         'dsp.route': '/v2/searchextended/count',
       });
     });
@@ -83,7 +91,8 @@ describe('ErrorReportingService', () => {
     });
 
     it('keeps the full URL off the tags and on the event, so the tag index stays low-cardinality', () => {
-      const url = 'https://api.dasch.swiss/v2/searchextended/count/PREFIX%20knora-api%3A%3Chttp%3A%2F%2Fexample';
+      // The fulltext count query does put its search term in the path.
+      const url = 'https://api.dasch.swiss/v2/search/count/Wandel%20der%20Zeit?limitToProject=http%3A%2F%2Frdfh.ch';
       service.report(apiError(500, 'GET', url));
 
       const [, context] = captureException.mock.calls[0];
