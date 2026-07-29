@@ -75,9 +75,14 @@ jobs:
             the claim against the source, and to default to "refuted" where the evidence is
             ambiguous. Drop every finding its verifier refutes.
 
-            If spawning agents is unavailable to you, say so explicitly in your output and run the
-            same pass yourself, re-deriving each finding from the code without reference to your
-            earlier reasoning.
+            If you cannot spawn agents at all, do NOT check the findings yourself and do NOT post a
+            review. Post only a short error stating that subagents were unavailable and what
+            happened when you tried. A review that reads as verified but was not is worse than no
+            review, and quietly falling back to self-checking restores the exact anchoring this
+            section exists to remove.
+
+            If an individual spawn fails, retry it once; if it fails again keep that finding but
+            label it `unverified` and carry on. One flaky spawn should not sink a whole review.
 
             Apply the deletion test to Minor findings without a verifier.
 
