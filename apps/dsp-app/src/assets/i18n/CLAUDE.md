@@ -36,7 +36,25 @@ Every key that exists in English must exist in all other language files.
 
 ## Key Parity Verification
 
-Verify key parity between translation files after any changes made.
+Verify key parity against `en.json` after any change. There is no script for this — run the check inline from the repository root (`json.load` also fails loudly on a syntax error, so this covers validation too):
+
+```bash
+python3 - <<'PY'
+import json
+def keys(o, p=''):
+    s = set()
+    for k, v in o.items():
+        kp = f'{p}.{k}' if p else k
+        s |= keys(v, kp) if isinstance(v, dict) else {kp}
+    return s
+ref = keys(json.load(open('apps/dsp-app/src/assets/i18n/en.json')))
+for f in ['de', 'fr', 'it']:
+    o = keys(json.load(open(f'apps/dsp-app/src/assets/i18n/{f}.json')))
+    print(f, 'missing:', sorted(ref - o) or 'none', '| extra:', sorted(o - ref) or 'none')
+PY
+```
+
+**Storybook caveat:** some libs render stories against a static translation object instead of `en.json` (e.g. `libs/vre/pages/search/advanced-search/src/lib/stories.helpers.ts`). A new key used by a component that appears in those stories must be added there too, or the story renders the raw key. Parity checking `de`/`fr`/`it` will not catch it.
 
 ## Workflow for Translation Changes
 
@@ -44,20 +62,20 @@ Verify key parity between translation files after any changes made.
 1. Add the key to `en.json` with the English text
 2. Add proper translations to `de.json`, `fr.json`, and `it.json`
 3. **Update the relevant code** to replace hardcoded text with the translation key (e.g., `"Add user"` → `{{ 'pages.project.add' | translate }}`)
-4. Run the parity verification script
+4. Run the parity check (see **Key Parity Verification**)
 5. Test the application to ensure functionality
 
 ### When Updating Existing Keys:
 1. Update the key in `en.json`
 2. Update translations in other language files as needed
-3. Run the parity verification script
+3. Run the parity check (see **Key Parity Verification**)
 4. Test the application
 
 ### When Removing Keys:
 1. Remove from `en.json` first
 2. Remove from all other language files (`de.json`, `fr.json`, `it.json`)
 3. Verify no references remain in the codebase
-4. Run the parity verification script
+4. Run the parity check (see **Key Parity Verification**)
 
 ## Common Issues to Avoid
 
@@ -67,7 +85,7 @@ Verify key parity between translation files after any changes made.
 ## Testing Translations
 
 After making translation changes:
-1. Run the parity verification script
+1. Run the parity check (see **Key Parity Verification**)
 2. Start the application: `npm run start-local`
 3. Switch between languages in the UI to verify functionality
 4. Check that no translation keys show as raw keys (e.g., `"pages.project.legalSettings.tab"`)
@@ -139,28 +157,6 @@ Keys use dot notation in the application code:
 ```typescript
 const message = this._translateService.instant('ui.common.confirmations.deleteItem', { item: 'user' });
 ```
-
-### Validation Scripts
-
-Automated validation scripts are available in the `scripts/` directory:
-
-```bash
-# Validate JSON syntax
-./scripts/validate-translations.sh
-
-# Check key parity across all languages
-./scripts/compare-translation-keys.sh
-
-# Migrate legacy ui.form.action keys
-./scripts/migrate-ui-actions.sh
-```
-
-### Further Reading
-
-For detailed information about the refactored structure, see:
-- `docs/TRANSLATION_REFACTORING.md` - Complete refactoring guide and usage patterns
-- Migration guide and decision trees
-- Benefits and impact analysis
 
 ### File Structure Notes
 

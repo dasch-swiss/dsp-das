@@ -378,7 +378,8 @@
         "commentPlaceholder": "Kommentar"
       },
       "service": {
-        "classCreated": "Die Klasse {{classLabel}} wurde erfolgreich erstellt."
+        "classCreated": "Die Klasse {{classLabel}} wurde erfolgreich erstellt.",
+        "imageAnnotationClass": "Bildannotation"
       }
     },
     "notAllowed": {
@@ -392,6 +393,10 @@
         "placeholder": "Suchbegriff eingeben..."
       },
       "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchFailed": {
+        "title": "Suche fehlgeschlagen",
+        "message": "Etwas ist schiefgelaufen und die Suche konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut."
+      },
       "searchTips": {
         "title": "Suchtipps",
         "exactPhrases": "Verwenden Sie Anführungszeichen für exakte Phrasen: \"down the rabbit hole\"",
@@ -472,7 +477,8 @@
         "resourcesMustBeSameProject": "Die Ressourcen müssen zum selben Projekt gehören"
       },
       "resourcesList": {
-        "resultsCount": "{{count}} Ergebnisse"
+        "resultsCount": "{{count}} Ergebnisse",
+        "countUnavailable": "Anzahl der Ergebnisse nicht verfügbar"
       },
       "resourcesListFetcher": {
         "noResourcesFound": "Keine Ressourcen für diese Klasse gefunden.",
@@ -644,7 +650,7 @@
         "yesDelete": "Ja, löschen"
       },
       "annotationToolbar": {
-        "highlightRegion": "Region hervorheben",
+        "highlightAnnotation": "Annotation hervorheben",
         "openInNewTab": "Annotation in neuem Tab öffnen",
         "shareResource": "Annotation teilen: {{arkUrl}}",
         "copyArkUrl": "ARK-URL kopieren",

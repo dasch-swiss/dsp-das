@@ -1,5 +1,3 @@
-/// <reference types="window" />
-
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, inject, Injectable, NgZone } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
@@ -7,6 +5,7 @@ import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { AjaxError } from 'rxjs/ajax';
+import { ErrorReportingService } from './error-reporting.service';
 import { UserFeedbackError } from './user-feedback-error';
 
 @Injectable({
@@ -18,12 +17,18 @@ export class AppErrorHandler implements ErrorHandler {
   constructor(
     private readonly _notification: NotificationService,
     private readonly _appConfig: AppConfigService,
-    private readonly _ngZone: NgZone
+    private readonly _ngZone: NgZone,
+    private readonly _errorReporting: ErrorReportingService
   ) {}
 
   badRequestRegexMatch = /dsp\.errors\.BadRequestException:(.*)$/;
 
   handleError(error: any): void {
+    // Reported before branching, so every branch reaches telemetry rather than only the last one.
+    // The snackbar branches used to report nothing at all, which left every dsp-api failure — a
+    // triplestore timeout, a 500, a 403 — with no trace beyond five seconds on screen (DEV-6872).
+    this._errorReporting.report(error);
+
     if (error instanceof ApiResponseError && error.error instanceof AjaxError) {
       // JS-LIB
       this.handleGenericError(error.error, error.url);
@@ -32,12 +37,8 @@ export class AppErrorHandler implements ErrorHandler {
       this.handleHttpErrorResponse(error);
     } else if (error instanceof UserFeedbackError) {
       this.displayNotification(error.message);
-    } else {
-      if (this._appConfig.dspInstrumentationConfig.environment !== 'prod') {
-        console.error(error);
-      }
-      this._sendErrorToSentry(error);
-      this._sendErrorToFaro(error);
+    } else if (this._appConfig.dspInstrumentationConfig.environment !== 'prod') {
+      console.error(error);
     }
   }
 
@@ -108,38 +109,6 @@ export class AppErrorHandler implements ErrorHandler {
     const invalidRequestRegexMatch = error.match(/\((.*)\)$/);
     if (invalidRequestRegexMatch) {
       this.displayNotification(invalidRequestRegexMatch[1]);
-    }
-  }
-
-  /**
-   * Send error to Sentry (lazy loaded)
-   * Sentry is only loaded in production environments
-   */
-  private async _sendErrorToSentry(error: any): Promise<void> {
-    try {
-      // Check if Sentry is available in the global window object
-      // It will be loaded by main.ts if the environment requires it
-      if (window.Sentry && typeof window.Sentry.captureException === 'function') {
-        window.Sentry.captureException(error);
-      }
-    } catch (sentryError) {
-      console.error('Failed to send error to Sentry:', sentryError);
-    }
-  }
-
-  /**
-   * Send error to Grafana Faro (lazy loaded)
-   * Faro is only loaded when enabled in configuration
-   */
-  private _sendErrorToFaro(error: any): void {
-    try {
-      // Check if Faro is available in the global window object
-      // It will be loaded by GrafanaFaroService if enabled
-      if (window.__FARO__ && typeof window.__FARO__.api?.pushError === 'function') {
-        window.__FARO__.api.pushError(error);
-      }
-    } catch (faroError) {
-      console.error('Failed to send error to Faro:', faroError);
     }
   }
 }

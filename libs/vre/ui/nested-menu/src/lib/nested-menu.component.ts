@@ -34,6 +34,7 @@ import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
         [matMenuTriggerFor]="menu"
         [matTooltip]="data.comments | appStringifyStringLiteral"
         matTooltipPosition="above"
+        class="list-item-button"
         style="width: 100%"
         (click)="selectMenuWithChildren(data)"
         (mouseenter)="openSubMenu()">
@@ -63,12 +64,13 @@ import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
   styles: [
     `
       .list-item-button {
-        padding: 0 16px;
-        width: 400px;
-      }
-
-      ::ng-deep span.mat-mdc-menu-item-text {
         width: 100%;
+        padding: 8px 16px;
+        height: auto;
+        min-height: 48px;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: break-word;
       }
     `,
   ],
