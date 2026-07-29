@@ -8,7 +8,7 @@
  * Sentry is lazy-loaded in production environments
  */
 interface SentrySDK {
-  captureException(error: any): void;
+  captureException(error: any, captureContext?: any): void;
   captureMessage(message: string): void;
   init(options: any): void;
   browserTracingIntegration(): any;

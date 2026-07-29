@@ -2,6 +2,7 @@ import { ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { ErrorReportingService } from '@dasch-swiss/vre/core/error-handler';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateModule } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
@@ -18,6 +19,7 @@ describe('SearchResultComponent — search failure handling (DEV-6866)', () => {
   let doFulltextSearch: jest.Mock;
   let doFulltextSearchCountQuery: jest.Mock;
   let handleError: jest.Mock;
+  let report: jest.Mock;
 
   const renderComponent = (query = 'der') => {
     const fixture = TestBed.createComponent(SearchResultComponent);
@@ -31,6 +33,7 @@ describe('SearchResultComponent — search failure handling (DEV-6866)', () => {
     doFulltextSearch = jest.fn().mockReturnValue(of({ resources: [resource] }));
     doFulltextSearchCountQuery = jest.fn().mockReturnValue(of({ numberOfResults: 1 }));
     handleError = jest.fn();
+    report = jest.fn();
 
     TestBed.configureTestingModule({
       imports: [SearchResultComponent, TranslateModule.forRoot()],
@@ -40,6 +43,7 @@ describe('SearchResultComponent — search failure handling (DEV-6866)', () => {
           useValue: { v2: { search: { doFulltextSearch, doFulltextSearchCountQuery } } },
         },
         { provide: ErrorHandler, useValue: { handleError } },
+        { provide: ErrorReportingService, useValue: { report } },
       ],
     });
     TestBed.overrideComponent(SearchResultComponent, { set: { template: '', imports: [] } });
@@ -82,6 +86,24 @@ describe('SearchResultComponent — search failure handling (DEV-6866)', () => {
     expect(component.loading()).toBe(false);
     // Null, not the page length: substituting a wrong total would have the UI assert it as fact.
     expect(resourceResult.numberOfResults).toBeNull();
+    sub.unsubscribe();
+  });
+
+  it('reports a failed count query to telemetry without notifying the user (DEV-6872)', () => {
+    const error = new Error('count query timed out');
+    doFulltextSearchCountQuery.mockReturnValue(throwError(() => error));
+    const { component } = renderComponent();
+
+    const sub = component.resources$.subscribe();
+
+    // The failure used to be swallowed outright, which is what left the DEV-6809 count-query cost and
+    // the DEV-6864 timeouts with no production signal at all.
+    expect(report).toHaveBeenCalledWith(error, {
+      component: 'SearchResultComponent',
+      operation: 'fulltextCountQuery',
+    });
+    // Still deliberately silent towards the user: the result list rendered fine.
+    expect(handleError).not.toHaveBeenCalled();
     sub.unsubscribe();
   });
 

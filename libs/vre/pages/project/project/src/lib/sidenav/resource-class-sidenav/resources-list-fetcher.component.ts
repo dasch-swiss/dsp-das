@@ -3,6 +3,7 @@ import { Component, ErrorHandler, Inject, Input, OnChanges, signal } from '@angu
 import { ActivatedRoute, Router } from '@angular/router';
 import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ErrorReportingService } from '@dasch-swiss/vre/core/error-handler';
 import { MultipleViewerService, ResourcesListComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { OntologyService, ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
@@ -89,11 +90,16 @@ export class ResourcesListFetcherComponent implements OnChanges {
       )
       .pipe(
         map(response => response.numberOfResults),
-        // Swallowed without a snackbar on purpose: the resources rendered fine and an error toast over
-        // a working list is noise. Nothing is reported anywhere either, because no production channel
-        // exists — AppErrorHandler sends only non-HTTP errors to Sentry/Faro, so no ApiResponseError
-        // has ever reached telemetry (DEV-6872).
-        catchError(() => of(null))
+        // Reported, not surfaced: the resources rendered fine and an error toast over a working list is
+        // noise, but the cost of this query is exactly what DEV-6809 and DEV-6864 are about, so it must
+        // not stay invisible.
+        catchError((error: unknown) => {
+          this._errorReporting.report(error, {
+            component: 'ResourcesListFetcherComponent',
+            operation: 'gravsearchCountQuery',
+          });
+          return of(null);
+        })
       );
 
   constructor(
@@ -103,6 +109,7 @@ export class ResourcesListFetcherComponent implements OnChanges {
     private readonly _ontologyService: OntologyService,
     private readonly _resourceResult: ResourceResultService,
     private readonly _errorHandler: ErrorHandler,
+    private readonly _errorReporting: ErrorReportingService,
     protected route: ActivatedRoute,
     protected router: Router,
     public projectPageService: ProjectPageService

@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { ErrorReportingService } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,11 +19,13 @@ describe('AdvancedSearchResultsComponent', () => {
   let doExtendedSearch: jest.Mock;
   let doExtendedSearchCountQuery: jest.Mock;
   let handleError: jest.Mock;
+  let report: jest.Mock;
 
   beforeEach(() => {
     doExtendedSearch = jest.fn().mockReturnValue(of({ resources: [] }));
     doExtendedSearchCountQuery = jest.fn().mockReturnValue(of({ numberOfResults: 0 }));
     handleError = jest.fn();
+    report = jest.fn();
 
     TestBed.configureTestingModule({
       imports: [AdvancedSearchResultsComponent, TranslateModule.forRoot()],
@@ -38,6 +41,7 @@ describe('AdvancedSearchResultsComponent', () => {
         },
         { provide: Title, useValue: { setTitle: jest.fn() } },
         { provide: ErrorHandler, useValue: { handleError } },
+        { provide: ErrorReportingService, useValue: { report } },
       ],
     });
     TestBed.overrideComponent(AdvancedSearchResultsComponent, { set: { template: '', imports: [] } });
@@ -124,6 +128,25 @@ describe('AdvancedSearchResultsComponent', () => {
       // Null, not the page length: substituting a wrong total would have the UI assert it as fact.
       // Read the component's own instance — it declares providers: [ResourceResultService].
       expect(fixture.debugElement.injector.get(ResourceResultService).numberOfResults).toBeNull();
+      sub.unsubscribe();
+    });
+
+    it('reports a failed count query to telemetry without notifying the user (DEV-6872)', () => {
+      const error = new Error('count query timed out');
+      doExtendedSearch.mockReturnValue(of({ resources: [resource] }));
+      doExtendedSearchCountQuery.mockReturnValue(throwError(() => error));
+      const component = renderComponent();
+
+      const sub = component.resources$.subscribe();
+
+      // Previously this only reached the isDevMode()-gated SearchFlowLogger, so in production the
+      // failure left no trace at all.
+      expect(report).toHaveBeenCalledWith(error, {
+        component: 'AdvancedSearchResultsComponent',
+        operation: 'gravsearchCountQuery',
+      });
+      // Still deliberately silent towards the user: the result list rendered fine.
+      expect(handleError).not.toHaveBeenCalled();
       sub.unsubscribe();
     });
 
