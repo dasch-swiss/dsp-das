@@ -114,7 +114,7 @@ jobs:
         with:
           fetch-depth: 2
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: 'npm'
@@ -141,7 +141,7 @@ jobs:
         with:
           fetch-depth: 2
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: 'npm'
@@ -188,7 +188,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: 'npm'
@@ -217,7 +217,7 @@ jobs:
           ref: main
           path: dsp-api
       - name: Set up just
-        uses: extractions/setup-just@v2
+        uses: extractions/setup-just@v4
       - name: Start API
         run: |
           cd dsp-api
@@ -308,7 +308,7 @@ jobs:
           exit $exit_code
       - name: Set up Node.js
         if: always() && steps.check.outputs.exit_code == '1'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
       - name: Install dependencies
@@ -413,7 +413,7 @@ jobs:
         with:
           fetch-depth: 2
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: 'npm'
@@ -447,7 +447,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: 3.14
           cache: 'pip'
