@@ -77,6 +77,20 @@
         @if (isLoading(group.id)) {
           <app-progress-indicator />
         } @else if (expandedGroup(group.id); as eg) {
+          @if (eg.page.pagination.totalPages > 1) {
+            <div class="pager pager-top">
+              <span>{{ eg.currentPage }} / {{ eg.page.pagination.totalPages }} ({{ eg.page.pagination.totalItems }})</span>
+              <button type="button" [disabled]="eg.currentPage <= 1" (click)="loadPage(group.id, eg.currentPage - 1)">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+              <button
+                type="button"
+                [disabled]="eg.currentPage >= eg.page.pagination.totalPages"
+                (click)="loadPage(group.id, eg.currentPage + 1)">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+          }
           @for (res of eg.page.data; track res.resourceIri) {
             @if (isCombo(res)) {
               <!-- combo row: fully-visible resource with a single restricted item, on one line (design 1g/1h) -->

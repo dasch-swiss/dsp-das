@@ -257,6 +257,12 @@
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     font-size: 12px;
 
+    // the top pager separates from the rows below it instead of the rows above
+    &.pager-top {
+      border-top: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
     button {
       display: inline-flex;
       align-items: center;
