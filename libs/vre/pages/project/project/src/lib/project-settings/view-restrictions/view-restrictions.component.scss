@@ -276,9 +276,11 @@
   }
 }
 
-// visibility eye colours
+// visibility eye colours.
+// The "visible" eye is hidden to cut visual density — only hidden (red) and
+// restricted-view (amber) icons are shown; a visible cell is left blank.
 .vis-visible {
-  color: #0d9488;
+  display: none;
 }
 .vis-hidden {
   color: #e11d48;
