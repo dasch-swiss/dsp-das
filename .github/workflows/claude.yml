@@ -42,28 +42,47 @@ jobs:
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
 
-            Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security concerns
-            - Test coverage (only for modified code)
+            Review this pull request for correctness, security, performance, and test coverage.
 
-            Focus your review **only on files and lines changed in this PR**.
-            Do **not** review unrelated parts of the repository.
-            Do **not** make any code changes, run commands, or push code; only provide analysis and suggestions.
+            ## Scope
 
-            Structure your review as follows:
-            1. Summary of PR changes
-            2. Identified issues (prioritize Critical issues, including bugs, security vulnerabilities, or regressions):
-              - Grade each issue as Critical, Major, or Minor.
-              - Only Critical issues should prevent the PR from being ready to merge.
-              - Minor or style issues should be noted but do not affect merge readiness.
-            3. Recommendations for improvement (aligned with the issue severity)
-            4. Clear statement whether the PR is ready to merge (based **only** on Critical issues)
+            Report issues **only in lines this PR changed**. But READ WHATEVER YOU NEED to decide
+            whether an issue is real: open the changed files in full (the diff hunks alone give too
+            little surrounding context), plus their callers, their tests, neighbouring
+            implementations of the same pattern, and read-only git history. Reading widely is
+            required; reporting widely is not.
 
-            Be constructive, precise, and concise. Avoid verbose explanations unless necessary for clarity.
-            Use the repository's CLAUDE.md for guidance on style, conventions, and repository-specific best practices.
+            ## Every finding must survive this test
+
+            Name the concrete input or state that triggers it, and the wrong output, crash, or
+            regression that results. Then try to refute your own finding by checking the source.
+
+            DELETE — do not downgrade — any finding where:
+            - you cannot name a specific input and a specific wrong outcome;
+            - the justification is "more robust", "best practice", or "could break if X" where X
+              does not occur in this codebase;
+            - the code is already correct under TypeScript, RxJS, or Angular semantics;
+            - it is a deliberate decision explained in a comment (read the comment before flagging).
+
+            Three defensible findings beat twelve speculative ones. Reporting no findings is a
+            valid and useful outcome.
+
+            ## Test coverage
+
+            For a bug fix, check that a test exists which would FAIL without the change — name it,
+            or state that none exists. Do not ask for tests that only restate an implementation
+            line or assert a config value.
+
+            ## Output
+
+            1. One-paragraph summary of what the PR does.
+            2. Findings, most severe first. For each: `file:line`, the failure scenario, and the
+               fix. Grade Critical / Major / Minor, where Critical means a bug, security hole, or
+               regression that reaches users.
+            3. Ready to merge: yes or no, based **only** on Critical findings.
+
+            Be precise and concise. Read REVIEW.md at the repository root if it exists; its rules
+            override these defaults. Do **not** change code, push, or run commands.
             Use `gh pr comment` to leave your review as a comment on the PR.
 
           claude_args: '--allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
