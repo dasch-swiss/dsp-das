@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ErrorReportingService } from '@dasch-swiss/vre/core/error-handler';
 import { MultipleViewerService } from '@dasch-swiss/vre/pages/data-browser';
 import { DataBrowserPageService, ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService, ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -19,6 +20,7 @@ describe('ResourcesListFetcherComponent', () => {
   let routeParamsSubject: BehaviorSubject<any>;
   let currentProjectSubject: BehaviorSubject<ReadProject>;
   let handleError: jest.Mock;
+  let report: jest.Mock;
 
   const mockResource1 = { id: 'resource-1', label: 'Resource 1' } as ReadResource;
   const mockResource2 = { id: 'resource-2', label: 'Resource 2' } as ReadResource;
@@ -35,6 +37,7 @@ describe('ResourcesListFetcherComponent', () => {
     { provide: MultipleViewerService, useValue: mockMultipleViewerService },
     { provide: DataBrowserPageService, useValue: { onNavigationReload$: of(undefined) } },
     { provide: ErrorHandler, useValue: { handleError } },
+    { provide: ErrorReportingService, useValue: { report } },
   ];
 
   beforeEach(async () => {
@@ -64,6 +67,7 @@ describe('ResourcesListFetcherComponent', () => {
     };
 
     handleError = jest.fn();
+    report = jest.fn();
 
     await TestBed.configureTestingModule({
       imports: [ResourcesListFetcherComponent],
@@ -153,6 +157,24 @@ describe('ResourcesListFetcherComponent', () => {
       // The component provides its own ResourceResultService, so read that instance rather than the
       // module-level mock, which this component never sees.
       expect(fixture.debugElement.injector.get(ResourceResultService).numberOfResults).toBeNull();
+      sub.unsubscribe();
+    });
+
+    it('reports a failed count query to telemetry without notifying the user (DEV-6872)', () => {
+      const error = new Error('count query timed out');
+      mockDspApiConnection.v2.search.doExtendedSearch.mockReturnValue(of({ resources: [mockResource1] }));
+      mockDspApiConnection.v2.search.doExtendedSearchCountQuery.mockReturnValue(throwError(() => error));
+
+      component.ngOnChanges();
+      const { sub } = collectData();
+
+      // The failure used to be swallowed outright, leaving no signal of a count-query timeout anywhere.
+      expect(report).toHaveBeenCalledWith(error, {
+        component: 'ResourcesListFetcherComponent',
+        operation: 'gravsearchCountQuery',
+      });
+      // Still deliberately silent towards the user: the resource list rendered fine.
+      expect(handleError).not.toHaveBeenCalled();
       sub.unsubscribe();
     });
 

@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ErrorHandler, Inject, Input, OnChanges, signal } from '@angular/core';
 import { IFulltextSearchParams, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { ErrorReportingService } from '@dasch-swiss/vre/core/error-handler';
 import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
@@ -70,7 +71,8 @@ export class SearchResultComponent implements OnChanges {
     @Inject(DspApiConnectionToken)
     private readonly _dspApiConnection: KnoraApiConnection,
     private readonly _resourceResultService: ResourceResultService,
-    private readonly _errorHandler: ErrorHandler
+    private readonly _errorHandler: ErrorHandler,
+    private readonly _errorReporting: ErrorReportingService
   ) {}
 
   ngOnChanges() {
@@ -138,12 +140,14 @@ export class SearchResultComponent implements OnChanges {
    */
   private _numberOfAllResults$ = (query: string) =>
     this._dspApiConnection.v2.search.doFulltextSearchCountQuery(query, 0, this.searchInProjectParam).pipe(
-      catchError(() => {
-        // Swallowed without a snackbar on purpose: the results rendered fine and an error toast over a
-        // working result list is noise. Nothing is reported anywhere either, because no production
-        // channel exists — AppErrorHandler sends only non-HTTP errors to Sentry/Faro, so no
-        // ApiResponseError has ever reached telemetry (DEV-6872). Advanced search additionally has a
-        // dev-only SearchFlowLogger; this lib has none.
+      catchError((error: unknown) => {
+        // Reported, not surfaced: the results rendered fine and an error toast over a working result
+        // list is noise, but the cost of this query is exactly what DEV-6809 and DEV-6864 are about,
+        // so it must not stay invisible.
+        this._errorReporting.report(error, {
+          component: 'SearchResultComponent',
+          operation: 'fulltextCountQuery',
+        });
         return of(null);
       })
     );

@@ -12,6 +12,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { ErrorReportingService } from '@dasch-swiss/vre/core/error-handler';
 import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { filterNull } from '@dasch-swiss/vre/shared/app-common';
@@ -68,6 +69,7 @@ export class AdvancedSearchResultsComponent implements OnChanges {
   private readonly _logger = inject(SearchFlowLogger);
   private readonly _projectPageService = inject(ProjectPageService);
   private readonly _errorHandler = inject(ErrorHandler);
+  private readonly _errorReporting = inject(ErrorReportingService);
 
   private readonly querySubject = new BehaviorSubject<string | null>(null);
 
@@ -154,11 +156,15 @@ export class AdvancedSearchResultsComponent implements OnChanges {
       .doExtendedSearchCountQuery(`${this._getQuery(query_)}OFFSET 0`, this._projectPageService.currentProject.id)
       .pipe(
         catchError((err: unknown) => {
-          // Dev-console only — SearchFlowLogger is isDevMode()-gated. There is no production channel
-          // for this: AppErrorHandler sends only non-HTTP errors to Sentry/Faro, so no ApiResponseError
-          // has ever reached telemetry (DEV-6872). Deliberately not a snackbar: the results rendered
-          // fine, and an error toast over a working result list is noise.
+          // Deliberately not a snackbar: the results rendered fine, and an error toast over a working
+          // result list is noise. It is reported nonetheless — the cost of this query is exactly what
+          // DEV-6809 and DEV-6864 are about. The logger stays for the dev console, being
+          // isDevMode()-gated and therefore absent in production.
           this._logger.searchError(err);
+          this._errorReporting.report(err, {
+            component: 'AdvancedSearchResultsComponent',
+            operation: 'gravsearchCountQuery',
+          });
           return of(null);
         })
       );
