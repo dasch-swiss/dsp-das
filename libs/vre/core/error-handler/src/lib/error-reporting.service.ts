@@ -21,6 +21,12 @@ const UNKNOWN_ROUTE = 'unknown';
 /** Cap on the server's reason. Generous enough for any dsp-api message, far inside the event limits. */
 const MAX_REASON_LENGTH = 2000;
 
+/**
+ * The Sentry severity levels this service assigns. Declared locally rather than imported from
+ * `@sentry/angular`: the SDK is lazy loaded and reached only through `window`.
+ */
+type ReportLevel = 'error' | 'warning';
+
 /** The request-shaped fields shared by the types a dsp-api failure can arrive as. */
 interface ApiFailure {
   status: number;
@@ -47,6 +53,8 @@ interface ReportPayload {
    * and every URL is unique, so as a tag it would only inflate the tag index.
    */
   extra?: Record<string, string>;
+  /** Left unset for JS errors, which Sentry captures at `error` level by default. */
+  level?: ReportLevel;
 }
 
 /**
@@ -114,6 +122,11 @@ export class ErrorReportingService {
         ...context,
       },
       extra: { 'dsp.url': failure.url, ...(reason ? { 'dsp.response': reason } : {}) },
+      // A 5xx is a fault; a 4xx is the API rejecting what we sent, and a 0 is almost always the user's
+      // own connectivity — the app says as much, mapping it to the "no internet" message. Grading them
+      // alike would make an invalid date indistinguishable from a triplestore timeout in alerting, and
+      // that is how reporting ends up switched off again.
+      level: failure.status >= 500 ? 'error' : 'warning',
     };
   }
 
@@ -231,6 +244,7 @@ export class ErrorReportingService {
           tags: payload.tags,
           extra: payload.extra,
           fingerprint: payload.fingerprint,
+          level: payload.level,
         });
       }
     } catch (sentryError) {

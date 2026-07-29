@@ -160,6 +160,22 @@ describe('ErrorReportingService', () => {
       expect(captureException.mock.calls[0][1].fingerprint).toEqual(['dsp-api', 'POST', '400', '/v2/values']);
     });
 
+    it('grades a server fault as an error and a rejected request as a warning', () => {
+      service.report(apiError(504, 'POST', '/v2/searchextended/count'));
+      service.report(apiError(403, 'GET', '/v2/resources/xyz'));
+
+      // Same level for both would leave an invalid date firing the same alerts as a triplestore timeout.
+      expect(captureException.mock.calls[0][1].level).toBe('error');
+      expect(captureException.mock.calls[1][1].level).toBe('warning');
+    });
+
+    it('grades a request that never completed as a warning, matching how the app reads it', () => {
+      // AppErrorHandler maps status 0 to the "no internet" message, i.e. the user's own connectivity.
+      service.report(apiError(0, 'GET', '/v2/resources/xyz'));
+
+      expect(captureException.mock.calls[0][1].level).toBe('warning');
+    });
+
     it('attaches caller context as tags so a silently swallowed failure names its call site', () => {
       service.report(apiError(504, 'GET', '/v2/search/count/gaga'), {
         component: 'SearchResultComponent',
@@ -227,6 +243,8 @@ describe('ErrorReportingService', () => {
       const [reported, context] = captureException.mock.calls[0];
       expect(reported).toBe(error);
       expect(context.fingerprint).toBeUndefined();
+      // No level either, so Sentry applies its own default of `error` — a JS error is always a fault.
+      expect(context.level).toBeUndefined();
     });
 
     it('does not deduplicate JS errors', () => {
