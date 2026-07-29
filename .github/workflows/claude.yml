@@ -55,7 +55,7 @@ jobs:
             ## Every finding must survive this test
 
             Name the concrete input or state that triggers it, and the wrong output, crash, or
-            regression that results. Then try to refute your own finding by checking the source.
+            regression that results.
 
             DELETE — do not downgrade — any finding where:
             - you cannot name a specific input and a specific wrong outcome;
@@ -66,6 +66,32 @@ jobs:
 
             Three defensible findings beat twelve speculative ones. Reporting no findings is a
             valid and useful outcome.
+
+            ## Verify every Critical or Major finding before reporting it
+
+            Spawn a separate agent per finding to attack it. Give that agent the finding, the file
+            and the surrounding code — but NOT the reasoning that led you to suspect it, so its
+            judgement is not shaped by yours. Instruct it to argue the finding is WRONG, to check
+            the claim against the source, and to default to "refuted" where the evidence is
+            ambiguous. Drop every finding its verifier refutes.
+
+            If spawning agents is unavailable to you, say so explicitly in your output and run the
+            same pass yourself, re-deriving each finding from the code without reference to your
+            earlier reasoning.
+
+            Apply the deletion test to Minor findings without a verifier.
+
+            Work inside the job's time budget: verify in descending order of severity, and if you
+            run short, report the remaining findings explicitly marked as unverified rather than
+            letting the run time out. A partial review is useful; a timed-out one is not.
+
+            ## Checking claims about libraries
+
+            Do not assert an API contract from memory. When a finding depends on how a dependency
+            behaves — a method signature, an option shape, a documented limit — confirm it against
+            the version installed in this repo (`node_modules`, lock file) or against the library's
+            own documentation via web search. An unverified claim about a dependency is a finding
+            to delete, not to report.
 
             ## Test coverage
 
@@ -85,7 +111,12 @@ jobs:
             override these defaults. Do **not** change code, push, or run commands.
             Use `gh pr comment` to leave your review as a comment on the PR.
 
-          claude_args: '--allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
+          # Reading files is already in the action's base tool set; search, web lookup and Task are
+          # not, and the prompt above depends on all three — Grep/Glob to confirm a suspicion across
+          # the repo, WebSearch/WebFetch to check a dependency's real API instead of recalling it,
+          # and Task to verify findings in an agent that has not seen the reasoning behind them.
+          # Bash stays confined to read-only gh commands, so no path to secrets is opened.
+          claude_args: '--allowed-tools "Grep,Glob,WebSearch,WebFetch,Task,Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(gh api:*)"'
 
       - name: Notify on failure
         if: failure()
