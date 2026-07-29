@@ -1,0 +1,260 @@
+:host {
+  display: block;
+}
+
+.subtitle {
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0 0 20px;
+  max-width: 640px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+
+  .control-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.5);
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  mat-button-toggle mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+}
+
+.approximate-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.5);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #b45309;
+  }
+}
+
+.matrix {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+
+  $grid: minmax(360px, 2.6fr) 1fr 1fr 1fr;
+
+  .matrix-head,
+  .matrix-row,
+  .matrix-foot,
+  .drill-res,
+  .drill-item {
+    display: grid;
+    grid-template-columns: $grid;
+    align-items: center;
+  }
+
+  .matrix-head {
+    background: #f9fafb;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.5);
+
+    .col-aud {
+      flex-direction: column;
+      gap: 2px;
+      padding: 10px 4px;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .col-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    min-width: 0;
+  }
+
+  .col-aud {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+
+    &.count {
+      font-weight: 500;
+    }
+  }
+
+  .matrix-row {
+    width: 100%;
+    background: #fff;
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    padding: 0;
+
+    &:hover {
+      background: #f5f7fa;
+    }
+
+    .chevron {
+      color: rgba(0, 0, 0, 0.4);
+    }
+
+    .group-label {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .group-name {
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .group-sub {
+      font-size: 11px;
+      color: rgba(0, 0, 0, 0.5);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .drill-res,
+  .drill-item {
+    background: #eaeff3;
+    border-top: 1px solid #d6e0e8;
+  }
+
+  .indent-1 {
+    padding-left: 48px;
+  }
+
+  .indent-2 {
+    padding-left: 80px;
+  }
+
+  .link-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .drill-item .link-label {
+    font-size: 13px;
+  }
+
+  .child-info {
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+  }
+
+  .tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 999px;
+    padding: 1px 7px;
+    white-space: nowrap;
+  }
+
+  .kind-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #336790;
+  }
+
+  .matrix-foot {
+    background: #f9fafb;
+    border-top: 2px solid rgba(0, 0, 0, 0.18);
+    font-weight: 500;
+  }
+
+  .empty {
+    padding: 24px 16px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .pager {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+    padding: 8px 16px;
+    background: #f9fafb;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    font-size: 12px;
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+
+      &:disabled {
+        color: rgba(0, 0, 0, 0.26);
+        cursor: default;
+      }
+    }
+  }
+}
+
+// visibility eye colours
+.vis-visible {
+  color: #0d9488;
+}
+.vis-hidden {
+  color: #e11d48;
+}
+.vis-restricted {
+  color: #b45309;
+}

@@ -190,6 +190,33 @@
       },
       "projectShortDescription": {
         "readMore": "Leggi di più"
+      },
+      "viewRestrictions": {
+        "tab": "Restrizioni di visualizzazione",
+        "title": "Restrizioni di visualizzazione",
+        "intro": "Per ciascun pubblico, quanti elementi sono nascosti — raggruppati per classe di risorsa o proprietà. Apri una riga per vedere le risorse interessate e la loro visibilità per pubblico.",
+        "groupBy": "Raggruppa per",
+        "byClass": "Classe di risorsa",
+        "byProperty": "Proprietà",
+        "filters": "Filtri",
+        "resourceClass": "Classe di risorsa",
+        "property": "Proprietà",
+        "total": "Totale",
+        "itemsInside": "elementi con restrizioni all'interno",
+        "noRestrictions": "Nessuna restrizione trovata per questo filtro.",
+        "approximate": "I conteggi sono approssimativi: il progetto è grande e la scansione è stata limitata, quindi sono un limite inferiore.",
+        "audience": {
+          "anonymous": "Disconnesso",
+          "authenticated": "Connesso",
+          "projectMember": "Membro del progetto"
+        },
+        "itemType": {
+          "All": "Tutti gli elementi",
+          "Resource": "Risorse",
+          "File": "Valori di file",
+          "Value": "Valori",
+          "Comment": "Commenti"
+        }
       }
     },
     "system": {

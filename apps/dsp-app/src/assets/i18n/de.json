@@ -190,6 +190,33 @@
       },
       "projectShortDescription": {
         "readMore": "Mehr lesen"
+      },
+      "viewRestrictions": {
+        "tab": "Sichtbarkeitseinschränkungen",
+        "title": "Sichtbarkeitseinschränkungen",
+        "intro": "Für jede Zielgruppe: wie viele Elemente verborgen sind – gruppiert nach Ressourcenklasse oder Eigenschaft. Öffnen Sie eine Zeile, um die betroffenen Ressourcen und ihre Sichtbarkeit je Zielgruppe zu sehen.",
+        "groupBy": "Gruppieren nach",
+        "byClass": "Ressourcenklasse",
+        "byProperty": "Eigenschaft",
+        "filters": "Filter",
+        "resourceClass": "Ressourcenklasse",
+        "property": "Eigenschaft",
+        "total": "Total",
+        "itemsInside": "eingeschränkte Elemente enthalten",
+        "noRestrictions": "Keine Einschränkungen für diesen Filter gefunden.",
+        "approximate": "Zahlen sind ungefähr: Das Projekt ist gross und die Auswertung wurde begrenzt, daher sind dies Mindestwerte.",
+        "audience": {
+          "anonymous": "Abgemeldet",
+          "authenticated": "Angemeldet",
+          "projectMember": "Projektmitglied"
+        },
+        "itemType": {
+          "All": "Alle Elemente",
+          "Resource": "Ressourcen",
+          "File": "Dateiwerte",
+          "Value": "Werte",
+          "Comment": "Kommentare"
+        }
       }
     },
     "system": {

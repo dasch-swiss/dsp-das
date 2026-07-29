@@ -190,6 +190,33 @@
       },
       "projectShortDescription": {
         "readMore": "Read more"
+      },
+      "viewRestrictions": {
+        "tab": "View restrictions",
+        "title": "View restrictions",
+        "intro": "For each audience, how many items are hidden — grouped by resource class or property. Open a row to see the affected resources and their per-audience visibility.",
+        "groupBy": "Group by",
+        "byClass": "Resource class",
+        "byProperty": "Property",
+        "filters": "Filters",
+        "resourceClass": "Resource class",
+        "property": "Property",
+        "total": "Total",
+        "itemsInside": "restricted items inside",
+        "noRestrictions": "No restrictions found for this filter.",
+        "approximate": "Counts are approximate: the project is large and the scan was capped, so these are a lower bound.",
+        "audience": {
+          "anonymous": "Logged out",
+          "authenticated": "Logged in",
+          "projectMember": "Project member"
+        },
+        "itemType": {
+          "All": "All items",
+          "Resource": "Resources",
+          "File": "File values",
+          "Value": "Values",
+          "Comment": "Comments"
+        }
       }
     },
     "system": {

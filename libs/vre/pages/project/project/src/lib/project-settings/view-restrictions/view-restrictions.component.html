@@ -1,0 +1,143 @@
+<h2>{{ 'pages.project.viewRestrictions.title' | translate }}</h2>
+<p class="subtitle">{{ 'pages.project.viewRestrictions.intro' | translate }}</p>
+
+<!-- Group by: resource class <-> property -->
+<div class="controls">
+  <span class="control-label">{{ 'pages.project.viewRestrictions.groupBy' | translate }}</span>
+  <mat-button-toggle-group
+    [value]="(groupBy$ | async)"
+    (change)="onGroupBy($event.value)"
+    aria-label="Group by">
+    <mat-button-toggle [value]="GroupBy.ResourceClass">
+      <mat-icon>account_tree</mat-icon>
+      {{ 'pages.project.viewRestrictions.byClass' | translate }}
+    </mat-button-toggle>
+    <mat-button-toggle [value]="GroupBy.Property">
+      <mat-icon>sell</mat-icon>
+      {{ 'pages.project.viewRestrictions.byProperty' | translate }}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<!-- Item-type filter chips -->
+<div class="controls">
+  <span class="control-label">
+    <mat-icon>filter_list</mat-icon>
+    {{ 'pages.project.viewRestrictions.filters' | translate }}
+  </span>
+  <mat-chip-listbox [value]="(itemType$ | async)" (change)="onItemType($event.value)">
+    @for (chip of itemTypeChips; track chip) {
+      <mat-chip-option [value]="chip" [disabled]="isChipDisabled(chip)" [selectable]="!isChipDisabled(chip)">
+        {{ 'pages.project.viewRestrictions.itemType.' + chip | translate }}
+      </mat-chip-option>
+    }
+  </mat-chip-listbox>
+</div>
+
+@if (summary$ | async; as summary) {
+  @if (summary.approximate) {
+    <div class="approximate-note">
+      <mat-icon>info</mat-icon>
+      {{ 'pages.project.viewRestrictions.approximate' | translate }}
+    </div>
+  }
+
+  <div class="matrix">
+    <!-- header row -->
+    <div class="matrix-head">
+      <div class="col-group">
+        {{
+          (groupBy$ | async) === GroupBy.Property
+            ? ('pages.project.viewRestrictions.property' | translate)
+            : ('pages.project.viewRestrictions.resourceClass' | translate)
+        }}
+      </div>
+      <div class="col-aud"><mat-icon>public</mat-icon>{{ 'pages.project.viewRestrictions.audience.anonymous' | translate }}</div>
+      <div class="col-aud"><mat-icon>person</mat-icon>{{ 'pages.project.viewRestrictions.audience.authenticated' | translate }}</div>
+      <div class="col-aud"><mat-icon>group</mat-icon>{{ 'pages.project.viewRestrictions.audience.projectMember' | translate }}</div>
+    </div>
+
+    @for (group of summary.groups; track group.id) {
+      <button type="button" class="matrix-row" (click)="toggleGroup(group)">
+        <span class="col-group">
+          <mat-icon class="chevron">{{ isExpanded(group.id) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+          <span class="group-label">
+            <span class="group-name">{{ group.label }}</span>
+            @if (group.propertyName || group.ontology) {
+              <span class="group-sub">{{ group.propertyName || group.ontology }}</span>
+            }
+          </span>
+        </span>
+        <span class="col-aud count">{{ group.counts.anonymous || '–' }}</span>
+        <span class="col-aud count">{{ group.counts.authenticated || '–' }}</span>
+        <span class="col-aud count">{{ group.counts.projectMember || '–' }}</span>
+      </button>
+
+      @if (isExpanded(group.id)) {
+        @if (isLoading(group.id)) {
+          <app-progress-indicator />
+        } @else if (expandedGroup(group.id); as eg) {
+          @for (res of eg.page.data; track res.resourceIri) {
+            <div class="drill-res">
+              <span class="col-group indent-1">
+                <mat-icon class="kind-icon">description</mat-icon>
+                <span class="link-label">{{ res.label }}</span>
+                @if (res.items?.length) {
+                  <span class="child-info">
+                    {{ res.items.length }} {{ 'pages.project.viewRestrictions.itemsInside' | translate }}
+                  </span>
+                }
+              </span>
+              <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.anonymous)">{{ visibilityIcon(res.resourceVisibility.anonymous) }}</mat-icon></span>
+              <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.authenticated)">{{ visibilityIcon(res.resourceVisibility.authenticated) }}</mat-icon></span>
+              <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.projectMember)">{{ visibilityIcon(res.resourceVisibility.projectMember) }}</mat-icon></span>
+            </div>
+
+            @for (item of res.items; track item.valueIri || $index) {
+              <div class="drill-item">
+                <span class="col-group indent-2">
+                  <mat-icon class="kind-icon">{{ item.type === ItemType.File ? 'image' : item.type === ItemType.Comment ? 'comment' : 'lock' }}</mat-icon>
+                  <span class="link-label">{{ item.propertyLabel || item.type }}</span>
+                  <span class="tag">{{ 'pages.project.viewRestrictions.itemType.' + item.type | translate }}</span>
+                </span>
+                <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.anonymous)">{{ visibilityIcon(item.visibility.anonymous) }}</mat-icon></span>
+                <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.authenticated)">{{ visibilityIcon(item.visibility.authenticated) }}</mat-icon></span>
+                <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.projectMember)">{{ visibilityIcon(item.visibility.projectMember) }}</mat-icon></span>
+              </div>
+            }
+          }
+
+          <!-- pager -->
+          @if (eg.page.pagination.totalPages > 1) {
+            <div class="pager">
+              <span>{{ eg.currentPage }} / {{ eg.page.pagination.totalPages }} ({{ eg.page.pagination.totalItems }})</span>
+              <button type="button" [disabled]="eg.currentPage <= 1" (click)="loadPage(group.id, eg.currentPage - 1)">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+              <button
+                type="button"
+                [disabled]="eg.currentPage >= eg.page.pagination.totalPages"
+                (click)="loadPage(group.id, eg.currentPage + 1)">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+          }
+        }
+      }
+    } @empty {
+      <div class="empty">{{ 'pages.project.viewRestrictions.noRestrictions' | translate }}</div>
+    }
+
+    <!-- footer totals -->
+    @if (summary.groups?.length) {
+      <div class="matrix-foot">
+        <div class="col-group">{{ 'pages.project.viewRestrictions.total' | translate }}</div>
+        <div class="col-aud count">{{ summary.totals.anonymous || '–' }}</div>
+        <div class="col-aud count">{{ summary.totals.authenticated || '–' }}</div>
+        <div class="col-aud count">{{ summary.totals.projectMember || '–' }}</div>
+      </div>
+    }
+  </div>
+} @else {
+  <app-progress-indicator />
+}
