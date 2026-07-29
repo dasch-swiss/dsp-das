@@ -34,13 +34,16 @@
   </mat-chip-listbox>
 </div>
 
-@if (summary$ | async; as summary) {
-  @if (summary.approximate) {
-    <div class="approximate-note">
-      <mat-icon>info</mat-icon>
-      {{ 'pages.project.viewRestrictions.approximate' | translate }}
-    </div>
-  }
+@if (summaryState$ | async; as state) {
+  @if (state.loading) {
+    <app-progress-indicator />
+  } @else if (state.summary; as summary) {
+    @if (summary.approximate) {
+      <div class="approximate-note">
+        <mat-icon>info</mat-icon>
+        {{ 'pages.project.viewRestrictions.approximate' | translate }}
+      </div>
+    }
 
   <div class="matrix">
     <!-- header row -->
@@ -169,7 +172,8 @@
         <div class="col-aud count">{{ summary.totals.projectMember || '–' }}</div>
       </div>
     }
-  </div>
+    </div>
+  }
 } @else {
   <app-progress-indicator />
 }

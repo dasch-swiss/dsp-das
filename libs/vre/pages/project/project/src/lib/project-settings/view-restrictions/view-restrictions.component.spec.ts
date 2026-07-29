@@ -84,11 +84,18 @@ describe('ViewRestrictionsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('loads the summary for the current project', done => {
-    component.summary$.subscribe(s => {
-      expect(s.groups?.length).toBe(1);
-      expect(s.totals.anonymous).toBe(15);
-      done();
+  it('loads the summary for the current project (final state not loading)', done => {
+    // startWith emits { loading: true } first, then the loaded state; assert the loaded one.
+    const states: unknown[] = [];
+    component.summaryState$.subscribe(state => {
+      states.push(state);
+      if (!state.loading) {
+        expect(state.summary?.groups?.length).toBe(1);
+        expect(state.summary?.totals.anonymous).toBe(15);
+        // the first emission must have been the loading sentinel
+        expect((states[0] as { loading: boolean }).loading).toBe(true);
+        done();
+      }
     });
   });
 

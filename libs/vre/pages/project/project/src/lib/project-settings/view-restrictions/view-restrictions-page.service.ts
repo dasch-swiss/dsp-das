@@ -6,13 +6,19 @@ import {
   PagedResponseRestrictedResource,
   ViewRestrictionsSummary,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { BehaviorSubject, combineLatest, EMPTY, Observable, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
+
+/** Summary matrix load state: `loading` while a filter change is being fetched; `summary` set once loaded. */
+export interface SummaryState {
+  loading: boolean;
+  summary?: ViewRestrictionsSummary;
+}
 
 /**
  * State for the read-only "View restrictions" page (design screen 1h).
  *
- * Holds the current group-by / item-type filters and exposes the per-audience `summary$` matrix.
+ * Holds the current group-by / item-type filters and exposes the per-audience `summaryState$` matrix.
  * Drill-down items for one group are fetched on demand via `loadItems(...)`.
  */
 @Injectable()
@@ -22,8 +28,11 @@ export class ViewRestrictionsPageService {
   readonly groupBy$ = new BehaviorSubject<GroupBy>(GroupBy.ResourceClass);
   readonly itemType$ = new BehaviorSubject<ItemType>(ItemType.All);
 
-  /** The summary matrix, recomputed whenever the project, group-by or item-type changes. */
-  readonly summary$: Observable<ViewRestrictionsSummary> = combineLatest([
+  /**
+   * The summary matrix as a load state, recomputed whenever the project, group-by or item-type changes.
+   * Emits `{ loading: true }` immediately on every change (so the UI can show a spinner), then the result.
+   */
+  readonly summaryState$: Observable<SummaryState> = combineLatest([
     this._project$,
     this.groupBy$,
     this.itemType$,
@@ -32,7 +41,12 @@ export class ViewRestrictionsPageService {
       if (!project) {
         return EMPTY;
       }
-      return this._adminApiService.getAdminProjectsIriProjectiriViewRestrictionsSummary(project.id, groupBy, itemType);
+      return this._adminApiService
+        .getAdminProjectsIriProjectiriViewRestrictionsSummary(project.id, groupBy, itemType)
+        .pipe(
+          map(summary => ({ loading: false, summary }) as SummaryState),
+          startWith({ loading: true } as SummaryState)
+        );
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   );

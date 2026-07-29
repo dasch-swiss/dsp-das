@@ -50,7 +50,7 @@ export class ViewRestrictionsComponent {
     ItemType.Comment,
   ];
 
-  readonly summary$ = this.vr.summary$;
+  readonly summaryState$ = this.vr.summaryState$;
   readonly groupBy$ = this.vr.groupBy$;
   readonly itemType$ = this.vr.itemType$;
 
