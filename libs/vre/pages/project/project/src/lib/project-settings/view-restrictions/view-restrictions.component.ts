@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
@@ -13,7 +13,7 @@ import {
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Observable, tap } from 'rxjs';
+import { take, tap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 import { ViewRestrictionsPageService } from './view-restrictions-page.service';
 
@@ -52,8 +52,8 @@ export class ViewRestrictionsComponent {
   readonly groupBy$ = this.vr.groupBy$;
   readonly itemType$ = this.vr.itemType$;
 
-  /** Per-group expansion state, keyed by group id. */
-  expanded: Record<string, ExpandedGroup | 'loading'> = {};
+  /** Per-group expansion state, keyed by group id. A signal so OnPush re-renders when it changes. */
+  readonly expanded = signal<Record<string, ExpandedGroup | 'loading'>>({});
 
   private readonly _pageSize = 25;
 
@@ -68,12 +68,12 @@ export class ViewRestrictionsComponent {
   ) {}
 
   onGroupBy(value: GroupBy): void {
-    this.expanded = {};
+    this.expanded.set({});
     this.vr.setGroupBy(value);
   }
 
   onItemType(value: ItemType): void {
-    this.expanded = {};
+    this.expanded.set({});
     this.vr.setItemType(value);
   }
 
@@ -83,30 +83,35 @@ export class ViewRestrictionsComponent {
   }
 
   toggleGroup(group: RestrictionGroup): void {
-    if (this.expanded[group.id]) {
-      delete this.expanded[group.id];
+    if (this.expanded()[group.id]) {
+      const next = { ...this.expanded() };
+      delete next[group.id];
+      this.expanded.set(next);
       return;
     }
     this.loadPage(group.id, 1);
   }
 
   loadPage(groupId: string, page: number): void {
-    this.expanded[groupId] = 'loading';
-    this.vr.loadItems(groupId, page, this._pageSize).subscribe(result => {
-      this.expanded[groupId] = { page: result, currentPage: page };
-    });
+    this.expanded.update(e => ({ ...e, [groupId]: 'loading' }));
+    this.vr
+      .loadItems(groupId, page, this._pageSize)
+      .pipe(take(1))
+      .subscribe(result => {
+        this.expanded.update(e => ({ ...e, [groupId]: { page: result, currentPage: page } }));
+      });
   }
 
   isExpanded(id: string): boolean {
-    return !!this.expanded[id];
+    return !!this.expanded()[id];
   }
 
   isLoading(id: string): boolean {
-    return this.expanded[id] === 'loading';
+    return this.expanded()[id] === 'loading';
   }
 
   expandedGroup(id: string): ExpandedGroup | null {
-    const e = this.expanded[id];
+    const e = this.expanded()[id];
     return e && e !== 'loading' ? e : null;
   }
 
@@ -116,7 +121,7 @@ export class ViewRestrictionsComponent {
     return c.anonymous + c.authenticated + c.projectMember === 0;
   }
 
-  visibilityIcon(v: Visibility | object | undefined): string {
+  visibilityIcon(v: Visibility | undefined): string {
     switch (v) {
       case Visibility.Hidden:
         return 'visibility_off';
@@ -127,7 +132,7 @@ export class ViewRestrictionsComponent {
     }
   }
 
-  visibilityClass(v: Visibility | object | undefined): string {
+  visibilityClass(v: Visibility | undefined): string {
     switch (v) {
       case Visibility.Hidden:
         return 'vis-hidden';
@@ -136,9 +141,5 @@ export class ViewRestrictionsComponent {
       default:
         return 'vis-visible';
     }
-  }
-
-  asObservable(x: unknown): Observable<unknown> {
-    return x as Observable<unknown>;
   }
 }
