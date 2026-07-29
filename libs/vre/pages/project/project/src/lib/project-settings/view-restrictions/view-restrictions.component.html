@@ -84,10 +84,10 @@
               <div class="drill-res">
                 <span class="col-group indent-1 combo">
                   <mat-icon class="kind-icon">description</mat-icon>
-                  <span class="link-label res-name">{{ res.label }}</span>
+                  <span class="link-label res-name" [title]="res.label">{{ res.label }}</span>
                   <mat-icon class="combo-sep">chevron_right</mat-icon>
                   <mat-icon class="kind-icon">{{ itemIcon(comboItem) }}</mat-icon>
-                  <span class="link-label">{{ comboItem.propertyLabel || comboItem.type }}</span>
+                  <span class="link-label" [title]="comboItem.propertyLabel || comboItem.type">{{ comboItem.propertyLabel || comboItem.type }}</span>
                   <span class="tag">{{ 'pages.project.viewRestrictions.itemType.' + comboItem.type | translate }}</span>
                 </span>
                 <span class="col-aud"><mat-icon [class]="visibilityClass(comboItem.visibility.anonymous)">{{ visibilityIcon(comboItem.visibility.anonymous) }}</mat-icon></span>

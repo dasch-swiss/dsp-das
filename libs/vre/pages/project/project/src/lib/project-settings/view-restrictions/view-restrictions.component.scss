@@ -166,9 +166,21 @@
 
   // combo row: resource + single item inline (design 1g/1h)
   .col-group.combo {
+    // both labels share the leftover width and ellipsis independently;
+    // icons, chevron and tag are fixed-size and never shrink or get pushed off.
+    .link-label {
+      flex: 1 1 0;
+      min-width: 3ch; // keep a few chars before the ellipsis so neither label vanishes
+    }
+
     .res-name {
       font-weight: 500;
-      flex: 0 1 auto;
+    }
+
+    .kind-icon,
+    .combo-sep,
+    .tag {
+      flex: none;
     }
 
     .combo-sep {
@@ -176,7 +188,6 @@
       width: 15px;
       height: 15px;
       color: rgba(0, 0, 0, 0.4);
-      flex: none;
     }
   }
 
@@ -192,6 +203,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    min-width: 0; // allow the flex item to shrink so ellipsis actually applies
   }
 
   .drill-item .link-label {
