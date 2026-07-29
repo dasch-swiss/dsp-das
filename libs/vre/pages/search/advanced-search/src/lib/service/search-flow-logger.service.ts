@@ -49,8 +49,8 @@ export class SearchFlowLogger {
     this._log('API search start', c.data, `page=${page}`);
   }
 
-  searchSuccess(count: number, total: number): void {
-    this._log('API search success', c.data, `${count} resources, total=${total}`);
+  searchSuccess(count: number, total: number | null): void {
+    this._log('API search success', c.data, `${count} resources, total=${total ?? 'unknown'}`);
   }
 
   searchError(err: unknown): void {

@@ -4,7 +4,7 @@ import { expect, within } from 'storybook/test';
 import { makeReadResource, STORY_PROVIDERS } from '../stories.helpers';
 import { ResourcesListComponent } from './resources-list.component';
 
-const makeResourceResultServiceStub = (numberOfResults: number): Partial<ResourceResultService> => ({
+const makeResourceResultServiceStub = (numberOfResults: number | null): Partial<ResourceResultService> => ({
   numberOfResults,
   MAX_RESULTS_PER_PAGE: 25,
   updatePageIndex: () => {},
@@ -95,6 +95,34 @@ export const Loading: Story = {
     });
     await step('Resource list is not rendered', async () => {
       await expect(canvas.queryByRole('list')).toBeNull();
+    });
+  },
+};
+
+export const CountUnavailable: Story = {
+  name: 'States the count is unavailable rather than asserting a wrong total when the count query failed',
+  decorators: [
+    applicationConfig({
+      providers: [
+        ...STORY_PROVIDERS,
+        { provide: ResourceResultService, useValue: makeResourceResultServiceStub(null) },
+      ],
+    }),
+  ],
+  // A full page of 25, the case that used to render the misleading "25 results" (DEV-6866).
+  args: {
+    resources: Array.from({ length: 25 }, (_, i) => makeReadResource({ id: `r${i}`, label: `Resource ${i + 1}` })),
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('The unknown count is stated explicitly', async () => {
+      await expect(canvas.getByText(/Result count unavailable/i)).toBeInTheDocument();
+    });
+    await step('No total is asserted', async () => {
+      await expect(canvas.queryByText(/25 results/)).toBeNull();
+    });
+    await step('The resources themselves are still listed', async () => {
+      await expect(canvasElement.querySelectorAll('app-resource-list-item').length).toBeGreaterThan(0);
     });
   },
 };

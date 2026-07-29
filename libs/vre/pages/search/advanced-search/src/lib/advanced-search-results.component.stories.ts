@@ -1,13 +1,13 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { importProvidersFrom } from '@angular/core';
+import { ErrorHandler, importProvidersFrom } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
-import { NEVER, of } from 'rxjs';
-import { expect } from 'storybook/test';
+import { NEVER, of, throwError } from 'rxjs';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { AdvancedSearchResultsComponent } from './advanced-search-results.component';
 import { makeDspApiConnectionStub, STORY_PROVIDERS } from './stories.helpers';
 
@@ -130,6 +130,54 @@ export const Loading: Story = {
     });
     await step('Resource browser is not yet rendered', async () => {
       await expect(canvasElement.querySelector('app-resource-browser')).toBeNull();
+    });
+  },
+};
+
+/** See the note in search-result.component.stories.ts — first attempt fails, the retry succeeds. */
+let queryAttempt = 0;
+
+export const QueryFails: Story = {
+  name: 'Shows a failure state — not the no-results message — and re-runs the query when retried',
+  args: { query: SAMPLE_QUERY },
+  beforeEach: () => {
+    queryAttempt = 0;
+  },
+  decorators: [
+    applicationConfig({
+      providers: [
+        ...sharedProviders,
+        // Failures are handed to the ErrorHandler for the snackbar; stub it so the story does not
+        // depend on the real AppErrorHandler (and its NotificationService) being wired up.
+        { provide: ErrorHandler, useValue: { handleError: () => {} } },
+        {
+          provide: DspApiConnectionToken,
+          useValue: makeDspApiConnectionStub({
+            search: {
+              doExtendedSearch: () =>
+                queryAttempt++ === 0
+                  ? throwError(() => new Error('500 from the triplestore'))
+                  : of({ resources: [makeReadResource('http://rdfh.ch/0001/res1', 'Test Resource')] }),
+              doExtendedSearchCountQuery: () => of({ numberOfResults: 1 }),
+            },
+          }),
+        },
+      ],
+    }),
+  ],
+  play: async ({ canvasElement, step }) => {
+    await step('Failure state is rendered', async () => {
+      await expect(canvasElement.querySelector('app-search-failed')).not.toBeNull();
+    });
+    await step('Failure is not mistaken for an empty result set', async () => {
+      await expect(canvasElement.querySelector('app-no-results-found')).toBeNull();
+    });
+    await step('Clicking Retry re-runs the query and renders the results', async () => {
+      await userEvent.click(canvasElement.querySelector('[data-cy="search-failed-retry"]')!);
+      await waitFor(async () => {
+        await expect(canvasElement.querySelector('app-search-failed')).toBeNull();
+        await expect(canvasElement.querySelector('app-resource-browser')).not.toBeNull();
+      });
     });
   },
 };
