@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DSP-API
-  version: v37.2.0-28-g4b60192-dirty-feature-dev-6778-new-api-route-restricted-elements-per-resource-class-for-a
+  version: v37.2.0-29-gbe69fb4-dirty-feature-dev-6778-new-api-route-restricted-elements-per-resource-class-for-a
   summary: DSP-API is part of the DaSCH Service Platform, a repository for the long-term
     preservation and reuse of data in the humanities.
   contact:
@@ -5320,7 +5320,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       responses:
         '200':
           description: ''
@@ -5384,7 +5384,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       responses:
         '200':
           description: ''
@@ -5448,7 +5448,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       responses:
         '200':
           description: ''
@@ -5637,7 +5637,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       responses:
         '200':
           description: ''
@@ -5703,7 +5703,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       responses:
         '200':
           description: ''
@@ -5907,7 +5907,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5980,7 +5980,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6054,7 +6054,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6127,7 +6127,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6201,7 +6201,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6274,7 +6274,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6348,7 +6348,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       requestBody:
         content:
           application/json:
@@ -6421,7 +6421,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       requestBody:
         content:
           application/json:
@@ -6494,7 +6494,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       requestBody:
         content:
           application/json:
@@ -6567,7 +6567,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/es3qADFrQRKU4CLZbVECZQ
+        example: http://rdfh.ch/users/WQrA2WshQqeq9oLwmJ1tDA
       requestBody:
         content:
           application/json:
@@ -6650,6 +6650,7 @@ paths:
         required: false
         schema:
           $ref: '#/components/schemas/GroupBy'
+          default: ResourceClass
       - name: itemType
         in: query
         description: Restrict the report to a single item type, or `all` for the combined
@@ -6657,6 +6658,7 @@ paths:
         required: false
         schema:
           $ref: '#/components/schemas/ItemType'
+          default: All
       responses:
         '200':
           description: ''
@@ -6750,6 +6752,7 @@ paths:
         required: false
         schema:
           $ref: '#/components/schemas/GroupBy'
+          default: ResourceClass
       - name: group
         in: query
         description: The IRI of the class (or property, in property mode) whose affected
@@ -6764,6 +6767,7 @@ paths:
         required: false
         schema:
           $ref: '#/components/schemas/ItemType'
+          default: All
       - name: page
         in: query
         description: The number of the desired page to be returned.
@@ -7070,7 +7074,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/a7Eo0vsmT1CWuZ4ljrr_Lw
+        example: http://rdfh.ch/lists/0001/hbLY-UkYT-S1iUUW6Gxaeg
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -7198,7 +7202,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/a7Eo0vsmT1CWuZ4ljrr_Lw
+        example: http://rdfh.ch/lists/0001/hbLY-UkYT-S1iUUW6Gxaeg
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -16529,8 +16533,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/VersionResponse'
               example:
-                webapi: v37.2.0-28-g4b60192-dirty-feature-dev-6778-new-api-route-restricted-elements-per-resource-class-for-a
-                buildCommit: 4b6019277
+                webapi: v37.2.0-29-gbe69fb4-dirty-feature-dev-6778-new-api-route-restricted-elements-per-resource-class-for-a
+                buildCommit: be69fb428
                 buildTime: dev
                 fuseki: 6.1.0-0
                 scala: 3.8.4
@@ -16756,9 +16760,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AdministrativePermissionADM'
-    All:
-      title: All
-      type: object
     AudienceCounts:
       title: AudienceCounts
       type: object
@@ -16935,9 +16936,6 @@ components:
         lastModificationDate:
           type: string
           format: date-time
-    Comment:
-      title: Comment
-      type: object
     Comments:
       title: Comments
       type: object
@@ -17216,9 +17214,6 @@ components:
       properties:
         value:
           type: string
-    File:
-      title: File
-      type: object
     Forbidden:
       title: Forbidden
       type: object
@@ -17280,16 +17275,10 @@ components:
           type: boolean
     GroupBy:
       title: GroupBy
-      default: ResourceClass
       type: string
       enum:
       - Property
       - ResourceClass
-    GroupBy1:
-      title: GroupBy
-      oneOf:
-      - $ref: '#/components/schemas/Property'
-      - $ref: '#/components/schemas/ResourceClass'
     GroupCreateRequest:
       title: GroupCreateRequest
       type: object
@@ -17431,7 +17420,6 @@ components:
           type: string
     ItemType:
       title: ItemType
-      default: All
       type: string
       enum:
       - All
@@ -17439,14 +17427,6 @@ components:
       - File
       - Resource
       - Value
-    ItemType1:
-      title: ItemType
-      oneOf:
-      - $ref: '#/components/schemas/All'
-      - $ref: '#/components/schemas/Comment'
-      - $ref: '#/components/schemas/File'
-      - $ref: '#/components/schemas/Resource'
-      - $ref: '#/components/schemas/Value'
     ItemVisibility:
       title: ItemVisibility
       type: object
@@ -18330,9 +18310,6 @@ components:
           type: array
           items:
             type: string
-    Property:
-      title: Property
-      type: object
     PropertyMappingResponse:
       title: PropertyMappingResponse
       type: object
@@ -18415,12 +18392,6 @@ components:
       - StillImageRepresentation
       - TextRepresentation
       - WithoutRepresentation
-    Resource:
-      title: Resource
-      type: object
-    ResourceClass:
-      title: ResourceClass
-      type: object
     ResourceClassAndCountDto:
       title: ResourceClassAndCountDto
       type: object
@@ -18504,7 +18475,7 @@ components:
       - visibility
       properties:
         type:
-          $ref: '#/components/schemas/ItemType1'
+          $ref: '#/components/schemas/ItemType'
         propertyIri:
           type: string
         propertyLabel:
@@ -18832,9 +18803,6 @@ components:
       properties:
         msg:
           type: string
-    Value:
-      title: Value
-      type: object
     VersionResponse:
       title: VersionResponse
       type: object
@@ -18874,9 +18842,9 @@ components:
         projectIri:
           type: string
         groupBy:
-          $ref: '#/components/schemas/GroupBy1'
+          $ref: '#/components/schemas/GroupBy'
         itemType:
-          $ref: '#/components/schemas/ItemType1'
+          $ref: '#/components/schemas/ItemType'
         groups:
           type: array
           items:
