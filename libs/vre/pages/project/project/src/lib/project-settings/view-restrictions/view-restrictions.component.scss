@@ -206,6 +206,17 @@
     min-width: 0; // allow the flex item to shrink so ellipsis actually applies
   }
 
+  // labels that are links to open the resource / value in a new tab
+  a.link-label {
+    color: #336790;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   .drill-item .link-label {
     font-size: 13px;
   }

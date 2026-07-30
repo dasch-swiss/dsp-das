@@ -101,10 +101,10 @@
               <div class="drill-res">
                 <span class="col-group indent-1 combo">
                   <mat-icon class="kind-icon">description</mat-icon>
-                  <span class="link-label res-name" [title]="res.label">{{ res.label }}</span>
+                  <a class="link-label res-name" [href]="resourceLink(res.resourceIri)" target="_blank" rel="noopener" [title]="res.label">{{ res.label }}</a>
                   <mat-icon class="combo-sep">chevron_right</mat-icon>
                   <mat-icon class="kind-icon">{{ itemIcon(comboItem) }}</mat-icon>
-                  <span class="link-label" [title]="comboItem.propertyLabel || comboItem.type">{{ comboItem.propertyLabel || comboItem.type }}</span>
+                  <a class="link-label" [href]="itemLink(res.resourceIri, comboItem.valueIri)" target="_blank" rel="noopener" [title]="comboItem.propertyLabel || comboItem.type">{{ comboItem.propertyLabel || comboItem.type }}</a>
                   <span class="tag">{{ 'pages.project.viewRestrictions.itemType.' + comboItem.type | translate }}</span>
                 </span>
                 <span class="col-aud"><mat-icon [class]="visibilityClass(comboItem.visibility.anonymous)">{{ visibilityIcon(comboItem.visibility.anonymous) }}</mat-icon></span>
@@ -115,7 +115,7 @@
               <div class="drill-res">
                 <span class="col-group indent-1">
                   <mat-icon class="kind-icon">description</mat-icon>
-                  <span class="link-label">{{ res.label }}</span>
+                  <a class="link-label" [href]="resourceLink(res.resourceIri)" target="_blank" rel="noopener" [title]="res.label">{{ res.label }}</a>
                   @if (res.items?.length) {
                     <span class="child-info">
                       {{ res.items.length }} {{ 'pages.project.viewRestrictions.itemsInside' | translate }}
@@ -131,7 +131,7 @@
                 <div class="drill-item">
                   <span class="col-group indent-2">
                     <mat-icon class="kind-icon">{{ itemIcon(item) }}</mat-icon>
-                    <span class="link-label">{{ item.propertyLabel || item.type }}</span>
+                    <a class="link-label" [href]="itemLink(res.resourceIri, item.valueIri)" target="_blank" rel="noopener" [title]="item.propertyLabel || item.type">{{ item.propertyLabel || item.type }}</a>
                     <span class="tag">{{ 'pages.project.viewRestrictions.itemType.' + item.type | translate }}</span>
                   </span>
                   <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.anonymous)">{{ visibilityIcon(item.visibility.anonymous) }}</mat-icon></span>

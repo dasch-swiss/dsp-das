@@ -13,6 +13,7 @@ import {
   RestrictionGroup,
   Visibility,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { TranslatePipe } from '@ngx-translate/core';
 import { take, tap } from 'rxjs';
@@ -66,8 +67,25 @@ export class ViewRestrictionsComponent {
   constructor(
     protected titleService: Title,
     public vr: ViewRestrictionsPageService,
-    private readonly _projectPageService: ProjectPageService
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _resourceService: ResourceService
   ) {}
+
+  /** In-app path to open a resource: `/resource/{shortcode}/{uuid}` (getResourcePath strips the iriBase). */
+  resourceLink(resourceIri: string): string {
+    return `/resource${this._resourceService.getResourcePath(resourceIri)}`;
+  }
+
+  /**
+   * Path to open a restricted item: the containing resource, deep-linked to the specific value via
+   * `?highlightValue={valueUuid}` (the value UUID is the last segment of the value IRI). Falls back to
+   * the resource link when there is no value IRI.
+   */
+  itemLink(resourceIri: string, valueIri: string | undefined): string {
+    const base = this.resourceLink(resourceIri);
+    const valueUuid = valueIri?.split('/').filter(Boolean).pop();
+    return valueUuid ? `${base}?highlightValue=${encodeURIComponent(valueUuid)}` : base;
+  }
 
   onGroupBy(value: GroupBy): void {
     this.expanded.set({});
