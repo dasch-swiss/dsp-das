@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
-import { StatementElement } from '../../model';
+import { PropertyObjectType, StatementElement } from '../../model';
 import { OntologyDataService } from '../../service/ontology-data.service';
 import { SearchFlowLogger } from '../../service/search-flow-logger.service';
 import { SearchUrlParams, SearchUrlSyncService } from '../../service/search-url-sync.service';
@@ -224,9 +224,13 @@ export class AdvancedSearchBarComponent implements OnInit {
         predicateIri: stmt.selectedPredicate!.iri,
         operator: stmt.selectedOperator!,
         value: stmt.selectedObjectWriteValue ?? '',
-        // Persist the linked-resource label (e.g. "Rita") next to its IRI so the chip shows the name,
-        // not the raw IRI, after a reload/back-forward. Undefined for plain string values.
-        valueLabel: stmt.selectedObjectLabel,
+        // Persist the label only for link values, where the label ("Rita" for an author IRI) has no
+        // multi-language source the app already fetches — without this, the chip would render the raw
+        // IRI after a reload/back-forward. Lists and resource classes have their multi-language labels
+        // in data the chip pipe already resolves (list tree / ontology), so persisting a single-language
+        // string here would fossilize the label in the writer's language (DEV-6857). Plain string values
+        // carry no label (the value IS the label).
+        valueLabel: stmt.objectType === PropertyObjectType.LinkValueObject ? stmt.selectedObjectLabel : undefined,
         parentIndex: stmt.parentId !== undefined ? idxById.get(stmt.parentId) : undefined,
       }));
     const encoded = stmts.length ? this._urlSync.encodeFilters(filterArgs) : null;

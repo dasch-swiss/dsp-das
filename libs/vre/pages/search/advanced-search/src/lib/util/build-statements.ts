@@ -1,6 +1,18 @@
-import { NodeValue, Predicate, StatementElement } from '../model';
+import { NodeValue, Predicate, PropertyObjectType, StatementElement } from '../model';
 import { FilterParam } from '../service/search-url-sync.service';
 import { toLabels } from './labels';
+
+/**
+ * Set of object types whose operand is a node reference (an IRI naming a list node, resource class,
+ * or linked resource) rather than a plain literal. Matches the branching in
+ * {@link StatementElement.objectType}; when a new node-shaped `PropertyObjectType` is added, add it
+ * here too so the URL rehydration keeps producing the `IriLabelPair` shape the chip pipe expects.
+ */
+const NODE_SHAPED_OBJECT_TYPES: ReadonlySet<PropertyObjectType> = new Set([
+  PropertyObjectType.ListValueObject,
+  PropertyObjectType.LinkValueObject,
+  PropertyObjectType.ResourceObject,
+]);
 
 /**
  * Pure reconstruction of the confirmed statement tree from decoded URL filter params. This is the
@@ -50,9 +62,18 @@ export function buildStatementsFromFilterParams(
     stmt.selectedPredicate = predicate;
     if (fp.operator) stmt.selectedOperator = fp.operator;
     if (fp.value) {
-      // A linked-resource value carries a `valueLabel` (its human name): rebuild it as an IriLabelPair so
-      // the chip and editor show the label, not the IRI. Plain string values stay as-is.
-      stmt.selectedObjectValue = fp.valueLabel
+      // Rebuild the object *shape* the chip and editor expect. The setter on `selectedObjectValue`
+      // routes strings to `StringValue` and objects to `NodeValue`, and the chip pipe treats those
+      // two very differently — a `StringValue` is rendered as-is, while a `NodeValue`'s labels are
+      // resolved from live data (list tree / ontology) via the label resolver, which is what makes
+      // the chip re-translate on language switch (DEV-6857). So statements whose object is a linked
+      // *node* (list nodes, resource classes picked via Matches, linked resources) must land as
+      // NodeValue-shaped IriLabelPairs — even when the URL carries no `valueLabel` (which is now
+      // the case for list values and resource-class Matches under DEV-6857). The classification
+      // itself lives on `StatementElement.objectType`, so route through it rather than duplicating
+      // its branching here — a new node-shaped `PropertyObjectType` only needs to be added to
+      // `NODE_SHAPED_OBJECT_TYPES` above.
+      stmt.selectedObjectValue = NODE_SHAPED_OBJECT_TYPES.has(stmt.objectType)
         ? { iri: fp.value, labels: toLabels(fp.valueLabel), comments: [] }
         : fp.value;
     }
