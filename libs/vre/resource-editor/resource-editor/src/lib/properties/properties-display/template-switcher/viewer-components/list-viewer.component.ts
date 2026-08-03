@@ -1,19 +1,14 @@
 import { AsyncPipe, NgStyle } from '@angular/common';
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  KnoraApiConnection,
-  ListNodeV2WithAllLanguages,
-  ReadListValue,
-  ResourcePropertyDefinition,
-} from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { ListNodeV2WithAllLanguages, ReadListValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { filterUndefined, listRootIriFromGuiAttributes } from '@dasch-swiss/vre/shared/app-common';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { combineLatest, map, Observable, of, Subject, tap } from 'rxjs';
 import { ResourceFetcherService } from '../../../../representation/resource-fetcher.service';
+import { PropertyValueService } from '../../property-value/property-value.service';
 
 @Component({
   selector: 'app-list-viewer',
@@ -53,8 +48,7 @@ export class ListViewerComponent implements OnInit {
   private _nodeIdSubject = new Subject<string>();
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
+    private _propertyValueService: PropertyValueService,
     private _resourceFetcher: ResourceFetcherService,
     private _localizationService: LocalizationService
   ) {}
@@ -70,7 +64,9 @@ export class ListViewerComponent implements OnInit {
       return;
     }
 
-    const tree$ = this._dspApiConnection.v2.list.getListWithAllLanguages(rootIri).pipe(
+    // Share one whole-list fetch across all of this property's values (provided per property),
+    // so N values from the same list issue a single /v2/lists request, not N.
+    const tree$ = this._propertyValueService.getList$(rootIri).pipe(
       map(v => ListViewerComponent.lookFor([v], this.value.listNode) as ListNodeV2WithAllLanguages[]),
       tap(tree => this._nodeIdSubject.next(tree[tree.length - 1].id)),
       map(tree => tree.slice(1))
