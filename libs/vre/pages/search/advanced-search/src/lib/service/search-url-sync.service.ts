@@ -20,7 +20,17 @@ export interface FilterParam {
   predicateIri: string;
   operator: Operator;
   value: string;
-  /** Display label for a linked-resource `value` (its IRI). Absent for plain string values. */
+  /**
+   * Display label for a linked-*resource* `value` (its IRI) — the "Rita" in "author equals Rita". Only
+   * written for the link-value chip case, where the label has no multi-language source the search page
+   * already fetches and re-deriving it on rehydration would need a per-chip network round-trip.
+   *
+   * DEV-6857: list values and resource-class `Matches` chips deliberately do NOT populate this — their
+   * labels live in the loaded list tree / ontology and are resolved at chip-render time by
+   * `ChipLabelPipe`. Persisting a single-language string here for those cases fossilises the display in
+   * the writer's language. Plain string values (typed literals, IsLike patterns, label text) never
+   * populate this field either (the value IS the label).
+   */
   valueLabel?: string;
 }
 

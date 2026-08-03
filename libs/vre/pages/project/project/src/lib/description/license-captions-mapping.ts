@@ -40,7 +40,7 @@ Belltower of Aurigeno. © Romeo Dell’Era`,
   ],
   ['0862', 'Author: Christian von Zimmermann.'],
   [
-    '085c',
+    '085C',
     'Edition und Übersetzung der beiden von den St. Galler Mönchen Ekkehart I. und Herimannus verfassten Viten Wiboradas von St. Gallen († 926) durch Walter Berschin.',
   ],
   [
