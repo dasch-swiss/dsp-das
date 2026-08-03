@@ -214,4 +214,14 @@ export class ViewRestrictionsComponent {
   itemTypeKey(type: ItemType): string {
     return `pages.project.viewRestrictions.itemType.${ITEM_TYPE_SLUG[type] ?? 'all'}`;
   }
+
+  /**
+   * Whether a restricted item has its own property label. `propertyLabel` is optional in the API
+   * (only `type` and `visibility` are required — a file value typically has no property label), and
+   * the template falls back to the *translated* item type rather than the raw enum, which would
+   * otherwise show a stray English "File" next to its own translated tag.
+   */
+  hasPropertyLabel(item: RestrictedItem): boolean {
+    return !!item.propertyLabel;
+  }
 }

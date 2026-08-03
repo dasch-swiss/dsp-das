@@ -111,7 +111,8 @@
                   <a class="link-label res-name" [href]="resourceLink(res.resourceIri)" target="_blank" rel="noopener" [title]="res.label">{{ res.label }}</a>
                   <mat-icon class="combo-sep">chevron_right</mat-icon>
                   <mat-icon class="kind-icon">{{ itemIcon(comboItem) }}</mat-icon>
-                  <a class="link-label" [href]="itemLink(res.resourceIri, comboItem.valueIri)" target="_blank" rel="noopener" [title]="comboItem.propertyLabel || comboItem.type">{{ comboItem.propertyLabel || comboItem.type }}</a>
+                  @let comboLabel = hasPropertyLabel(comboItem) ? comboItem.propertyLabel : (itemTypeKey(comboItem.type) | translate);
+                  <a class="link-label" [href]="itemLink(res.resourceIri, comboItem.valueIri)" target="_blank" rel="noopener" [title]="comboLabel">{{ comboLabel }}</a>
                   <span class="tag">{{ itemTypeKey(comboItem.type) | translate }}</span>
                 </span>
                 <app-visibility-cell [visibility]="comboItem.visibility.anonymous" />
@@ -138,7 +139,8 @@
                 <div class="drill-item">
                   <span class="col-group indent-2">
                     <mat-icon class="kind-icon">{{ itemIcon(item) }}</mat-icon>
-                    <a class="link-label" [href]="itemLink(res.resourceIri, item.valueIri)" target="_blank" rel="noopener" [title]="item.propertyLabel || item.type">{{ item.propertyLabel || item.type }}</a>
+                    @let itemLabel = hasPropertyLabel(item) ? item.propertyLabel : (itemTypeKey(item.type) | translate);
+                    <a class="link-label" [href]="itemLink(res.resourceIri, item.valueIri)" target="_blank" rel="noopener" [title]="itemLabel">{{ itemLabel }}</a>
                     <span class="tag">{{ itemTypeKey(item.type) | translate }}</span>
                   </span>
                   <app-visibility-cell [visibility]="item.visibility.anonymous" />

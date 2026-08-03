@@ -152,6 +152,14 @@ describe('ViewRestrictionsComponent', () => {
     expect(component.itemTypeKey(ItemType.Comment)).toBe('pages.project.viewRestrictions.itemType.comment');
   });
 
+  it('falls back to the translated item type when an item has no property label', () => {
+    // propertyLabel is optional in the API; without this the template would render the raw enum
+    expect(component.hasPropertyLabel({ type: ItemType.File, visibility: {} } as never)).toBe(false);
+    expect(
+      component.hasPropertyLabel({ type: ItemType.File, propertyLabel: 'Has image', visibility: {} } as never)
+    ).toBe(true);
+  });
+
   describe('pager adapter (app-pager is 0-based, the API is 1-based)', () => {
     it('translates a 0-based page index into the 1-based API page', () => {
       const group = summary.groups![0];
