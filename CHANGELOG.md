@@ -1,5 +1,13 @@
 # Changelog
 
+## [13.12.1](https://github.com/dasch-swiss/dsp-app/compare/v13.12.0...v13.12.1) (2026-08-03)
+
+
+### Bug Fixes
+
+* **advanced-search:** negate over whole property for value/list "does not equal" (DEV-6889) ([#3309](https://github.com/dasch-swiss/dsp-app/issues/3309)) ([e592703](https://github.com/dasch-swiss/dsp-app/commit/e592703b3f16368effe639e2dafc51dd48fc0e39))
+* **advanced-search:** order by ?label when sorting on rdfs:label (DEV-6889 follow-up) ([#3311](https://github.com/dasch-swiss/dsp-app/issues/3311)) ([81284f8](https://github.com/dasch-swiss/dsp-app/commit/81284f851e34e84bd78ed48c288c9f672fcb6b00))
+
 ## [13.12.0](https://github.com/dasch-swiss/dsp-app/compare/v13.11.0...v13.12.0) (2026-08-03)
 
 
