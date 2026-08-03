@@ -223,7 +223,9 @@
           "hidden": "Hidden",
           "restrictedView": "Restricted view",
           "visible": "Visible"
-        }
+        },
+        "summaryLoadFailed": "The restrictions could not be loaded. Please try again later.",
+        "itemsLoadFailed": "The affected resources could not be loaded. Close and reopen the row to retry."
       }
     },
     "system": {

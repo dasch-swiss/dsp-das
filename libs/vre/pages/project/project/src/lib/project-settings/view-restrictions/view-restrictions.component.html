@@ -40,6 +40,11 @@
 @if (summaryState$ | async; as state) {
   @if (state.loading) {
     <app-progress-indicator />
+  } @else if (state.failed) {
+    <div class="load-error">
+      <mat-icon>error_outline</mat-icon>
+      {{ 'pages.project.viewRestrictions.summaryLoadFailed' | translate }}
+    </div>
   } @else if (state.summary; as summary) {
     @if (summary.approximate) {
       <div class="approximate-note">
@@ -82,6 +87,11 @@
       @if (isExpanded(group.id)) {
         @if (isLoading(group.id)) {
           <app-progress-indicator />
+        } @else if (isFailed(group.id)) {
+          <div class="load-error">
+            <mat-icon>error_outline</mat-icon>
+            {{ 'pages.project.viewRestrictions.itemsLoadFailed' | translate }}
+          </div>
         } @else if (expandedGroup(group.id); as eg) {
           @if (eg.page.pagination.totalPages > 1) {
             <div class="pager">

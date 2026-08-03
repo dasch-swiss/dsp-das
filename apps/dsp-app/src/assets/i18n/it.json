@@ -223,7 +223,9 @@
           "hidden": "Nascosto",
           "restrictedView": "Vista limitata",
           "visible": "Visibile"
-        }
+        },
+        "summaryLoadFailed": "Non è stato possibile caricare le restrizioni. Riprovare più tardi.",
+        "itemsLoadFailed": "Non è stato possibile caricare le risorse interessate. Chiudere e riaprire la riga per riprovare."
       }
     },
     "system": {

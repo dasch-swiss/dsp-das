@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Title } from '@angular/platform-browser';
 import {
   AdminAPIApiService,
   GroupBy,
@@ -10,8 +11,9 @@ import {
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
+import { SummaryState } from './view-restrictions-page.service';
 import { ViewRestrictionsComponent } from './view-restrictions.component';
 
 const summary: ViewRestrictionsSummary = {
@@ -102,6 +104,10 @@ describe('ViewRestrictionsComponent', () => {
     });
   });
 
+  it('sets the browser title for the current project', () => {
+    expect(TestBed.inject(Title).getTitle()).toBe('Project anything | View restrictions');
+  });
+
   it('expands a group and stores the fetched items (resolves the loading state)', () => {
     const group = summary.groups![0];
     component.toggleGroup(group);
@@ -190,6 +196,57 @@ describe('ViewRestrictionsComponent', () => {
 
     it('itemLink falls back to the resource link when there is no value IRI', () => {
       expect(component.itemLink('http://rdfh.ch/0001/a-thing', undefined)).toBe('/resource/0001/a-thing');
+    });
+  });
+
+  describe('error handling', () => {
+    it('resolves the summary to a failed state instead of spinning forever', () => {
+      const states: SummaryState[] = [];
+      const sub = component.summaryState$.subscribe(state => states.push(state));
+
+      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsSummary.mockReturnValueOnce(
+        throwError(() => new Error('boom'))
+      );
+      // re-trigger the stream so the failing mock is the one that gets used
+      component.onItemType(ItemType.Value);
+
+      expect(states.at(-1)?.loading).toBe(false);
+      expect(states.at(-1)?.failed).toBe(true);
+      expect(states.at(-1)?.summary).toBeUndefined();
+
+      sub.unsubscribe();
+    });
+
+    it('keeps working after a failed summary: the next filter change retries', () => {
+      const states: SummaryState[] = [];
+      // subscribe first, so this sees the failure and the recovery in order rather than a replay
+      const sub = component.summaryState$.subscribe(state => states.push(state));
+
+      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsSummary.mockReturnValueOnce(
+        throwError(() => new Error('boom'))
+      );
+      component.onItemType(ItemType.Value);
+      expect(states.at(-1)?.failed).toBe(true);
+
+      // catchError sits on the inner request, so the outer stream survives and refetches
+      component.onItemType(ItemType.File);
+      expect(states.at(-1)?.failed).toBeUndefined();
+      expect(states.at(-1)?.summary?.groups?.length).toBe(1);
+
+      sub.unsubscribe();
+    });
+
+    it('marks a drill-down group as failed instead of leaving it on loading', () => {
+      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems.mockReturnValueOnce(
+        throwError(() => new Error('boom'))
+      );
+      const group = summary.groups![0];
+
+      component.toggleGroup(group);
+
+      expect(component.isLoading(group.id)).toBe(false);
+      expect(component.isFailed(group.id)).toBe(true);
+      expect(component.expandedGroup(group.id)).toBeNull();
     });
   });
 

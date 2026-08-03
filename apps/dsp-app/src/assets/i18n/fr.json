@@ -223,7 +223,9 @@
           "hidden": "Masqué",
           "restrictedView": "Vue restreinte",
           "visible": "Visible"
-        }
+        },
+        "summaryLoadFailed": "Les restrictions n'ont pas pu être chargées. Veuillez réessayer plus tard.",
+        "itemsLoadFailed": "Les ressources concernées n'ont pas pu être chargées. Fermez et rouvrez la ligne pour réessayer."
       }
     },
     "system": {

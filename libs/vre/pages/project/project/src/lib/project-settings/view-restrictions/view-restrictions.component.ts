@@ -1,5 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
@@ -17,7 +18,7 @@ import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
-import { take, tap } from 'rxjs';
+import { take } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 import { ViewRestrictionsPageService } from './view-restrictions-page.service';
 import { VisibilityCellComponent } from './visibility-cell.component';
@@ -79,21 +80,25 @@ export class ViewRestrictionsComponent {
   readonly itemType$ = this.vr.itemType$;
 
   /** Per-group expansion state, keyed by group id. A signal so OnPush re-renders when it changes. */
-  readonly expanded = signal<Record<string, ExpandedGroup | 'loading'>>({});
+  readonly expanded = signal<Record<string, ExpandedGroup | 'loading' | 'failed'>>({});
 
   /** Drill-down page size; also fed to `app-pager` so it can compute the page count. */
   readonly pageSize = 25;
 
-  readonly project$ = this._projectPageService.currentProject$.pipe(
-    tap(project => this.titleService.setTitle(`Project ${project.shortname} | View restrictions`))
-  );
+  private readonly _destroyRef = inject(DestroyRef);
 
   constructor(
     protected titleService: Title,
     public vr: ViewRestrictionsPageService,
     private readonly _projectPageService: ProjectPageService,
     private readonly _resourceService: ResourceService
-  ) {}
+  ) {
+    // Subscribed here rather than exposed as a `project$` for the template to unwrap: the title is a
+    // side effect with no rendered output, so a cold observable would simply never run.
+    this._projectPageService.currentProject$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(project => {
+      this.titleService.setTitle(`Project ${project.shortname} | View restrictions`);
+    });
+  }
 
   /** In-app path to open a resource: `/resource/{shortcode}/{uuid}` (getResourcePath strips the iriBase). */
   resourceLink(resourceIri: string): string {
@@ -140,9 +145,15 @@ export class ViewRestrictionsComponent {
     this.expanded.update(e => ({ ...e, [groupId]: 'loading' }));
     this.vr
       .loadItems(groupId, page, this.pageSize)
-      .pipe(take(1))
-      .subscribe(result => {
-        this.expanded.update(e => ({ ...e, [groupId]: { page: result, currentPage: page } }));
+      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: result => {
+          this.expanded.update(e => ({ ...e, [groupId]: { page: result, currentPage: page } }));
+        },
+        // Without this the group would stay on 'loading' forever and spin indefinitely.
+        error: () => {
+          this.expanded.update(e => ({ ...e, [groupId]: 'failed' }));
+        },
       });
   }
 
@@ -169,9 +180,13 @@ export class ViewRestrictionsComponent {
     return this.expanded()[id] === 'loading';
   }
 
+  isFailed(id: string): boolean {
+    return this.expanded()[id] === 'failed';
+  }
+
   expandedGroup(id: string): ExpandedGroup | null {
     const e = this.expanded()[id];
-    return e && e !== 'loading' ? e : null;
+    return e && e !== 'loading' && e !== 'failed' ? e : null;
   }
 
   private isResourceVisible(res: RestrictedResource): boolean {

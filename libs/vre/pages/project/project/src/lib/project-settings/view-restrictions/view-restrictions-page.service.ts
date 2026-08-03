@@ -6,13 +6,28 @@ import {
   PagedResponseRestrictedResource,
   ViewRestrictionsSummary,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { BehaviorSubject, combineLatest, EMPTY, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  EMPTY,
+  map,
+  Observable,
+  of,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 
-/** Summary matrix load state: `loading` while a filter change is being fetched; `summary` set once loaded. */
+/**
+ * Summary matrix load state: `loading` while a filter change is being fetched, then either `summary`
+ * or `failed` — the three states are mutually exclusive, so the UI never has to guess.
+ */
 export interface SummaryState {
   loading: boolean;
   summary?: ViewRestrictionsSummary;
+  failed?: boolean;
 }
 
 /**
@@ -31,6 +46,9 @@ export class ViewRestrictionsPageService {
   /**
    * The summary matrix as a load state, recomputed whenever the project, group-by or item-type changes.
    * Emits `{ loading: true }` immediately on every change (so the UI can show a spinner), then the result.
+   *
+   * `catchError` sits on the *inner* request so a failed fetch resolves to `{ failed: true }` instead of
+   * terminating the outer stream: the spinner stops, and changing a filter afterwards still retries.
    */
   readonly summaryState$: Observable<SummaryState> = combineLatest([
     this._project$,
@@ -45,6 +63,7 @@ export class ViewRestrictionsPageService {
         .getAdminProjectsIriProjectiriViewRestrictionsSummary(project.id, groupBy, itemType)
         .pipe(
           map(summary => ({ loading: false, summary }) as SummaryState),
+          catchError(() => of({ loading: false, failed: true } as SummaryState)),
           startWith({ loading: true } as SummaryState)
         );
     }),
