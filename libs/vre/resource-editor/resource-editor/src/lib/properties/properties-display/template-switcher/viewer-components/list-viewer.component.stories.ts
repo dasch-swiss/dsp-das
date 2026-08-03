@@ -50,7 +50,6 @@ const rootNode = makeListNode(
 const dspApiConnectionStub = {
   v2: {
     list: {
-      getNodeWithAllLanguages: () => of(rootNode.children[0].children[0]),
       getListWithAllLanguages: () => of(rootNode),
     },
   },
@@ -70,7 +69,11 @@ const localizationServiceStub: Partial<LocalizationService> = {
 };
 
 const makeValue = (): ReadListValue => ({ listNode: 'http://rdfh.ch/lists/0001/itemA1' }) as any;
-const makePropertyDef = (): ResourcePropertyDefinition => ({ id: 'http://example.org/listProp' }) as any;
+const makePropertyDef = (): ResourcePropertyDefinition =>
+  ({
+    id: 'http://example.org/listProp',
+    guiAttributes: ['hlist=<http://rdfh.ch/lists/0001/root>'],
+  }) as any;
 
 const meta: Meta<ListViewerComponent> = {
   title:

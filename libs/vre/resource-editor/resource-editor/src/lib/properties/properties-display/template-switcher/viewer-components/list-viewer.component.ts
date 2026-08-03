@@ -9,10 +9,10 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
+import { filterUndefined, listRootIriFromGuiAttributes } from '@dasch-swiss/vre/shared/app-common';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { combineLatest, map, Observable, Subject, switchMap, tap } from 'rxjs';
+import { combineLatest, map, Observable, of, Subject, tap } from 'rxjs';
 import { ResourceFetcherService } from '../../../../representation/resource-fetcher.service';
 
 @Component({
@@ -62,8 +62,15 @@ export class ListViewerComponent implements OnInit {
   ngOnInit() {
     this._fetchSearchLink();
 
-    const tree$ = this._dspApiConnection.v2.list.getNodeWithAllLanguages(this.value.listNode).pipe(
-      switchMap(v => this._dspApiConnection.v2.list.getListWithAllLanguages(v.hasRootNode!)),
+    // Derive the list root from the property definition (already in memory) instead of a
+    // /v2/node round trip whose only purpose was to read hasRootNode.
+    const rootIri = listRootIriFromGuiAttributes(this.propertyDef.guiAttributes);
+    if (!rootIri) {
+      this.nodes$ = of([]);
+      return;
+    }
+
+    const tree$ = this._dspApiConnection.v2.list.getListWithAllLanguages(rootIri).pipe(
       map(v => ListViewerComponent.lookFor([v], this.value.listNode) as ListNodeV2WithAllLanguages[]),
       tap(tree => this._nodeIdSubject.next(tree[tree.length - 1].id)),
       map(tree => tree.slice(1))
