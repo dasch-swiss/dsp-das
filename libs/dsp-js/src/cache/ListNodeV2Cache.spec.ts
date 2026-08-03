@@ -213,6 +213,48 @@ describe('ListNodeV2Cache', () => {
     });
   });
 
+  describe('Method getListNodes()', () => {
+    it('should fetch the whole list once and return all of its nodes without a /v2/node request', done => {
+      knoraApiConnection.v2.listNodeCache
+        .getListNodes('http://rdfh.ch/lists/0001/treeList')
+        .subscribe((nodes: ListNodeV2[]) => {
+          // no per-leaf node request
+          expect(getNodeSpy).not.toHaveBeenCalled();
+
+          // one whole-list request, by root
+          expect(getListSpy).toHaveBeenCalledTimes(1);
+          expect(getListSpy).toHaveBeenCalledWith('http://rdfh.ch/lists/0001/treeList');
+
+          // all nodes are present, so a leaf label can be resolved locally
+          const ids = nodes.map(node => node.id);
+          expect(ids).toEqual(
+            expect.arrayContaining([
+              'http://rdfh.ch/lists/0001/treeList',
+              'http://rdfh.ch/lists/0001/treeList01',
+              'http://rdfh.ch/lists/0001/treeList03',
+              'http://rdfh.ch/lists/0001/treeList10',
+              'http://rdfh.ch/lists/0001/treeList11',
+            ])
+          );
+
+          const leaf = nodes.find(node => node.id === 'http://rdfh.ch/lists/0001/treeList10');
+          expect(leaf?.label).toEqual('Tree list node 10');
+
+          done();
+        });
+    });
+
+    it('should reuse the single fetch for repeated calls for the same root', done => {
+      knoraApiConnection.v2.listNodeCache.getListNodes('http://rdfh.ch/lists/0001/treeList').subscribe(() => {
+        knoraApiConnection.v2.listNodeCache.getListNodes('http://rdfh.ch/lists/0001/treeList').subscribe(() => {
+          expect(getNodeSpy).not.toHaveBeenCalled();
+          expect(getListSpy).toHaveBeenCalledTimes(1);
+          done();
+        });
+      });
+    });
+  });
+
   describe('Method reloadCachedItem', () => {
     it('should reload the item in the cache', done => {
       knoraApiConnection.v2.listNodeCache['reloadCachedItem']('http://rdfh.ch/lists/0001/treeList01').subscribe(

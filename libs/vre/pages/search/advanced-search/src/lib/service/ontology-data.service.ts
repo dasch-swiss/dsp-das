@@ -9,6 +9,7 @@ import {
   StringLiteralV2,
 } from '@dasch-swiss/dsp-js';
 import { AvailableLanguageKeys, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { listRootIriFromGuiAttributes } from '@dasch-swiss/vre/shared/app-common';
 import {
   LocalizationService,
   pickPreferredLanguageString,
@@ -248,12 +249,11 @@ export class OntologyDataService {
       undefined,
       propDef.comments ?? []
     );
-    if (
-      propDef.objectType === Constants.ListValue &&
-      propDef.guiAttributes.length === 1 &&
-      propDef.guiAttributes[0].startsWith('hlist=')
-    ) {
-      predicate.listObjectIri = propDef.guiAttributes[0].substring(7, propDef.guiAttributes[0].length - 1);
+    if (propDef.objectType === Constants.ListValue) {
+      const listObjectIri = listRootIriFromGuiAttributes(propDef.guiAttributes);
+      if (listObjectIri !== undefined) {
+        predicate.listObjectIri = listObjectIri;
+      }
     }
     return predicate;
   }
