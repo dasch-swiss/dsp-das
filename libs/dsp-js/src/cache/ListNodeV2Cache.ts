@@ -1,4 +1,4 @@
-import { Observable, map } from 'rxjs';
+import { Observable, map, shareReplay } from 'rxjs';
 import { V2Endpoint } from '../api/v2/v2-endpoint';
 import { ListConversionUtil } from '../models/v2/lists/list-conversion-util';
 import { ListNodeV2 } from '../models/v2/lists/list-node-v2';
@@ -9,6 +9,12 @@ import { GenericCache } from './GenericCache';
  * As an optimization, the whole list is requested and cached (all of its nodes) once a list node has been rquested.
  */
 export class ListNodeV2Cache extends GenericCache<ListNodeV2> {
+  /**
+   * Memoizes whole-list fetches by root node IRI, so N leaves of the same list
+   * within this cache's lifetime share a single `/v2/lists` request.
+   */
+  private listNodesByRoot: { [rootIri: string]: Observable<ListNodeV2[]> } = {};
+
   constructor(private v2Endpoint: V2Endpoint) {
     super();
   }
@@ -23,6 +29,27 @@ export class ListNodeV2Cache extends GenericCache<ListNodeV2> {
    */
   getNode(nodeIri: string) {
     return this.getItem(nodeIri);
+  }
+
+  /**
+   * Given a list's root node IRI, fetches the whole list once and returns all of its nodes
+   * (root and its direct and indirect children).
+   *
+   * The whole list is fetched in a single `/v2/lists` request; repeated calls for the same root
+   * within this cache's lifetime reuse that single fetch. This lets callers resolve a leaf node's
+   * label locally, without a per-leaf `/v2/node` request.
+   *
+   * @param rootNodeIri the IRI of the list's root node.
+   * @return all nodes of the list (root and its direct and indirect children).
+   */
+  getListNodes(rootNodeIri: string): Observable<ListNodeV2[]> {
+    if (this.listNodesByRoot[rootNodeIri] === undefined) {
+      this.listNodesByRoot[rootNodeIri] = (this.v2Endpoint.list.getList(rootNodeIri) as Observable<ListNodeV2>).pipe(
+        map(rootNode => ListConversionUtil.collectNodes(rootNode)),
+        shareReplay({ refCount: false, bufferSize: 1 })
+      );
+    }
+    return this.listNodesByRoot[rootNodeIri];
   }
 
   /**
