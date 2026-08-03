@@ -251,6 +251,7 @@ CONSTRUCT {
 ?mainRes knora-api:isMainResource true .
 
 } WHERE {
+?mainRes a knora-api:Resource .
 ?mainRes rdfs:label ?label .
 ?mainRes <http://www.w3.org/2000/01/rdf-schema#label> ?res0 .
 
@@ -443,6 +444,7 @@ CONSTRUCT {
 ?mainRes <http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#hasPlacePublisher> ?res0 .
 
 } WHERE {
+?mainRes a knora-api:Resource .
 ?mainRes rdfs:label ?label .
 ?mainRes <http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#hasPlacePublisher> ?res0 .
 ?res0 <http://api.knora.org/ontology/knora-api/v2#valueAsString> ?res0val .
@@ -964,6 +966,80 @@ OFFSET 0`;
 
     // Only check the operator-specific FILTER clause
     expect(query).toContain('FILTER (?res0val <= "1"^^<http://www.w3.org/2001/XMLSchema#integer> )');
+  });
+});
+
+describe('GravsearchService — main-resource type anchor (DEV-6889)', () => {
+  // `?mainRes` must be typed by *something* in the WHERE clause, or dsp-api's Gravsearch type
+  // inspection rejects the query with HTTP 400 ("Types could not be determined for … ?mainRes").
+  // A selected class or a matchFulltext term type it; `rdfs:label` and (in general) property
+  // statements do not guarantee it. So the generator must emit the generic `?mainRes a
+  // knora-api:Resource .` anchor exactly when there is no class AND no fulltext term.
+  let gravsearchService: GravsearchService;
+  let ontologyDataService: OntologyDataService;
+
+  const ontologyIri = 'http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2';
+  const labelPredicate = 'http://www.w3.org/2000/01/rdf-schema#label';
+
+  function labelStatement(operator: Operator, value = 'foo'): StatementElement[] {
+    const stm = new StatementElement();
+    (stm as any).id = 'label-stmt';
+    (stm as any).statementLevel = 0;
+    (stm as any)._selectedPredicate = new Predicate(
+      labelPredicate,
+      englishLabels('Resource Label'),
+      'http://api.knora.org/ontology/knora-api/v2#ResourceLabel',
+      false
+    );
+    (stm as any)._selectedOperator = operator;
+    (stm as any)._selectedObjectNode = new StringValue('label-stmt', value);
+    return [stm];
+  }
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        GravsearchService,
+        OntologyDataService,
+        { provide: DspApiConnectionToken, useValue: {} },
+        { provide: LocalizationService, useValue: mockLocalizationService },
+        { provide: TranslateLoader, useValue: mockTranslateLoader },
+      ],
+    });
+    gravsearchService = TestBed.inject(GravsearchService);
+    ontologyDataService = TestBed.inject(OntologyDataService);
+    jest
+      .spyOn(ontologyDataService, 'selectedOntology', 'get')
+      .mockReturnValue({ iri: ontologyIri, label: 'webern-onto' });
+    jest.spyOn(ontologyDataService, 'classIris', 'get').mockReturnValue([`${ontologyIri}#Person`]);
+  });
+
+  it('emits the generic type anchor for a class-less, fulltext-less label "is like" search (the DEV-6889 400 case)', () => {
+    const query = gravsearchService.generateGravSearchQuery(labelStatement(Operator.IsLike));
+    expect(query).toContain('?mainRes a knora-api:Resource .');
+  });
+
+  it('emits the generic type anchor for a class-less label "equals" search', () => {
+    const query = gravsearchService.generateGravSearchQuery(labelStatement(Operator.Equals));
+    expect(query).toContain('?mainRes a knora-api:Resource .');
+  });
+
+  it('emits the generic type anchor for an empty class-less, fulltext-less search', () => {
+    const query = gravsearchService.generateGravSearchQuery([]);
+    expect(query).toContain('?mainRes a knora-api:Resource .');
+  });
+
+  it('uses the class restriction as the anchor and omits the generic one when a class is selected', () => {
+    const classIri = `${ontologyIri}#Person`;
+    const query = gravsearchService.generateGravSearchQuery(labelStatement(Operator.IsLike), undefined, classIri);
+    expect(query).toContain(`?mainRes a <${classIri}> .`);
+    expect(query).not.toContain('?mainRes a knora-api:Resource .');
+  });
+
+  it('omits the generic anchor when a fulltext term is present (matchFulltext types ?mainRes; anchor pessimizes the backend)', () => {
+    const query = gravsearchService.generateGravSearchQuery([], 'hello');
+    expect(query).toContain('FILTER knora-api:matchFulltext(?mainRes, "hello")');
+    expect(query).not.toContain('a knora-api:Resource');
   });
 });
 

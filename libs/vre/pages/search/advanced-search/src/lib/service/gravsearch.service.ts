@@ -56,13 +56,17 @@ export class GravsearchService {
       '?mainRes knora-api:isMainResource true .\n' +
       `${constructStatements}\n` +
       '} WHERE {\n' +
-      // NB: no generic `?mainRes a knora-api:Resource .` anchor. Measured against the dev DB it is the
-      // dominant cost — it defeats matchFulltext's index anchoring and forces a full project-wide
-      // resource scan (60-80s for some terms). `?mainRes` is always typed by something else: the class
-      // restriction, matchFulltext (its first arg is resource-typed), or a property statement (its
-      // subject's domain). The one shape with none of those (no class, no fulltext, no filter) is not
-      // generated (gravsearchQuery$ returns null). Verified: parity with /v2/search and 14-20x faster.
-      `${this._restrictToResourceClassStatement(resourceClassIri)}\n` +
+      // `?mainRes` must be typed by *something* in the WHERE clause — dsp-api's Gravsearch type
+      // inspection (SearchResponderV2 → GravsearchTypeInspectionRunner over the WHERE clause) fails a
+      // query outright ("Types could not be determined for one or more entities: ?mainRes") when it
+      // cannot infer a type for it. A selected class (`?mainRes a <class>`) or a matchFulltext term (its
+      // first arg is resource-typed) both type it — and in the fulltext case the generic anchor is a
+      // measured perf pessimization (it defeats matchFulltext's index anchoring), so we omit it there.
+      // But `rdfs:label` does NOT type `?mainRes`, so a class-less label-only search (e.g. "Resource
+      // label is like X" with no class and no fulltext) has nothing to anchor it → 400 (DEV-6889).
+      // Restore the generic `?mainRes a knora-api:Resource .` anchor for exactly that gap: no class AND
+      // no fulltext. (No per-class UNION — the removed optimization stays removed.)
+      `${this._restrictToResourceClassStatement(resourceClassIri, trimmedTerm)}\n` +
       '?mainRes rdfs:label ?label .\n' +
       `${fulltextTriple}` +
       `${whereClause}\n` +
@@ -72,11 +76,19 @@ export class GravsearchService {
     );
   }
 
-  private _restrictToResourceClassStatement(resourceClassIri: string): string {
-    // A selected class → a plain type restriction (also the type anchor for `?mainRes`). No class →
-    // no restriction at all: matchFulltext or a property statement types `?mainRes`, and project scope
-    // (limitToProject, passed by the results component) constrains the result set. No per-class UNION.
-    return resourceClassIri ? `?mainRes a <${resourceClassIri}> .` : '';
+  private _restrictToResourceClassStatement(resourceClassIri: string, fulltextTerm: string): string {
+    // Selected class → a plain type restriction (also the type anchor for `?mainRes`).
+    if (resourceClassIri) {
+      return `?mainRes a <${resourceClassIri}> .`;
+    }
+    // No class, but a fulltext term → matchFulltext types `?mainRes`; adding the generic anchor here
+    // would only pessimize the backend (see WHERE-clause note), so emit nothing.
+    if (fulltextTerm) {
+      return '';
+    }
+    // No class and no fulltext → nothing else types `?mainRes`; emit the generic anchor so the query is
+    // valid (project scope via limitToProject still constrains the result set).
+    return '?mainRes a knora-api:Resource .';
   }
 
   private _getOrderByString(statements: StatementElement[], orderBy: OrderByItem[]): string {
