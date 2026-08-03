@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { LABEL_VARIABLE, RESOURCE_PLACEHOLDER } from '../constants';
+import { LABEL_VARIABLE, RDFS_LABEL, RESOURCE_PLACEHOLDER } from '../constants';
 import { escapeSparqlStringLiteral, OrderByItem, StatementElement } from '../model';
 import { GravsearchWriter } from './gravsearch-writer';
 import { OntologyDataService } from './ontology-data.service';
@@ -95,8 +95,13 @@ export class GravsearchService {
     const orderByProps: string[] = orderBy
       .filter(o => o.orderBy)
       .map(o => {
-        const index = statements.findIndex(stm => stm.selectedPredicate?.iri === o.id);
-        const variable = `${RESOURCE_PLACEHOLDER}${index}`;
+        // A ResourceLabel statement filters on the assembly's shared `?label` variable and no longer
+        // binds a `?resN` object variable, so sort on `?label` for it; other statements sort on the
+        // `?resN` bound by their object projection, indexed by statement position.
+        const variable =
+          o.id === RDFS_LABEL
+            ? LABEL_VARIABLE
+            : `${RESOURCE_PLACEHOLDER}${statements.findIndex(stm => stm.selectedPredicate?.iri === o.id)}`;
         const fn = o.direction === 'desc' ? 'DESC' : 'ASC';
         return `${fn}(${variable})`;
       });

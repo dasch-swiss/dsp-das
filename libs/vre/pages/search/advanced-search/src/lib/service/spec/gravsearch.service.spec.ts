@@ -4,6 +4,7 @@ import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services
 import { createMockLocalizationService } from '@dasch-swiss/vre/shared/app-helper-services/testing';
 import { TranslateLoader } from '@ngx-translate/core';
 import { of } from 'rxjs';
+import { RDFS_LABEL } from '../../constants';
 import { IriLabelPair, NodeValue, OrderByItem, Predicate, StatementElement, StringValue } from '../../model';
 import { Operator } from '../../operators.config';
 import { englishLabels, makeIriLabelPair } from '../../testing/test-data-builders';
@@ -332,6 +333,43 @@ OFFSET 0`;
     // Runtime wire string inside the FILTER literal: say \\\"hi\\\" \\\\*
     // (3 backslashes per quote, 4 backslashes per user backslash)
     expect(query).toContain('FILTER regex(?label, "say \\\\\\"hi\\\\\\" \\\\\\\\*", "i")');
+  });
+
+  it('sorts on the shared ?label variable when ordering by rdfs:label (not the unbound ?resN)', () => {
+    // A ResourceLabel statement filters on the assembly's `?label` and does not bind a `?resN` object
+    // variable, so an active sort on rdfs:label must ORDER BY on `?label` — ordering on `?resN` would
+    // reference an out-of-scope variable and make the query invalid.
+    const labelSnapshot = {
+      selectedOntology: { iri: webernOntologyIri, label: 'webern-onto' },
+      selectedResourceClass: { iri: '', label: 'All resource classes' },
+      statementElements: [
+        {
+          id: 'label-stmt',
+          statementLevel: 0,
+          _selectedPredicate: {
+            iri: RDFS_LABEL,
+            label: 'Resource Label',
+            objectValueType: 'http://api.knora.org/ontology/knora-api/v2#ResourceLabel',
+            isLinkProperty: false,
+          },
+          _selectedOperator: 'is like',
+          _selectedObjectNode: { statementId: 'label-stmt', _value: 'foo' },
+        },
+      ],
+      orderBy: [],
+    };
+    setupTestFromJson(searchStateService, JSON.stringify(labelSnapshot), makeIriLabelPair('', 'All resource classes'));
+
+    const activeOrderBy = [new OrderByItem(RDFS_LABEL, [], false, true)];
+    const query = gravsearchService.generateGravSearchQuery(
+      searchStateService.validStatementElements,
+      undefined,
+      '',
+      activeOrderBy
+    );
+
+    expect(query).toContain('ORDER BY ASC(?label)');
+    expect(query).not.toContain('?res0');
   });
 });
 
