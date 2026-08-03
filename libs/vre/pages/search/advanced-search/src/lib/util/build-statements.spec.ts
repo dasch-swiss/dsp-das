@@ -183,6 +183,111 @@ describe('buildStatementsFromFilterParams (DEV-6576)', () => {
     expect(result).toHaveLength(3);
     expect(result[1].parentId).toBe(result[0].id);
     expect(result[2].parentId).toBeUndefined();
+    // None of these three carries a NodeValue-shaped object: `authorPred` Exists has no value,
+    // `namePred`/`titlePred` are plain string-value predicates. See the DEV-6857 describe below for
+    // the list-value / resource-class Matches cases where the object shape MUST be a NodeValue.
     expect(result.some(s => s.selectedObjectNode instanceof NodeValue)).toBe(false);
+  });
+
+  /**
+   * DEV-6857: rehydration must produce an object-shaped operand (→ `NodeValue`) for every filter
+   * whose operand is a *node reference* (list node, resource class, linked resource) — even when
+   * the URL carries no `valueLabel`. If we let those decode to a bare string, the `selectedObjectValue`
+   * setter routes them to `StringValue`, and `ChipLabelPipe` then renders the raw IRI instead of the
+   * label the resolver could look up from live data. This is exactly the regression the Linear ticket
+   * describes ("Education Type equals http://rdfh.ch/lists…").
+   */
+  describe('node-shaped operands hydrate as IriLabelPair (DEV-6857)', () => {
+    const LIST_ROOT_IRI = 'http://rdfh.ch/lists/0828/root';
+    const LIST_NODE_IRI = 'http://rdfh.ch/lists/0828/xiDhI4MaRMmrIYhClQJixg';
+    const listPred = makePredicate(
+      'http://ex.org/hasEducationType',
+      'Education Type',
+      Constants.ListValue,
+      false,
+      LIST_ROOT_IRI
+    );
+
+    // A link-property predicate whose target *class* the user matched. In real ontology hydration,
+    // `objectValueType` on such a predicate names the target class IRI, not `#LinkValue`, which is
+    // what routes `StatementElement.objectType` to `ResourceObject` for `Matches`.
+    const CLASS_IRI = 'http://ex.org/onto/Person';
+    const linkPredToClass = makePredicate('http://ex.org/hasAuthor', 'author', CLASS_IRI, true);
+
+    it('list value: rebuilds an IriLabelPair with empty labels when the URL carries no valueLabel', () => {
+      const [stmt] = buildStatementsFromFilterParams(
+        [
+          fp({
+            predicateIri: listPred.iri,
+            operator: Operator.Equals,
+            value: LIST_NODE_IRI,
+            // No `valueLabel` — matches what the DEV-6857 encoder now writes for list values.
+          }),
+        ],
+        [listPred]
+      );
+
+      // NodeValue-shaped: the setter routed through the object branch of `selectedObjectValue`.
+      expect(stmt.selectedObjectNode).toBeInstanceOf(NodeValue);
+      expect(stmt.selectedObjectValue).toEqual({ iri: LIST_NODE_IRI, labels: [], comments: [] });
+    });
+
+    it('resource-class Matches: rebuilds an IriLabelPair with empty labels when there is no valueLabel', () => {
+      const [stmt] = buildStatementsFromFilterParams(
+        [fp({ predicateIri: linkPredToClass.iri, operator: Operator.Matches, value: CLASS_IRI })],
+        [linkPredToClass]
+      );
+
+      expect(stmt.selectedObjectNode).toBeInstanceOf(NodeValue);
+      expect(stmt.selectedObjectValue).toEqual({ iri: CLASS_IRI, labels: [], comments: [] });
+    });
+
+    it('link value Equals: still uses valueLabel when persisted (label has no multi-language source)', () => {
+      // The existing "linked-resource valueLabel" pin above already covers this shape; this variant
+      // asserts that behaviour survives under the new dispatcher (link + Equals → NodeValue).
+      const [stmt] = buildStatementsFromFilterParams(
+        [
+          fp({
+            predicateIri: linkPredToClass.iri,
+            operator: Operator.Equals,
+            value: 'http://rdfh.ch/0801/abc',
+            valueLabel: 'Rita',
+          }),
+        ],
+        [linkPredToClass]
+      );
+
+      expect(stmt.selectedObjectNode).toBeInstanceOf(NodeValue);
+      expect(stmt.selectedObjectLabel).toBe('Rita');
+    });
+
+    it('link value Equals with no valueLabel (legacy URL): still lands as an IriLabelPair', () => {
+      // The DEV-6857 encoder keeps `valueLabel` for link values, but very old URLs may lack it. In
+      // that case the chip pipe still gets an IriLabelPair with empty labels and falls back to the
+      // IRI. Persistence is preserved — no regression, just no name for those pre-DEV-6857 URLs.
+      const [stmt] = buildStatementsFromFilterParams(
+        [
+          fp({
+            predicateIri: linkPredToClass.iri,
+            operator: Operator.Equals,
+            value: 'http://rdfh.ch/0801/abc',
+          }),
+        ],
+        [linkPredToClass]
+      );
+
+      expect(stmt.selectedObjectNode).toBeInstanceOf(NodeValue);
+      expect(stmt.selectedObjectValue).toEqual({ iri: 'http://rdfh.ch/0801/abc', labels: [], comments: [] });
+    });
+
+    it('text value: still hydrates as a plain string (not routed to NodeValue)', () => {
+      const [stmt] = buildStatementsFromFilterParams(
+        [fp({ predicateIri: titlePred.iri, operator: Operator.Equals, value: 'Moby Dick' })],
+        [titlePred]
+      );
+
+      expect(stmt.selectedObjectValue).toBe('Moby Dick');
+      expect(stmt.selectedObjectNode).not.toBeInstanceOf(NodeValue);
+    });
   });
 });
