@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DSP-API
-  version: v37.3.0-1-g6cb36e3
+  version: v37.4.0-16-g8cf16d9
   summary: DSP-API is part of the DaSCH Service Platform, a repository for the long-term
     preservation and reuse of data in the humanities.
   contact:
@@ -16,7 +16,10 @@ paths:
       tags:
       - Admin API
       description: Returns the permission code and the project's restricted view settings
-        for a given shortcode and filename. Publicly accessible.
+        for a given filename. Publicly accessible. The `{shortcode}` path segment
+        is not authoritative and does not affect the result — the file is identified
+        by its filename alone (internal filenames are globally-unique asset IDs);
+        the segment is retained only for URL compatibility.
       operationId: getAdminFilesProjectshortcodeFilename
       parameters:
       - name: projectShortcode
@@ -5320,7 +5323,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       responses:
         '200':
           description: ''
@@ -5384,7 +5387,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       responses:
         '200':
           description: ''
@@ -5448,7 +5451,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       responses:
         '200':
           description: ''
@@ -5637,7 +5640,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       responses:
         '200':
           description: ''
@@ -5703,7 +5706,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       responses:
         '200':
           description: ''
@@ -5907,7 +5910,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5980,7 +5983,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6054,7 +6057,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6127,7 +6130,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6201,7 +6204,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6274,7 +6277,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6348,7 +6351,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       requestBody:
         content:
           application/json:
@@ -6421,7 +6424,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       requestBody:
         content:
           application/json:
@@ -6494,7 +6497,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       requestBody:
         content:
           application/json:
@@ -6567,7 +6570,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/LvtRivDkTYmaolUNwsVYkw
+        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
       requestBody:
         content:
           application/json:
@@ -6838,7 +6841,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/sp15mF6WRDSRHYi3JLPp0w
+        example: http://rdfh.ch/lists/0001/FqvN8b83StmsTYbU_HyZbA
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -6966,7 +6969,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/sp15mF6WRDSRHYi3JLPp0w
+        example: http://rdfh.ch/lists/0001/FqvN8b83StmsTYbU_HyZbA
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -9823,6 +9826,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchTimeoutException'
       security:
       - httpAuth: []
       - httpAuth1: []
@@ -9959,6 +9968,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchTimeoutException'
       security:
       - httpAuth: []
       - httpAuth1: []
@@ -16297,12 +16312,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/VersionResponse'
               example:
-                webapi: v37.3.0-1-g6cb36e3
-                buildCommit: 6cb36e332
+                webapi: v37.4.0-16-g8cf16d9
+                buildCommit: 8cf16d902
                 buildTime: dev
-                fuseki: 6.1.0-0
+                fuseki: 6.1.0
                 scala: 3.8.4
-                sipi: v6.2.2
+                sipi: v6.3.0
                 name: version
         '400':
           description: ''
@@ -18188,6 +18203,14 @@ components:
       properties:
         listinfo:
           $ref: '#/components/schemas/ListRootNodeInfoADM'
+    SearchTimeoutException:
+      title: SearchTimeoutException
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
     SelfJoin:
       title: SelfJoin
       oneOf:
