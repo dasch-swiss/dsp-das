@@ -253,9 +253,8 @@ CONSTRUCT {
 } WHERE {
 ?mainRes a knora-api:Resource .
 ?mainRes rdfs:label ?label .
-?mainRes <http://www.w3.org/2000/01/rdf-schema#label> ?res0 .
 
-FILTER (?res0 = "foo") .
+FILTER (?label = "foo") .
 
 }
 
@@ -275,7 +274,7 @@ OFFSET 0`;
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
     // Only check the operator-specific FILTER clause
-    expect(query).toContain('FILTER (?res0 != "foo")');
+    expect(query).toContain('FILTER (?label != "foo")');
   });
 
   it('should generate query with isLike operator', () => {
@@ -288,7 +287,7 @@ OFFSET 0`;
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
     // Only check the operator-specific FILTER clause
-    expect(query).toContain('FILTER regex(?res0, "foo", "i")');
+    expect(query).toContain('FILTER regex(?label, "foo", "i")');
   });
 
   it('should generate query with matches operator', () => {
@@ -315,7 +314,7 @@ OFFSET 0`;
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
-    expect(query).toContain('FILTER regex(?res0, "a.b*c(d)", "i")');
+    expect(query).toContain('FILTER regex(?label, "a.b*c(d)", "i")');
   });
 
   it('quadruples user-typed backslashes and triples-escapes quotes in label isLike pattern', () => {
@@ -332,7 +331,7 @@ OFFSET 0`;
 
     // Runtime wire string inside the FILTER literal: say \\\"hi\\\" \\\\*
     // (3 backslashes per quote, 4 backslashes per user backslash)
-    expect(query).toContain('FILTER regex(?res0, "say \\\\\\"hi\\\\\\" \\\\\\\\*", "i")');
+    expect(query).toContain('FILTER regex(?label, "say \\\\\\"hi\\\\\\" \\\\\\\\*", "i")');
   });
 });
 
@@ -467,8 +466,17 @@ OFFSET 0`;
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
-    // Only check the operator-specific FILTER clause
-    expect(query).toContain('FILTER (?res0val != "Wien"^^<http://www.w3.org/2001/XMLSchema#string> )');
+    // A multi-valued property "does not equal X" negates over the WHOLE property: projection + value
+    // binding + the positive (=) filter live inside FILTER NOT EXISTS, so a resource with X among
+    // several values is excluded. A bare `?res0val != X` would leak (another value satisfies it) — DEV-6889.
+    expect(normalizeQuery(query)).toContain(
+      normalizeQuery(`FILTER NOT EXISTS {
+?mainRes <http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#hasPlacePublisher> ?res0 .
+?res0 <http://api.knora.org/ontology/knora-api/v2#valueAsString> ?res0val .
+FILTER (?res0val = "Wien"^^<http://www.w3.org/2001/XMLSchema#string> ) .
+}`)
+    );
+    expect(query).not.toContain('!=');
   });
 
   it('should generate query with isLike operator', () => {
@@ -691,9 +699,11 @@ OFFSET 0`;
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
-    // Only check the operator-specific FILTER clause
-    expect(query).toContain(
-      'FILTER NOT EXISTS { ?res0 <http://api.knora.org/ontology/knora-api/v2#listValueAsListNode> <http://rdfh.ch/lists/0806/8mpYXDnYRYi_9HAHXzmzIA> . }'
+    // The property projection now lives INSIDE the NOT EXISTS block, so ?res0 is existentially
+    // quantified there — a resource with a *different* list value no longer slips through (DEV-6889).
+    expect(normalizeQuery(query)).toContain(
+      normalizeQuery(`FILTER NOT EXISTS { ?mainRes <http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#hasSourceDescMainWritingInstr> ?res0 .
+?res0 <http://api.knora.org/ontology/knora-api/v2#listValueAsListNode> <http://rdfh.ch/lists/0806/8mpYXDnYRYi_9HAHXzmzIA> . }`)
     );
   });
 });
@@ -836,8 +846,16 @@ OFFSET 0`;
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
-    // Only check the operator-specific FILTER clause
-    expect(query).toContain('FILTER (?res0val != "1"^^<http://www.w3.org/2001/XMLSchema#integer> )');
+    // Negates over the whole property (projection + binding + positive `=` inside FILTER NOT EXISTS),
+    // so a bare `!=` no longer leaks on multi-valued properties (DEV-6889).
+    expect(normalizeQuery(query)).toContain(
+      normalizeQuery(`FILTER NOT EXISTS {
+?mainRes <http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#hasMnr> ?res0 .
+?res0 <http://api.knora.org/ontology/knora-api/v2#intValueAsInt> ?res0val .
+FILTER (?res0val = "1"^^<http://www.w3.org/2001/XMLSchema#integer> ) .
+}`)
+    );
+    expect(query).not.toContain('!=');
   });
 
   it('emits ORDER BY on the active predicate index when an orderBy item is active (DEV-6576 D1)', () => {
@@ -1144,7 +1162,9 @@ describe('GravsearchService — fulltextTerm parameter', () => {
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements, 'foo');
     const matchesIdx = query.indexOf('matchFulltext');
-    const chipIdx = query.indexOf('?res0');
+    // The label chip now filters on the assembly's `?label` var (no duplicate rdfs:label projection),
+    // so use the chip's FILTER as the marker for "the chip statement".
+    const chipIdx = query.indexOf('FILTER (?label = "bar")');
     expect(matchesIdx).toBeGreaterThan(-1);
     expect(chipIdx).toBeGreaterThan(-1);
     expect(matchesIdx).toBeLessThan(chipIdx);
@@ -1182,7 +1202,7 @@ describe('GravsearchService — fulltextTerm parameter', () => {
 
     expect(query).toContain('FILTER knora-api:matchFulltext(?mainRes, "foo")');
     expect(query).toContain(`?mainRes a <${ontologyIri}#Person> .`);
-    expect(query).toContain('FILTER (?res0 = "bar")');
+    expect(query).toContain('FILTER (?label = "bar")');
   });
 
   it('generates a project-wide fulltext query (no PREFIX, no throw) when no data model is selected', () => {

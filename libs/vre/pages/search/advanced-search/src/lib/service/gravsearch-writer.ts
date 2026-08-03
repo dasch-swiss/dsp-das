@@ -3,6 +3,7 @@ import {
   MAIN_RESOURCE_PLACEHOLDER,
   RESOURCE_PLACEHOLDER,
   RDFS_LABEL,
+  LABEL_VARIABLE,
   ResourceLabel,
   VALUE_SUFFIX,
   RDFS_TYPE,
@@ -80,11 +81,29 @@ class GravsearchWriterScoped {
   }
 
   get constructStatement(): string {
+    // For a value/list NotEquals the projection lives inside the FILTER NOT EXISTS block (see
+    // whereStatement), so `?resN` is not bound in the outer query and must not be projected here.
+    if (this._operator === Operator.NotEquals && (this._objectType === Constants.ListValue || this.isKnoraValueType)) {
+      return '';
+    }
     return this._objectType !== ResourceLabel && this._operator !== Operator.IsLike ? this.objectProjection : '';
   }
 
   get whereStatement(): string {
-    let statement = this.objectProjection;
+    // On a multi-valued value/list property, "does not equal X" must negate over the whole property, so
+    // its object projection has to live INSIDE the FILTER NOT EXISTS block (the list/value methods emit
+    // it themselves). Keeping the shared outer projection here would bind `?resN` to some *other* value
+    // and let the resource slip through the negation (DEV-6889). Every other case keeps the shared
+    // outer projection unchanged.
+    const projectionInsideBlock =
+      this._operator === Operator.NotEquals && (this._objectType === Constants.ListValue || this.isKnoraValueType);
+
+    // A label comparison filters on `?label`, which the query assembly already binds
+    // (`?mainRes rdfs:label ?label`). Emitting the shared object projection here too would duplicate
+    // that `rdfs:label` triple, so skip it for labels.
+    const omitOuterProjection = projectionInsideBlock || this._objectType === ResourceLabel;
+
+    let statement = omitOuterProjection ? '' : this.objectProjection;
     if (this._objectType === ResourceLabel) {
       statement += this._whereStatementForLabelComparison();
     } else if (this._objectType === Constants.ListValue) {
@@ -98,6 +117,16 @@ class GravsearchWriterScoped {
   }
 
   private _whereStatementForValueComparison(): string {
+    if (this._operator === Operator.NotEquals) {
+      // Projection + value binding + the positive (`=`) comparison all live INSIDE the block (see
+      // whereStatement), so the negation covers the whole property rather than leaking through a second
+      // value. The `!=` from `valueFilterStatement`/`operatorSymbol` would do exactly that (DEV-6889).
+      const object =
+        this._objectType === Constants.DateValue
+          ? `knora-api:toSimpleDate(${this.objectPlaceHolder})`
+          : `${this.objectPlaceHolder}${VALUE_SUFFIX}`;
+      return `FILTER NOT EXISTS { \n${this.objectProjection}${this.valueProjection}FILTER (${object} = ${this.typedValueLiteral} ) .\n}\n`;
+    }
     let whereStm = '';
     if (this._operator !== Operator.Exists && this._operator !== Operator.NotExists) {
       whereStm += this.valueProjection;
@@ -140,18 +169,20 @@ class GravsearchWriterScoped {
   }
 
   private _whereStatementForLabelComparison(): string {
+    // Filter on `?label` — the assembly already binds `?mainRes rdfs:label ?label`, so we reuse it
+    // rather than emitting a second `rdfs:label` projection on `?resN` (which duplicated the triple).
     switch (this._operator) {
       case Operator.Equals:
-        return `FILTER (${this.objectPlaceHolder} = "${escapeSparqlStringLiteral(this._selectedValue ?? '')}") .\n`;
+        return `FILTER (${LABEL_VARIABLE} = "${escapeSparqlStringLiteral(this._selectedValue ?? '')}") .\n`;
       case Operator.NotEquals:
-        return `FILTER (${this.objectPlaceHolder} != "${escapeSparqlStringLiteral(this._selectedValue ?? '')}") .\n`;
+        return `FILTER (${LABEL_VARIABLE} != "${escapeSparqlStringLiteral(this._selectedValue ?? '')}") .\n`;
       case Operator.Matches:
         return `FILTER knora-api:matchLabel(${MAIN_RESOURCE_PLACEHOLDER}, "${escapeSparqlStringLiteral(
           this._selectedValue ?? ''
         )}") .\n`;
       case Operator.IsLike: {
         const pattern = escapeForGravsearchStringLiteral(this._selectedValue ?? '');
-        return `FILTER regex(${this.objectPlaceHolder}, "${pattern}", "i") .\n`;
+        return `FILTER regex(${LABEL_VARIABLE}, "${pattern}", "i") .\n`;
       }
       default:
         return '';
@@ -161,9 +192,10 @@ class GravsearchWriterScoped {
   private _getWhereStatementForListObjectComparison(): string {
     let whereStm = '';
     if (this._operator === Operator.NotEquals) {
-      whereStm += `FILTER NOT EXISTS { ${this.objectPlaceHolder} <${this.valueTypeIri}> <${sanitizeSparqlIri(
-        this._selectedValue ?? ''
-      )}> . }`;
+      // Projection lives INSIDE the block (see whereStatement) so the negation covers the whole property.
+      whereStm += `FILTER NOT EXISTS { ${this.objectProjection}${this.objectPlaceHolder} <${
+        this.valueTypeIri
+      }> <${sanitizeSparqlIri(this._selectedValue ?? '')}> . }`;
     }
     if (this._operator === Operator.Equals || this._operator === Operator.Matches) {
       whereStm += `${this.objectPlaceHolder} <${this.valueTypeIri}> <${sanitizeSparqlIri(
