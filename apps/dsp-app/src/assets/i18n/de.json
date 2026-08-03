@@ -211,11 +211,18 @@
           "projectMember": "Projektmitglied"
         },
         "itemType": {
-          "All": "Alle Elemente",
-          "Resource": "Ressourcen",
-          "File": "Dateiwerte",
-          "Value": "Werte",
-          "Comment": "Kommentare"
+          "all": "Alle Elemente",
+          "resource": "Ressourcen",
+          "file": "Dateiwerte",
+          "value": "Werte",
+          "comment": "Kommentare"
+        },
+        "groupByAria": "Gruppieren nach",
+        "filtersAria": "Nach Elementtyp filtern",
+        "visibility": {
+          "hidden": "Verborgen",
+          "restrictedView": "Eingeschränkte Ansicht",
+          "visible": "Sichtbar"
         }
       }
     },

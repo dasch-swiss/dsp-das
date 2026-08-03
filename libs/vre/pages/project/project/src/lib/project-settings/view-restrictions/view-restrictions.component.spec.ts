@@ -140,10 +140,41 @@ describe('ViewRestrictionsComponent', () => {
     expect(component.isChipDisabled(ItemType.Value)).toBe(false);
   });
 
-  it('maps visibility to the correct icon', () => {
-    expect(component.visibilityIcon(Visibility.Hidden)).toBe('visibility_off');
-    expect(component.visibilityIcon(Visibility.RestrictedView)).toBe('blur_on');
-    expect(component.visibilityIcon(Visibility.Visible)).toBe('visibility');
+  it('builds item-type translation keys from lowercase slugs, not the raw enum casing', () => {
+    expect(component.itemTypeKey(ItemType.All)).toBe('pages.project.viewRestrictions.itemType.all');
+    expect(component.itemTypeKey(ItemType.File)).toBe('pages.project.viewRestrictions.itemType.file');
+    expect(component.itemTypeKey(ItemType.Comment)).toBe('pages.project.viewRestrictions.itemType.comment');
+  });
+
+  describe('pager adapter (app-pager is 0-based, the API is 1-based)', () => {
+    it('translates a 0-based page index into the 1-based API page', () => {
+      const group = summary.groups![0];
+      component.toggleGroup(group); // loads page 1
+      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems.mockClear();
+
+      component.onPageIndexChanged(group.id, 2);
+
+      expect(adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems).toHaveBeenCalledWith(
+        'http://rdfh.ch/projects/0001',
+        group.id,
+        GroupBy.ResourceClass,
+        ItemType.All,
+        3,
+        25
+      );
+    });
+
+    it('ignores an event naming the page already shown, so expanding does not refetch page 1', () => {
+      const group = summary.groups![0];
+      component.toggleGroup(group); // loads page 1 => currentPage 1
+      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems.mockClear();
+
+      // app-pager resets its index to 0 when numberOfAllResults changes and emits it
+      component.onPageIndexChanged(group.id, 0);
+
+      expect(adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems).not.toHaveBeenCalled();
+      expect(component.expandedGroup(group.id)?.currentPage).toBe(1);
+    });
   });
 
   describe('links', () => {

@@ -1,9 +1,11 @@
+@use '../../../../../../../../../apps/dsp-app/src/styles/config' as *;
+
 :host {
   display: block;
 }
 
 .subtitle {
-  color: rgba(0, 0, 0, 0.6);
+  color: $black-60-opacity;
   margin: 0 0 20px;
   max-width: 640px;
 }
@@ -23,7 +25,7 @@
     font-weight: 500;
     letter-spacing: 0.4px;
     text-transform: uppercase;
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba($black, 0.5);
 
     mat-icon {
       font-size: 18px;
@@ -45,9 +47,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(251, 191, 36, 0.12);
-  border: 1px solid rgba(251, 191, 36, 0.5);
-  border-radius: 4px;
+  background: rgba($yellow_400, 0.12);
+  border: 1px solid rgba($yellow_400, 0.5);
+  border-radius: $border-radius;
   padding: 8px 12px;
   margin-bottom: 12px;
   font-size: 13px;
@@ -56,12 +58,12 @@
     font-size: 18px;
     width: 18px;
     height: 18px;
-    color: #b45309;
+    color: $yellow_700;
   }
 }
 
 .matrix {
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid $black-12-opacity;
   border-radius: 8px;
   overflow: hidden;
 
@@ -78,13 +80,13 @@
   }
 
   .matrix-head {
-    background: #f9fafb;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    background: $cool_gray_50;
+    border-bottom: 1px solid $black-12-opacity;
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba($black, 0.5);
 
     .col-aud {
       flex-direction: column;
@@ -120,20 +122,20 @@
 
   .matrix-row {
     width: 100%;
-    background: #fff;
+    background: $white;
     border: none;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    border-top: 1px solid rgba($black, 0.06);
     cursor: pointer;
     text-align: left;
     font: inherit;
     padding: 0;
 
     &:hover {
-      background: #f5f7fa;
+      background: $secondary_50;
     }
 
     .chevron {
-      color: rgba(0, 0, 0, 0.4);
+      color: rgba($black, 0.4);
     }
 
     .group-label {
@@ -151,7 +153,7 @@
 
     .group-sub {
       font-size: 11px;
-      color: rgba(0, 0, 0, 0.5);
+      color: rgba($black, 0.5);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -160,8 +162,8 @@
 
   .drill-res,
   .drill-item {
-    background: #eaeff3;
-    border-top: 1px solid #d6e0e8;
+    background: $primary_50;
+    border-top: 1px solid $primary_100;
   }
 
   // combo row: resource + single item inline (design 1g/1h)
@@ -208,7 +210,7 @@
 
   // labels that are links to open the resource / value in a new tab
   a.link-label {
-    color: #336790;
+    color: $primary;
     text-decoration: none;
     cursor: pointer;
 
@@ -223,7 +225,7 @@
 
   .child-info {
     font-size: 11px;
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba($black, 0.5);
     white-space: nowrap;
   }
 
@@ -232,8 +234,8 @@
     font-weight: 500;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: rgba($black, 0.5);
+    border: 1px solid $black-20-opacity;
     border-radius: 999px;
     padding: 1px 7px;
     white-space: nowrap;
@@ -243,65 +245,27 @@
     font-size: 18px;
     width: 18px;
     height: 18px;
-    color: #336790;
+    color: $primary;
   }
 
   .matrix-foot {
-    background: #f9fafb;
-    border-top: 2px solid rgba(0, 0, 0, 0.18);
+    background: $cool_gray_50;
+    border-top: 2px solid rgba($black, 0.18);
     font-weight: 500;
   }
 
   .empty {
     padding: 24px 16px;
     text-align: center;
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba($black, 0.5);
   }
 
+  // wrapper chrome around the shared `app-pager`, which brings its own MUI buttons and layout
   .pager {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: flex-end;
-    padding: 8px 16px;
-    background: #f9fafb;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-    font-size: 12px;
-
-    // the top pager separates from the rows below it instead of the rows above
-    &.pager-top {
-      border-top: none;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    }
-
-    button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      border: 1px solid rgba(0, 0, 0, 0.12);
-      border-radius: 4px;
-      background: #fff;
-      cursor: pointer;
-
-      &:disabled {
-        color: rgba(0, 0, 0, 0.26);
-        cursor: default;
-      }
-    }
+    background: $cool_gray_50;
+    border-bottom: 1px solid rgba($black, 0.06);
+    padding: 0 8px;
   }
 }
 
-// visibility eye colours.
-// The "visible" eye is hidden to cut visual density — only hidden (red) and
-// restricted-view (amber) icons are shown; a visible cell is left blank.
-.vis-visible {
-  display: none;
-}
-.vis-hidden {
-  color: #e11d48;
-}
-.vis-restricted {
-  color: #b45309;
-}
+// The per-audience cells live in `app-visibility-cell`, which owns its own eye colours.

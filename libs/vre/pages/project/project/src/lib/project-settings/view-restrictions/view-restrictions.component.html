@@ -7,7 +7,7 @@
   <mat-button-toggle-group
     [value]="(groupBy$ | async)"
     (change)="onGroupBy($event.value)"
-    aria-label="Group by">
+    [attr.aria-label]="'pages.project.viewRestrictions.groupByAria' | translate">
     <mat-button-toggle [value]="GroupBy.ResourceClass">
       <mat-icon>account_tree</mat-icon>
       {{ 'pages.project.viewRestrictions.byClass' | translate }}
@@ -25,10 +25,13 @@
     <mat-icon>filter_list</mat-icon>
     {{ 'pages.project.viewRestrictions.filters' | translate }}
   </span>
-  <mat-chip-listbox [value]="(itemType$ | async)" (change)="onItemType($event.value)">
+  <mat-chip-listbox
+    [value]="(itemType$ | async)"
+    (change)="onItemType($event.value)"
+    [attr.aria-label]="'pages.project.viewRestrictions.filtersAria' | translate">
     @for (chip of itemTypeChips; track chip) {
       <mat-chip-option [value]="chip" [disabled]="isChipDisabled(chip)" [selectable]="!isChipDisabled(chip)">
-        {{ 'pages.project.viewRestrictions.itemType.' + chip | translate }}
+        {{ itemTypeKey(chip) | translate }}
       </mat-chip-option>
     }
   </mat-chip-listbox>
@@ -81,17 +84,11 @@
           <app-progress-indicator />
         } @else if (expandedGroup(group.id); as eg) {
           @if (eg.page.pagination.totalPages > 1) {
-            <div class="pager pager-top">
-              <span>{{ eg.currentPage }} / {{ eg.page.pagination.totalPages }} ({{ eg.page.pagination.totalItems }})</span>
-              <button type="button" [disabled]="eg.currentPage <= 1" (click)="loadPage(group.id, eg.currentPage - 1)">
-                <mat-icon>chevron_left</mat-icon>
-              </button>
-              <button
-                type="button"
-                [disabled]="eg.currentPage >= eg.page.pagination.totalPages"
-                (click)="loadPage(group.id, eg.currentPage + 1)">
-                <mat-icon>chevron_right</mat-icon>
-              </button>
+            <div class="pager">
+              <app-pager
+                [numberOfAllResults]="eg.page.pagination.totalItems"
+                [pageSize]="pageSize"
+                (pageIndexChanged)="onPageIndexChanged(group.id, $event)" />
             </div>
           }
           @for (res of eg.page.data; track res.resourceIri) {
@@ -105,11 +102,11 @@
                   <mat-icon class="combo-sep">chevron_right</mat-icon>
                   <mat-icon class="kind-icon">{{ itemIcon(comboItem) }}</mat-icon>
                   <a class="link-label" [href]="itemLink(res.resourceIri, comboItem.valueIri)" target="_blank" rel="noopener" [title]="comboItem.propertyLabel || comboItem.type">{{ comboItem.propertyLabel || comboItem.type }}</a>
-                  <span class="tag">{{ 'pages.project.viewRestrictions.itemType.' + comboItem.type | translate }}</span>
+                  <span class="tag">{{ itemTypeKey(comboItem.type) | translate }}</span>
                 </span>
-                <span class="col-aud"><mat-icon [class]="visibilityClass(comboItem.visibility.anonymous)">{{ visibilityIcon(comboItem.visibility.anonymous) }}</mat-icon></span>
-                <span class="col-aud"><mat-icon [class]="visibilityClass(comboItem.visibility.authenticated)">{{ visibilityIcon(comboItem.visibility.authenticated) }}</mat-icon></span>
-                <span class="col-aud"><mat-icon [class]="visibilityClass(comboItem.visibility.projectMember)">{{ visibilityIcon(comboItem.visibility.projectMember) }}</mat-icon></span>
+                <app-visibility-cell [visibility]="comboItem.visibility.anonymous" />
+                <app-visibility-cell [visibility]="comboItem.visibility.authenticated" />
+                <app-visibility-cell [visibility]="comboItem.visibility.projectMember" />
               </div>
             } @else {
               <div class="drill-res">
@@ -122,9 +119,9 @@
                     </span>
                   }
                 </span>
-                <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.anonymous)">{{ visibilityIcon(res.resourceVisibility.anonymous) }}</mat-icon></span>
-                <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.authenticated)">{{ visibilityIcon(res.resourceVisibility.authenticated) }}</mat-icon></span>
-                <span class="col-aud"><mat-icon [class]="visibilityClass(res.resourceVisibility.projectMember)">{{ visibilityIcon(res.resourceVisibility.projectMember) }}</mat-icon></span>
+                <app-visibility-cell [visibility]="res.resourceVisibility.anonymous" />
+                <app-visibility-cell [visibility]="res.resourceVisibility.authenticated" />
+                <app-visibility-cell [visibility]="res.resourceVisibility.projectMember" />
               </div>
 
               @for (item of res.items; track item.valueIri || $index) {
@@ -132,31 +129,16 @@
                   <span class="col-group indent-2">
                     <mat-icon class="kind-icon">{{ itemIcon(item) }}</mat-icon>
                     <a class="link-label" [href]="itemLink(res.resourceIri, item.valueIri)" target="_blank" rel="noopener" [title]="item.propertyLabel || item.type">{{ item.propertyLabel || item.type }}</a>
-                    <span class="tag">{{ 'pages.project.viewRestrictions.itemType.' + item.type | translate }}</span>
+                    <span class="tag">{{ itemTypeKey(item.type) | translate }}</span>
                   </span>
-                  <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.anonymous)">{{ visibilityIcon(item.visibility.anonymous) }}</mat-icon></span>
-                  <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.authenticated)">{{ visibilityIcon(item.visibility.authenticated) }}</mat-icon></span>
-                  <span class="col-aud"><mat-icon [class]="visibilityClass(item.visibility.projectMember)">{{ visibilityIcon(item.visibility.projectMember) }}</mat-icon></span>
+                  <app-visibility-cell [visibility]="item.visibility.anonymous" />
+                  <app-visibility-cell [visibility]="item.visibility.authenticated" />
+                  <app-visibility-cell [visibility]="item.visibility.projectMember" />
                 </div>
               }
             }
           }
 
-          <!-- pager -->
-          @if (eg.page.pagination.totalPages > 1) {
-            <div class="pager">
-              <span>{{ eg.currentPage }} / {{ eg.page.pagination.totalPages }} ({{ eg.page.pagination.totalItems }})</span>
-              <button type="button" [disabled]="eg.currentPage <= 1" (click)="loadPage(group.id, eg.currentPage - 1)">
-                <mat-icon>chevron_left</mat-icon>
-              </button>
-              <button
-                type="button"
-                [disabled]="eg.currentPage >= eg.page.pagination.totalPages"
-                (click)="loadPage(group.id, eg.currentPage + 1)">
-                <mat-icon>chevron_right</mat-icon>
-              </button>
-            </div>
-          }
         }
       }
     } @empty {

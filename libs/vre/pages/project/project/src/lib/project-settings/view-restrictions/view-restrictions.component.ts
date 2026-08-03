@@ -15,15 +15,30 @@ import {
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import { take, tap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 import { ViewRestrictionsPageService } from './view-restrictions-page.service';
+import { VisibilityCellComponent } from './visibility-cell.component';
 
 interface ExpandedGroup {
   page: PagedResponseRestrictedResource;
   currentPage: number;
 }
+
+/**
+ * Translation-key slugs for the API enums. Decoupled from the enum *values* on purpose: the
+ * generated client currently emits PascalCase (`ItemType.All === 'All'`), and using those verbatim
+ * as i18n keys would silently fall back to the raw key if the API ever changes its casing.
+ */
+const ITEM_TYPE_SLUG: Record<ItemType, string> = {
+  All: 'all',
+  Resource: 'resource',
+  File: 'file',
+  Value: 'value',
+  Comment: 'comment',
+};
 
 /**
  * Read-only "View restrictions" page (design screen 1h): a per-audience matrix of hidden items,
@@ -35,13 +50,21 @@ interface ExpandedGroup {
   templateUrl: './view-restrictions.component.html',
   styleUrl: './view-restrictions.component.scss',
   providers: [ViewRestrictionsPageService],
-  imports: [AsyncPipe, TranslatePipe, MatIcon, MatButtonToggleModule, MatChipsModule, AppProgressIndicatorComponent],
+  imports: [
+    AsyncPipe,
+    TranslatePipe,
+    MatIcon,
+    MatButtonToggleModule,
+    MatChipsModule,
+    AppProgressIndicatorComponent,
+    PagerComponent,
+    VisibilityCellComponent,
+  ],
 })
 export class ViewRestrictionsComponent {
   // expose enums to the template
   readonly GroupBy = GroupBy;
   readonly ItemType = ItemType;
-  readonly Visibility = Visibility;
 
   readonly itemTypeChips: ItemType[] = [
     ItemType.All,
@@ -58,7 +81,8 @@ export class ViewRestrictionsComponent {
   /** Per-group expansion state, keyed by group id. A signal so OnPush re-renders when it changes. */
   readonly expanded = signal<Record<string, ExpandedGroup | 'loading'>>({});
 
-  private readonly _pageSize = 25;
+  /** Drill-down page size; also fed to `app-pager` so it can compute the page count. */
+  readonly pageSize = 25;
 
   readonly project$ = this._projectPageService.currentProject$.pipe(
     tap(project => this.titleService.setTitle(`Project ${project.shortname} | View restrictions`))
@@ -115,11 +139,26 @@ export class ViewRestrictionsComponent {
   loadPage(groupId: string, page: number): void {
     this.expanded.update(e => ({ ...e, [groupId]: 'loading' }));
     this.vr
-      .loadItems(groupId, page, this._pageSize)
+      .loadItems(groupId, page, this.pageSize)
       .pipe(take(1))
       .subscribe(result => {
         this.expanded.update(e => ({ ...e, [groupId]: { page: result, currentPage: page } }));
       });
+  }
+
+  /**
+   * Bridge from `app-pager`'s 0-based `pageIndexChanged` to this API's 1-based paging.
+   *
+   * The pager emits on every index assignment — including the reset to 0 its own `ngOnChanges`
+   * performs when `numberOfAllResults` changes — so ignore an event that names the page already
+   * displayed, otherwise expanding a group would immediately refetch page 1.
+   */
+  onPageIndexChanged(groupId: string, pageIndex: number): void {
+    const page = pageIndex + 1;
+    if (this.expandedGroup(groupId)?.currentPage === page) {
+      return;
+    }
+    this.loadPage(groupId, page);
   }
 
   isExpanded(id: string): boolean {
@@ -133,12 +172,6 @@ export class ViewRestrictionsComponent {
   expandedGroup(id: string): ExpandedGroup | null {
     const e = this.expanded()[id];
     return e && e !== 'loading' ? e : null;
-  }
-
-  /** Total hidden across the three audiences for a group (drives the "no restrictions" empty case). */
-  isEmptyGroup(group: RestrictionGroup): boolean {
-    const c = group.counts;
-    return c.anonymous + c.authenticated + c.projectMember === 0;
   }
 
   private isResourceVisible(res: RestrictedResource): boolean {
@@ -162,25 +195,8 @@ export class ViewRestrictionsComponent {
     return item.type === ItemType.File ? 'image' : item.type === ItemType.Comment ? 'comment' : 'lock';
   }
 
-  visibilityIcon(v: Visibility | undefined): string {
-    switch (v) {
-      case Visibility.Hidden:
-        return 'visibility_off';
-      case Visibility.RestrictedView:
-        return 'blur_on';
-      default:
-        return 'visibility';
-    }
-  }
-
-  visibilityClass(v: Visibility | undefined): string {
-    switch (v) {
-      case Visibility.Hidden:
-        return 'vis-hidden';
-      case Visibility.RestrictedView:
-        return 'vis-restricted';
-      default:
-        return 'vis-visible';
-    }
+  /** Translation key for an item-type label (chips and per-row tags). */
+  itemTypeKey(type: ItemType): string {
+    return `pages.project.viewRestrictions.itemType.${ITEM_TYPE_SLUG[type] ?? 'all'}`;
   }
 }
