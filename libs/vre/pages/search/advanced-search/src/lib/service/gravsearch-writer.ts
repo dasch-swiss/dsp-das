@@ -3,6 +3,7 @@ import {
   MAIN_RESOURCE_PLACEHOLDER,
   RESOURCE_PLACEHOLDER,
   RDFS_LABEL,
+  LABEL_VARIABLE,
   ResourceLabel,
   VALUE_SUFFIX,
   RDFS_TYPE,
@@ -97,7 +98,12 @@ class GravsearchWriterScoped {
     const projectionInsideBlock =
       this._operator === Operator.NotEquals && (this._objectType === Constants.ListValue || this.isKnoraValueType);
 
-    let statement = projectionInsideBlock ? '' : this.objectProjection;
+    // A label comparison filters on `?label`, which the query assembly already binds
+    // (`?mainRes rdfs:label ?label`). Emitting the shared object projection here too would duplicate
+    // that `rdfs:label` triple, so skip it for labels.
+    const omitOuterProjection = projectionInsideBlock || this._objectType === ResourceLabel;
+
+    let statement = omitOuterProjection ? '' : this.objectProjection;
     if (this._objectType === ResourceLabel) {
       statement += this._whereStatementForLabelComparison();
     } else if (this._objectType === Constants.ListValue) {
@@ -163,18 +169,20 @@ class GravsearchWriterScoped {
   }
 
   private _whereStatementForLabelComparison(): string {
+    // Filter on `?label` — the assembly already binds `?mainRes rdfs:label ?label`, so we reuse it
+    // rather than emitting a second `rdfs:label` projection on `?resN` (which duplicated the triple).
     switch (this._operator) {
       case Operator.Equals:
-        return `FILTER (${this.objectPlaceHolder} = "${escapeSparqlStringLiteral(this._selectedValue ?? '')}") .\n`;
+        return `FILTER (${LABEL_VARIABLE} = "${escapeSparqlStringLiteral(this._selectedValue ?? '')}") .\n`;
       case Operator.NotEquals:
-        return `FILTER (${this.objectPlaceHolder} != "${escapeSparqlStringLiteral(this._selectedValue ?? '')}") .\n`;
+        return `FILTER (${LABEL_VARIABLE} != "${escapeSparqlStringLiteral(this._selectedValue ?? '')}") .\n`;
       case Operator.Matches:
         return `FILTER knora-api:matchLabel(${MAIN_RESOURCE_PLACEHOLDER}, "${escapeSparqlStringLiteral(
           this._selectedValue ?? ''
         )}") .\n`;
       case Operator.IsLike: {
         const pattern = escapeForGravsearchStringLiteral(this._selectedValue ?? '');
-        return `FILTER regex(${this.objectPlaceHolder}, "${pattern}", "i") .\n`;
+        return `FILTER regex(${LABEL_VARIABLE}, "${pattern}", "i") .\n`;
       }
       default:
         return '';

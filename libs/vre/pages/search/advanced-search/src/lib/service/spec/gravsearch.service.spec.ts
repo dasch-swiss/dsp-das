@@ -253,9 +253,8 @@ CONSTRUCT {
 } WHERE {
 ?mainRes a knora-api:Resource .
 ?mainRes rdfs:label ?label .
-?mainRes <http://www.w3.org/2000/01/rdf-schema#label> ?res0 .
 
-FILTER (?res0 = "foo") .
+FILTER (?label = "foo") .
 
 }
 
@@ -275,7 +274,7 @@ OFFSET 0`;
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
     // Only check the operator-specific FILTER clause
-    expect(query).toContain('FILTER (?res0 != "foo")');
+    expect(query).toContain('FILTER (?label != "foo")');
   });
 
   it('should generate query with isLike operator', () => {
@@ -288,7 +287,7 @@ OFFSET 0`;
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
     // Only check the operator-specific FILTER clause
-    expect(query).toContain('FILTER regex(?res0, "foo", "i")');
+    expect(query).toContain('FILTER regex(?label, "foo", "i")');
   });
 
   it('should generate query with matches operator', () => {
@@ -315,7 +314,7 @@ OFFSET 0`;
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
-    expect(query).toContain('FILTER regex(?res0, "a.b*c(d)", "i")');
+    expect(query).toContain('FILTER regex(?label, "a.b*c(d)", "i")');
   });
 
   it('quadruples user-typed backslashes and triples-escapes quotes in label isLike pattern', () => {
@@ -332,7 +331,7 @@ OFFSET 0`;
 
     // Runtime wire string inside the FILTER literal: say \\\"hi\\\" \\\\*
     // (3 backslashes per quote, 4 backslashes per user backslash)
-    expect(query).toContain('FILTER regex(?res0, "say \\\\\\"hi\\\\\\" \\\\\\\\*", "i")');
+    expect(query).toContain('FILTER regex(?label, "say \\\\\\"hi\\\\\\" \\\\\\\\*", "i")');
   });
 });
 
@@ -1163,7 +1162,9 @@ describe('GravsearchService — fulltextTerm parameter', () => {
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements, 'foo');
     const matchesIdx = query.indexOf('matchFulltext');
-    const chipIdx = query.indexOf('?res0');
+    // The label chip now filters on the assembly's `?label` var (no duplicate rdfs:label projection),
+    // so use the chip's FILTER as the marker for "the chip statement".
+    const chipIdx = query.indexOf('FILTER (?label = "bar")');
     expect(matchesIdx).toBeGreaterThan(-1);
     expect(chipIdx).toBeGreaterThan(-1);
     expect(matchesIdx).toBeLessThan(chipIdx);
@@ -1201,7 +1202,7 @@ describe('GravsearchService — fulltextTerm parameter', () => {
 
     expect(query).toContain('FILTER knora-api:matchFulltext(?mainRes, "foo")');
     expect(query).toContain(`?mainRes a <${ontologyIri}#Person> .`);
-    expect(query).toContain('FILTER (?res0 = "bar")');
+    expect(query).toContain('FILTER (?label = "bar")');
   });
 
   it('generates a project-wide fulltext query (no PREFIX, no throw) when no data model is selected', () => {

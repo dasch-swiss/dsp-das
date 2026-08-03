@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { RESOURCE_PLACEHOLDER } from '../constants';
+import { LABEL_VARIABLE, RESOURCE_PLACEHOLDER } from '../constants';
 import { escapeSparqlStringLiteral, OrderByItem, StatementElement } from '../model';
 import { GravsearchWriter } from './gravsearch-writer';
 import { OntologyDataService } from './ontology-data.service';
@@ -67,7 +67,7 @@ export class GravsearchService {
       // Restore the generic `?mainRes a knora-api:Resource .` anchor for exactly that gap: no class AND
       // no fulltext. (No per-class UNION — the removed optimization stays removed.)
       `${this._restrictToResourceClassStatement(resourceClassIri, trimmedTerm)}\n` +
-      '?mainRes rdfs:label ?label .\n' +
+      `?mainRes rdfs:label ${LABEL_VARIABLE} .\n` +
       `${fulltextTriple}` +
       `${whereClause}\n` +
       '}\n' +
@@ -101,6 +101,6 @@ export class GravsearchService {
         return `${fn}(${variable})`;
       });
 
-    return orderByProps.length ? `ORDER BY ${orderByProps.join(' ')}` : 'ORDER BY ASC(?label)';
+    return orderByProps.length ? `ORDER BY ${orderByProps.join(' ')}` : `ORDER BY ASC(${LABEL_VARIABLE})`;
   }
 }
