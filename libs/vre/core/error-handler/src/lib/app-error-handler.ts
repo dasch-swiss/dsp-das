@@ -96,7 +96,13 @@ export class AppErrorHandler implements ErrorHandler {
     } else if (error.status === 404) {
       message = this._translateService.instant('core.errorHandler.notFound');
     } else if (error.status === 409) {
-      message = (error as AjaxError).response['knora-api:error'];
+      // Only the JS-LIB `AjaxError` carries `response`. A 409 from the generated OpenAPI client
+      // arrives as an `HttpErrorResponse`, which keeps its body on `error` and has no `response` at
+      // all — so reading straight through it threw inside the error handler, and a handler that
+      // throws costs the user every snackbar (DEV-6872).
+      const body = ((error as AjaxError).response ?? (error as HttpErrorResponse).error) as
+        { 'knora-api:error'?: string } | undefined;
+      message = body?.['knora-api:error'] ?? this._translateService.instant('core.errorHandler.contactSupport');
     } else if (error.status === 504) {
       message = this._translateService.instant('core.errorHandler.timeout', { url });
     } else {

@@ -156,4 +156,35 @@ describe('AppErrorHandler', () => {
       expect(consoleError).toHaveBeenCalled();
     });
   });
+
+  /**
+   * A 409 used to read `response['knora-api:error']` unconditionally. Only the JS-LIB `AjaxError`
+   * has a `response`; the generated OpenAPI client answers with an `HttpErrorResponse`, so the read
+   * threw inside the handler and the user lost the snackbar entirely (DEV-6872).
+   */
+  describe('409 conflict', () => {
+    it('surfaces the reason from an HttpErrorResponse body', () => {
+      handler.handleError(
+        new HttpErrorResponse({
+          status: 409,
+          statusText: 'Conflict',
+          error: { 'knora-api:error': 'the resource has been modified in the meantime' },
+        })
+      );
+
+      expect(openSnackBar).toHaveBeenCalledWith('the resource has been modified in the meantime', 'error');
+    });
+
+    it('falls back to contact-support when a 409 carries no reason', () => {
+      handler.handleError(new HttpErrorResponse({ status: 409, statusText: 'Conflict' }));
+
+      expect(openSnackBar).toHaveBeenCalledWith('core.errorHandler.contactSupport', 'error');
+    });
+
+    it('still reads the JS-LIB shape', () => {
+      handler.handleError(jsLibError(409, { 'knora-api:error': 'duplicate value' }));
+
+      expect(openSnackBar).toHaveBeenCalledWith('duplicate value', 'error');
+    });
+  });
 });
