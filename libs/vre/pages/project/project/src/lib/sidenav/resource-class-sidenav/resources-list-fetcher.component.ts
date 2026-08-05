@@ -178,12 +178,14 @@ export class ResourcesListFetcherComponent implements OnChanges {
         return { resources: currResources!, selectFirstResource };
       }),
       catchError((error: unknown) => {
-        this._errorHandler.handleError(error);
         // Drop any previously known total: after a failed page change the old count describes results
         // that are no longer on screen, and leaving it would break the service's "null means genuinely
         // unknown" contract for as long as the failure state lasts.
         this._resourceResult.numberOfResults = null;
         this.failed.set(true);
+        // Last, so that the failure state stands on its own: a throw inside the global handler must
+        // not be able to take the retry panel down with it and restore the eternal spinner (DEV-6872).
+        this._errorHandler.handleError(error);
         return of(null);
       })
     );

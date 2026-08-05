@@ -120,13 +120,15 @@ export class SearchResultComponent implements OnChanges {
         return resourceResponse.resources;
       }),
       catchError((error: unknown) => {
-        this._errorHandler.handleError(error);
         // Drop any previously known total: after a failed page change the old count describes results
         // that are no longer on screen, and leaving it would break the service's "null means genuinely
         // unknown" contract for as long as the failure state lasts.
         this._resourceResultService.numberOfResults = null;
         this.loading.set(false);
         this.failed.set(true);
+        // Last, so that the failure state stands on its own: a throw inside the global handler must
+        // not be able to take the retry panel down with it and restore the eternal spinner (DEV-6872).
+        this._errorHandler.handleError(error);
         return of(null);
       })
     );
