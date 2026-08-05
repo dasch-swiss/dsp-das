@@ -1,5 +1,17 @@
 # Changelog
 
+## [13.12.2](https://github.com/dasch-swiss/dsp-app/compare/v13.12.1...v13.12.2) (2026-08-05)
+
+
+### Bug Fixes
+
+* **error-handler:** bind the ErrorHandler token without a stale deps list (DEV-6872) ([#3314](https://github.com/dasch-swiss/dsp-app/issues/3314)) ([cd51809](https://github.com/dasch-swiss/dsp-app/commit/cd51809863638249d7ad1f68136504cc8857035f))
+
+
+### Maintenances
+
+* **deps:** Update grafana-faro-deps from 2.8.2 to 2.9.0 ([#3312](https://github.com/dasch-swiss/dsp-app/issues/3312)) ([c946a10](https://github.com/dasch-swiss/dsp-app/commit/c946a109c700ef5a026c23721a0e97e1b058ba8c))
+
 ## [13.12.1](https://github.com/dasch-swiss/dsp-app/compare/v13.12.0...v13.12.1) (2026-08-03)
 
 
