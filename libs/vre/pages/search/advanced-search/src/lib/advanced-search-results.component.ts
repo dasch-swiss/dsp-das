@@ -101,13 +101,15 @@ export class AdvancedSearchResultsComponent implements OnChanges {
         // `of(null)` keeps the stream alive for retry while the `failed` signal drives the real state.
         catchError((err: unknown) => {
           this._logger.searchError(err);
-          this._errorHandler.handleError(err);
           // Drop any previously known total: after a failed page change the old count describes results
           // that are no longer on screen, and leaving it would break the service's "null means genuinely
           // unknown" contract for as long as the failure state lasts.
           this._resourceResultService.numberOfResults = null;
           this.queryIsExecuting.set(false);
           this.failed.set(true);
+          // Last, so that the failure state stands on its own: a throw inside the global handler must
+          // not be able to take the retry panel down with it and restore the eternal spinner (DEV-6872).
+          this._errorHandler.handleError(err);
           return of(null);
         }),
         startWith(null)
