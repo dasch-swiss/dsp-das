@@ -27,7 +27,16 @@ export class AppErrorHandler implements ErrorHandler {
     // Reported before branching, so every branch reaches telemetry rather than only the last one.
     // The snackbar branches used to report nothing at all, which left every dsp-api failure — a
     // triplestore timeout, a 500, a 403 — with no trace beyond five seconds on screen (DEV-6872).
-    this._errorReporting.report(error);
+    //
+    // Guarded, because telemetry is the auxiliary half of this method and the snackbar is the half
+    // the user depends on. When the reporting call threw — a mis-wired dependency did exactly that —
+    // it took every error message in the app down with it, and the components that call this handler
+    // inline lost their failure state too. A broken reporting path must cost telemetry, nothing else.
+    try {
+      this._errorReporting.report(error);
+    } catch (reportingError) {
+      console.error('Failed to report error to telemetry:', reportingError);
+    }
 
     if (error instanceof ApiResponseError && error.error instanceof AjaxError) {
       // JS-LIB

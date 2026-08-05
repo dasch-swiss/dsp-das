@@ -143,5 +143,17 @@ describe('AppErrorHandler', () => {
       expect(report).toHaveBeenCalledWith(error);
       expect(openSnackBar).not.toHaveBeenCalled();
     });
+
+    it('still shows the snackbar when reporting itself throws', () => {
+      const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+      report.mockImplementation(() => {
+        throw new TypeError("Cannot read properties of undefined (reading 'report')");
+      });
+
+      handler.handleError(new HttpErrorResponse({ status: 500, statusText: 'Server Error' }));
+
+      expect(openSnackBar).toHaveBeenCalledWith('core.errorHandler.contactSupport', 'error');
+      expect(consoleError).toHaveBeenCalled();
+    });
   });
 });
