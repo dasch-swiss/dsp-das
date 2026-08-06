@@ -228,10 +228,8 @@
         "itemsLoadFailed": "Non è stato possibile caricare le risorse interessate. Chiudere e riaprire la riga per riprovare.",
         "hiddenCount": "Nascosto – non viene servito nulla",
         "restrictedViewCount": "Vista limitata – viene servita una versione ridotta",
-        "countAria": "{{resourcesHidden}} risorse nascoste, {{resourcesRestricted}} in vista limitata; {{itemsHidden}} valori nascosti, {{itemsRestricted}} in vista limitata",
-        "countNone": "Nessuna restrizione",
-        "resourceUnit": "Risorse intere",
-        "itemUnit": "Valori dentro le risorse"
+        "countAria": "{{hidden}} nascosti, {{restricted}} in vista limitata",
+        "countNone": "Nessuna restrizione"
       }
     },
     "system": {

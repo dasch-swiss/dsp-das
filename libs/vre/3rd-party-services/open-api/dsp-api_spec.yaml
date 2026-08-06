@@ -6636,15 +6636,12 @@ paths:
       description: 'Per-audience counts of items a project''s audiences cannot fully
         see, grouped by resource class or property. Each audience reports `hidden`
         (permission code 0 — nothing is served) and `restrictedView` (code 1 — a degraded
-        version is served) separately; the two are disjoint. Both are further split
-        by unit: `resources` counts whole restricted resources, `items` counts restricted
-        values inside resources. The two units are never summed — one resource with
-        three hidden values is 1 resource and 3 items, not 4 of anything. When grouping
+        version is served) separately; the two are disjoint and are never summed. When
+        grouping
         by resource class, **every** class in the project is reported — including
         classes with no restrictions at all — each with `totalResources`: how many
         resources the project has in that class in total. That count is independent
-        of the restrictions and of `itemType`; it is the denominator for `counts.<audience>.resources`
-        (same unit), not for `items`. Summing it over the groups gives the project''s
+        of the restrictions and of `itemType`. Summing it over the groups gives the project''s
         whole resource count. In property mode only properties that carry a restriction
         are reported and `totalResources` is absent, since a property has no resource
         population of its own. Counts are computed by the triplestore and are exact
@@ -6691,49 +6688,25 @@ paths:
                   ontology: anything
                   counts:
                     anonymous:
-                      resources:
-                        hidden: 7
-                        restrictedView: 3
-                      items:
-                        hidden: 12
-                        restrictedView: 4
+                      hidden: 7
+                      restrictedView: 3
                     authenticated:
-                      resources:
-                        hidden: 2
-                        restrictedView: 1
-                      items:
-                        hidden: 5
-                        restrictedView: 2
+                      hidden: 2
+                      restrictedView: 1
                     projectMember:
-                      resources:
-                        hidden: 0
-                        restrictedView: 0
-                      items:
-                        hidden: 0
-                        restrictedView: 0
+                      hidden: 0
+                      restrictedView: 0
                   totalResources: 120
                 totals:
                   anonymous:
-                    resources:
-                      hidden: 7
-                      restrictedView: 3
-                    items:
-                      hidden: 12
-                      restrictedView: 4
+                    hidden: 7
+                    restrictedView: 3
                   authenticated:
-                    resources:
-                      hidden: 2
-                      restrictedView: 1
-                    items:
-                      hidden: 5
-                      restrictedView: 2
+                    hidden: 2
+                    restrictedView: 1
                   projectMember:
-                    resources:
-                      hidden: 0
-                      restrictedView: 0
-                    items:
-                      hidden: 0
-                      restrictedView: 0
+                    hidden: 0
+                    restrictedView: 0
         '400':
           description: ''
           content:
@@ -16833,11 +16806,11 @@ components:
       - projectMember
       properties:
         anonymous:
-          $ref: '#/components/schemas/UnitCounts'
+          $ref: '#/components/schemas/RestrictionCounts'
         authenticated:
-          $ref: '#/components/schemas/UnitCounts'
+          $ref: '#/components/schemas/RestrictionCounts'
         projectMember:
-          $ref: '#/components/schemas/UnitCounts'
+          $ref: '#/components/schemas/RestrictionCounts'
     BadCredentialsException:
       title: BadCredentialsException
       type: object
@@ -18723,17 +18696,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    UnitCounts:
-      title: UnitCounts
-      type: object
-      required:
-      - resources
-      - items
-      properties:
-        resources:
-          $ref: '#/components/schemas/RestrictionCounts'
-        items:
-          $ref: '#/components/schemas/RestrictionCounts'
     UserCreateRequest:
       title: UserCreateRequest
       type: object

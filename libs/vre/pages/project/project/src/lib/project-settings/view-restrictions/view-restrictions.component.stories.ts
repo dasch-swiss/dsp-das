@@ -43,9 +43,9 @@ const makeSummary = (overrides: Partial<ViewRestrictionsSummary> = {}): ViewRest
       label: 'Thing',
       ontology: 'anything',
       counts: {
-        anonymous: { resources: { hidden: 15, restrictedView: 4 }, items: { hidden: 22, restrictedView: 7 } },
-        authenticated: { resources: { hidden: 14, restrictedView: 2 }, items: { hidden: 9, restrictedView: 3 } },
-        projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+        anonymous: { hidden: 37, restrictedView: 11 },
+        authenticated: { hidden: 23, restrictedView: 5 },
+        projectMember: { hidden: 5, restrictedView: 0 },
       },
       totalResources: 120,
     },
@@ -55,17 +55,17 @@ const makeSummary = (overrides: Partial<ViewRestrictionsSummary> = {}): ViewRest
       label: 'Blue thing',
       ontology: 'anything',
       counts: {
-        anonymous: { resources: { hidden: 3, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-        authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-        projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+        anonymous: { hidden: 3, restrictedView: 0 },
+        authenticated: { hidden: 0, restrictedView: 0 },
+        projectMember: { hidden: 0, restrictedView: 0 },
       },
       totalResources: 30,
     },
   ],
   totals: {
-    anonymous: { resources: { hidden: 18, restrictedView: 4 }, items: { hidden: 22, restrictedView: 7 } },
-    authenticated: { resources: { hidden: 14, restrictedView: 2 }, items: { hidden: 9, restrictedView: 3 } },
-    projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+    anonymous: { hidden: 40, restrictedView: 11 },
+    authenticated: { hidden: 23, restrictedView: 5 },
+    projectMember: { hidden: 5, restrictedView: 0 },
   },
   ...overrides,
 });
@@ -221,9 +221,9 @@ export const ShowsEmptyStateWhenNoRestrictionsExist: Story = {
         makeSummary({
           groups: [],
           totals: {
-            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            anonymous: { hidden: 0, restrictedView: 0 },
+            authenticated: { hidden: 0, restrictedView: 0 },
+            projectMember: { hidden: 0, restrictedView: 0 },
           },
         })
       ),
@@ -271,9 +271,9 @@ export const ShowsUnrestrictedClassWithItsPopulation: Story = {
               label: 'Open thing',
               ontology: 'anything',
               counts: {
-                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                anonymous: { hidden: 0, restrictedView: 0 },
+                authenticated: { hidden: 0, restrictedView: 0 },
+                projectMember: { hidden: 0, restrictedView: 0 },
               },
               totalResources: 500,
             },
@@ -308,17 +308,17 @@ export const ShowsNoteWhenNothingIsRestricted: Story = {
               label: 'Open thing',
               ontology: 'anything',
               counts: {
-                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                anonymous: { hidden: 0, restrictedView: 0 },
+                authenticated: { hidden: 0, restrictedView: 0 },
+                projectMember: { hidden: 0, restrictedView: 0 },
               },
               totalResources: 500,
             },
           ],
           totals: {
-            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            anonymous: { hidden: 0, restrictedView: 0 },
+            authenticated: { hidden: 0, restrictedView: 0 },
+            projectMember: { hidden: 0, restrictedView: 0 },
           },
         })
       ),
@@ -339,32 +339,15 @@ export const ShowsHiddenAndRestrictedViewSeparately: Story = {
   decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    // "Thing" is 15 hidden + 4 in restricted view for the anonymous audience. Both numbers must
-    // appear as their own figures — a single "19" would be the conflation screen 1i removes.
+    // "Thing" is 37 hidden + 11 in restricted view for the anonymous audience. Hidden and restricted
+    // view are disjoint outcomes and must appear as their own figures, never as a single summed number.
     await step('Both states are rendered as distinct counts', async () => {
-      await expect(canvas.getByText('15')).toBeInTheDocument();
-      await expect(canvas.getByText('4')).toBeInTheDocument();
+      await expect(canvas.getByText('37')).toBeInTheDocument();
+      await expect(canvas.getByText('11')).toBeInTheDocument();
     });
     await step('The two states use their own icons', async () => {
       await expect(canvasElement.querySelector('.count-hidden')).not.toBeNull();
       await expect(canvasElement.querySelector('.count-restricted')).not.toBeNull();
-    });
-  },
-};
-
-export const ShowsResourceAndItemUnitsSeparately: Story = {
-  name: 'Shows restricted resources and restricted values as separate figures',
-  decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    // "Thing": 15 resources hidden, and 22 values hidden inside other resources. Two different facts in
-    // two different units — summing them to 37 is the bug this split fixes.
-    await step('The resources figure and the items figure both appear', async () => {
-      await expect(canvas.getByText('15')).toBeInTheDocument();
-      await expect(canvas.getByText('22')).toBeInTheDocument();
-    });
-    await step('Each unit gets its own line in the cell', async () => {
-      await expect(canvasElement.querySelectorAll('.count-line').length).toBeGreaterThan(1);
     });
   },
 };
@@ -383,17 +366,17 @@ export const ShowsManyRestrictedValuesOnOneResource: Story = {
               label: 'Sparse thing',
               ontology: 'anything',
               counts: {
-                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
-                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
-                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                anonymous: { hidden: 3, restrictedView: 0 },
+                authenticated: { hidden: 3, restrictedView: 0 },
+                projectMember: { hidden: 0, restrictedView: 0 },
               },
               totalResources: 1,
             },
           ],
           totals: {
-            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
-            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
-            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            anonymous: { hidden: 3, restrictedView: 0 },
+            authenticated: { hidden: 3, restrictedView: 0 },
+            projectMember: { hidden: 0, restrictedView: 0 },
           },
         })
       ),
@@ -408,8 +391,8 @@ export const ShowsManyRestrictedValuesOnOneResource: Story = {
       // the Resources column shows the true population, not the restriction count
       await expect(canvas.getAllByText('1').length).toBeGreaterThan(0);
     });
-    await step('Only the items unit renders a figure', async () => {
-      await expect(canvasElement.querySelectorAll('.count-line').length).toBeGreaterThan(0);
+    await step('The cell reports the restriction rather than reading as empty', async () => {
+      await expect(canvasElement.querySelector('.count-hidden')).not.toBeNull();
     });
   },
 };

@@ -1,26 +1,55 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { RestrictionCounts, UnitCounts } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { RestrictionCounts } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { TranslatePipe } from '@ngx-translate/core';
 
+/** The nested form: the two units, each with its own pair of states. */
+interface NestedCounts {
+  resources?: RestrictionCounts;
+  items?: RestrictionCounts;
+}
+
 /**
- * One audience cell of the summary matrix (design 1i): what that audience cannot fully see.
+ * One audience's figure as it actually arrives. The API is not consistent: `totals` is flat, while
+ * `groups[].counts` is still nested, so every consumer has to cope with both.
+ */
+export type AudienceCount = RestrictionCounts | NestedCounts;
+
+const isNested = (value: AudienceCount): value is NestedCounts => 'resources' in value || 'items' in value;
+
+/**
+ * Collapse either shape to a single pair of state counts.
  *
- * Two independent axes, and neither is collapsed:
+ * A nested payload is summed across its units — one resource holding three hidden values reports 4 hidden.
+ * That conflates two different questions, and the split form answered them separately, but the deployed API
+ * no longer sends the split consistently and a summed figure beats a blank cell.
+ */
+export function normaliseCounts(value: AudienceCount | undefined): RestrictionCounts | undefined {
+  if (!value) {
+    return undefined;
+  }
+  if (!isNested(value)) {
+    return value;
+  }
+  return {
+    hidden: (value.resources?.hidden ?? 0) + (value.items?.hidden ?? 0),
+    restrictedView: (value.resources?.restrictedView ?? 0) + (value.items?.restrictedView ?? 0),
+  };
+}
+
+/**
+ * One audience cell of the summary matrix: what that audience cannot fully see.
  *
- *   - **state** — `hidden` (permission code 0, nothing served) shows red with `visibility_off`;
- *     `restrictedView` (code 1, degraded version served) shows amber with `blur_on`.
- *   - **unit** — `resources` counts whole restricted resources and is the figure comparable to the class's
- *     `totalResources`; `items` counts restricted values inside resources.
+ * A single count per state, shown side by side on one line:
  *
- * The units are rendered on separate lines with distinct icons, never added together: one resource holding
- * three hidden values is 1 resource and 3 items, and summing them to "4" produced rows reading "3 of 1"
- * against a class of one resource. A state with a zero count renders nothing; a cell with nothing at all
- * renders a single dash.
+ *   - **hidden** — permission code 0, nothing served; red with `visibility_off`.
+ *   - **restrictedView** — code 1, a degraded version served; amber with `blur_on`.
  *
- * Icons are `aria-hidden` because the numbers beside them are the content; each line carries its own
- * tooltip and the cell an `aria-label`, so colour is never the only channel.
+ * The two states are distinct outcomes, not degrees of one, so they are never added together. A state
+ * with a zero count renders nothing; a cell with neither renders a single dash.
+ *
+ * Icons are `aria-hidden` because the numbers beside them are the content; the cell carries one
+ * `aria-label` naming both states, so colour is never the only channel.
  */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,77 +59,57 @@ import { TranslatePipe } from '@ngx-translate/core';
       @if (isEmpty) {
         <span class="count-none" aria-hidden="true">–</span>
       } @else {
-        @if (hasUnit(counts?.resources)) {
-          <span class="count-line" [matTooltip]="'pages.project.viewRestrictions.resourceUnit' | translate">
-            <mat-icon class="unit-icon" aria-hidden="true">description</mat-icon>
-            @if (counts!.resources.hidden) {
-              <span class="count-hidden">
-                <mat-icon aria-hidden="true">visibility_off</mat-icon>
-                {{ counts!.resources.hidden }}
-              </span>
-            }
-            @if (counts!.resources.restrictedView) {
-              <span class="count-restricted">
-                <mat-icon aria-hidden="true">blur_on</mat-icon>
-                {{ counts!.resources.restrictedView }}
-              </span>
-            }
+        @if (counts!.hidden) {
+          <span class="count-hidden">
+            <mat-icon aria-hidden="true">visibility_off</mat-icon>
+            {{ counts!.hidden }}
           </span>
         }
-        @if (hasUnit(counts?.items)) {
-          <span class="count-line" [matTooltip]="'pages.project.viewRestrictions.itemUnit' | translate">
-            <mat-icon class="unit-icon" aria-hidden="true">label</mat-icon>
-            @if (counts!.items.hidden) {
-              <span class="count-hidden">
-                <mat-icon aria-hidden="true">visibility_off</mat-icon>
-                {{ counts!.items.hidden }}
-              </span>
-            }
-            @if (counts!.items.restrictedView) {
-              <span class="count-restricted">
-                <mat-icon aria-hidden="true">blur_on</mat-icon>
-                {{ counts!.items.restrictedView }}
-              </span>
-            }
+        @if (counts!.restrictedView) {
+          <span class="count-restricted">
+            <mat-icon aria-hidden="true">blur_on</mat-icon>
+            {{ counts!.restrictedView }}
           </span>
         }
       }
     </span>
   `,
   styleUrl: './count-cell.component.scss',
-  imports: [MatIcon, MatTooltipModule, TranslatePipe],
+  imports: [MatIcon, TranslatePipe],
 })
 export class CountCellComponent {
-  @Input({ required: true }) counts!: UnitCounts | undefined;
-
-  /** Whether one unit has anything to show, in either state. */
-  hasUnit(unit: RestrictionCounts | undefined): boolean {
-    return !!unit && (!!unit.hidden || !!unit.restrictedView);
+  /**
+   * Accepts either shape the API emits, because it is not consistent between them: `totals` arrives flat
+   * as `{hidden, restrictedView}`, while `groups[].counts` still nests the figures under `resources` and
+   * `items`. Reading only one shape left the other rendering a dash over live data, so both are read here
+   * rather than in each call site. A nested payload is collapsed by summing the two units per state.
+   */
+  @Input({ required: true }) set counts(value: AudienceCount | undefined) {
+    this._counts = normaliseCounts(value);
   }
 
+  get counts(): RestrictionCounts | undefined {
+    return this._counts;
+  }
+
+  private _counts: RestrictionCounts | undefined;
+
   get isEmpty(): boolean {
-    return !this.hasUnit(this.counts?.resources) && !this.hasUnit(this.counts?.items);
+    return !this.counts?.hidden && !this.counts?.restrictedView;
   }
 
   /**
-   * A single spoken label per cell, so a screen reader announces the units and states in words rather than
-   * reading four bare numbers whose meaning lives in icon colour and row position.
+   * A single spoken label per cell, so a screen reader announces the states in words rather than two
+   * bare numbers whose meaning lives in icon colour and row position.
    */
   get ariaLabel(): string {
     return this.isEmpty ? 'pages.project.viewRestrictions.countNone' : 'pages.project.viewRestrictions.countAria';
   }
 
-  get ariaParams(): {
-    resourcesHidden: number;
-    resourcesRestricted: number;
-    itemsHidden: number;
-    itemsRestricted: number;
-  } {
+  get ariaParams(): { hidden: number; restricted: number } {
     return {
-      resourcesHidden: this.counts?.resources?.hidden ?? 0,
-      resourcesRestricted: this.counts?.resources?.restrictedView ?? 0,
-      itemsHidden: this.counts?.items?.hidden ?? 0,
-      itemsRestricted: this.counts?.items?.restrictedView ?? 0,
+      hidden: this.counts?.hidden ?? 0,
+      restricted: this.counts?.restrictedView ?? 0,
     };
   }
 }

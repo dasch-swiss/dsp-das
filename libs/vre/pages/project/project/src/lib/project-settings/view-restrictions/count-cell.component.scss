@@ -4,33 +4,16 @@
   display: block;
 }
 
-// Design 1i, extended: one line per unit (resources / items), each carrying its two states side by side.
-// Stacked rather than inlined so the four possible figures never read as one run of numbers.
+// One line: the states present for this audience, side by side.
 .col-aud {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 8px;
   padding: 6px 8px;
   min-height: 38px;
   box-sizing: border-box;
   font-size: 13px;
-}
-
-// one unit's line: a unit icon, then the state counts present for it
-.count-line {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-// marks which unit the line counts; muted, since it is a label rather than a finding
-.unit-icon {
-  font-size: 14px;
-  width: 14px;
-  height: 14px;
-  color: rgba($black, 0.35);
 }
 
 .count-hidden,

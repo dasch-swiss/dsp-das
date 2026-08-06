@@ -11,9 +11,7 @@ import {
   PagedResponseRestrictedResource,
   RestrictedItem,
   RestrictedResource,
-  RestrictionCounts,
   RestrictionGroup,
-  UnitCounts,
   ViewRestrictionsSummary,
   Visibility,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
@@ -23,7 +21,7 @@ import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
-import { CountCellComponent } from './count-cell.component';
+import { AudienceCount, CountCellComponent, normaliseCounts } from './count-cell.component';
 import { ViewRestrictionsPageService } from './view-restrictions-page.service';
 import { VisibilityCellComponent } from './visibility-cell.component';
 
@@ -170,17 +168,15 @@ export class ViewRestrictionsComponent {
   }
 
   /**
-   * Whether an audience cell has nothing to report in either unit, so it renders a dash rather than zeroes.
+   * Whether an audience cell has nothing to report, so it renders a dash rather than zeroes.
    *
-   * Checks both units and both states: a cell with only restricted-view items, or only restricted values and
-   * no restricted resources, is still a finding and must not read as empty.
+   * Normalises first, because the API sends `totals` flat but `groups[].counts` nested — reading the flat
+   * shape alone would call every nested cell empty and wrongly announce "no restrictions". Checks both
+   * states: a cell with only restricted-view counts and nothing hidden is still a finding.
    */
-  isEmptyCount(counts: UnitCounts | undefined): boolean {
-    return this.isEmptyUnit(counts?.resources) && this.isEmptyUnit(counts?.items);
-  }
-
-  private isEmptyUnit(unit: RestrictionCounts | undefined): boolean {
-    return !unit?.hidden && !unit?.restrictedView;
+  isEmptyCount(counts: AudienceCount | undefined): boolean {
+    const c = normaliseCounts(counts);
+    return !c?.hidden && !c?.restrictedView;
   }
 
   /**
