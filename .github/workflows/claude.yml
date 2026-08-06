@@ -22,7 +22,10 @@ jobs:
       (github.event.issue.pull_request || github.event.pull_request) &&
       (contains(github.event.comment.body, '@claude review') || contains(github.event.review.body, '@claude review'))
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 30, not 15: the action writes its result only at the end, so a killed run yields no
+    # review at all — and measured review runs have peaked within a few minutes of 15.
+    # A generous ceiling costs nothing on the runs that finish early.
+    timeout-minutes: 30
     permissions:
       contents: read
       pull-requests: write
@@ -96,12 +99,15 @@ jobs:
           # Sonnet caught 1/6 and produced the only merge-blocking false positives.
           claude_args: '--model claude-opus-5 --allowed-tools "Grep,Glob,WebSearch,WebFetch,Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
 
+      # cancelled() as well as failure(): a `timeout-minutes` kill marks the job cancelled,
+      # not failed, so `if: failure()` alone lets a timed-out review pass silently with no
+      # comment on the PR.
       - name: Notify on failure
-        if: failure()
+        if: failure() || cancelled()
         run: |
           PR_NUMBER="${{ github.event.issue.number || github.event.pull_request.number }}"
           if [ -n "$PR_NUMBER" ]; then
-            gh issue comment "$PR_NUMBER" --body "⚠️ Claude Code Review failed. Check [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details."
+            gh issue comment "$PR_NUMBER" --body "⚠️ Claude Code Review did not complete (failed, timed out, or was cancelled). Check [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details."
           fi
         env:
           GH_TOKEN: ${{ github.token }}
