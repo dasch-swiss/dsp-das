@@ -194,17 +194,17 @@
       "viewRestrictions": {
         "tab": "Sichtbarkeitseinschränkungen",
         "title": "Sichtbarkeitseinschränkungen",
-        "intro": "Für jede Zielgruppe: wie viele Elemente verborgen sind – gruppiert nach Ressourcenklasse oder Eigenschaft. Öffnen Sie eine Zeile, um die betroffenen Ressourcen und ihre Sichtbarkeit je Zielgruppe zu sehen.",
+        "intro": "Jede Ressourcenklasse des Projekts mit der Anzahl ihrer Ressourcen und, für jede Zielgruppe, wie viele Elemente verborgen oder in eingeschränkter Ansicht ausgeliefert werden. Öffnen Sie eine Zeile, um die betroffenen Ressourcen und ihre Sichtbarkeit pro Zielgruppe zu sehen.",
         "groupBy": "Gruppieren nach",
         "byClass": "Ressourcenklasse",
         "byProperty": "Eigenschaft",
         "filters": "Filter",
         "resourceClass": "Ressourcenklasse",
         "property": "Eigenschaft",
+        "resources": "Ressourcen",
         "total": "Total",
         "itemsInside": "eingeschränkte Elemente enthalten",
         "noRestrictions": "Keine Einschränkungen für diesen Filter gefunden.",
-        "approximate": "Zahlen sind ungefähr: Das Projekt ist gross und die Auswertung wurde begrenzt, daher sind dies Mindestwerte.",
         "audience": {
           "anonymous": "Abgemeldet",
           "authenticated": "Angemeldet",
@@ -225,7 +225,13 @@
           "visible": "Sichtbar"
         },
         "summaryLoadFailed": "Die Einschränkungen konnten nicht geladen werden. Bitte versuchen Sie es später erneut.",
-        "itemsLoadFailed": "Die betroffenen Ressourcen konnten nicht geladen werden. Schliessen und öffnen Sie die Zeile erneut."
+        "itemsLoadFailed": "Die betroffenen Ressourcen konnten nicht geladen werden. Schliessen und öffnen Sie die Zeile erneut.",
+        "hiddenCount": "Verborgen – es wird nichts ausgeliefert",
+        "restrictedViewCount": "Eingeschränkte Ansicht – es wird eine reduzierte Version ausgeliefert",
+        "countAria": "{{resourcesHidden}} Ressourcen verborgen, {{resourcesRestricted}} in eingeschränkter Ansicht; {{itemsHidden}} Werte verborgen, {{itemsRestricted}} in eingeschränkter Ansicht",
+        "countNone": "Keine Einschränkungen",
+        "resourceUnit": "Ganze Ressourcen",
+        "itemUnit": "Werte innerhalb von Ressourcen"
       }
     },
     "system": {

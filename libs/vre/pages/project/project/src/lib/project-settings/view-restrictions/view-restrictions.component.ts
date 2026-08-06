@@ -11,7 +11,10 @@ import {
   PagedResponseRestrictedResource,
   RestrictedItem,
   RestrictedResource,
+  RestrictionCounts,
   RestrictionGroup,
+  UnitCounts,
+  ViewRestrictionsSummary,
   Visibility,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
@@ -20,6 +23,7 @@ import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
+import { CountCellComponent } from './count-cell.component';
 import { ViewRestrictionsPageService } from './view-restrictions-page.service';
 import { VisibilityCellComponent } from './visibility-cell.component';
 
@@ -42,8 +46,20 @@ const ITEM_TYPE_SLUG: Record<ItemType, string> = {
 };
 
 /**
- * Read-only "View restrictions" page (design screen 1h): a per-audience matrix of hidden items,
+ * Read-only "View restrictions" page (design screen 1i): a per-audience matrix of restricted items,
  * grouped by resource class or property, with an expandable drill-down of affected resources/items.
+ *
+ * Each audience cell splits its count along two axes, neither of them collapsed:
+ *
+ *   - **state** — *hidden* (permission code 0, nothing served) vs *restricted view* (code 1, a degraded
+ *     version served). Disjoint, and shown side by side rather than summed.
+ *   - **unit** — restricted whole *resources* vs restricted *values* inside resources. Also never
+ *     summed: one resource with three hidden values is 1 resource and 3 values, not 4 of anything.
+ *
+ * In resource-class mode the matrix carries an extra "Resources" column: the class's whole population.
+ * It is the denominator for the *resources* unit only — the values unit counts a different thing and is
+ * not a share of it. A property has no resource population of its own, so the API omits
+ * `totalResources` in property mode and the column disappears with it (see `showTotals`).
  */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,6 +76,7 @@ const ITEM_TYPE_SLUG: Record<ItemType, string> = {
     AppProgressIndicatorComponent,
     PagerComponent,
     VisibilityCellComponent,
+    CountCellComponent,
   ],
 })
 export class ViewRestrictionsComponent {
@@ -129,6 +146,53 @@ export class ViewRestrictionsComponent {
   /** In property mode the "Resource" filter is not meaningful (whole-resource rows are out of scope). */
   isChipDisabled(chip: ItemType): boolean {
     return chip === ItemType.Resource && this.groupBy$.value === GroupBy.Property;
+  }
+
+  /**
+   * Whether to render the "Resources" column (design 1i: a 96px column between the label and the
+   * audience cells). Keyed off the grouping rather than off the presence of `totalResources`, so the
+   * column and the grid template can never disagree about how many columns there are — a per-row
+   * check would misalign the header and footer if one group happened to lack the field.
+   */
+  showTotals(groupBy: GroupBy | null): boolean {
+    return groupBy === GroupBy.ResourceClass;
+  }
+
+  /**
+   * The project's whole resource count — the footer's "Resources" cell.
+   *
+   * Summed over the summary's groups rather than requested separately, so it always agrees with the
+   * rows on screen. In class mode the API reports *every* class, including those with no restrictions,
+   * so this sum is the project's total resource count and not merely the restricted subset.
+   */
+  totalResources(groups: RestrictionGroup[] | undefined): number {
+    return (groups ?? []).reduce((sum, g) => sum + (g.totalResources ?? 0), 0);
+  }
+
+  /**
+   * Whether an audience cell has nothing to report in either unit, so it renders a dash rather than zeroes.
+   *
+   * Checks both units and both states: a cell with only restricted-view items, or only restricted values and
+   * no restricted resources, is still a finding and must not read as empty.
+   */
+  isEmptyCount(counts: UnitCounts | undefined): boolean {
+    return this.isEmptyUnit(counts?.resources) && this.isEmptyUnit(counts?.items);
+  }
+
+  private isEmptyUnit(unit: RestrictionCounts | undefined): boolean {
+    return !unit?.hidden && !unit?.restrictedView;
+  }
+
+  /**
+   * Whether the report found no restriction anywhere, even though rows are listed.
+   *
+   * In class mode the API reports every class in the project, so `groups` is non-empty whenever the
+   * project has any resources at all — the `@empty` branch alone would then never fire and a project
+   * with nothing restricted would silently render a table of dashes. This says so explicitly.
+   */
+  hasNoRestrictions(summary: ViewRestrictionsSummary): boolean {
+    const t = summary.totals;
+    return this.isEmptyCount(t.anonymous) && this.isEmptyCount(t.authenticated) && this.isEmptyCount(t.projectMember);
   }
 
   toggleGroup(group: RestrictionGroup): void {

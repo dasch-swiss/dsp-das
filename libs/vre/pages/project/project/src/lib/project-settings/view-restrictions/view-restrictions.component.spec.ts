@@ -25,11 +25,20 @@ const summary: ViewRestrictionsSummary = {
       id: 'http://www.knora.org/ontology/0001/anything#Thing',
       label: 'Thing',
       ontology: 'anything',
-      counts: { anonymous: 15, authenticated: 14, projectMember: 5 },
+      counts: {
+        anonymous: { resources: { hidden: 15, restrictedView: 4 }, items: { hidden: 0, restrictedView: 0 } },
+        authenticated: { resources: { hidden: 14, restrictedView: 2 }, items: { hidden: 0, restrictedView: 0 } },
+        projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+      },
+      // the class population, of which the counts above are a part
+      totalResources: 120,
     },
   ],
-  totals: { anonymous: 15, authenticated: 14, projectMember: 5 },
-  approximate: false,
+  totals: {
+    anonymous: { resources: { hidden: 15, restrictedView: 4 }, items: { hidden: 0, restrictedView: 0 } },
+    authenticated: { resources: { hidden: 14, restrictedView: 2 }, items: { hidden: 0, restrictedView: 0 } },
+    projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+  },
 };
 
 const itemsPage: PagedResponseRestrictedResource = {
@@ -96,7 +105,8 @@ describe('ViewRestrictionsComponent', () => {
       states.push(state);
       if (!state.loading) {
         expect(state.summary?.groups?.length).toBe(1);
-        expect(state.summary?.totals.anonymous).toBe(15);
+        expect(state.summary?.totals.anonymous.resources.hidden).toBe(15);
+        expect(state.summary?.totals.anonymous.resources.restrictedView).toBe(4);
         // the first emission must have been the loading sentinel
         expect((states[0] as { loading: boolean }).loading).toBe(true);
         done();
@@ -316,6 +326,147 @@ describe('ViewRestrictionsComponent', () => {
           items: [],
         })
       ).toBe(false);
+    });
+  });
+
+  describe('resources column (design 1i)', () => {
+    it('is shown when grouping by resource class', () => {
+      expect(component.showTotals(GroupBy.ResourceClass)).toBe(true);
+    });
+
+    // A property groups values across classes, so it has no resource population of its own and the
+    // API omits totalResources — the column has to disappear with it or the grid would misalign.
+    it('is hidden when grouping by property', () => {
+      expect(component.showTotals(GroupBy.Property)).toBe(false);
+    });
+
+    it('is hidden before the grouping is known', () => {
+      expect(component.showTotals(null)).toBe(false);
+    });
+
+    it('sums the per-class populations for the footer', () => {
+      expect(
+        component.totalResources([
+          { id: 'a', label: 'A', counts: summary.totals, totalResources: 120 },
+          { id: 'b', label: 'B', counts: summary.totals, totalResources: 30 },
+        ])
+      ).toBe(150);
+    });
+
+    // In property mode every group lacks the field; the footer must read 0 rather than NaN.
+    it('treats a missing population as zero rather than NaN', () => {
+      expect(component.totalResources([{ id: 'a', label: 'A', counts: summary.totals }])).toBe(0);
+      expect(component.totalResources(undefined)).toBe(0);
+    });
+
+    // The population is independent of the restrictions: an unrestricted class is still reported with its
+    // resource count, and it still counts towards the footer total.
+    it('counts an unrestricted class towards the total', () => {
+      const zero = {
+        anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+        authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+        projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+      };
+      expect(
+        component.totalResources([
+          { id: 'a', label: 'A', counts: summary.totals, totalResources: 120 },
+          { id: 'b', label: 'B', counts: zero, totalResources: 500 },
+        ])
+      ).toBe(620);
+    });
+  });
+
+  describe('hasNoRestrictions', () => {
+    const zero = {
+      anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+      authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+      projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+    };
+
+    // Class mode lists every class, so rows exist even with nothing restricted — the component has to
+    // recognise that state explicitly or the page renders a table of dashes with no explanation.
+    it('is true when every audience total is zero', () => {
+      expect(component.hasNoRestrictions({ ...summary, groups: [], totals: zero })).toBe(true);
+    });
+
+    it('is false when anything is hidden', () => {
+      expect(component.hasNoRestrictions(summary)).toBe(false);
+    });
+
+    // Restricted-view-only must not read as "no restrictions" — that is the conflation 1i undoes.
+    it('is false when only restricted view is non-zero', () => {
+      expect(
+        component.hasNoRestrictions({
+          ...summary,
+          totals: {
+            ...zero,
+            anonymous: { resources: { hidden: 0, restrictedView: 2 }, items: { hidden: 0, restrictedView: 0 } },
+          },
+        })
+      ).toBe(false);
+    });
+  });
+
+  describe('isEmptyCount', () => {
+    it('is empty only when both states are zero', () => {
+      expect(
+        component.isEmptyCount({ resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } })
+      ).toBe(true);
+      expect(component.isEmptyCount(undefined)).toBe(true);
+    });
+
+    // A cell with only restricted-view items must still render — folding it into "no restrictions"
+    // is exactly the conflation screen 1i exists to undo.
+    it('is not empty when only restricted view is non-zero', () => {
+      expect(
+        component.isEmptyCount({ resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 3 } })
+      ).toBe(false);
+    });
+
+    it('is not empty when only hidden is non-zero', () => {
+      expect(
+        component.isEmptyCount({ resources: { hidden: 2, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } })
+      ).toBe(false);
+    });
+
+    // A cell with restricted VALUES but no restricted resources is a finding too — it must not read as
+    // empty just because the resources unit is zero.
+    it('is not empty when only the items unit is non-zero', () => {
+      expect(
+        component.isEmptyCount({ resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 4, restrictedView: 0 } })
+      ).toBe(false);
+    });
+  });
+
+  // The units answer different questions and are never added. These pin the invariant at the UI boundary:
+  // the resources figure is the one that pairs with totalResources, and a large items count must not make a
+  // row claim more restricted resources than the class has.
+  describe('count units', () => {
+    const oneResourceThreeValues = {
+      resources: { hidden: 0, restrictedView: 0 },
+      items: { hidden: 3, restrictedView: 0 },
+    };
+
+    it('keeps the resources figure within the class population even when many values are restricted', () => {
+      // the "3 of 1" case: three restricted values on a single, fully visible resource
+      const counts = {
+        anonymous: oneResourceThreeValues,
+        authenticated: oneResourceThreeValues,
+        projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+      };
+      expect(counts.anonymous.resources.hidden).toBeLessThanOrEqual(1);
+      expect(counts.anonymous.items.hidden).toBe(3);
+      // and the cell still reports something rather than reading as empty
+      expect(component.isEmptyCount(counts.anonymous)).toBe(false);
+    });
+
+    it('sums the class population from totalResources alone, never from the counts', () => {
+      // a big items figure cannot inflate the population total
+      expect(
+        component.totalResources([
+          { id: 'c', label: 'C', counts: { ...summary.totals, anonymous: oneResourceThreeValues }, totalResources: 1 },
+        ])
+      ).toBe(1);
     });
   });
 });

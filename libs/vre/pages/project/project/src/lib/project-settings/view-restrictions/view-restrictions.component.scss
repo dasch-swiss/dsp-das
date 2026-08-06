@@ -43,6 +43,26 @@
   }
 }
 
+// shown above the matrix when every class is listed but nothing is restricted
+.empty-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba($green_600, 0.08);
+  border: 1px solid rgba($green_600, 0.4);
+  border-radius: $border-radius;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: $green_600;
+  }
+}
+
 .load-error {
   display: flex;
   align-items: center;
@@ -61,31 +81,16 @@
   }
 }
 
-.approximate-note {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba($yellow_400, 0.12);
-  border: 1px solid rgba($yellow_400, 0.5);
-  border-radius: $border-radius;
-  padding: 8px 12px;
-  margin-bottom: 12px;
-  font-size: 13px;
-
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    color: $yellow_700;
-  }
-}
-
 .matrix {
   border: 1px solid $black-12-opacity;
   border-radius: 8px;
   overflow: hidden;
 
-  $grid: minmax(360px, 2.6fr) 1fr 1fr 1fr;
+  // Design 1i grid. Class mode inserts a fixed 96px "Resources" column between the label and the
+  // audience cells; property mode has no resource population to report, so it drops the column and
+  // gives the label a wider minimum instead.
+  $grid: minmax(430px, 2.6fr) 1fr 1fr 1fr;
+  $grid-with-totals: minmax(400px, 2.6fr) 96px 1fr 1fr 1fr;
 
   .matrix-head,
   .matrix-row,
@@ -95,6 +100,38 @@
     display: grid;
     grid-template-columns: $grid;
     align-items: center;
+  }
+
+  &.with-totals {
+    .matrix-head,
+    .matrix-row,
+    .matrix-foot,
+    .drill-res,
+    .drill-item {
+      grid-template-columns: $grid-with-totals;
+    }
+
+    // Drill-down rows have no resources count of their own — the population is a property of the
+    // class, not of an individual resource — so their label spans the label + Resources columns
+    // (design 1i `iSpan`). Without this the per-audience cells would shift one column left and no
+    // longer line up under their headers.
+    .drill-res > .col-group,
+    .drill-item > .col-group {
+      grid-column: span 2;
+    }
+  }
+
+  // The class population: a plain neutral number, deliberately quieter than the restriction counts
+  // next to it — it is the denominator, not a finding.
+  .col-total {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 6px 8px;
+    font-size: 13px;
+    color: rgba($black, 0.6);
+    border-left: 1px solid rgba($black, 0.06);
   }
 
   .matrix-head {
@@ -116,6 +153,17 @@
         width: 18px;
         height: 18px;
       }
+    }
+
+    // inherits the head's uppercase caption styling; bottom-aligned to sit on the same
+    // baseline as the audience labels, which are pushed down by their icons
+    .col-total {
+      align-items: flex-end;
+      padding: 12px 10px;
+      font-size: inherit;
+      font-weight: inherit;
+      color: inherit;
+      border-left: none;
     }
   }
 
@@ -270,6 +318,12 @@
     background: $cool_gray_50;
     border-top: 2px solid rgba($black, 0.18);
     font-weight: 500;
+
+    // the footer's population total is the one place the neutral number is emphasised
+    .col-total {
+      font-weight: 500;
+      color: rgba($black, 0.87);
+    }
   }
 
   .empty {

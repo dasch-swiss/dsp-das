@@ -194,17 +194,17 @@
       "viewRestrictions": {
         "tab": "Restrictions d'affichage",
         "title": "Restrictions d'affichage",
-        "intro": "Pour chaque public, combien d'éléments sont masqués — regroupés par classe de ressource ou par propriété. Ouvrez une ligne pour voir les ressources concernées et leur visibilité par public.",
+        "intro": "Chaque classe de ressource du projet avec le nombre de ressources qu'elle contient et, pour chaque audience, combien d'éléments sont masqués ou servis en vue restreinte. Ouvrez une ligne pour voir les ressources concernées et leur visibilité par audience.",
         "groupBy": "Grouper par",
         "byClass": "Classe de ressource",
         "byProperty": "Propriété",
         "filters": "Filtres",
         "resourceClass": "Classe de ressource",
         "property": "Propriété",
+        "resources": "Ressources",
         "total": "Total",
         "itemsInside": "éléments restreints à l'intérieur",
         "noRestrictions": "Aucune restriction trouvée pour ce filtre.",
-        "approximate": "Les nombres sont approximatifs : le projet est volumineux et l'analyse a été limitée, il s'agit donc d'une borne inférieure.",
         "audience": {
           "anonymous": "Déconnecté",
           "authenticated": "Connecté",
@@ -225,7 +225,13 @@
           "visible": "Visible"
         },
         "summaryLoadFailed": "Les restrictions n'ont pas pu être chargées. Veuillez réessayer plus tard.",
-        "itemsLoadFailed": "Les ressources concernées n'ont pas pu être chargées. Fermez et rouvrez la ligne pour réessayer."
+        "itemsLoadFailed": "Les ressources concernées n'ont pas pu être chargées. Fermez et rouvrez la ligne pour réessayer.",
+        "hiddenCount": "Masqué – rien n’est servi",
+        "restrictedViewCount": "Vue restreinte – une version dégradée est servie",
+        "countAria": "{{resourcesHidden}} ressources masquées, {{resourcesRestricted}} en vue restreinte ; {{itemsHidden}} valeurs masquées, {{itemsRestricted}} en vue restreinte",
+        "countNone": "Aucune restriction",
+        "resourceUnit": "Ressources entières",
+        "itemUnit": "Valeurs dans les ressources"
       }
     },
     "system": {

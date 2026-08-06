@@ -42,17 +42,31 @@ const makeSummary = (overrides: Partial<ViewRestrictionsSummary> = {}): ViewRest
       id: 'http://www.knora.org/ontology/0001/anything#Thing',
       label: 'Thing',
       ontology: 'anything',
-      counts: { anonymous: 15, authenticated: 14, projectMember: 5 },
+      counts: {
+        anonymous: { resources: { hidden: 15, restrictedView: 4 }, items: { hidden: 22, restrictedView: 7 } },
+        authenticated: { resources: { hidden: 14, restrictedView: 2 }, items: { hidden: 9, restrictedView: 3 } },
+        projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+      },
+      totalResources: 120,
     },
     {
+      // restricted view only, and nothing hidden — the case a single conflated count would hide
       id: 'http://www.knora.org/ontology/0001/anything#BlueThing',
       label: 'Blue thing',
       ontology: 'anything',
-      counts: { anonymous: 3, authenticated: 0, projectMember: 0 },
+      counts: {
+        anonymous: { resources: { hidden: 3, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+        authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+        projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+      },
+      totalResources: 30,
     },
   ],
-  totals: { anonymous: 18, authenticated: 14, projectMember: 5 },
-  approximate: false,
+  totals: {
+    anonymous: { resources: { hidden: 18, restrictedView: 4 }, items: { hidden: 22, restrictedView: 7 } },
+    authenticated: { resources: { hidden: 14, restrictedView: 2 }, items: { hidden: 9, restrictedView: 3 } },
+    projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+  },
   ...overrides,
 });
 
@@ -154,6 +168,7 @@ export const ShowsMatrixWithPerAudienceCounts: Story = {
       await expect(canvas.getByText('Blue thing')).toBeInTheDocument();
     });
     await step('The totals row sums the hidden counts across groups', async () => {
+      // 15 (Thing) + 3 (Blue thing) hidden from the anonymous audience
       await expect(canvas.getByText('18')).toBeInTheDocument();
     });
   },
@@ -202,7 +217,16 @@ export const ShowsEmptyStateWhenNoRestrictionsExist: Story = {
   name: 'Shows an empty state when no group has restrictions',
   decorators: [
     withApi(
-      of(makeSummary({ groups: [], totals: { anonymous: 0, authenticated: 0, projectMember: 0 } })),
+      of(
+        makeSummary({
+          groups: [],
+          totals: {
+            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+          },
+        })
+      ),
       of(makeItemsPage([]))
     ),
   ],
@@ -214,13 +238,178 @@ export const ShowsEmptyStateWhenNoRestrictionsExist: Story = {
   },
 };
 
-export const ShowsApproximateNoteForLargeProjects: Story = {
-  name: 'Warns that counts are a lower bound when the scan was capped',
-  decorators: [withApi(of(makeSummary({ approximate: true })), of(makeItemsPage([makeResource()])))],
+export const ShowsResourcePopulationPerClass: Story = {
+  name: 'Shows each class’s resource population next to its restriction counts',
+  decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('The approximate-counts note is shown', async () => {
-      await expect(canvas.getByText(/lower bound/i)).toBeInTheDocument();
+    await step('The Resources column header is present in class mode', async () => {
+      await expect(canvas.getByText('Resources')).toBeInTheDocument();
+    });
+    await step('Each class reports its own population', async () => {
+      await expect(canvas.getByText('120')).toBeInTheDocument();
+      await expect(canvas.getByText('30')).toBeInTheDocument();
+    });
+    await step('The footer sums the populations of the listed classes', async () => {
+      await expect(canvas.getByText('150')).toBeInTheDocument();
+    });
+  },
+};
+
+export const ShowsUnrestrictedClassWithItsPopulation: Story = {
+  name: 'Lists a class with no restrictions, with its resource count intact',
+  decorators: [
+    withApi(
+      of(
+        makeSummary({
+          groups: [
+            ...makeSummary().groups!,
+            {
+              // nothing restricted, but the class still has 500 resources — the count is a property of
+              // the class, not of the restrictions
+              id: 'http://www.knora.org/ontology/0001/anything#OpenThing',
+              label: 'Open thing',
+              ontology: 'anything',
+              counts: {
+                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+              },
+              totalResources: 500,
+            },
+          ],
+        })
+      ),
+      of(makeItemsPage([makeResource()]))
+    ),
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('The unrestricted class is listed', async () => {
+      await expect(canvas.getByText('Open thing')).toBeInTheDocument();
+      await expect(canvas.getByText('500')).toBeInTheDocument();
+    });
+    await step('Its population counts towards the footer total', async () => {
+      // 120 + 30 + 500
+      await expect(canvas.getByText('650')).toBeInTheDocument();
+    });
+  },
+};
+
+export const ShowsNoteWhenNothingIsRestricted: Story = {
+  name: 'States that nothing is restricted rather than showing a table of dashes',
+  decorators: [
+    withApi(
+      of(
+        makeSummary({
+          groups: [
+            {
+              id: 'http://www.knora.org/ontology/0001/anything#OpenThing',
+              label: 'Open thing',
+              ontology: 'anything',
+              counts: {
+                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+              },
+              totalResources: 500,
+            },
+          ],
+          totals: {
+            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+          },
+        })
+      ),
+      of(makeItemsPage([]))
+    ),
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('The "no restrictions" note is shown even though a row is listed', async () => {
+      await expect(canvas.getByText(/No restrictions found/i)).toBeInTheDocument();
+      await expect(canvas.getByText('Open thing')).toBeInTheDocument();
+    });
+  },
+};
+
+export const ShowsHiddenAndRestrictedViewSeparately: Story = {
+  name: 'Splits each count into hidden and restricted view',
+  decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    // "Thing" is 15 hidden + 4 in restricted view for the anonymous audience. Both numbers must
+    // appear as their own figures — a single "19" would be the conflation screen 1i removes.
+    await step('Both states are rendered as distinct counts', async () => {
+      await expect(canvas.getByText('15')).toBeInTheDocument();
+      await expect(canvas.getByText('4')).toBeInTheDocument();
+    });
+    await step('The two states use their own icons', async () => {
+      await expect(canvasElement.querySelector('.count-hidden')).not.toBeNull();
+      await expect(canvasElement.querySelector('.count-restricted')).not.toBeNull();
+    });
+  },
+};
+
+export const ShowsResourceAndItemUnitsSeparately: Story = {
+  name: 'Shows restricted resources and restricted values as separate figures',
+  decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    // "Thing": 15 resources hidden, and 22 values hidden inside other resources. Two different facts in
+    // two different units — summing them to 37 is the bug this split fixes.
+    await step('The resources figure and the items figure both appear', async () => {
+      await expect(canvas.getByText('15')).toBeInTheDocument();
+      await expect(canvas.getByText('22')).toBeInTheDocument();
+    });
+    await step('Each unit gets its own line in the cell', async () => {
+      await expect(canvasElement.querySelectorAll('.count-line').length).toBeGreaterThan(1);
+    });
+  },
+};
+
+export const ShowsManyRestrictedValuesOnOneResource: Story = {
+  name: 'Never claims more restricted resources than the class has (the "3 of 1" case)',
+  decorators: [
+    withApi(
+      of(
+        makeSummary({
+          groups: [
+            {
+              // ONE resource in the class, itself fully visible, carrying THREE hidden values. The old
+              // summed count rendered "3" against a population of 1.
+              id: 'http://www.knora.org/ontology/0001/anything#Sparse',
+              label: 'Sparse thing',
+              ontology: 'anything',
+              counts: {
+                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
+                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
+                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+              },
+              totalResources: 1,
+            },
+          ],
+          totals: {
+            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
+            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
+            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+          },
+        })
+      ),
+      of(makeItemsPage([makeResource()]))
+    ),
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('The population is 1 and the three restrictions are reported as values', async () => {
+      await expect(canvas.getByText('Sparse thing')).toBeInTheDocument();
+      await expect(canvas.getByText('3')).toBeInTheDocument();
+      // the Resources column shows the true population, not the restriction count
+      await expect(canvas.getAllByText('1').length).toBeGreaterThan(0);
+    });
+    await step('Only the items unit renders a figure', async () => {
+      await expect(canvasElement.querySelectorAll('.count-line').length).toBeGreaterThan(0);
     });
   },
 };
