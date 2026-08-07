@@ -144,7 +144,9 @@ export class ErrorReportingService {
    */
   private static _reasonOf(error: unknown): string | undefined {
     if (error instanceof ApiResponseError) {
-      return typeof error.error === 'string' ? error.error || undefined : reasonFromErrorBody(error.error.response);
+      // `error` is the wrapped `AjaxError` for a JS-LIB failure and a plain string otherwise, where it
+      // defaults to empty. The reader takes either and maps an empty one to undefined.
+      return reasonFromErrorBody(typeof error.error === 'string' ? error.error : error.error.response);
     }
 
     if (error instanceof HttpErrorResponse) {
