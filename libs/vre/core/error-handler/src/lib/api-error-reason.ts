@@ -1,3 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { ApiResponseError } from '@dasch-swiss/dsp-js';
+
 /**
  * The server's own account of a failure, read out of whichever field carries it.
  *
@@ -22,4 +25,49 @@ export function reasonFromErrorBody(body: unknown): string | undefined {
   return [shape['knora-api:error'], shape.message, shape.error].find(
     (candidate): candidate is string => typeof candidate === 'string' && candidate.length > 0
   );
+}
+
+/** The same reason, read off a whole error rather than a body already dug out of it. */
+export function reasonFromApiError(error: unknown): string | undefined {
+  if (error instanceof ApiResponseError) {
+    // `error` is the wrapped `AjaxError` for a JS-LIB failure and a plain string otherwise.
+    return reasonFromErrorBody(typeof error.error === 'string' ? error.error : error.error?.response);
+  }
+
+  if (error instanceof HttpErrorResponse) {
+    return reasonFromErrorBody(error.error);
+  }
+
+  return undefined;
+}
+
+/**
+ * Statuses whose body explains something the user can act on. A 400 names the constraint they broke
+ * ("a wildcard search term must contain at least 3 characters"); a 409 names the conflict. Everything
+ * else is deliberately excluded: 403/404/504 already have curated messages, and a 500 body carries
+ * server internals that do not belong on screen — which is why `AppErrorHandler` answers those with
+ * "contact support" rather than the raw text.
+ */
+const REASON_BEARING_STATUSES = new Set([400, 409]);
+
+/** dsp-api prefixes some 400s with its exception class; the user only wants what follows it. */
+const DSP_BAD_REQUEST_PREFIX = /dsp\.errors\.BadRequestException:(.*)$/;
+
+/**
+ * The server's explanation, when it is fit to show the user directly.
+ *
+ * Returns `undefined` when the failure has no actionable text, so callers can fall back to their own
+ * generic wording. Used to give a persistent failure panel the same sentence the snackbar shows —
+ * before this, a rejected query explained itself for five seconds and then left the user looking at
+ * "something went wrong, please try again", advice that cannot work for a malformed query (DEV-6866).
+ */
+export function userFacingReason(error: unknown): string | undefined {
+  const status = error instanceof ApiResponseError || error instanceof HttpErrorResponse ? error.status : undefined;
+
+  if (status === undefined || !REASON_BEARING_STATUSES.has(status)) {
+    return undefined;
+  }
+
+  const reason = reasonFromApiError(error);
+  return reason?.match(DSP_BAD_REQUEST_PREFIX)?.[1].trim() ?? reason;
 }

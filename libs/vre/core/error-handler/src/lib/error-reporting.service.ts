@@ -3,7 +3,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
-import { reasonFromErrorBody } from './api-error-reason';
+import { reasonFromApiError } from './api-error-reason';
 
 /**
  * How long the same fingerprint stays suppressed after being reported, per browser tab.
@@ -143,17 +143,7 @@ export class ErrorReportingService {
    * say something.
    */
   private static _reasonOf(error: unknown): string | undefined {
-    if (error instanceof ApiResponseError) {
-      // `error` is the wrapped `AjaxError` for a JS-LIB failure and a plain string otherwise, where it
-      // defaults to empty. The reader takes either and maps an empty one to undefined.
-      return reasonFromErrorBody(typeof error.error === 'string' ? error.error : error.error.response);
-    }
-
-    if (error instanceof HttpErrorResponse) {
-      return reasonFromErrorBody(error.error);
-    }
-
-    return undefined;
+    return reasonFromApiError(error);
   }
 
   private static _asApiFailure(error: unknown): ApiFailure | null {
