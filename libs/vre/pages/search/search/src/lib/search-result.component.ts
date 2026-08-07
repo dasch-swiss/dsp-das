@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ErrorHandler, Inject, Input, OnChanges, signal } from '@angular/core';
 import { IFulltextSearchParams, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ErrorReportingService } from '@dasch-swiss/vre/core/error-handler';
+import { ErrorReportingService, userFacingReason } from '@dasch-swiss/vre/core/error-handler';
 import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
@@ -23,7 +23,7 @@ import { BehaviorSubject, catchError, combineLatest, map, Observable, of, switch
     @let resources = resources$ | async;
     @if (failed()) {
       <app-centered-box>
-        <app-search-failed (retry)="onRetry()" />
+        <app-search-failed [reason]="failureReason()" (retry)="onRetry()" />
       </app-centered-box>
     } @else if (!resources && loading()) {
       <app-progress-indicator />
@@ -51,6 +51,8 @@ export class SearchResultComponent implements OnChanges {
 
   readonly loading = signal(true);
   readonly failed = signal(false);
+  /** dsp-api's own account of the failure, when it gave one fit to show. */
+  readonly failureReason = signal<string | undefined>(undefined);
 
   resources$!: Observable<ReadResource[] | null>;
 
@@ -104,6 +106,7 @@ export class SearchResultComponent implements OnChanges {
         tap(() => {
           this.loading.set(true);
           this.failed.set(false);
+          this.failureReason.set(undefined);
         }),
         switchMap(pageNumber =>
           this._dspApiConnection.v2.search.doFulltextSearch(this.query, pageNumber, this.searchInProjectParam)
@@ -124,6 +127,9 @@ export class SearchResultComponent implements OnChanges {
         // that are no longer on screen, and leaving it would break the service's "null means genuinely
         // unknown" contract for as long as the failure state lasts.
         this._resourceResultService.numberOfResults = null;
+        // A rejected query explains itself; the panel says so instead of "try again", which cannot
+        // work for a query the server will keep rejecting (DEV-6866).
+        this.failureReason.set(userFacingReason(error));
         this.loading.set(false);
         this.failed.set(true);
         // Last, so the failure state is committed before the global handler runs and a throw there

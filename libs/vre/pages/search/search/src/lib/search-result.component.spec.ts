@@ -1,11 +1,12 @@
 import { ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ReadResource } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ErrorReportingService } from '@dasch-swiss/vre/core/error-handler';
 import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateModule } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
+import { AjaxError } from 'rxjs/ajax';
 import { SearchResultComponent } from './search-result.component';
 
 /**
@@ -104,6 +105,42 @@ describe('SearchResultComponent — search failure handling (DEV-6866)', () => {
     });
     // Still deliberately silent towards the user: the result list rendered fine.
     expect(handleError).not.toHaveBeenCalled();
+    sub.unsubscribe();
+  });
+
+  it('shows the reason dsp-api gave for rejecting the query (DEV-6866)', () => {
+    // The real body from GET /v2/search/de*, reported as an eternal spinner and then as an unhelpful
+    // "please try again" — advice that cannot work for a query the server will keep rejecting.
+    const ajax = Object.create(AjaxError.prototype) as AjaxError;
+    Object.assign(ajax, {
+      status: 400,
+      message: 'ajax error 400',
+      name: 'AjaxError',
+      response: { message: 'A wildcard search term must contain at least 3 characters besides the wildcard.' },
+    });
+    const rejected = Object.create(ApiResponseError.prototype) as ApiResponseError;
+    Object.assign(rejected, { status: 400, error: ajax, url: '/v2/search/de*', method: 'GET' });
+    doFulltextSearch.mockReturnValue(throwError(() => rejected));
+
+    const { component } = renderComponent('de*');
+    const sub = component.resources$.subscribe();
+
+    expect(component.loading()).toBe(false);
+    expect(component.failed()).toBe(true);
+    expect(component.failureReason()).toBe(
+      'A wildcard search term must contain at least 3 characters besides the wildcard.'
+    );
+    sub.unsubscribe();
+  });
+
+  it('falls back to the generic wording when the failure carries no usable reason', () => {
+    doFulltextSearch.mockReturnValue(throwError(() => new Error('socket hang up')));
+
+    const { component } = renderComponent();
+    const sub = component.resources$.subscribe();
+
+    expect(component.failed()).toBe(true);
+    expect(component.failureReason()).toBeUndefined();
     sub.unsubscribe();
   });
 

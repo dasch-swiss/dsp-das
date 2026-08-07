@@ -3,7 +3,7 @@ import { Component, ErrorHandler, Inject, Input, OnChanges, signal } from '@angu
 import { ActivatedRoute, Router } from '@angular/router';
 import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ErrorReportingService } from '@dasch-swiss/vre/core/error-handler';
+import { ErrorReportingService, userFacingReason } from '@dasch-swiss/vre/core/error-handler';
 import { MultipleViewerService, ResourcesListComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { OntologyService, ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
@@ -31,7 +31,7 @@ import { ProjectPageService } from '../../project-page.service';
     @let data = data$ | async;
     @if (failed()) {
       <app-centered-box>
-        <app-search-failed (retry)="onRetry()" />
+        <app-search-failed [reason]="failureReason()" (retry)="onRetry()" />
       </app-centered-box>
     } @else if (data) {
       @if (userCanViewResources) {
@@ -67,6 +67,8 @@ export class ResourcesListFetcherComponent implements OnChanges {
   userCanViewResources = true;
 
   readonly failed = signal(false);
+  /** dsp-api's own account of the failure, when it gave one fit to show. */
+  readonly failureReason = signal<string | undefined>(undefined);
 
   /** Re-triggers the load after a failure. Replays on subscribe so the initial load runs too. */
   private readonly _retrySubject = new BehaviorSubject<void>(undefined);
@@ -118,6 +120,7 @@ export class ResourcesListFetcherComponent implements OnChanges {
   ngOnChanges() {
     this._resourceResult.updatePageIndex(0);
     this.failed.set(false);
+    this.failureReason.set(undefined);
 
     this.data$ = this._retrySubject.pipe(switchMap(() => this._data$()));
   }
@@ -182,6 +185,9 @@ export class ResourcesListFetcherComponent implements OnChanges {
         // that are no longer on screen, and leaving it would break the service's "null means genuinely
         // unknown" contract for as long as the failure state lasts.
         this._resourceResult.numberOfResults = null;
+        // A rejected request explains itself; the panel says so instead of "try again", which cannot
+        // work for a request the server will keep rejecting (DEV-6866).
+        this.failureReason.set(userFacingReason(error));
         this.failed.set(true);
         // Last, so the failure state is committed before the global handler runs and a throw there
         // cannot bring the eternal spinner back (DEV-6872). It would still error this stream and
