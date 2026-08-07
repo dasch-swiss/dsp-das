@@ -8,6 +8,7 @@ import { OntologyCache } from '../../../cache/ontology-cache/OntologyCache';
 import { KnoraApiConfig } from '../../../knora-api-config';
 import { KnoraApiConnection } from '../../../knora-api-connection';
 import { ApiResponseError } from '../../../models/api-response-error';
+import { ListConversionUtil } from '../../../models/v2/lists/list-conversion-util';
 import { CreateResource } from '../../../models/v2/resources/create/create-resource';
 import { DeleteResource } from '../../../models/v2/resources/delete/delete-resource';
 import { DeleteResourceResponse } from '../../../models/v2/resources/delete/delete-resource-response';
@@ -38,6 +39,7 @@ describe('ResourcesEndpoint', () => {
 
   let getResourceClassDefinitionFromCacheSpy: jest.SpyInstance;
   let getListNodeFromCacheSpy: jest.SpyInstance;
+  let getListNodesFromCacheSpy: jest.SpyInstance;
 
   let ajaxMock: AjaxMock;
 
@@ -56,6 +58,10 @@ describe('ResourcesEndpoint', () => {
       .spyOn(ListNodeV2Cache.prototype, 'getNode')
       .mockImplementation((listNodeIri: string) => of(MockList.mockNode(listNodeIri)));
 
+    getListNodesFromCacheSpy = jest
+      .spyOn(ListNodeV2Cache.prototype, 'getListNodes')
+      .mockImplementation((rootNodeIri: string) => of(ListConversionUtil.collectNodes(MockList.mockList(rootNodeIri))));
+
     knoraApiConnection = new KnoraApiConnection(config);
   });
 
@@ -63,6 +69,7 @@ describe('ResourcesEndpoint', () => {
     ajaxMock.cleanup();
     getResourceClassDefinitionFromCacheSpy.mockRestore();
     getListNodeFromCacheSpy.mockRestore();
+    getListNodesFromCacheSpy.mockRestore();
   });
 
   describe('method getResource', () => {

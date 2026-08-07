@@ -6,6 +6,7 @@ import { MockOntology } from '../../../../test/data/api/v2/mock-ontology';
 import { MockOntologyAssertions } from '../../../../test/data/api/v2/mock-ontology-assertions';
 import { KnoraApiConfig } from '../../../knora-api-config';
 import { KnoraApiConnection } from '../../../knora-api-connection';
+import { ListConversionUtil } from '../lists/list-conversion-util';
 import { ResourcesConversionUtil } from './ResourcesConversionUtil';
 import { ReadResource } from './read/read-resource';
 import { ReadResourceSequence } from './read/read-resource-sequence';
@@ -29,6 +30,7 @@ describe('ResourcesConversionUtil', () => {
 
   let getResourceClassDefinitionFromCacheSpy: jest.SpyInstance;
   let getListNodeFromCacheSpy: jest.SpyInstance;
+  let getListNodesFromCacheSpy: jest.SpyInstance;
 
   const jsonConvert: JsonConvert = new JsonConvert(
     OperationMode.ENABLE,
@@ -52,11 +54,18 @@ describe('ResourcesConversionUtil', () => {
       .mockImplementation((listNodeIri: string) => {
         return of(MockList.mockNode(listNodeIri));
       });
+
+    getListNodesFromCacheSpy = jest
+      .spyOn(knoraApiConnection.v2.listNodeCache, 'getListNodes')
+      .mockImplementation((rootNodeIri: string) => {
+        return of(ListConversionUtil.collectNodes(MockList.mockList(rootNodeIri)));
+      });
   });
 
   afterEach(() => {
     getResourceClassDefinitionFromCacheSpy.mockRestore();
     getListNodeFromCacheSpy.mockRestore();
+    getListNodesFromCacheSpy.mockRestore();
   });
 
   describe('Method parseResourceSequence()', () => {
@@ -317,9 +326,12 @@ describe('ResourcesConversionUtil', () => {
         expect((listVals[0] as ReadListValue).listNode).toEqual('http://rdfh.ch/lists/0001/treeList01');
         expect((listVals[0] as ReadListValue).listNodeLabel).toEqual('Tree list node 01');
 
-        expect(getListNodeFromCacheSpy).toHaveBeenCalledTimes(2);
-        expect(getListNodeFromCacheSpy).toHaveBeenCalledWith('http://rdfh.ch/lists/0001/treeList01');
-        expect(getListNodeFromCacheSpy).toHaveBeenCalledWith('http://rdfh.ch/lists/0001/otherTreeList01');
+        // The list root is derived from the ontology (guiAttributes: hlist=<root>), so the label
+        // is read out of a single whole-list fetch per list — no per-leaf /v2/node request.
+        expect(getListNodeFromCacheSpy).not.toHaveBeenCalled();
+
+        expect(getListNodesFromCacheSpy).toHaveBeenCalledWith('http://rdfh.ch/lists/0001/treeList');
+        expect(getListNodesFromCacheSpy).toHaveBeenCalledWith('http://rdfh.ch/lists/0001/otherTreeList');
 
         expect(getResourceClassDefinitionFromCacheSpy).toHaveBeenCalledTimes(2);
         expect(getResourceClassDefinitionFromCacheSpy).toHaveBeenCalledWith(

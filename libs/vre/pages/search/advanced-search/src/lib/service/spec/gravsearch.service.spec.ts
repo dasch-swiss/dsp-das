@@ -4,6 +4,7 @@ import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services
 import { createMockLocalizationService } from '@dasch-swiss/vre/shared/app-helper-services/testing';
 import { TranslateLoader } from '@ngx-translate/core';
 import { of } from 'rxjs';
+import { RDFS_LABEL } from '../../constants';
 import { IriLabelPair, NodeValue, OrderByItem, Predicate, StatementElement, StringValue } from '../../model';
 import { Operator } from '../../operators.config';
 import { englishLabels, makeIriLabelPair } from '../../testing/test-data-builders';
@@ -251,10 +252,10 @@ CONSTRUCT {
 ?mainRes knora-api:isMainResource true .
 
 } WHERE {
+?mainRes a knora-api:Resource .
 ?mainRes rdfs:label ?label .
-?mainRes <http://www.w3.org/2000/01/rdf-schema#label> ?res0 .
 
-FILTER (?res0 = "foo") .
+FILTER (?label = "foo") .
 
 }
 
@@ -274,7 +275,7 @@ OFFSET 0`;
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
     // Only check the operator-specific FILTER clause
-    expect(query).toContain('FILTER (?res0 != "foo")');
+    expect(query).toContain('FILTER (?label != "foo")');
   });
 
   it('should generate query with isLike operator', () => {
@@ -287,7 +288,7 @@ OFFSET 0`;
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
     // Only check the operator-specific FILTER clause
-    expect(query).toContain('FILTER regex(?res0, "foo", "i")');
+    expect(query).toContain('FILTER regex(?label, "foo", "i")');
   });
 
   it('should generate query with matches operator', () => {
@@ -314,7 +315,7 @@ OFFSET 0`;
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
-    expect(query).toContain('FILTER regex(?res0, "a.b*c(d)", "i")');
+    expect(query).toContain('FILTER regex(?label, "a.b*c(d)", "i")');
   });
 
   it('quadruples user-typed backslashes and triples-escapes quotes in label isLike pattern', () => {
@@ -331,7 +332,44 @@ OFFSET 0`;
 
     // Runtime wire string inside the FILTER literal: say \\\"hi\\\" \\\\*
     // (3 backslashes per quote, 4 backslashes per user backslash)
-    expect(query).toContain('FILTER regex(?res0, "say \\\\\\"hi\\\\\\" \\\\\\\\*", "i")');
+    expect(query).toContain('FILTER regex(?label, "say \\\\\\"hi\\\\\\" \\\\\\\\*", "i")');
+  });
+
+  it('sorts on the shared ?label variable when ordering by rdfs:label (not the unbound ?resN)', () => {
+    // A ResourceLabel statement filters on the assembly's `?label` and does not bind a `?resN` object
+    // variable, so an active sort on rdfs:label must ORDER BY on `?label` — ordering on `?resN` would
+    // reference an out-of-scope variable and make the query invalid.
+    const labelSnapshot = {
+      selectedOntology: { iri: webernOntologyIri, label: 'webern-onto' },
+      selectedResourceClass: { iri: '', label: 'All resource classes' },
+      statementElements: [
+        {
+          id: 'label-stmt',
+          statementLevel: 0,
+          _selectedPredicate: {
+            iri: RDFS_LABEL,
+            label: 'Resource Label',
+            objectValueType: 'http://api.knora.org/ontology/knora-api/v2#ResourceLabel',
+            isLinkProperty: false,
+          },
+          _selectedOperator: 'is like',
+          _selectedObjectNode: { statementId: 'label-stmt', _value: 'foo' },
+        },
+      ],
+      orderBy: [],
+    };
+    setupTestFromJson(searchStateService, JSON.stringify(labelSnapshot), makeIriLabelPair('', 'All resource classes'));
+
+    const activeOrderBy = [new OrderByItem(RDFS_LABEL, [], false, true)];
+    const query = gravsearchService.generateGravSearchQuery(
+      searchStateService.validStatementElements,
+      undefined,
+      '',
+      activeOrderBy
+    );
+
+    expect(query).toContain('ORDER BY ASC(?label)');
+    expect(query).not.toContain('?res0');
   });
 });
 
@@ -443,6 +481,7 @@ CONSTRUCT {
 ?mainRes <http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#hasPlacePublisher> ?res0 .
 
 } WHERE {
+?mainRes a knora-api:Resource .
 ?mainRes rdfs:label ?label .
 ?mainRes <http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#hasPlacePublisher> ?res0 .
 ?res0 <http://api.knora.org/ontology/knora-api/v2#valueAsString> ?res0val .
@@ -465,8 +504,17 @@ OFFSET 0`;
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
-    // Only check the operator-specific FILTER clause
-    expect(query).toContain('FILTER (?res0val != "Wien"^^<http://www.w3.org/2001/XMLSchema#string> )');
+    // A multi-valued property "does not equal X" negates over the WHOLE property: projection + value
+    // binding + the positive (=) filter live inside FILTER NOT EXISTS, so a resource with X among
+    // several values is excluded. A bare `?res0val != X` would leak (another value satisfies it) — DEV-6889.
+    expect(normalizeQuery(query)).toContain(
+      normalizeQuery(`FILTER NOT EXISTS {
+?mainRes <http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#hasPlacePublisher> ?res0 .
+?res0 <http://api.knora.org/ontology/knora-api/v2#valueAsString> ?res0val .
+FILTER (?res0val = "Wien"^^<http://www.w3.org/2001/XMLSchema#string> ) .
+}`)
+    );
+    expect(query).not.toContain('!=');
   });
 
   it('should generate query with isLike operator', () => {
@@ -689,9 +737,11 @@ OFFSET 0`;
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
-    // Only check the operator-specific FILTER clause
-    expect(query).toContain(
-      'FILTER NOT EXISTS { ?res0 <http://api.knora.org/ontology/knora-api/v2#listValueAsListNode> <http://rdfh.ch/lists/0806/8mpYXDnYRYi_9HAHXzmzIA> . }'
+    // The property projection now lives INSIDE the NOT EXISTS block, so ?res0 is existentially
+    // quantified there — a resource with a *different* list value no longer slips through (DEV-6889).
+    expect(normalizeQuery(query)).toContain(
+      normalizeQuery(`FILTER NOT EXISTS { ?mainRes <http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#hasSourceDescMainWritingInstr> ?res0 .
+?res0 <http://api.knora.org/ontology/knora-api/v2#listValueAsListNode> <http://rdfh.ch/lists/0806/8mpYXDnYRYi_9HAHXzmzIA> . }`)
     );
   });
 });
@@ -834,8 +884,16 @@ OFFSET 0`;
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements);
 
-    // Only check the operator-specific FILTER clause
-    expect(query).toContain('FILTER (?res0val != "1"^^<http://www.w3.org/2001/XMLSchema#integer> )');
+    // Negates over the whole property (projection + binding + positive `=` inside FILTER NOT EXISTS),
+    // so a bare `!=` no longer leaks on multi-valued properties (DEV-6889).
+    expect(normalizeQuery(query)).toContain(
+      normalizeQuery(`FILTER NOT EXISTS {
+?mainRes <http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2#hasMnr> ?res0 .
+?res0 <http://api.knora.org/ontology/knora-api/v2#intValueAsInt> ?res0val .
+FILTER (?res0val = "1"^^<http://www.w3.org/2001/XMLSchema#integer> ) .
+}`)
+    );
+    expect(query).not.toContain('!=');
   });
 
   it('emits ORDER BY on the active predicate index when an orderBy item is active (DEV-6576 D1)', () => {
@@ -967,6 +1025,80 @@ OFFSET 0`;
   });
 });
 
+describe('GravsearchService — main-resource type anchor (DEV-6889)', () => {
+  // `?mainRes` must be typed by *something* in the WHERE clause, or dsp-api's Gravsearch type
+  // inspection rejects the query with HTTP 400 ("Types could not be determined for … ?mainRes").
+  // A selected class or a matchFulltext term type it; `rdfs:label` and (in general) property
+  // statements do not guarantee it. So the generator must emit the generic `?mainRes a
+  // knora-api:Resource .` anchor exactly when there is no class AND no fulltext term.
+  let gravsearchService: GravsearchService;
+  let ontologyDataService: OntologyDataService;
+
+  const ontologyIri = 'http://api.stage.dasch.swiss/ontology/0806/webern-onto/v2';
+  const labelPredicate = 'http://www.w3.org/2000/01/rdf-schema#label';
+
+  function labelStatement(operator: Operator, value = 'foo'): StatementElement[] {
+    const stm = new StatementElement();
+    (stm as any).id = 'label-stmt';
+    (stm as any).statementLevel = 0;
+    (stm as any)._selectedPredicate = new Predicate(
+      labelPredicate,
+      englishLabels('Resource Label'),
+      'http://api.knora.org/ontology/knora-api/v2#ResourceLabel',
+      false
+    );
+    (stm as any)._selectedOperator = operator;
+    (stm as any)._selectedObjectNode = new StringValue('label-stmt', value);
+    return [stm];
+  }
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        GravsearchService,
+        OntologyDataService,
+        { provide: DspApiConnectionToken, useValue: {} },
+        { provide: LocalizationService, useValue: mockLocalizationService },
+        { provide: TranslateLoader, useValue: mockTranslateLoader },
+      ],
+    });
+    gravsearchService = TestBed.inject(GravsearchService);
+    ontologyDataService = TestBed.inject(OntologyDataService);
+    jest
+      .spyOn(ontologyDataService, 'selectedOntology', 'get')
+      .mockReturnValue({ iri: ontologyIri, label: 'webern-onto' });
+    jest.spyOn(ontologyDataService, 'classIris', 'get').mockReturnValue([`${ontologyIri}#Person`]);
+  });
+
+  it('emits the generic type anchor for a class-less, fulltext-less label "is like" search (the DEV-6889 400 case)', () => {
+    const query = gravsearchService.generateGravSearchQuery(labelStatement(Operator.IsLike));
+    expect(query).toContain('?mainRes a knora-api:Resource .');
+  });
+
+  it('emits the generic type anchor for a class-less label "equals" search', () => {
+    const query = gravsearchService.generateGravSearchQuery(labelStatement(Operator.Equals));
+    expect(query).toContain('?mainRes a knora-api:Resource .');
+  });
+
+  it('emits the generic type anchor for an empty class-less, fulltext-less search', () => {
+    const query = gravsearchService.generateGravSearchQuery([]);
+    expect(query).toContain('?mainRes a knora-api:Resource .');
+  });
+
+  it('uses the class restriction as the anchor and omits the generic one when a class is selected', () => {
+    const classIri = `${ontologyIri}#Person`;
+    const query = gravsearchService.generateGravSearchQuery(labelStatement(Operator.IsLike), undefined, classIri);
+    expect(query).toContain(`?mainRes a <${classIri}> .`);
+    expect(query).not.toContain('?mainRes a knora-api:Resource .');
+  });
+
+  it('omits the generic anchor when a fulltext term is present (matchFulltext types ?mainRes; anchor pessimizes the backend)', () => {
+    const query = gravsearchService.generateGravSearchQuery([], 'hello');
+    expect(query).toContain('FILTER knora-api:matchFulltext(?mainRes, "hello")');
+    expect(query).not.toContain('a knora-api:Resource');
+  });
+});
+
 describe('GravsearchService — fulltextTerm parameter', () => {
   let gravsearchService: GravsearchService;
   let searchStateService: StatementStore;
@@ -1068,7 +1200,9 @@ describe('GravsearchService — fulltextTerm parameter', () => {
 
     const query = gravsearchService.generateGravSearchQuery(searchStateService.validStatementElements, 'foo');
     const matchesIdx = query.indexOf('matchFulltext');
-    const chipIdx = query.indexOf('?res0');
+    // The label chip now filters on the assembly's `?label` var (no duplicate rdfs:label projection),
+    // so use the chip's FILTER as the marker for "the chip statement".
+    const chipIdx = query.indexOf('FILTER (?label = "bar")');
     expect(matchesIdx).toBeGreaterThan(-1);
     expect(chipIdx).toBeGreaterThan(-1);
     expect(matchesIdx).toBeLessThan(chipIdx);
@@ -1106,7 +1240,7 @@ describe('GravsearchService — fulltextTerm parameter', () => {
 
     expect(query).toContain('FILTER knora-api:matchFulltext(?mainRes, "foo")');
     expect(query).toContain(`?mainRes a <${ontologyIri}#Person> .`);
-    expect(query).toContain('FILTER (?res0 = "bar")');
+    expect(query).toContain('FILTER (?label = "bar")');
   });
 
   it('generates a project-wide fulltext query (no PREFIX, no throw) when no data model is selected', () => {

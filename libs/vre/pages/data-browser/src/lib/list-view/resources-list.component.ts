@@ -12,15 +12,18 @@ import { ResourceListComponent } from './resource-list.component';
     @if (loading) {
       <app-progress-indicator data-testid="loader" />
     } @else {
-      @if (resourceResultService.numberOfResults > resourceResultService.MAX_RESULTS_PER_PAGE) {
-        <app-pager
-          (pageIndexChanged)="updatePageIndex($event)"
-          [numberOfAllResults]="resourceResultService.numberOfResults" />
+      @let numberOfResults = resourceResultService.numberOfResults;
+      @if (numberOfResults === null) {
+        <!-- The count query failed. Say so rather than asserting a total we do not have: the pager
+             cannot be sized either, so paging is unavailable until the next successful load. -->
+        <div class="results-count" data-cy="count-unavailable">
+          {{ 'pages.dataBrowser.resourcesList.countUnavailable' | translate }}
+        </div>
+      } @else if (numberOfResults > resourceResultService.MAX_RESULTS_PER_PAGE) {
+        <app-pager (pageIndexChanged)="updatePageIndex($event)" [numberOfAllResults]="numberOfResults" />
       } @else {
         <div class="results-count">
-          {{
-            'pages.dataBrowser.resourcesList.resultsCount' | translate: { count: resourceResultService.numberOfResults }
-          }}
+          {{ 'pages.dataBrowser.resourcesList.resultsCount' | translate: { count: numberOfResults } }}
         </div>
       }
       <app-resource-list [resources]="resources" [showProjectShortname]="showProjectShortname" />

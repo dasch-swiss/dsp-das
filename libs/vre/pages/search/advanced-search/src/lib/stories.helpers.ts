@@ -1,11 +1,13 @@
 import { importProvidersFrom } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
+import { StringLiteralV2 } from '@dasch-swiss/dsp-js';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { TranslateLoader, TranslateModule, TranslationObject } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { IriLabelPair, OrderByItem } from './model';
 import { DerivedSearchStateService } from './service/derived-search-state.service';
+import { ListNodeLabelResolver } from './service/list-node-label.resolver';
 import { OntologyDataService } from './service/ontology-data.service';
 import { SearchFlowLogger } from './service/search-flow-logger.service';
 import { SearchUrlSyncService } from './service/search-url-sync.service';
@@ -45,8 +47,19 @@ const searchFlowLoggerStub = {
 // namespace so the `translate` pipe renders the real UI text (not the raw key) in stories and their
 // play() assertions. Keep in sync with apps/dsp-app/src/assets/i18n/en.json.
 const STORY_TRANSLATIONS = {
+  ui: {
+    common: {
+      actions: {
+        retry: 'Retry',
+      },
+    },
+  },
   pages: {
     search: {
+      searchFailed: {
+        title: 'Search failed',
+        message: 'Something went wrong and the search could not be completed. Please try again.',
+      },
       advancedSearch: {
         allResourceClasses: 'All resources',
         dataModel: 'Data model',
@@ -170,6 +183,30 @@ export const makeDerivedSearchStateServiceStub = (
 export const PROPERTY_FORM_MANAGER_STORY_PROVIDERS = [
   { provide: DerivedSearchStateService, useValue: makeDerivedSearchStateServiceStub() },
   StatementDraftStore,
+];
+
+/**
+ * Build a `ListNodeLabelResolver` stub whose `getLabels` returns the given static map. Stories that
+ * exercise list-value chips (DEV-6857) can pass a pre-populated `nodeIri → labels[]` map so the pipe
+ * resolves the multi-language labels synchronously, without needing a real list fetch.
+ */
+export const makeListNodeLabelResolverStub = (
+  labelsByNodeIri: Record<string, StringLiteralV2[]> = {}
+): Partial<ListNodeLabelResolver> => ({
+  getLabels: (_rootIri: string, nodeIri: string) => labelsByNodeIri[nodeIri],
+  changes$: of(undefined),
+});
+
+/**
+ * Default chip-label story providers: the manager pair above plus an ontology stub and an empty list
+ * resolver, so the DEV-6857-aware ChipLabelPipe can be constructed by any chip story out of the box.
+ * Individual stories can override either service by placing a more specific provider *after* this
+ * spread in their story's `applicationConfig`.
+ */
+export const CHIP_LABEL_STORY_PROVIDERS = [
+  ...PROPERTY_FORM_MANAGER_STORY_PROVIDERS,
+  { provide: OntologyDataService, useValue: makeOntologyDataServiceStub() },
+  { provide: ListNodeLabelResolver, useValue: makeListNodeLabelResolverStub() },
 ];
 
 export const makeDspApiConnectionStub = (partial: Record<string, unknown> = {}) => ({

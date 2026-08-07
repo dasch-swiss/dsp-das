@@ -1,5 +1,5 @@
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, ErrorHandler, inject, NgZone, provideAppInitializer } from '@angular/core';
+import { ApplicationConfig, inject, provideAppInitializer } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withComponentInputBinding, withRouterConfig } from '@angular/router';
 import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
@@ -12,11 +12,10 @@ import {
   DspAppConfigToken,
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/core/config';
-import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
+import { provideAppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
 import { apiConnectionTokenProvider } from '@dasch-swiss/vre/pages/user-settings/user';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { provideCalendarDateAdapter } from '@dasch-swiss/vre/ui/date-picker';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TRANSLATE_HTTP_LOADER_CONFIG } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
@@ -75,11 +74,7 @@ export const appConfig: ApplicationConfig = {
       useFactory: (configService: AppConfigService) => configService.dspApiConfig.apiUrl,
       deps: [AppConfigService],
     },
-    {
-      provide: ErrorHandler,
-      useClass: AppErrorHandler,
-      deps: [NotificationService, AppConfigService, NgZone],
-    },
+    ...provideAppErrorHandler(),
     LocalizationService,
     ...provideCalendarDateAdapter(),
   ],

@@ -12,13 +12,12 @@ import { FormControl } from '@angular/forms';
 import { MatError } from '@angular/material/form-field';
 import { KnoraApiConnection, ListNodeV2WithAllLanguages, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { listRootIriFromGuiAttributes } from '@dasch-swiss/vre/shared/app-common';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NestedMenuComponent } from '@dasch-swiss/vre/ui/nested-menu';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { combineLatest } from 'rxjs';
 import { filter, startWith, switchMap } from 'rxjs/operators';
-
-const HLIST_PREFIX = 'hlist=<';
 
 @Component({
   selector: 'app-list-value',
@@ -100,10 +99,7 @@ export class ListValueComponent implements OnInit {
   }
 
   private _rootNodeIri(): string | undefined {
-    // guiAttributes[0] has shape `hlist=<iri>` for a list-value property.
-    const raw = this.propertyDef.guiAttributes[0];
-    if (!raw?.startsWith(HLIST_PREFIX) || !raw.endsWith('>')) return undefined;
-    return raw.substring(HLIST_PREFIX.length, raw.length - 1);
+    return listRootIriFromGuiAttributes(this.propertyDef.guiAttributes);
   }
 
   private _lookForNode(response: ListNodeV2WithAllLanguages): boolean {

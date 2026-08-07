@@ -433,6 +433,10 @@
         "placeholder": "Inserisci termine di ricerca..."
       },
       "noResultsFound": "Nessun risultato trovato",
+      "searchFailed": {
+        "title": "Ricerca non riuscita",
+        "message": "Si è verificato un errore e la ricerca non è stata completata. Riprova."
+      },
       "searchTips": {
         "title": "Suggerimenti per la ricerca",
         "exactPhrases": "Usa le virgolette per frasi esatte: \"down the rabbit hole\"",
@@ -513,7 +517,8 @@
         "resourcesMustBeSameProject": "Le risorse devono appartenere allo stesso progetto"
       },
       "resourcesList": {
-        "resultsCount": "{{count}} risultati"
+        "resultsCount": "{{count}} risultati",
+        "countUnavailable": "Numero di risultati non disponibile"
       },
       "resourcesListFetcher": {
         "noResourcesFound": "Nessuna risorsa trovata per questa classe.",

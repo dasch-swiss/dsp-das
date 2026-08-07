@@ -4,6 +4,7 @@ import { ListNodeV2Cache } from '../../../cache/ListNodeV2Cache';
 import { OntologyCache } from '../../../cache/ontology-cache/OntologyCache';
 import { ResourceClassAndPropertyDefinitions } from '../../../cache/ontology-cache/resource-class-and-property-definitions';
 import { Constants } from '../Constants';
+import { PropertyDefinition } from '../ontologies/property-definition';
 import { ResourcePropertyDefinition } from '../ontologies/resource-property-definition';
 import { CountQueryResponse } from '../search/count-query-response';
 import { ReadResource } from './read/read-resource';
@@ -43,6 +44,25 @@ import { ReadValue } from './values/read/read-value';
  * @category Internal
  */
 export namespace ResourcesConversionUtil {
+  const HLIST_PREFIX = 'hlist=<';
+
+  /**
+   * Derives a list's root node IRI from a list-value property's definition.
+   *
+   * A list-value property carries its list root in `guiAttributes[0]`, shaped `hlist=<iri>`.
+   * Deriving the root from the definition already in memory lets the list-value case fetch the
+   * whole list once and read leaf labels locally, instead of a `/v2/node` request per leaf.
+   *
+   * @param propDef the property definition of the list-value property.
+   * @returns the root node IRI, or `undefined` if it cannot be derived.
+   */
+  const listRootNodeIri = (propDef: PropertyDefinition | undefined): string | undefined => {
+    if (!(propDef instanceof ResourcePropertyDefinition)) return undefined;
+    const raw = propDef.guiAttributes[0];
+    if (!raw?.startsWith(HLIST_PREFIX) || !raw.endsWith('>')) return undefined;
+    return raw.substring(HLIST_PREFIX.length, raw.length - 1);
+  };
+
   /**
    * Given a JSON-LD representing zero, one or more resources, converts it to an array of ReadResource.
    *
@@ -401,14 +421,36 @@ export namespace ResourcesConversionUtil {
 
       case Constants.ListValue: {
         const listValue = handleSimpleValue(valueJsonld, ReadListValue, jsonConvert);
+        const rootNodeIri = listRootNodeIri(entitiyDefs.properties[propIri]);
         value = listValue.pipe(
           mergeMap((listVal: ReadListValue) => {
-            // get referred list node's label
-            return listNodeCache.getNode(listVal.listNode).pipe(
-              map(listNode => {
-                listVal.listNodeLabel = listNode.label;
-                listVal.strval = listNode.label;
-                return listVal;
+            // Resolve the referred list node's label from the leaf node directly
+            // (issues a /v2/node request). Used as a fallback when the root cannot
+            // be derived from the ontology, or the leaf is absent from the list.
+            const resolveFromLeaf = () =>
+              listNodeCache.getNode(listVal.listNode).pipe(
+                map(listNode => {
+                  listVal.listNodeLabel = listNode.label;
+                  listVal.strval = listNode.label;
+                  return listVal;
+                })
+              );
+
+            if (rootNodeIri === undefined) {
+              return resolveFromLeaf();
+            }
+
+            // Derive the root from the ontology and read the leaf's label out of the single
+            // whole-list fetch, so no per-leaf /v2/node request is issued.
+            return listNodeCache.getListNodes(rootNodeIri).pipe(
+              mergeMap(nodes => {
+                const leaf = nodes.find(node => node.id === listVal.listNode);
+                if (leaf === undefined) {
+                  return resolveFromLeaf();
+                }
+                listVal.listNodeLabel = leaf.label;
+                listVal.strval = leaf.label;
+                return of(listVal);
               })
             );
           })

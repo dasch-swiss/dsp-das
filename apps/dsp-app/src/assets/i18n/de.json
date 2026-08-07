@@ -433,6 +433,10 @@
         "placeholder": "Suchbegriff eingeben..."
       },
       "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchFailed": {
+        "title": "Suche fehlgeschlagen",
+        "message": "Etwas ist schiefgelaufen und die Suche konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut."
+      },
       "searchTips": {
         "title": "Suchtipps",
         "exactPhrases": "Verwenden Sie Anführungszeichen für exakte Phrasen: \"down the rabbit hole\"",
@@ -513,7 +517,8 @@
         "resourcesMustBeSameProject": "Die Ressourcen müssen zum selben Projekt gehören"
       },
       "resourcesList": {
-        "resultsCount": "{{count}} Ergebnisse"
+        "resultsCount": "{{count}} Ergebnisse",
+        "countUnavailable": "Anzahl der Ergebnisse nicht verfügbar"
       },
       "resourcesListFetcher": {
         "noResourcesFound": "Keine Ressourcen für diese Klasse gefunden.",

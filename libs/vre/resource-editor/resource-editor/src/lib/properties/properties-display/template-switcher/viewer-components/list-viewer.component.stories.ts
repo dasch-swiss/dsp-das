@@ -10,6 +10,7 @@ import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular'
 import { of } from 'rxjs';
 import { expect } from 'storybook/test';
 import { ResourceFetcherService } from '../../../../representation/resource-fetcher.service';
+import { PropertyValueService } from '../../property-value/property-value.service';
 
 import { ListViewerComponent } from './list-viewer.component';
 
@@ -50,7 +51,6 @@ const rootNode = makeListNode(
 const dspApiConnectionStub = {
   v2: {
     list: {
-      getNodeWithAllLanguages: () => of(rootNode.children[0].children[0]),
       getListWithAllLanguages: () => of(rootNode),
     },
   },
@@ -70,7 +70,11 @@ const localizationServiceStub: Partial<LocalizationService> = {
 };
 
 const makeValue = (): ReadListValue => ({ listNode: 'http://rdfh.ch/lists/0001/itemA1' }) as any;
-const makePropertyDef = (): ResourcePropertyDefinition => ({ id: 'http://example.org/listProp' }) as any;
+const makePropertyDef = (): ResourcePropertyDefinition =>
+  ({
+    id: 'http://example.org/listProp',
+    guiAttributes: ['hlist=<http://rdfh.ch/lists/0001/root>'],
+  }) as any;
 
 const meta: Meta<ListViewerComponent> = {
   title:
@@ -82,6 +86,9 @@ const meta: Meta<ListViewerComponent> = {
         { provide: DspApiConnectionToken, useValue: dspApiConnectionStub },
         { provide: ResourceFetcherService, useValue: resourceFetcherServiceStub },
         { provide: LocalizationService, useValue: localizationServiceStub },
+        // The viewer resolves its list through PropertyValueService (provided per property),
+        // which reads getListWithAllLanguages from the connection stub above.
+        PropertyValueService,
       ],
     }),
   ],

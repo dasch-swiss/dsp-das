@@ -2,6 +2,9 @@ import { Constants, StringLiteralV2 } from '@dasch-swiss/dsp-js';
 
 export const ResourceLabel = `${Constants.KnoraApiV2 + Constants.HashDelimiter}ResourceLabel`;
 export const RDFS_LABEL = 'rdfs:label';
+/** The `rdfs:label` variable that the query assembly always binds on the main resource; a label
+ *  comparison filters on it directly instead of re-projecting `rdfs:label` (which would duplicate it). */
+export const LABEL_VARIABLE = '?label';
 export const MAIN_RESOURCE_PLACEHOLDER = '?mainRes';
 export const RESOURCE_PLACEHOLDER = '?res';
 export const VALUE_SUFFIX = 'val';

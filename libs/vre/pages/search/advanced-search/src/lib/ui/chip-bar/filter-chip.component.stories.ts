@@ -5,9 +5,11 @@ import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular'
 import { expect } from 'storybook/test';
 import { StatementElement } from '../../model';
 import { Operator } from '../../operators.config';
+import { ListNodeLabelResolver } from '../../service/list-node-label.resolver';
 import { OntologyDataService } from '../../service/ontology-data.service';
 import {
   makeDspApiConnectionStub,
+  makeListNodeLabelResolverStub,
   makeOntologyDataServiceStub,
   PROPERTY_FORM_MANAGER_STORY_PROVIDERS,
   STORY_PROVIDERS,
@@ -59,6 +61,7 @@ const baseProviders = [
   importProvidersFrom(OverlayModule),
   { provide: DspApiConnectionToken, useValue: makeDspApiConnectionStub() },
   { provide: OntologyDataService, useValue: makeOntologyDataServiceStub() },
+  { provide: ListNodeLabelResolver, useValue: makeListNodeLabelResolverStub() },
   ...PROPERTY_FORM_MANAGER_STORY_PROVIDERS,
 ];
 
