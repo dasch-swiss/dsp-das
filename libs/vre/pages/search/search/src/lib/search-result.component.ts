@@ -126,8 +126,9 @@ export class SearchResultComponent implements OnChanges {
         this._resourceResultService.numberOfResults = null;
         this.loading.set(false);
         this.failed.set(true);
-        // Last, so that the failure state stands on its own: a throw inside the global handler must
-        // not be able to take the retry panel down with it and restore the eternal spinner (DEV-6872).
+        // Last, so the failure state is committed before the global handler runs and a throw there
+        // cannot bring the eternal spinner back (DEV-6872). It would still error this stream and
+        // leave retry dead, which is why `AppErrorHandler.handleError` is written not to throw.
         this._errorHandler.handleError(error);
         return of(null);
       })

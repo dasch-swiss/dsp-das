@@ -3,6 +3,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
+import { reasonFromErrorBody } from './api-error-reason';
 
 /**
  * How long the same fingerprint stays suppressed after being reported, per browser tab.
@@ -143,32 +144,16 @@ export class ErrorReportingService {
    */
   private static _reasonOf(error: unknown): string | undefined {
     if (error instanceof ApiResponseError) {
-      return typeof error.error === 'string'
-        ? error.error || undefined
-        : ErrorReportingService._reasonFromBody(error.error.response);
+      // `error` is the wrapped `AjaxError` for a JS-LIB failure and a plain string otherwise, where it
+      // defaults to empty. The reader takes either and maps an empty one to undefined.
+      return reasonFromErrorBody(typeof error.error === 'string' ? error.error : error.error.response);
     }
 
     if (error instanceof HttpErrorResponse) {
-      return ErrorReportingService._reasonFromBody(error.error);
+      return reasonFromErrorBody(error.error);
     }
 
     return undefined;
-  }
-
-  /** dsp-api answers with the JSON-LD `knora-api:error`, a `{ message }`, an `{ error }`, or a bare string. */
-  private static _reasonFromBody(body: unknown): string | undefined {
-    if (typeof body === 'string') {
-      return body || undefined;
-    }
-
-    if (!body || typeof body !== 'object') {
-      return undefined;
-    }
-
-    const shape = body as { 'knora-api:error'?: unknown; message?: unknown; error?: unknown };
-    return [shape['knora-api:error'], shape.message, shape.error].find(
-      (candidate): candidate is string => typeof candidate === 'string' && candidate.length > 0
-    );
   }
 
   private static _asApiFailure(error: unknown): ApiFailure | null {
