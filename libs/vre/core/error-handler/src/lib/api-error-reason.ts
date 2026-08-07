@@ -50,8 +50,17 @@ export function reasonFromApiError(error: unknown): string | undefined {
  */
 const REASON_BEARING_STATUSES = new Set([400, 409]);
 
-/** dsp-api prefixes some 400s with its exception class; the user only wants what follows it. */
-const DSP_BAD_REQUEST_PREFIX = /dsp\.errors\.BadRequestException:(.*)$/;
+/** dsp-api prefixes its own exceptions with their class; the user only wants what follows it. */
+const DSP_EXCEPTION_PREFIX = /^dsp\.errors\.\w+:\s*([\s\S]*)$/;
+
+/**
+ * A package-qualified exception class still leading the text once dsp's own prefix is gone — dsp-api
+ * forwards some failures verbatim from the triplestore, so a malformed Lucene term comes back as
+ * `org.apache.jena.query.text.TextIndexParseException: Text search parse error: Cannot parse …`.
+ * That names internals rather than anything the user can act on, so it is withheld even though the
+ * status says the request was bad, and the caller falls back to its own wording.
+ */
+const FOREIGN_EXCEPTION = /^[a-z][\w$]*(\.[\w$]+)*\.[A-Z][\w$]*(Exception|Error)\b/;
 
 /**
  * The server's explanation, when it is fit to show the user directly.
@@ -69,5 +78,10 @@ export function userFacingReason(error: unknown): string | undefined {
   }
 
   const reason = reasonFromApiError(error);
-  return reason?.match(DSP_BAD_REQUEST_PREFIX)?.[1].trim() ?? reason;
+  if (!reason) {
+    return undefined;
+  }
+
+  const withoutDspPrefix = reason.match(DSP_EXCEPTION_PREFIX)?.[1].trim() ?? reason;
+  return FOREIGN_EXCEPTION.test(withoutDspPrefix) ? undefined : withoutDspPrefix;
 }

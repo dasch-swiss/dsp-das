@@ -61,6 +61,36 @@ describe('userFacingReason', () => {
     expect(userFacingReason(error)).toBe('the query is malformed');
   });
 
+  it.each([
+    ['dsp.errors.ConflictException: shortname already taken', 'shortname already taken'],
+    ['dsp.errors.NotFoundException: no such resource', 'no such resource'],
+  ])('strips any dsp exception class, not only BadRequestException (%s)', (body, expected) => {
+    expect(userFacingReason(makeApiResponseError(400, { 'knora-api:error': body }))).toBe(expected);
+  });
+
+  it('withholds a triplestore exception forwarded verbatim', () => {
+    // The real body from searching `"unbalanced` or `AND`: dsp-api passes Jena's parse failure straight
+    // through, and a Java class name on screen is worse than the generic wording it would replace.
+    const error = makeApiResponseError(400, {
+      message:
+        "org.apache.jena.query.text.TextIndexParseException: Text search parse error:\nCannot parse '\"unbalanced': Lexical error",
+    });
+
+    expect(userFacingReason(error)).toBeUndefined();
+  });
+
+  it('withholds a bare java.lang failure too', () => {
+    const error = makeApiResponseError(400, { message: 'java.lang.IllegalArgumentException: bad input' });
+
+    expect(userFacingReason(error)).toBeUndefined();
+  });
+
+  it('keeps a plain sentence that merely mentions the word exception', () => {
+    const error = makeApiResponseError(400, { message: 'This value is an exception to the rule.' });
+
+    expect(userFacingReason(error)).toBe('This value is an exception to the rule.');
+  });
+
   it('surfaces a 409 conflict reason', () => {
     const error = new HttpErrorResponse({ status: 409, error: { message: 'shortname already taken' } });
 
