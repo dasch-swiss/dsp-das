@@ -98,6 +98,14 @@ describe('AppErrorHandler', () => {
       expect(instant).toHaveBeenCalledWith('core.errorHandler.contactSupport');
       expect(openSnackBar).toHaveBeenCalledWith('core.errorHandler.contactSupport', 'error');
     });
+
+    it('does not throw on a 400 with an empty body (ApiServices path)', () => {
+      // Angular leaves `error` null when a 400 arrives with no body, as a gateway or proxy answers.
+      // There is nothing to tell the user, but throwing here costs them the snackbar for every
+      // error and kills the calling component's stream.
+      expect(() => handler.handleError(new HttpErrorResponse({ status: 400 }))).not.toThrow();
+      expect(openSnackBar).not.toHaveBeenCalled();
+    });
   });
 
   /**

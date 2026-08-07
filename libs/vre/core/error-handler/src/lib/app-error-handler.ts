@@ -64,7 +64,10 @@ export class AppErrorHandler implements ErrorHandler {
         this.testInvalidRequest(error.error.error);
       } else if (typeof error.error === 'string') {
         this.testInvalidRequest(error.error);
-      } else if (error.error.message) {
+      } else if (error.error?.message) {
+        // Null-safe: Angular leaves `error` null for a 400 with an empty body — a gateway or proxy
+        // answers that way — and reading through it threw inside the handler, which costs the user
+        // the snackbar and kills the stream of whichever component called it (DEV-6872).
         this.displayNotification(error.error.message);
       }
       return;
