@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CenteredMessageComponent } from './centered-message.component';
@@ -16,7 +16,7 @@ import { CenteredMessageComponent } from './centered-message.component';
     <app-centered-message
       [icon]="'error_outline'"
       [title]="'pages.search.searchFailed.title' | translate"
-      [message]="'pages.search.searchFailed.message' | translate" />
+      [message]="reason ?? ('pages.search.searchFailed.message' | translate)" />
     <button mat-stroked-button data-cy="search-failed-retry" (click)="retry.emit()">
       {{ 'ui.common.actions.retry' | translate }}
     </button>
@@ -33,5 +33,12 @@ import { CenteredMessageComponent } from './centered-message.component';
   imports: [CenteredMessageComponent, MatButtonModule, TranslatePipe],
 })
 export class SearchFailedComponent {
+  /**
+   * The server's own explanation, when it gave one worth showing (a rejected query says why it was
+   * rejected). Falls back to the generic wording. Not translated — it is dsp-api's text, and the
+   * snackbar has always shown it in the same language.
+   */
+  @Input() reason?: string;
+
   @Output() retry = new EventEmitter<void>();
 }

@@ -12,7 +12,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ErrorReportingService } from '@dasch-swiss/vre/core/error-handler';
+import { ErrorReportingService, userFacingReason } from '@dasch-swiss/vre/core/error-handler';
 import { ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { filterNull } from '@dasch-swiss/vre/shared/app-common';
@@ -38,7 +38,7 @@ import { SearchFlowLogger } from './service/search-flow-logger.service';
     @let resources = resources$ | async;
     @if (failed()) {
       <app-centered-box>
-        <app-search-failed (retry)="onRetry()" />
+        <app-search-failed [reason]="failureReason()" (retry)="onRetry()" />
       </app-centered-box>
     } @else if (!resources && queryIsExecuting()) {
       <app-centered-box>
@@ -75,12 +75,15 @@ export class AdvancedSearchResultsComponent implements OnChanges {
 
   readonly queryIsExecuting = signal(false);
   readonly failed = signal(false);
+  /** dsp-api's own account of the failure, when it gave one fit to show. */
+  readonly failureReason = signal<string | undefined>(undefined);
 
   readonly resources$ = this.querySubject.pipe(
     filterNull(),
     switchMap(query => {
       this.queryIsExecuting.set(true);
       this.failed.set(false);
+      this.failureReason.set(undefined);
       return combineLatest([
         this._resourceResultService.pageIndex$.pipe(
           switchMap(pageNumber => this._performGravSearch$(query, pageNumber))
@@ -105,6 +108,9 @@ export class AdvancedSearchResultsComponent implements OnChanges {
           // that are no longer on screen, and leaving it would break the service's "null means genuinely
           // unknown" contract for as long as the failure state lasts.
           this._resourceResultService.numberOfResults = null;
+          // A rejected query explains itself; the panel says so instead of "try again", which cannot
+          // work for a query the server will keep rejecting (DEV-6866).
+          this.failureReason.set(userFacingReason(err));
           this.queryIsExecuting.set(false);
           this.failed.set(true);
           // Last, so the failure state is committed before the global handler runs and a throw there
