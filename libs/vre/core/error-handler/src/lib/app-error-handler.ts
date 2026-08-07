@@ -5,6 +5,7 @@ import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { AjaxError } from 'rxjs/ajax';
+import { reasonFromErrorBody } from './api-error-reason';
 import { ErrorReportingService } from './error-reporting.service';
 import { UserFeedbackError } from './user-feedback-error';
 
@@ -99,10 +100,11 @@ export class AppErrorHandler implements ErrorHandler {
       // Only the JS-LIB `AjaxError` carries `response`. A 409 from the generated OpenAPI client
       // arrives as an `HttpErrorResponse`, which keeps its body on `error` and has no `response` at
       // all — so reading straight through it threw inside the error handler, and a handler that
-      // throws costs the user every snackbar (DEV-6872).
-      const body = ((error as AjaxError).response ?? (error as HttpErrorResponse).error) as
-        { 'knora-api:error'?: string } | undefined;
-      message = body?.['knora-api:error'] ?? this._translateService.instant('core.errorHandler.contactSupport');
+      // throws costs the user every snackbar (DEV-6872). Every OpenAPI-declared 409 answers with a
+      // `{ message }` ConflictException, so reading only `knora-api:error` would swap the server's
+      // explanation for "contact support" on exactly the path that used to throw.
+      const body = (error as AjaxError).response ?? (error as HttpErrorResponse).error;
+      message = reasonFromErrorBody(body) ?? this._translateService.instant('core.errorHandler.contactSupport');
     } else if (error.status === 504) {
       message = this._translateService.instant('core.errorHandler.timeout', { url });
     } else {
