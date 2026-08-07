@@ -1,3 +1,4 @@
+export * from './lib/api-error-reason';
 export * from './lib/app-error-handler';
 export * from './lib/app-error-handler.providers';
 export * from './lib/app-error';
