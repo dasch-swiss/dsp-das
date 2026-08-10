@@ -27,6 +27,22 @@ export function reasonFromErrorBody(body: unknown): string | undefined {
   );
 }
 
+/**
+ * The `{ message }` of an exception declared in the OpenAPI spec, when the body carries one.
+ *
+ * Lives next to `reasonFromErrorBody` so that knowledge of the response shapes stays in one module: a
+ * caller that tidies up raw exception text before showing it needs to know whether the reason it was
+ * handed is that text or a sentence dsp-api already wrote for the user.
+ */
+export function declaredMessageOf(body: unknown): string | undefined {
+  if (!body || typeof body !== 'object') {
+    return undefined;
+  }
+
+  const message = (body as { message?: unknown }).message;
+  return typeof message === 'string' && message.length > 0 ? message : undefined;
+}
+
 /** The same reason, read off a whole error rather than a body already dug out of it. */
 export function reasonFromApiError(error: unknown): string | undefined {
   if (error instanceof ApiResponseError) {
