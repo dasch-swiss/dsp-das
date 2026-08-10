@@ -78,7 +78,8 @@ export class GlobalSearchComponent implements OnDestroy {
    * The key of the message to show under the field, or `null` when there is nothing to say. Nothing is
    * said until a search is actually attempted — complaining at the second keystroke of every term would
    * flag "de" on the way to "deutsch". An empty term says nothing either; `required` only stops the
-   * submit. Once a submit has been refused the message tracks the term live, so it clears as it is fixed.
+   * submit. Once a submit has been refused the message tracks the term live, so it clears as it is
+   * fixed — and a search that goes through resets the field to quiet for the next term.
    */
   get errorMessageKey(): string | null {
     if (!this._searchAttempted) {
@@ -135,11 +136,14 @@ export class GlobalSearchComponent implements OnDestroy {
     this.hideSearchTips();
     // The validators were already declared here but never consulted, so a term dsp-api rejects out of
     // hand ("de", "de*") still cost a navigation and a 400 (DEV-6930).
-    this._searchAttempted = true;
     const control = this.formGroup.controls.search;
     if (control.invalid) {
+      this._searchAttempted = true;
       return;
     }
+    // Cleared on a search that goes through, so the next term starts quiet again — otherwise the field
+    // would flag the "b" of "buch" for the rest of the session once any term had been refused.
+    this._searchAttempted = false;
     this._router.navigate([RouteConstants.search, control.value]);
   }
 

@@ -133,10 +133,13 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnDest
   }
 
   onSubmit() {
-    this.searchAttempted = true;
     if (!this.formGroup.valid) {
+      this.searchAttempted = true;
       return;
     }
+    // Cleared on a search that goes through, so the next term starts quiet again — `FormGroupDirective`
+    // keeps `submitted` true forever, so this flag is the only thing holding the message back.
+    this.searchAttempted = false;
     this.searchInput.nativeElement.blur();
 
     this.querySubject.next(this.formGroup.controls.query.value!);
