@@ -142,7 +142,7 @@ export class AdvancedSearchBarComponent implements OnInit {
         }
         // A deep link can carry a term the input would have refused. The query still runs (the URL is
         // the source of truth, and its failure is DEV-6866's panel), but the field says what is wrong.
-        this.fulltextTooShort.set(this.fulltextControl.invalid);
+        this._refreshFulltextError();
       });
 
     // Fulltext: after the user pauses typing (debounce), push one history entry so back/forward
@@ -153,13 +153,30 @@ export class AdvancedSearchBarComponent implements OnInit {
     this.fulltextControl.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this._destroyRef))
       .subscribe(q => {
-        this.fulltextTooShort.set(this.fulltextControl.invalid);
+        this._refreshFulltextError();
         if (this.fulltextControl.invalid) {
           return;
         }
         this._logger.fulltextChanged(q ?? '');
         this._urlSync.writeState({ q: q ?? undefined }, { replaceUrl: false });
       });
+  }
+
+  /**
+   * Raise or clear the inline message for the current term.
+   *
+   * `markAsTouched` is what actually makes the `mat-error` render, and it is not optional: Material
+   * gates the subscript on the control's error state, which for a control with no parent form is
+   * `invalid && touched` — and `touched` is otherwise set only by the value accessor's blur handler.
+   * Without it a term typed and never blurred is dropped in silence, which is worse than the 400 this
+   * whole change exists to avoid.
+   */
+  private _refreshFulltextError(): void {
+    const invalid = this.fulltextControl.invalid;
+    this.fulltextTooShort.set(invalid);
+    if (invalid) {
+      this.fulltextControl.markAsTouched();
+    }
   }
 
   onChipOpenChange(chipId: string, isOpen: boolean): void {
