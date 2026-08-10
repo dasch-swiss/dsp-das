@@ -78,7 +78,7 @@ export class AppErrorHandler implements ErrorHandler {
   private handleBadRequest(body: unknown): void {
     const reason = reasonFromErrorBody(body);
 
-    if (reason === undefined) {
+    if (reason === undefined || this.looksLikeMarkup(reason)) {
       return;
     }
 
@@ -87,6 +87,17 @@ export class AppErrorHandler implements ErrorHandler {
     // carry raw exception text, which is worth tidying.
     const isDeclaredMessage = declaredMessageOf(body) === reason;
     this.displayNotification(isDeclaredMessage ? reason : this.readableExceptionText(reason));
+  }
+
+  /**
+   * A 400 body is only shown when dsp-api wrote it. Angular hands the raw text through when the body
+   * does not parse as JSON — for an error status it does not wrap it, it assigns it (`HttpXhrBackend`
+   * keeps `body = originalBody`, `FetchBackend` returns the text) — so a 400 from a proxy ahead of the
+   * API arrives here as a whole HTML page, which `MatSnackBar` would put on screen escaped and
+   * untruncated. There is nothing in it for the user, so it is dropped as an unreadable body.
+   */
+  private looksLikeMarkup(reason: string): boolean {
+    return /^\s*</.test(reason);
   }
 
   /**

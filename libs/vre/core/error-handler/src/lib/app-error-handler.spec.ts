@@ -182,6 +182,16 @@ describe('AppErrorHandler', () => {
       );
     });
 
+    it('says nothing when the body is a page rather than a message', () => {
+      // Angular assigns the raw text when an error body does not parse as JSON, so a 400 from a proxy
+      // ahead of the API arrives as a whole HTML page. MatSnackBar would show all of it, escaped.
+      handler.handleError(
+        badRequest('<html>\r\n<head><title>400 Request Header Or Cookie Too Large</title></head>\r\n</html>\r\n')
+      );
+
+      expect(openSnackBar).not.toHaveBeenCalled();
+    });
+
     it('does not throw on a 400 with an empty body', () => {
       // Angular leaves `error` null when a 400 arrives with no body, as a gateway or proxy answers.
       // There is nothing to tell the user, but throwing here costs them the snackbar for every
