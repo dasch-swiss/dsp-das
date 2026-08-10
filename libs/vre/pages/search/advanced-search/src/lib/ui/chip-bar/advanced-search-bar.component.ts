@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { searchTermMinLengthValidator } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateModule } from '@ngx-translate/core';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { PropertyObjectType, StatementElement } from '../../model';
 import { OntologyDataService } from '../../service/ontology-data.service';
 import { SearchFlowLogger } from '../../service/search-flow-logger.service';
@@ -52,7 +52,7 @@ import { ResourceClassChipComponent } from './resource-class-chip.component';
           [formControl]="fulltextControl"
           [placeholder]="'pages.search.advancedSearch.fulltextSearchPlaceholder' | translate" />
         <mat-icon matSuffix>search</mat-icon>
-        @if (fulltextControl.hasError('searchTermTooShort')) {
+        @if (fulltextTooShort()) {
           <mat-error>{{ 'pages.search.termValidation.tooShort' | translate }}</mat-error>
         }
       </mat-form-field>
@@ -100,6 +100,9 @@ export class AdvancedSearchBarComponent implements OnInit {
   // which — unlike `/v2/search/:term` — accepts a wildcard on a short stem ("de*" returns 200), so the
   // per-token wildcard rule would block searches the API is happy to run (DEV-6930).
   readonly fulltextControl = new FormControl<string>('', searchTermMinLengthValidator());
+  // Raised at the debounce, i.e. the moment the term would have been searched — validating on every
+  // keystroke instead would flag "de" on the way to "deutsch".
+  readonly fulltextTooShort = signal(false);
   // Top-level confirmed filters shown as chips. Subcriteria (child statements) are not shown as chips —
   // they are edited inside the parent's popover and travel with it when confirmed.
   readonly confirmedStatements = signal<StatementElement[]>([]);
@@ -137,6 +140,9 @@ export class AdvancedSearchBarComponent implements OnInit {
         if ((this.fulltextControl.value ?? '') !== q) {
           this.fulltextControl.setValue(q, { emitEvent: false });
         }
+        // A deep link can carry a term the input would have refused. The query still runs (the URL is
+        // the source of truth, and its failure is DEV-6866's panel), but the field says what is wrong.
+        this.fulltextTooShort.set(this.fulltextControl.invalid);
       });
 
     // Fulltext: after the user pauses typing (debounce), push one history entry so back/forward
@@ -145,13 +151,12 @@ export class AdvancedSearchBarComponent implements OnInit {
     // A term dsp-api would reject outright is not written at all: the field shows the inline message
     // and the URL (and therefore the query) stays on the last term that searched.
     this.fulltextControl.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        filter(() => this.fulltextControl.valid),
-        takeUntilDestroyed(this._destroyRef)
-      )
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this._destroyRef))
       .subscribe(q => {
+        this.fulltextTooShort.set(this.fulltextControl.invalid);
+        if (this.fulltextControl.invalid) {
+          return;
+        }
         this._logger.fulltextChanged(q ?? '');
         this._urlSync.writeState({ q: q ?? undefined }, { replaceUrl: false });
       });

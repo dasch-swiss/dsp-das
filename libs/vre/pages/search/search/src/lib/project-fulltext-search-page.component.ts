@@ -44,11 +44,15 @@ import { SearchResultComponent } from './search-result.component';
             (focus)="showSearchTips()"
             (blur)="hideSearchTips()" />
           <mat-icon matSuffix>search</mat-icon>
-          @if (formGroup.controls.query.hasError('searchTermTooShort')) {
-            <mat-error>{{ 'pages.search.termValidation.tooShort' | translate }}</mat-error>
-          }
-          @if (formGroup.controls.query.hasError('searchWildcardTooShort')) {
-            <mat-error>{{ 'pages.search.termValidation.wildcardTooShort' | translate }}</mat-error>
+          <!-- Gated on an actual submit: complaining at the second keystroke would flag "de" on the way
+               to "deutsch". Once a submit has been refused the message tracks the term live. -->
+          @if (searchAttempted) {
+            @if (formGroup.controls.query.hasError('searchTermTooShort')) {
+              <mat-error>{{ 'pages.search.termValidation.tooShort' | translate }}</mat-error>
+            }
+            @if (formGroup.controls.query.hasError('searchWildcardTooShort')) {
+              <mat-error>{{ 'pages.search.termValidation.wildcardTooShort' | translate }}</mat-error>
+            }
           }
         </mat-form-field>
       </form>
@@ -74,6 +78,8 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnDest
   // The form had no validators at all, so the `formGroup.valid` guard in `onSubmit` was always true and
   // a term dsp-api rejects out of hand ("de", "de*") still cost a request and a 400 (DEV-6930).
   formGroup = this._fb.group({ query: ['', fulltextSearchTermValidator()] });
+
+  searchAttempted = false;
 
   projectId = this._projectPageService.currentProject.id;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
@@ -127,6 +133,7 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnDest
   }
 
   onSubmit() {
+    this.searchAttempted = true;
     if (!this.formGroup.valid) {
       return;
     }

@@ -65,6 +65,7 @@ export class GlobalSearchComponent implements OnDestroy {
     search: ['', [Validators.required, fulltextSearchTermValidator()]],
   });
   private overlayRef: OverlayRef | null = null;
+  private _searchAttempted = false;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   constructor(
@@ -74,15 +75,16 @@ export class GlobalSearchComponent implements OnDestroy {
   ) {}
 
   /**
-   * The key of the message to show under the field, or `null` when there is nothing to say. A term the
-   * user has not submitted yet says nothing, and neither does an empty one — `required` only stops the
-   * submit.
+   * The key of the message to show under the field, or `null` when there is nothing to say. Nothing is
+   * said until a search is actually attempted — complaining at the second keystroke of every term would
+   * flag "de" on the way to "deutsch". An empty term says nothing either; `required` only stops the
+   * submit. Once a submit has been refused the message tracks the term live, so it clears as it is fixed.
    */
   get errorMessageKey(): string | null {
-    const control = this.formGroup.controls.search;
-    if (!control.touched) {
+    if (!this._searchAttempted) {
       return null;
     }
+    const control = this.formGroup.controls.search;
     if (control.hasError('searchTermTooShort')) {
       return 'pages.search.termValidation.tooShort';
     }
@@ -133,9 +135,9 @@ export class GlobalSearchComponent implements OnDestroy {
     this.hideSearchTips();
     // The validators were already declared here but never consulted, so a term dsp-api rejects out of
     // hand ("de", "de*") still cost a navigation and a 400 (DEV-6930).
+    this._searchAttempted = true;
     const control = this.formGroup.controls.search;
     if (control.invalid) {
-      control.markAsTouched();
       return;
     }
     this._router.navigate([RouteConstants.search, control.value]);
