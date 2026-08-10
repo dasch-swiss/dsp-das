@@ -90,18 +90,20 @@ export class AppErrorHandler implements ErrorHandler {
   }
 
   /**
-   * The part of dsp-api's exception text worth putting on screen: the detail it appends in a trailing
-   * parenthesis, else whatever follows the exception class, else the text as it stands.
+   * The part of dsp-api's exception text worth putting on screen: what follows the exception class,
+   * else the detail it appends in a trailing parenthesis, else the text as it stands.
    *
-   * The order matters and preserves what the user used to end up seeing. Both extractions ran, one
-   * after the other, and `MatSnackBar.open` replaces the bar already showing — so the parenthesised
-   * detail won whenever there was one, and the message following the class name is only reached
-   * without it.
+   * The class prefix is stripped first because the sentence behind it is the actionable half and the
+   * parenthesis it ends with need not be. `Invalid search string: 'de*' (org.apache.lucene…
+   * ParseException: Cannot parse 'de*')` is a real dsp-api 400 (`SearchResponderV2`): taking the
+   * parenthesis first leaves the user holding Lucene's internals — the very text `userFacingReason`
+   * withholds from the failure panel (DEV-6866) — with the half naming their mistake dropped. The
+   * parenthesis extraction is what remains for the `Invalid request (…)` shape, which carries no class.
    *
    * TODO ask the backend to uniformize their response, so that none of this is needed.
    */
   private readableExceptionText(reason: string): string {
-    return reason.match(this.invalidRequestDetailMatch)?.[1] ?? reason.match(this.badRequestRegexMatch)?.[1] ?? reason;
+    return reason.match(this.badRequestRegexMatch)?.[1] ?? reason.match(this.invalidRequestDetailMatch)?.[1] ?? reason;
   }
 
   private handleGenericError(error: HttpErrorResponse | AjaxError, url: string | null): void {

@@ -144,11 +144,6 @@ describe('AppErrorHandler', () => {
         'the label must not be empty',
       ],
       [
-        'the detail rather than the message it follows',
-        { error: 'dsp.errors.BadRequestException: invalid (must be an integer)' },
-        'must be an integer',
-      ],
-      [
         'the detail out of a bare string body',
         'Invalid request (the label must not be empty)',
         'the label must not be empty',
@@ -168,13 +163,23 @@ describe('AppErrorHandler', () => {
       expect(openSnackBar).toHaveBeenCalledWith('The value is invalid (an integer was expected)', 'error');
     });
 
-    it('shows one snackbar for a body that matches both extractions', () => {
-      // Both used to fire, and MatSnackBar.open replaces the bar already showing — so the detail was
-      // what the user ended up reading, after a frame of the message it follows.
-      handler.handleError(badRequest({ error: 'dsp.errors.BadRequestException: invalid (must be an integer)' }));
+    it('keeps the sentence behind the exception class rather than the parenthesis it ends with', () => {
+      // A real dsp-api 400 (SearchResponderV2): the parenthesis holds Lucene's parse failure, the text
+      // before it names what the user got wrong. Taking the parenthesis first — which is what the two
+      // extractions used to add up to, the later call replacing the earlier bar — left the user holding
+      // internals that `userFacingReason` withholds from the failure panel outright (DEV-6866).
+      handler.handleError(
+        badRequest({
+          'knora-api:error':
+            "dsp.errors.BadRequestException: Invalid search string: 'de*' (org.apache.lucene.queryparser.classic.ParseException: Cannot parse 'de*')",
+        })
+      );
 
       expect(openSnackBar).toHaveBeenCalledTimes(1);
-      expect(openSnackBar).toHaveBeenCalledWith('must be an integer', 'error');
+      expect(openSnackBar).toHaveBeenCalledWith(
+        " Invalid search string: 'de*' (org.apache.lucene.queryparser.classic.ParseException: Cannot parse 'de*')",
+        'error'
+      );
     });
 
     it('does not throw on a 400 with an empty body', () => {
