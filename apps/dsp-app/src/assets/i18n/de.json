@@ -397,6 +397,10 @@
         "title": "Suche fehlgeschlagen",
         "message": "Etwas ist schiefgelaufen und die Suche konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut."
       },
+      "termValidation": {
+        "tooShort": "Mindestens 3 Zeichen eingeben",
+        "wildcardTooShort": "Ein Platzhalter benötigt mindestens 3 weitere Zeichen im selben Wort"
+      },
       "searchTips": {
         "title": "Suchtipps",
         "exactPhrases": "Verwenden Sie Anführungszeichen für exakte Phrasen: \"down the rabbit hole\"",

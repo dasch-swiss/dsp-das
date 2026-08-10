@@ -397,6 +397,10 @@
         "title": "Ricerca non riuscita",
         "message": "Si è verificato un errore e la ricerca non è stata completata. Riprova."
       },
+      "termValidation": {
+        "tooShort": "Inserisci almeno 3 caratteri",
+        "wildcardTooShort": "Un carattere jolly richiede almeno altri 3 caratteri nella stessa parola"
+      },
       "searchTips": {
         "title": "Suggerimenti per la ricerca",
         "exactPhrases": "Usa le virgolette per frasi esatte: \"down the rabbit hole\"",
