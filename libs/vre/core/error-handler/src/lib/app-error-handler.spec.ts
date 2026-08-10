@@ -98,12 +98,96 @@ describe('AppErrorHandler', () => {
       expect(instant).toHaveBeenCalledWith('core.errorHandler.contactSupport');
       expect(openSnackBar).toHaveBeenCalledWith('core.errorHandler.contactSupport', 'error');
     });
+  });
 
-    it('does not throw on a 400 with an empty body (ApiServices path)', () => {
+  /**
+   * The `HttpErrorResponse` path used to test the body against three shapes in turn, so the JSON-LD
+   * `{ 'knora-api:error': … }` of the hand-written v2 services matched none of them and the branch
+   * returned having notified nobody: the user caused a 400 and saw nothing (DEV-6922). All four shapes
+   * now go through the precedence `reasonFromErrorBody` already shares with telemetry.
+   */
+  describe('400 error body (ApiServices path via handleHttpErrorResponse)', () => {
+    const badRequest = (body: unknown) =>
+      new HttpErrorResponse({ status: 400, statusText: 'Bad Request', error: body });
+
+    it('surfaces the knora-api:error of the hand-written JSON-LD v2 services (DEV-6922)', () => {
+      handler.handleError(badRequest({ 'knora-api:error': 'dsp.errors.BadRequestException: the label is required' }));
+
+      // Everything after the colon, verbatim: the capture group is not trimmed, exactly as the
+      // `{ error }` shape beside it has always shown it.
+      expect(openSnackBar).toHaveBeenCalledWith(' the label is required', 'error');
+    });
+
+    it('surfaces a knora-api:error that carries no exception class verbatim', () => {
+      handler.handleError(badRequest({ 'knora-api:error': 'the resource is already deleted' }));
+
+      expect(openSnackBar).toHaveBeenCalledWith('the resource is already deleted', 'error');
+    });
+
+    it('prefers the knora-api:error over a { message } beside it, as telemetry and the JS-LIB path do', () => {
+      handler.handleError(
+        badRequest({ 'knora-api:error': 'dsp.errors.BadRequestException: precise reason', message: 'generic message' })
+      );
+
+      expect(openSnackBar).toHaveBeenCalledWith(' precise reason', 'error');
+    });
+
+    it.each([
+      [
+        'an { error } carrying a dsp exception',
+        { error: 'dsp.errors.BadRequestException: the label is required' },
+        ' the label is required',
+      ],
+      [
+        'the parenthesised detail of an invalid request',
+        { error: 'Invalid request (the label must not be empty)' },
+        'the label must not be empty',
+      ],
+      [
+        'the detail rather than the message it follows',
+        { error: 'dsp.errors.BadRequestException: invalid (must be an integer)' },
+        'must be an integer',
+      ],
+      [
+        'the detail out of a bare string body',
+        'Invalid request (the label must not be empty)',
+        'the label must not be empty',
+      ],
+      ['a declared { message } whole', { message: 'value type is not supported' }, 'value type is not supported'],
+    ])('keeps showing %s', (_label, body, expected) => {
+      handler.handleError(badRequest(body));
+
+      expect(openSnackBar).toHaveBeenCalledWith(expected, 'error');
+    });
+
+    it('shows a declared { message } whole even when it ends in a parenthesis', () => {
+      // The parenthesis extraction belongs to dsp-api's raw exception text. A `{ message }` is a
+      // sentence written for the user, so extracting from it would drop everything before the clause.
+      handler.handleError(badRequest({ message: 'The value is invalid (an integer was expected)' }));
+
+      expect(openSnackBar).toHaveBeenCalledWith('The value is invalid (an integer was expected)', 'error');
+    });
+
+    it('shows one snackbar for a body that matches both extractions', () => {
+      // Both used to fire, and MatSnackBar.open replaces the bar already showing — so the detail was
+      // what the user ended up reading, after a frame of the message it follows.
+      handler.handleError(badRequest({ error: 'dsp.errors.BadRequestException: invalid (must be an integer)' }));
+
+      expect(openSnackBar).toHaveBeenCalledTimes(1);
+      expect(openSnackBar).toHaveBeenCalledWith('must be an integer', 'error');
+    });
+
+    it('does not throw on a 400 with an empty body', () => {
       // Angular leaves `error` null when a 400 arrives with no body, as a gateway or proxy answers.
       // There is nothing to tell the user, but throwing here costs them the snackbar for every
-      // error and kills the calling component's stream.
+      // error and kills the calling component's stream (DEV-6872).
       expect(() => handler.handleError(new HttpErrorResponse({ status: 400 }))).not.toThrow();
+      expect(openSnackBar).not.toHaveBeenCalled();
+    });
+
+    it('says nothing when a 400 body carries no reason at all', () => {
+      handler.handleError(badRequest({ unrelated: 'metadata' }));
+
       expect(openSnackBar).not.toHaveBeenCalled();
     });
   });

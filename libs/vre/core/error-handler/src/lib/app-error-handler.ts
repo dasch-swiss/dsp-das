@@ -5,7 +5,7 @@ import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { AjaxError } from 'rxjs/ajax';
-import { reasonFromErrorBody } from './api-error-reason';
+import { declaredMessageOf, reasonFromErrorBody } from './api-error-reason';
 import { ErrorReportingService } from './error-reporting.service';
 import { UserFeedbackError } from './user-feedback-error';
 
@@ -23,6 +23,9 @@ export class AppErrorHandler implements ErrorHandler {
   ) {}
 
   badRequestRegexMatch = /dsp\.errors\.BadRequestException:(.*)$/;
+
+  /** dsp-api appends what was actually wrong with an invalid request in a trailing parenthesis. */
+  invalidRequestDetailMatch = /\((.*)\)$/;
 
   handleError(error: any): void {
     // Reported before branching, so every branch reaches telemetry rather than only the last one.
@@ -54,26 +57,51 @@ export class AppErrorHandler implements ErrorHandler {
 
   private handleHttpErrorResponse(error: HttpErrorResponse) {
     if (error.status === 400) {
-      if (error.error?.error) {
-        const badRequestRegexMatch = error.error.error.match(this.badRequestRegexMatch);
-
-        if (badRequestRegexMatch) {
-          this.displayNotification(badRequestRegexMatch[1]);
-        }
-
-        this.testInvalidRequest(error.error.error);
-      } else if (typeof error.error === 'string') {
-        this.testInvalidRequest(error.error);
-      } else if (error.error?.message) {
-        // Null-safe: Angular leaves `error` null for a 400 with an empty body — a gateway or proxy
-        // answers that way — and reading through it threw inside the handler, which costs the user
-        // the snackbar and kills the stream of whichever component called it (DEV-6872).
-        this.displayNotification(error.error.message);
-      }
+      this.handleBadRequest(error.error);
       return;
     }
 
     this.handleGenericError(error, error.url);
+  }
+
+  /**
+   * A 400 names the constraint the user broke, so the body is the message. It is read through the
+   * shared precedence (`knora-api:error` → `message` → `error` → bare string) rather than a branch per
+   * shape: branching that way recognised three of dsp-api's four and silently dropped the JSON-LD
+   * `{ 'knora-api:error': … }` the hand-written v2 services answer with, so that failure reached
+   * Sentry while the user saw no snackbar at all (DEV-6922).
+   *
+   * Nothing is shown when the body carries no reason — Angular leaves `error` null for a 400 with an
+   * empty body, as a gateway or proxy answers (DEV-6872) — and there is deliberately no generic
+   * fallback: a 400 with nothing in it can say nothing the failed action has not already said.
+   */
+  private handleBadRequest(body: unknown): void {
+    const reason = reasonFromErrorBody(body);
+
+    if (reason === undefined) {
+      return;
+    }
+
+    // A declared `{ message }` is dsp-api's own sentence for the user and is shown whole; tidying it
+    // would swap a full explanation for whatever its last clause happens to be. The other fields
+    // carry raw exception text, which is worth tidying.
+    const isDeclaredMessage = declaredMessageOf(body) === reason;
+    this.displayNotification(isDeclaredMessage ? reason : this.readableExceptionText(reason));
+  }
+
+  /**
+   * The part of dsp-api's exception text worth putting on screen: the detail it appends in a trailing
+   * parenthesis, else whatever follows the exception class, else the text as it stands.
+   *
+   * The order matters and preserves what the user used to end up seeing. Both extractions ran, one
+   * after the other, and `MatSnackBar.open` replaces the bar already showing — so the parenthesised
+   * detail won whenever there was one, and the message following the class name is only reached
+   * without it.
+   *
+   * TODO ask the backend to uniformize their response, so that none of this is needed.
+   */
+  private readableExceptionText(reason: string): string {
+    return reason.match(this.invalidRequestDetailMatch)?.[1] ?? reason.match(this.badRequestRegexMatch)?.[1] ?? reason;
   }
 
   private handleGenericError(error: HttpErrorResponse | AjaxError, url: string | null): void {
@@ -122,13 +150,5 @@ export class AppErrorHandler implements ErrorHandler {
     this._ngZone.run(() => {
       this._notification.openSnackBar(message, 'error');
     });
-  }
-
-  // TODO ask the backend to uniformize their response, so that this method is only called once.
-  private testInvalidRequest(error: string) {
-    const invalidRequestRegexMatch = error.match(/\((.*)\)$/);
-    if (invalidRequestRegexMatch) {
-      this.displayNotification(invalidRequestRegexMatch[1]);
-    }
   }
 }
