@@ -5,6 +5,7 @@ export * from './lib/property-info-values.interface';
 export * from './lib/generateProperty';
 export * from './lib/directives/mat-autocomplete-options-scroll.directive';
 export * from './lib/form-validators/at-least-one-string-required.validator';
+export * from './lib/form-validators/search-term.validator';
 export * from './lib/animations/replace-animation';
 export * from './lib/rxjs-operators/filter-undefined-operator';
 export * from './lib/rxjs-operators/filter-null-operator';
