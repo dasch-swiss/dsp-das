@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DSP-API
-  version: v37.4.0-16-g8cf16d9
+  version: v37.5.2-5-ge8dcdc8
   summary: DSP-API is part of the DaSCH Service Platform, a repository for the long-term
     preservation and reuse of data in the humanities.
   contact:
@@ -5323,7 +5323,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       responses:
         '200':
           description: ''
@@ -5387,7 +5387,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       responses:
         '200':
           description: ''
@@ -5451,7 +5451,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       responses:
         '200':
           description: ''
@@ -5640,7 +5640,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       responses:
         '200':
           description: ''
@@ -5706,7 +5706,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       responses:
         '200':
           description: ''
@@ -5910,7 +5910,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5983,7 +5983,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6057,7 +6057,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6130,7 +6130,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6204,7 +6204,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6277,7 +6277,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6351,7 +6351,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       requestBody:
         content:
           application/json:
@@ -6424,7 +6424,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       requestBody:
         content:
           application/json:
@@ -6497,7 +6497,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       requestBody:
         content:
           application/json:
@@ -6570,7 +6570,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/1B7ynPK2SLaf9BlDvW2FoA
+        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
       requestBody:
         content:
           application/json:
@@ -6584,6 +6584,291 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - httpAuth: []
+      - httpAuth1: []
+  /admin/projects/iri/{projectIri}/view-restrictions/summary:
+    get:
+      tags:
+      - Admin API
+      description: 'Per-audience counts of items a project''s audiences cannot fully
+        see, grouped by resource class or property. Each audience reports `hidden`
+        (permission code 0 — nothing is served) and `restrictedView` (code 1 — a degraded
+        version is served) separately; the two are disjoint. Both are further split
+        by unit: `resources` counts whole restricted resources, `items` counts restricted
+        values inside resources. The two units are never summed — one resource with
+        three hidden values is 1 resource and 3 items, not 4 of anything. When grouping
+        by resource class, **every** class in the project is reported — including
+        classes with no restrictions at all — each with `totalResources`: how many
+        resources the project has in that class in total. That count is independent
+        of the restrictions and of `itemType`; it is the denominator for `counts.<audience>.resources`
+        (same unit), not for `items`. Summing it over the groups gives the project''s
+        whole resource count. In property mode only properties that carry a restriction
+        are reported and `totalResources` is absent, since a property has no resource
+        population of its own. Counts are computed by the triplestore and are exact
+        regardless of project size. The user must be project admin or system admin.'
+      operationId: getAdminProjectsIriProjectiriView-restrictionsSummary
+      parameters:
+      - name: projectIri
+        in: path
+        description: The IRI of a project. Must be URL-encoded.
+        required: true
+        schema:
+          type: string
+        example: http://rdfh.ch/projects/0001
+      - name: groupBy
+        in: query
+        description: Whether to group the matrix by resource class or by the property
+          that carries the restriction.
+        required: false
+        schema:
+          $ref: '#/components/schemas/GroupBy'
+          default: ResourceClass
+      - name: itemType
+        in: query
+        description: Restrict the report to a single item type, or `all` for the combined
+          view.
+        required: false
+        schema:
+          $ref: '#/components/schemas/ItemType'
+          default: All
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewRestrictionsSummary'
+              example:
+                projectIri: http://rdfh.ch/projects/0001
+                groupBy: ResourceClass
+                itemType: All
+                groups:
+                - id: http://www.knora.org/ontology/0001/anything#Thing
+                  label: Thing
+                  ontology: anything
+                  counts:
+                    anonymous:
+                      resources:
+                        hidden: 7
+                        restrictedView: 3
+                      items:
+                        hidden: 12
+                        restrictedView: 4
+                    authenticated:
+                      resources:
+                        hidden: 2
+                        restrictedView: 1
+                      items:
+                        hidden: 5
+                        restrictedView: 2
+                    projectMember:
+                      resources:
+                        hidden: 0
+                        restrictedView: 0
+                      items:
+                        hidden: 0
+                        restrictedView: 0
+                  totalResources: 120
+                totals:
+                  anonymous:
+                    resources:
+                      hidden: 7
+                      restrictedView: 3
+                    items:
+                      hidden: 12
+                      restrictedView: 4
+                  authenticated:
+                    resources:
+                      hidden: 2
+                      restrictedView: 1
+                    items:
+                      hidden: 5
+                      restrictedView: 2
+                  projectMember:
+                    resources:
+                      hidden: 0
+                      restrictedView: 0
+                    items:
+                      hidden: 0
+                      restrictedView: 0
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - httpAuth: []
+      - httpAuth1: []
+  /admin/projects/iri/{projectIri}/view-restrictions/items:
+    get:
+      tags:
+      - Admin API
+      description: Paginated list of resources affected by a restriction under a given
+        class (or property), each with its per-audience visibility and the nested
+        restricted file values / values / comments. Ordered by label then IRI, so
+        paging is stable across requests. The user must be project admin or system
+        admin.
+      operationId: getAdminProjectsIriProjectiriView-restrictionsItems
+      parameters:
+      - name: projectIri
+        in: path
+        description: The IRI of a project. Must be URL-encoded.
+        required: true
+        schema:
+          type: string
+        example: http://rdfh.ch/projects/0001
+      - name: groupBy
+        in: query
+        description: Whether to group the matrix by resource class or by the property
+          that carries the restriction.
+        required: false
+        schema:
+          $ref: '#/components/schemas/GroupBy'
+          default: ResourceClass
+      - name: group
+        in: query
+        description: The IRI of the class (or property, in property mode) whose affected
+          items to page through.
+        required: true
+        schema:
+          type: string
+      - name: itemType
+        in: query
+        description: Restrict the report to a single item type, or `all` for the combined
+          view.
+        required: false
+        schema:
+          $ref: '#/components/schemas/ItemType'
+          default: All
+      - name: page
+        in: query
+        description: The number of the desired page to be returned.
+        required: false
+        schema:
+          default: 1
+          type: integer
+          format: int32
+          minimum: 1
+      - name: page-size
+        in: query
+        description: The number of items per page to be returned.
+        required: false
+        schema:
+          default: 25
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 100
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResponse_RestrictedResource'
+              example:
+                data:
+                - resourceIri: http://rdfh.ch/0001/a-thing
+                  label: A thing
+                  resourceClassIri: http://www.knora.org/ontology/0001/anything#Thing
+                  resourceVisibility:
+                    anonymous: Hidden
+                    authenticated: Visible
+                    projectMember: Visible
+                  items:
+                  - type: File
+                    propertyIri: http://www.knora.org/ontology/knora-base#hasStillImageFileValue
+                    propertyLabel: Still image file
+                    valueIri: http://rdfh.ch/0001/a-thing/values/image
+                    visibility:
+                      anonymous: RestrictedView
+                      authenticated: Visible
+                      projectMember: Visible
+                pagination:
+                  pageSize: 25
+                  totalItems: 1
+                  totalPages: 1
+                  currentPage: 1
         '400':
           description: ''
           content:
@@ -6841,7 +7126,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/FqvN8b83StmsTYbU_HyZbA
+        example: http://rdfh.ch/lists/0001/Lz1o0HeFSgCy4BQFI8Cmhw
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -6969,7 +7254,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/FqvN8b83StmsTYbU_HyZbA
+        example: http://rdfh.ch/lists/0001/Lz1o0HeFSgCy4BQFI8Cmhw
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -16312,12 +16597,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/VersionResponse'
               example:
-                webapi: v37.4.0-16-g8cf16d9
-                buildCommit: 8cf16d902
+                webapi: v37.5.2-5-ge8dcdc8
+                buildCommit: e8dcdc8d1
                 buildTime: dev
                 fuseki: 6.1.0
                 scala: 3.8.4
-                sipi: v6.3.0
+                sipi: v6.3.1
                 name: version
         '400':
           description: ''
@@ -16539,6 +16824,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AdministrativePermissionADM'
+    AudienceCounts:
+      title: AudienceCounts
+      type: object
+      required:
+      - anonymous
+      - authenticated
+      - projectMember
+      properties:
+        anonymous:
+          $ref: '#/components/schemas/UnitCounts'
+        authenticated:
+          $ref: '#/components/schemas/UnitCounts'
+        projectMember:
+          $ref: '#/components/schemas/UnitCounts'
     BadCredentialsException:
       title: BadCredentialsException
       type: object
@@ -17035,6 +17334,12 @@ components:
           type: boolean
         selfjoin:
           type: boolean
+    GroupBy:
+      title: GroupBy
+      type: string
+      enum:
+      - Property
+      - ResourceClass
     GroupCreateRequest:
       title: GroupCreateRequest
       type: object
@@ -17174,6 +17479,29 @@ components:
           type: string
         password:
           type: string
+    ItemType:
+      title: ItemType
+      type: string
+      enum:
+      - All
+      - Comment
+      - File
+      - Resource
+      - Value
+    ItemVisibility:
+      title: ItemVisibility
+      type: object
+      required:
+      - anonymous
+      - authenticated
+      - projectMember
+      properties:
+        anonymous:
+          $ref: '#/components/schemas/Visibility'
+        authenticated:
+          $ref: '#/components/schemas/Visibility'
+        projectMember:
+          $ref: '#/components/schemas/Visibility'
     Keyword:
       title: Keyword
       type: object
@@ -17683,6 +18011,19 @@ components:
             $ref: '#/components/schemas/ProjectLicenseDto'
         pagination:
           $ref: '#/components/schemas/Pagination'
+    PagedResponse_RestrictedResource:
+      title: PagedResponse_RestrictedResource
+      type: object
+      required:
+      - data
+      - pagination
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestrictedResource'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
     Pagination:
       title: Pagination
       type: object
@@ -18187,6 +18528,44 @@ components:
           minItems: 1
           items:
             type: string
+    RestrictedItem:
+      title: RestrictedItem
+      type: object
+      required:
+      - type
+      - visibility
+      properties:
+        type:
+          $ref: '#/components/schemas/ItemType'
+        propertyIri:
+          type: string
+        propertyLabel:
+          type: string
+        valueIri:
+          type: string
+        visibility:
+          $ref: '#/components/schemas/ItemVisibility'
+    RestrictedResource:
+      title: RestrictedResource
+      type: object
+      required:
+      - resourceIri
+      - label
+      - resourceClassIri
+      - resourceVisibility
+      properties:
+        resourceIri:
+          type: string
+        label:
+          type: string
+        resourceClassIri:
+          type: string
+        resourceVisibility:
+          $ref: '#/components/schemas/ItemVisibility'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestrictedItem'
     RestrictedViewResponse:
       title: RestrictedViewResponse
       type: object
@@ -18195,6 +18574,40 @@ components:
           $ref: '#/components/schemas/Size'
         watermark:
           $ref: '#/components/schemas/Watermark'
+    RestrictionCounts:
+      title: RestrictionCounts
+      type: object
+      required:
+      - hidden
+      - restrictedView
+      properties:
+        hidden:
+          type: integer
+          format: int32
+        restrictedView:
+          type: integer
+          format: int32
+    RestrictionGroup:
+      title: RestrictionGroup
+      type: object
+      required:
+      - id
+      - label
+      - counts
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        ontology:
+          type: string
+        propertyName:
+          type: string
+        counts:
+          $ref: '#/components/schemas/AudienceCounts'
+        totalResources:
+          type: integer
+          format: int32
     RootNodeInfoGetResponseADM:
       title: RootNodeInfoGetResponseADM
       type: object
@@ -18310,6 +18723,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ErrorDetail'
+    UnitCounts:
+      title: UnitCounts
+      type: object
+      required:
+      - resources
+      - items
+      properties:
+        resources:
+          $ref: '#/components/schemas/RestrictionCounts'
+        items:
+          $ref: '#/components/schemas/RestrictionCounts'
     UserCreateRequest:
       title: UserCreateRequest
       type: object
@@ -18501,6 +18925,34 @@ components:
           type: string
         name:
           type: string
+    ViewRestrictionsSummary:
+      title: ViewRestrictionsSummary
+      type: object
+      required:
+      - projectIri
+      - groupBy
+      - itemType
+      - totals
+      properties:
+        projectIri:
+          type: string
+        groupBy:
+          $ref: '#/components/schemas/GroupBy'
+        itemType:
+          $ref: '#/components/schemas/ItemType'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestrictionGroup'
+        totals:
+          $ref: '#/components/schemas/AudienceCounts'
+    Visibility:
+      title: Visibility
+      type: string
+      enum:
+      - Hidden
+      - RestrictedView
+      - Visible
     Watermark:
       title: Watermark
       type: object
