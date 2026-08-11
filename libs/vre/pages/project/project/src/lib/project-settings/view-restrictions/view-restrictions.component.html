@@ -59,6 +59,8 @@
 
     <!-- the "Resources" column is class-mode only: a property has no resource population (design 1i) -->
     @let showTotals = this.showTotals(groupBy$ | async);
+    <!-- the cells answer in whichever unit the item-type filter asked about (see CountCellComponent) -->
+    @let activeItemType = (itemType$ | async) ?? ItemType.All;
 
   <div class="matrix" [class.with-totals]="showTotals">
     <!-- header row -->
@@ -92,9 +94,9 @@
         @if (showTotals) {
           <span class="col-total">{{ group.totalResources ?? '–' }}</span>
         }
-        <app-count-cell [counts]="group.counts.anonymous" />
-        <app-count-cell [counts]="group.counts.authenticated" />
-        <app-count-cell [counts]="group.counts.projectMember" />
+        <app-count-cell [counts]="group.counts.anonymous" [itemType]="activeItemType" />
+        <app-count-cell [counts]="group.counts.authenticated" [itemType]="activeItemType" />
+        <app-count-cell [counts]="group.counts.projectMember" [itemType]="activeItemType" />
       </button>
 
       @if (isExpanded(group.id)) {
@@ -177,9 +179,9 @@
         @if (showTotals) {
           <div class="col-total">{{ totalResources(summary.groups) }}</div>
         }
-        <app-count-cell [counts]="summary.totals.anonymous" />
-        <app-count-cell [counts]="summary.totals.authenticated" />
-        <app-count-cell [counts]="summary.totals.projectMember" />
+        <app-count-cell [counts]="summary.totals.anonymous" [itemType]="activeItemType" />
+        <app-count-cell [counts]="summary.totals.authenticated" [itemType]="activeItemType" />
+        <app-count-cell [counts]="summary.totals.projectMember" [itemType]="activeItemType" />
       </div>
     }
     </div>

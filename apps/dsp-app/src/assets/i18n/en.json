@@ -228,8 +228,10 @@
         "itemsLoadFailed": "The affected resources could not be loaded. Close and reopen the row to retry.",
         "hiddenCount": "Hidden — nothing is served",
         "restrictedViewCount": "Restricted view — a degraded version is served",
-        "countAria": "{{hidden}} resources hidden, {{restricted}} in restricted view",
-        "countNone": "No restricted resources"
+        "countAria": "{{resourcesHidden}} resources hidden, {{resourcesRestricted}} in restricted view; {{itemsHidden}} values hidden, {{itemsRestricted}} in restricted view",
+        "countNone": "No restrictions",
+        "resourceUnit": "Whole resources",
+        "itemUnit": "Values inside resources"
       }
     },
     "system": {

@@ -352,6 +352,59 @@ export const ShowsHiddenAndRestrictedViewSeparately: Story = {
   },
 };
 
+/**
+ * The regression this guards against: filtering by an item type returns findings in the `items` unit and
+ * nothing in `resources`, because whole resources are not in scope for that filter. A cell that always
+ * rendered the `resources` unit therefore showed a dash in every column over a report that had findings —
+ * the matrix blanked exactly when the user narrowed to what they cared about (DEV-6868).
+ *
+ * The payload mirrors a real response for incunabula with `itemType=Value`.
+ */
+export const ReportsItemLevelFindingsUnderAnItemFilter: Story = {
+  name: 'Reports item-level findings when the item-type filter is item-level',
+  decorators: [
+    withApi(
+      of(
+        makeSummary({
+          groups: [
+            {
+              id: 'http://www.knora.org/ontology/0803/incunabula#t',
+              label: 't',
+              ontology: 'incunabula',
+              counts: {
+                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 1, restrictedView: 0 } },
+                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 1, restrictedView: 0 } },
+                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+              },
+              totalResources: 1,
+            },
+          ],
+          totals: {
+            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 1, restrictedView: 0 } },
+            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 1, restrictedView: 0 } },
+            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+          },
+        })
+      ),
+      of(makeItemsPage([makeResource()]))
+    ),
+  ],
+  play: async ({ canvasElement, step, userEvent }) => {
+    const canvas = within(canvasElement);
+    await step('Narrow the filter to values, as the user would', async () => {
+      // the page starts on "All"; the cells follow whichever chip is selected
+      await userEvent.click(canvas.getByText(/^Value$/i));
+    });
+    await step('The hidden value is reported rather than swallowed', async () => {
+      await expect(canvas.getByText('t')).toBeInTheDocument();
+      await expect(canvasElement.querySelector('.count-hidden')).not.toBeNull();
+    });
+    await step('The report is not announced as having no restrictions', async () => {
+      await expect(canvasElement.querySelector('.empty-note')).toBeNull();
+    });
+  },
+};
+
 export const ShowsManyRestrictedValuesOnOneResource: Story = {
   name: 'Never claims more restricted resources than the class has (the "3 of 1" case)',
   decorators: [
@@ -390,10 +443,14 @@ export const ShowsManyRestrictedValuesOnOneResource: Story = {
       await expect(canvas.getByText('Sparse thing')).toBeInTheDocument();
       await expect(canvas.getAllByText('1').length).toBeGreaterThan(0);
     });
-    await step('No cell claims a restricted resource, since the class has none', async () => {
-      // "3" would be the summed figure; it must appear nowhere in the matrix.
-      await expect(canvas.queryByText('3')).toBeNull();
-      await expect(canvasElement.querySelector('.count-hidden')).toBeNull();
+    await step('The three restrictions are reported as values, in their own line', async () => {
+      await expect(canvas.getByText('3')).toBeInTheDocument();
+      // one line per unit with something to report; here only the items unit qualifies
+      await expect(canvasElement.querySelectorAll('.count-line').length).toBeGreaterThan(0);
+    });
+    await step('No row claims more restricted resources than the class contains', async () => {
+      // "4" is resources + items summed — the figure the API documents as meaningless
+      await expect(canvas.queryByText('4')).toBeNull();
     });
     await step('The row is still reported rather than announced as unrestricted', async () => {
       await expect(canvasElement.querySelector('.empty-note')).toBeNull();
