@@ -170,7 +170,8 @@ describe('ErrorReportingService', () => {
     });
 
     it('grades a request that never completed as a warning, matching how the app reads it', () => {
-      // AppErrorHandler maps status 0 to the "no internet" message, i.e. the user's own connectivity.
+      // A 0 is a request the browser could not attribute to a response — not proof of the user's own
+      // connectivity, which is why the app no longer says so either (DEV-6935).
       service.report(apiError(0, 'GET', '/v2/resources/xyz'));
 
       expect(captureException.mock.calls[0][1].level).toBe('warning');

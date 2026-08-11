@@ -971,7 +971,7 @@
   },
   "core": {
     "errorHandler": {
-      "noInternet": "Il semble que vous ne soyez pas connecté à Internet.",
+      "serverUnreachable": "Le serveur n'a pas pu être joint. Veuillez vérifier votre connexion et réessayer.",
       "iiifServerError": "Erreur du serveur IIIF : L'image n'a pas pu être chargée. Veuillez réessayer plus tard.",
       "noPermission": "Vous n'avez pas la permission de voir une ou plusieurs ressources.",
       "notFound": "La ressource demandée n'a pas été trouvée.",

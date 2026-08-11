@@ -125,10 +125,11 @@ export class ErrorReportingService {
         ...context,
       },
       extra: { 'dsp.url': failure.url, ...(reason ? { 'dsp.response': reason } : {}) },
-      // A 5xx is a fault; a 4xx is the API rejecting what we sent, and a 0 is almost always the user's
-      // own connectivity — the app says as much, mapping it to the "no internet" message. Grading them
-      // alike would make an invalid date indistinguishable from a triplestore timeout in alerting, and
-      // that is how reporting ends up switched off again.
+      // A 5xx is a fault; a 4xx is the API rejecting what we sent, and a 0 is a request the browser
+      // could not attribute to any response at all — which is not evidence of the user's own
+      // connectivity, and is as likely to be our own ingress refusing the request (DEV-6935). Grading
+      // them alike would make an invalid date indistinguishable from a triplestore timeout in
+      // alerting, and that is how reporting ends up switched off again.
       level: failure.status >= 500 ? 'error' : 'warning',
     };
   }
