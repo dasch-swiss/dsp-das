@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatTooltip } from '@angular/material/tooltip';
+import { By } from '@angular/platform-browser';
 import { ItemType, UnitCounts } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { provideTranslateService } from '@ngx-translate/core';
 import { CountCellComponent } from './count-cell.component';
@@ -91,6 +93,24 @@ describe('CountCellComponent', () => {
   it('renders a dash when the audience has no counts at all', () => {
     render(undefined, ItemType.All);
     expect(text()).toBe('–');
+  });
+
+  // Colour is the only thing separating the two states at a glance, so each figure explains itself on
+  // hover rather than leaving red/amber to be decoded. Both states reuse the keys the drill-down cells
+  // use, so one glyph is never explained two ways.
+  it('explains each state on hover', () => {
+    expect(fixture.componentInstance.tooltipFor('hidden')).toBe('pages.project.viewRestrictions.hiddenCount');
+    expect(fixture.componentInstance.tooltipFor('restrictedView')).toBe(
+      'pages.project.viewRestrictions.restrictedViewCount'
+    );
+  });
+
+  // A tooltip attached to the line rather than to each figure would explain only one of the two.
+  it('attaches a tooltip to each state that renders', () => {
+    render({ resources: { hidden: 3, restrictedView: 2 }, items: { hidden: 0, restrictedView: 0 } }, ItemType.Resource);
+    const tips = fixture.debugElement.queryAll(By.directive(MatTooltip)).map(d => d.injector.get(MatTooltip).message);
+    expect(tips).toContain('pages.project.viewRestrictions.hiddenCount');
+    expect(tips).toContain('pages.project.viewRestrictions.restrictedViewCount');
   });
 
   // Changing the chip must re-render the cells. The cell is OnPush, so this only holds if the filter

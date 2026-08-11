@@ -45,18 +45,20 @@ interface CountLine {
         <span class="count-none" aria-hidden="true">–</span>
       } @else {
         @for (line of lines; track line.unit) {
-          <span class="count-line" [matTooltip]="line.tooltipKey | translate">
+          <span class="count-line">
             @if (showUnitIcon) {
-              <mat-icon class="unit-icon" aria-hidden="true">{{ line.icon }}</mat-icon>
+              <mat-icon class="unit-icon" aria-hidden="true" [matTooltip]="line.tooltipKey | translate">{{
+                line.icon
+              }}</mat-icon>
             }
             @if (line.counts.hidden) {
-              <span class="count-hidden">
+              <span class="count-hidden" [matTooltip]="tooltipFor('hidden') | translate">
                 <mat-icon aria-hidden="true">visibility_off</mat-icon>
                 {{ line.counts.hidden }}
               </span>
             }
             @if (line.counts.restrictedView) {
-              <span class="count-restricted">
+              <span class="count-restricted" [matTooltip]="tooltipFor('restrictedView') | translate">
                 <mat-icon aria-hidden="true">blur_on</mat-icon>
                 {{ line.counts.restrictedView }}
               </span>
@@ -79,6 +81,17 @@ export class CountCellComponent {
   /** Only in the combined view does a line need to say which unit it counts. */
   get showUnitIcon(): boolean {
     return this.itemType === ItemType.All;
+  }
+
+  /**
+   * What one state's figure means, on hover: the state explained in words ("Hidden — nothing is
+   * served"), which is the part colour alone conveys. The unit is only ambiguous in the combined view,
+   * where the unit icon carries its own tooltip; elsewhere the filter already fixes it.
+   */
+  tooltipFor(state: 'hidden' | 'restrictedView'): string {
+    return state === 'hidden'
+      ? 'pages.project.viewRestrictions.hiddenCount'
+      : 'pages.project.viewRestrictions.restrictedViewCount';
   }
 
   /** The lines to render: the units in scope for the filter that have something to report. */
