@@ -1,5 +1,25 @@
 # Changelog
 
+## [13.12.3](https://github.com/dasch-swiss/dsp-app/compare/v13.12.2...v13.12.3) (2026-08-10)
+
+
+### Bug Fixes
+
+* **error-handler:** show the reason of a 400 whose body is knora-api:error ([#3326](https://github.com/dasch-swiss/dsp-app/issues/3326)) ([5f96ccc](https://github.com/dasch-swiss/dsp-app/commit/5f96cccd8c46b044a7f9b2d6ce316eb253f3129d))
+* **error-handler:** stop AppErrorHandler from throwing on the paths that still could (DEV-6872) ([#3315](https://github.com/dasch-swiss/dsp-app/issues/3315)) ([2f6128c](https://github.com/dasch-swiss/dsp-app/commit/2f6128c1f3c8592ff172187faa93337df43e306f))
+* **search:** show the server's reason in the search failure panel ([#3320](https://github.com/dasch-swiss/dsp-app/issues/3320)) ([484da38](https://github.com/dasch-swiss/dsp-app/commit/484da386e3126b815fed741f971bf907c47bd156))
+
+
+### Maintenances
+
+* **ci:** roll the review prompt back to baseline and patch it against false flags ([#3316](https://github.com/dasch-swiss/dsp-app/issues/3316)) ([530e5d5](https://github.com/dasch-swiss/dsp-app/commit/530e5d5511fd537f274bee6323062229c9ff7b31))
+* **deps:** Update dependency ng-mocks from 14.15.3 to 14.16.0 ([#3319](https://github.com/dasch-swiss/dsp-app/issues/3319)) ([b0ff95f](https://github.com/dasch-swiss/dsp-app/commit/b0ff95f9fb29d96e24b94b95ad7ff01c4c015b68))
+* **deps:** Update dependency ng-mocks from 14.16.0 to 14.16.1 ([#3322](https://github.com/dasch-swiss/dsp-app/issues/3322)) ([4c236e3](https://github.com/dasch-swiss/dsp-app/commit/4c236e39f84e08d8518da41979b8e0153135586b))
+* **deps:** Update dependency postcss from 8.5.25 to 8.5.26 ([#3324](https://github.com/dasch-swiss/dsp-app/issues/3324)) ([8655ed6](https://github.com/dasch-swiss/dsp-app/commit/8655ed6a762f4de71650844325f09c9ec7410ba1))
+* **deps:** Update grafana/grafana Docker tag to v13.1.3 ([#3325](https://github.com/dasch-swiss/dsp-app/issues/3325)) ([d5cefe5](https://github.com/dasch-swiss/dsp-app/commit/d5cefe514f6191733ab7f34cb52fcba2b479531e))
+* **deps:** Update storybook monorepo from 10.5.5 to 10.5.6 ([#3318](https://github.com/dasch-swiss/dsp-app/issues/3318)) ([1ee7c40](https://github.com/dasch-swiss/dsp-app/commit/1ee7c408d2ba21fda2dc75e74c7a5da02e9326ca))
+* **open-api:** bump dsp-api spec v37.4.0-16-g8cf16d9 → v37.5.2-5-ge8dcdc8 ([#3323](https://github.com/dasch-swiss/dsp-app/issues/3323)) ([dac42cc](https://github.com/dasch-swiss/dsp-app/commit/dac42cc0218512ef3dd1244208aae5c4fed1960d))
+
 ## [13.12.2](https://github.com/dasch-swiss/dsp-app/compare/v13.12.1...v13.12.2) (2026-08-05)
 
 

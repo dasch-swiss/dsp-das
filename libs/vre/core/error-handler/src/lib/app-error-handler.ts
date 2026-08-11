@@ -5,7 +5,7 @@ import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { AjaxError } from 'rxjs/ajax';
-import { reasonFromErrorBody } from './api-error-reason';
+import { declaredMessageOf, reasonFromErrorBody } from './api-error-reason';
 import { ErrorReportingService } from './error-reporting.service';
 import { UserFeedbackError } from './user-feedback-error';
 
@@ -23,6 +23,9 @@ export class AppErrorHandler implements ErrorHandler {
   ) {}
 
   badRequestRegexMatch = /dsp\.errors\.BadRequestException:(.*)$/;
+
+  /** dsp-api appends what was actually wrong with an invalid request in a trailing parenthesis. */
+  invalidRequestDetailMatch = /\((.*)\)$/;
 
   handleError(error: any): void {
     // Reported before branching, so every branch reaches telemetry rather than only the last one.
@@ -54,26 +57,64 @@ export class AppErrorHandler implements ErrorHandler {
 
   private handleHttpErrorResponse(error: HttpErrorResponse) {
     if (error.status === 400) {
-      if (error.error?.error) {
-        const badRequestRegexMatch = error.error.error.match(this.badRequestRegexMatch);
-
-        if (badRequestRegexMatch) {
-          this.displayNotification(badRequestRegexMatch[1]);
-        }
-
-        this.testInvalidRequest(error.error.error);
-      } else if (typeof error.error === 'string') {
-        this.testInvalidRequest(error.error);
-      } else if (error.error?.message) {
-        // Null-safe: Angular leaves `error` null for a 400 with an empty body — a gateway or proxy
-        // answers that way — and reading through it threw inside the handler, which costs the user
-        // the snackbar and kills the stream of whichever component called it (DEV-6872).
-        this.displayNotification(error.error.message);
-      }
+      this.handleBadRequest(error.error);
       return;
     }
 
     this.handleGenericError(error, error.url);
+  }
+
+  /**
+   * A 400 names the constraint the user broke, so the body is the message. It is read through the
+   * shared precedence (`knora-api:error` → `message` → `error` → bare string) rather than a branch per
+   * shape: branching that way recognised three of dsp-api's four and silently dropped the JSON-LD
+   * `{ 'knora-api:error': … }` the hand-written v2 services answer with, so that failure reached
+   * Sentry while the user saw no snackbar at all (DEV-6922).
+   *
+   * Nothing is shown when the body carries no reason — Angular leaves `error` null for a 400 with an
+   * empty body, as a gateway or proxy answers (DEV-6872) — and there is deliberately no generic
+   * fallback: a 400 with nothing in it can say nothing the failed action has not already said.
+   */
+  private handleBadRequest(body: unknown): void {
+    const reason = reasonFromErrorBody(body);
+
+    if (reason === undefined || this.looksLikeMarkup(reason)) {
+      return;
+    }
+
+    // A declared `{ message }` is dsp-api's own sentence for the user and is shown whole; tidying it
+    // would swap a full explanation for whatever its last clause happens to be. The other fields
+    // carry raw exception text, which is worth tidying.
+    const isDeclaredMessage = declaredMessageOf(body) === reason;
+    this.displayNotification(isDeclaredMessage ? reason : this.readableExceptionText(reason));
+  }
+
+  /**
+   * A 400 body is only shown when dsp-api wrote it. Angular hands the raw text through when the body
+   * does not parse as JSON — for an error status it does not wrap it, it assigns it (`HttpXhrBackend`
+   * keeps `body = originalBody`, `FetchBackend` returns the text) — so a 400 from a proxy ahead of the
+   * API arrives here as a whole HTML page, which `MatSnackBar` would put on screen escaped and
+   * untruncated. There is nothing in it for the user, so it is dropped as an unreadable body.
+   */
+  private looksLikeMarkup(reason: string): boolean {
+    return /^\s*</.test(reason);
+  }
+
+  /**
+   * The part of dsp-api's exception text worth putting on screen: what follows the exception class,
+   * else the detail it appends in a trailing parenthesis, else the text as it stands.
+   *
+   * The class prefix is stripped first because the sentence behind it is the actionable half and the
+   * parenthesis it ends with need not be. `Invalid search string: 'de*' (org.apache.lucene…
+   * ParseException: Cannot parse 'de*')` is a real dsp-api 400 (`SearchResponderV2`): taking the
+   * parenthesis first leaves the user holding Lucene's internals — the very text `userFacingReason`
+   * withholds from the failure panel (DEV-6866) — with the half naming their mistake dropped. The
+   * parenthesis extraction is what remains for the `Invalid request (…)` shape, which carries no class.
+   *
+   * TODO ask the backend to uniformize their response, so that none of this is needed.
+   */
+  private readableExceptionText(reason: string): string {
+    return reason.match(this.badRequestRegexMatch)?.[1] ?? reason.match(this.invalidRequestDetailMatch)?.[1] ?? reason;
   }
 
   private handleGenericError(error: HttpErrorResponse | AjaxError, url: string | null): void {
@@ -122,13 +163,5 @@ export class AppErrorHandler implements ErrorHandler {
     this._ngZone.run(() => {
       this._notification.openSnackBar(message, 'error');
     });
-  }
-
-  // TODO ask the backend to uniformize their response, so that this method is only called once.
-  private testInvalidRequest(error: string) {
-    const invalidRequestRegexMatch = error.match(/\((.*)\)$/);
-    if (invalidRequestRegexMatch) {
-      this.displayNotification(invalidRequestRegexMatch[1]);
-    }
   }
 }
