@@ -244,14 +244,18 @@ export const ShowsResourcePopulationPerClass: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('The Resources column header is present in class mode', async () => {
-      await expect(canvas.getByText('Resources')).toBeInTheDocument();
+      // scoped to the header row: the "Resources" item-type chip carries the same label
+      await expect(canvasElement.querySelector('.matrix-head .col-total')?.textContent).toContain('Resources');
     });
     await step('Each class reports its own population', async () => {
-      await expect(canvas.getByText('120')).toBeInTheDocument();
-      await expect(canvas.getByText('30')).toBeInTheDocument();
+      const populations = Array.from(canvasElement.querySelectorAll('.matrix-row .col-total')).map(e =>
+        e.textContent?.trim()
+      );
+      await expect(populations).toContain('120');
+      await expect(populations).toContain('30');
     });
     await step('The footer sums the populations of the listed classes', async () => {
-      await expect(canvas.getByText('150')).toBeInTheDocument();
+      await expect(canvasElement.querySelector('.matrix-foot .col-total')?.textContent?.trim()).toBe('150');
     });
   },
 };
@@ -341,9 +345,10 @@ export const ShowsHiddenAndRestrictedViewSeparately: Story = {
     const canvas = within(canvasElement);
     // "Thing" is 37 hidden + 11 in restricted view for the anonymous audience. Hidden and restricted
     // view are disjoint outcomes and must appear as their own figures, never as a single summed number.
+    // (getAllByText, not getByText: the same figure legitimately appears in the row and the totals row.)
     await step('Both states are rendered as distinct counts', async () => {
-      await expect(canvas.getByText('37')).toBeInTheDocument();
-      await expect(canvas.getByText('11')).toBeInTheDocument();
+      await expect(canvas.getAllByText('37').length).toBeGreaterThan(0);
+      await expect(canvas.getAllByText('11').length).toBeGreaterThan(0);
     });
     await step('The two states use their own icons', async () => {
       await expect(canvasElement.querySelector('.count-hidden')).not.toBeNull();
@@ -389,11 +394,12 @@ export const ReportsItemLevelFindingsUnderAnItemFilter: Story = {
       of(makeItemsPage([makeResource()]))
     ),
   ],
-  play: async ({ canvasElement, step, userEvent }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Narrow the filter to values, as the user would', async () => {
-      // the page starts on "All"; the cells follow whichever chip is selected
-      await userEvent.click(canvas.getByText(/^Value$/i));
+      // the page starts on "All"; the cells follow whichever chip is selected.
+      // The chip reads "Values" (itemType.value), not "Value".
+      await userEvent.click(canvas.getByText('Values'));
     });
     await step('The hidden value is reported rather than swallowed', async () => {
       await expect(canvas.getByText('t')).toBeInTheDocument();
@@ -444,7 +450,8 @@ export const ShowsManyRestrictedValuesOnOneResource: Story = {
       await expect(canvas.getAllByText('1').length).toBeGreaterThan(0);
     });
     await step('The three restrictions are reported as values, in their own line', async () => {
-      await expect(canvas.getByText('3')).toBeInTheDocument();
+      // the same figure appears in the class row and the totals row, so match all of them
+      await expect(canvas.getAllByText('3').length).toBeGreaterThan(0);
       // one line per unit with something to report; here only the items unit qualifies
       await expect(canvasElement.querySelectorAll('.count-line').length).toBeGreaterThan(0);
     });
@@ -667,8 +674,13 @@ export const DisablesResourceChipInPropertyMode: Story = {
       await userEvent.click(canvas.getByText('Property'));
     });
     await step('The Resource chip becomes disabled (whole-resource rows are out of scope)', async () => {
-      const chip = canvas.getByText('Resources').closest('mat-chip-option');
-      await expect(chip?.getAttribute('aria-disabled')).toBe('true');
+      // The column header shares the "Resources" label, so find the chip among the chips. Material puts
+      // aria-disabled on the inner [role="option"], not on the mat-chip-option host (which is
+      // role="presentation") — asserting on the host silently reads null and passes nothing.
+      const chip = Array.from(canvasElement.querySelectorAll('mat-chip-option')).find(c =>
+        c.textContent?.trim().startsWith('Resources')
+      );
+      await expect(chip?.querySelector('[role="option"]')?.getAttribute('aria-disabled')).toBe('true');
     });
   },
 };
