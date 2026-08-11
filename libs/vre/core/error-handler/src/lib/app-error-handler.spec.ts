@@ -335,5 +335,24 @@ describe('AppErrorHandler', () => {
 
       expect(openSnackBar).toHaveBeenCalledWith('core.errorHandler.serverUnreachable', 'error');
     });
+
+    /**
+     * A Sipi failure is a status-0 failure too — Angular writes the status into the message, so the
+     * `0` in `knora.json: 0 Unknown Error` is that same status. Testing the generic case first left
+     * the IIIF message with no reachable input; it is now tried before the fallback (DEV-6946).
+     */
+    it('names Sipi rather than the server when the failed request was for knora.json (DEV-6946)', () => {
+      // The shape Angular produces when the request `RepresentationService.getFileInfo` issues fails
+      // at the network layer: `message` is composed from the url, status and statusText.
+      handler.handleError(
+        new HttpErrorResponse({
+          status: 0,
+          statusText: 'Unknown Error',
+          url: 'https://iiif.dasch.swiss/0801/aB1cD2eF3gH-image.jp2/knora.json',
+        })
+      );
+
+      expect(openSnackBar).toHaveBeenCalledWith('core.errorHandler.iiifServerError', 'error');
+    });
   });
 });
