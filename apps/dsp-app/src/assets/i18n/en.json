@@ -971,7 +971,7 @@
   },
   "core": {
     "errorHandler": {
-      "noInternet": "It seems that you are not connected to internet.",
+      "serverUnreachable": "Could not reach the server. Please check your connection and try again.",
       "iiifServerError": "IIIF server error: The image could not be loaded. Please try again later.",
       "noPermission": "You do not have permission to see one or more resources.",
       "notFound": "The requested resource was not found.",

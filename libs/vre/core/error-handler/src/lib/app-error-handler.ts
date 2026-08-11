@@ -121,7 +121,13 @@ export class AppErrorHandler implements ErrorHandler {
     let message: string;
 
     if (error.status === 0) {
-      message = this._translateService.instant('core.errorHandler.noInternet');
+      // `status: 0` is what the browser reports for every failure it cannot attribute to a response —
+      // a CORS rejection, DNS, TLS, an aborted request, a blocking extension — and for a genuine loss
+      // of connectivity. It used to be read as proof the user was offline, which sent them to check
+      // their wifi when the request had been rejected by our own ingress: searching `\*bc` is turned
+      // away by the shared ingress before routing, with no CORS headers, so the browser exposes
+      // nothing (DEV-6935). The message names only what is known — the server was not reached.
+      message = this._translateService.instant('core.errorHandler.serverUnreachable');
     } else if (error.message.includes('knora.json: 0 Unknown Error')) {
       message = this._translateService.instant('core.errorHandler.iiifServerError');
     } else if (error.status === 400) {

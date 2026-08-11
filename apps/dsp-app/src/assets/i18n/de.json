@@ -971,7 +971,7 @@
   },
   "core": {
     "errorHandler": {
-      "noInternet": "Es scheint, dass Sie nicht mit dem Internet verbunden sind.",
+      "serverUnreachable": "Der Server konnte nicht erreicht werden. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
       "iiifServerError": "IIIF-Serverfehler: Das Bild konnte nicht geladen werden. Bitte versuchen Sie es später erneut.",
       "noPermission": "Sie haben keine Berechtigung, eine oder mehrere Ressourcen zu sehen.",
       "notFound": "Die angeforderte Ressource wurde nicht gefunden.",
