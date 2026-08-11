@@ -120,7 +120,19 @@ export class AppErrorHandler implements ErrorHandler {
   private handleGenericError(error: HttpErrorResponse | AjaxError, url: string | null): void {
     let message: string;
 
-    if (error.status === 0) {
+    if (error.message.includes('knora.json: 0 Unknown Error')) {
+      // Tested before `status === 0`, not after it. Angular composes `message` as
+      // `…: ${status} ${statusText}`, so the `0` in the literal above *is* the status: every input
+      // that can match this test also satisfies the generic one, and ordering the generic test first
+      // left this branch with no reachable input at all (DEV-6946). Specific before generic — the
+      // status-0 branch below is the fallback, so it has to be tried last.
+      //
+      // Reachable here, but still without a producer: `RepresentationService.getFileInfo` is the only
+      // caller that requests `knora.json`, and all four of its subscribers take the failure with
+      // `catchError` and render an inline failed-to-load state instead of rethrowing, so nothing
+      // hands a Sipi failure to this handler today. Left in place for whoever wires one up.
+      message = this._translateService.instant('core.errorHandler.iiifServerError');
+    } else if (error.status === 0) {
       // `status: 0` is what the browser reports for every failure it cannot attribute to a response —
       // a CORS rejection, DNS, TLS, an aborted request, a blocking extension — and for a genuine loss
       // of connectivity. It used to be read as proof the user was offline, which sent them to check
@@ -128,13 +140,6 @@ export class AppErrorHandler implements ErrorHandler {
       // away by the shared ingress before routing, with no CORS headers, so the browser exposes
       // nothing (DEV-6935). The message names only what is known — the server was not reached.
       message = this._translateService.instant('core.errorHandler.serverUnreachable');
-    } else if (error.message.includes('knora.json: 0 Unknown Error')) {
-      // Unreachable, and not by design: Angular composes `message` as `…: ${status} ${statusText}`,
-      // so the `0` in the literal above is the status and the branch before this one has already
-      // taken every input that could match. A Sipi failure therefore shows the generic message
-      // rather than this one. Pre-dates DEV-6935 and is left alone by it — fixing it means putting
-      // this test first, which changes what the user sees and needs its own test (DEV-6946).
-      message = this._translateService.instant('core.errorHandler.iiifServerError');
     } else if (error.status === 400) {
       // A 400 carries an actionable reason. Support both response shapes: the older JSON-LD
       // `knora-api:error` ("dsp.errors.BadRequestException: <msg>") and the newer `{ message }`.
