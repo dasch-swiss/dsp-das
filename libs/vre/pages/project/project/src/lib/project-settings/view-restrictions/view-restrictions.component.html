@@ -9,11 +9,9 @@
     (change)="onGroupBy($event.value)"
     [attr.aria-label]="'pages.project.viewRestrictions.groupByAria' | translate">
     <mat-button-toggle [value]="GroupBy.ResourceClass">
-      <mat-icon>account_tree</mat-icon>
       {{ 'pages.project.viewRestrictions.byClass' | translate }}
     </mat-button-toggle>
     <mat-button-toggle [value]="GroupBy.Property">
-      <mat-icon>sell</mat-icon>
       {{ 'pages.project.viewRestrictions.byProperty' | translate }}
     </mat-button-toggle>
   </mat-button-toggle-group>
