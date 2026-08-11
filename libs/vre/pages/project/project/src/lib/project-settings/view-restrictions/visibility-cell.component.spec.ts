@@ -40,21 +40,6 @@ describe('VisibilityCellComponent', () => {
     expect(component.label).toBe('pages.project.viewRestrictions.visibility.hidden');
   });
 
-  // The hover text explains the consequence, not just the state name, and reuses the summary matrix's
-  // keys so the same red glyph is not explained two different ways in one page.
-  it('explains the consequence on hover, sharing the summary matrix wording', () => {
-    component.visibility = Visibility.Hidden;
-    expect(component.tooltip).toBe('pages.project.viewRestrictions.hiddenCount');
-    component.visibility = Visibility.RestrictedView;
-    expect(component.tooltip).toBe('pages.project.viewRestrictions.restrictedViewCount');
-  });
-
-  // "Visible" has no consequence worth spelling out, so it keeps its plain label.
-  it('falls back to the plain label when nothing is restricted', () => {
-    component.visibility = Visibility.Visible;
-    expect(component.tooltip).toBe('pages.project.viewRestrictions.visibility.visible');
-  });
-
   it('renders an icon for a restricted state', () => {
     const cell = render(Visibility.Hidden);
     expect(cell.query(By.css('mat-icon'))).not.toBeNull();

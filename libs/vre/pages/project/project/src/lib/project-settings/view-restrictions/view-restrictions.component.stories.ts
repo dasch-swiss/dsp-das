@@ -465,6 +465,34 @@ export const ShowsManyRestrictedValuesOnOneResource: Story = {
   },
 };
 
+/**
+ * Colour is the only thing separating hidden from restricted view at a glance. Explained once in a
+ * legend rather than per figure — a matrix carries dozens of them, and the same two glyphs mark the
+ * drill-down rows, so one key serves the whole page.
+ */
+export const ExplainsTheStateIconsInALegend: Story = {
+  name: 'Explains the two state icons in a legend under the matrix',
+  decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('Both states are spelled out, consequence and all', async () => {
+      await expect(canvas.getByText(/Hidden — nothing is served/i)).toBeInTheDocument();
+      await expect(canvas.getByText(/Restricted view — a degraded version is served/i)).toBeInTheDocument();
+    });
+    await step('The legend keys on the same glyphs the cells render', async () => {
+      const legend = canvasElement.querySelector('.legend');
+      await expect(legend?.querySelector('.legend-hidden')?.textContent?.trim()).toBe('visibility_off');
+      await expect(legend?.querySelector('.legend-restricted')?.textContent?.trim()).toBe('blur_on');
+    });
+    await step('It is a key to the table, not a replacement for it', async () => {
+      // the legend follows the matrix rather than pushing it down the page
+      const matrix = canvasElement.querySelector('.matrix')!;
+      const legend = canvasElement.querySelector('.legend')!;
+      await expect(matrix.compareDocumentPosition(legend) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+  },
+};
+
 export const ExpandsGroupToRevealAffectedResources: Story = {
   name: 'Reveals the affected resources when a group row is clicked',
   decorators: [

@@ -183,6 +183,23 @@
       </div>
     }
     </div>
+
+    <!--
+      Red and amber are otherwise the only thing telling the two states apart. Explained once here
+      rather than per figure: a matrix carries dozens of them, and the same two glyphs also mark the
+      drill-down cells, so one legend covers the whole page. The glyphs and colours are the cells' own
+      (see count-cell / visibility-cell), so the legend reads as a key to what is on screen.
+    -->
+    <div class="legend">
+      <span class="legend-entry">
+        <mat-icon class="legend-hidden">visibility_off</mat-icon>
+        {{ 'pages.project.viewRestrictions.hiddenCount' | translate }}
+      </span>
+      <span class="legend-entry">
+        <mat-icon class="legend-restricted">blur_on</mat-icon>
+        {{ 'pages.project.viewRestrictions.restrictedViewCount' | translate }}
+      </span>
+    </div>
   }
 } @else {
   <app-progress-indicator />

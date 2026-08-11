@@ -340,3 +340,37 @@
 }
 
 // The per-audience cells live in `app-visibility-cell`, which owns its own eye colours.
+
+// Key to the two state glyphs used throughout the matrix and its drill-down. Sits below the table:
+// the intro paragraph already explains the screen for a first read, so this is reference material,
+// consulted when a colour needs decoding rather than read up front.
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: rgba($black, 0.6);
+
+  .legend-entry {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  // deliberately the count cells' own sizes and colours: the legend is a key to those glyphs, so any
+  // divergence would make it a picture of something else
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+  }
+
+  .legend-hidden {
+    color: $red_700;
+  }
+
+  .legend-restricted {
+    color: $yellow_800;
+  }
+}

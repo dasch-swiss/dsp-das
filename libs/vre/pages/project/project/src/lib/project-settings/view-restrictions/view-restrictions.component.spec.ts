@@ -432,6 +432,49 @@ describe('ViewRestrictionsComponent', () => {
     });
   });
 
+  // Red and amber are otherwise the only thing separating the two states. The legend is where that is
+  // explained, so it has to survive template edits — without it the matrix is a wall of undecodable
+  // colour. Needs the real template, which the suite's shared TestBed replaces with a mock.
+  describe('state legend', () => {
+    let el: HTMLElement;
+
+    beforeEach(async () => {
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [ViewRestrictionsComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        providers: [
+          { provide: AdminAPIApiService, useValue: adminApiMock },
+          { provide: ProjectPageService, useValue: projectPageServiceMock },
+          {
+            provide: ResourceService,
+            useValue: { getResourcePath: (iri: string) => iri.replace('http://rdfh.ch', '') },
+          },
+          provideTranslateService(),
+          TranslateService,
+        ],
+      }).compileComponents();
+
+      const f = TestBed.createComponent(ViewRestrictionsComponent);
+      f.detectChanges();
+      el = f.nativeElement as HTMLElement;
+    });
+
+    it('explains both states once, below the matrix', () => {
+      const entries = Array.from(el.querySelectorAll('.legend .legend-entry')).map(e => e.textContent?.trim());
+      expect(entries.length).toBe(2);
+      expect(entries[0]).toContain('pages.project.viewRestrictions.hiddenCount');
+      expect(entries[1]).toContain('pages.project.viewRestrictions.restrictedViewCount');
+    });
+
+    // A legend keyed on different glyphs than the table explains nothing. These are the icons the count
+    // cells and the drill-down cells render.
+    it('keys on the glyphs the cells actually use', () => {
+      expect(el.querySelector('.legend .legend-hidden')?.textContent?.trim()).toBe('visibility_off');
+      expect(el.querySelector('.legend .legend-restricted')?.textContent?.trim()).toBe('blur_on');
+    });
+  });
+
   // The population column and the audience cells answer different questions: the restriction counts must
   // never feed the population total, or a heavily restricted class would inflate its own denominator.
   describe('count units', () => {

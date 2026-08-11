@@ -34,7 +34,9 @@ interface CountLine {
  *   - `All` → both lines, each labelled (design 1i)
  *
  * Icons are `aria-hidden` because the numbers beside them are the content; the cell carries one
- * `aria-label` naming the units and states in words, so colour is never the only channel.
+ * `aria-label` naming the units and states in words, so colour is never the only channel. Sighted
+ * readers get the same in the page's legend, which repeats these glyphs and spells out each state —
+ * the two states are not explained per figure, so a matrix of them stays readable.
  */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,13 +54,13 @@ interface CountLine {
               }}</mat-icon>
             }
             @if (line.counts.hidden) {
-              <span class="count-hidden" [matTooltip]="tooltipFor('hidden') | translate">
+              <span class="count-hidden">
                 <mat-icon aria-hidden="true">visibility_off</mat-icon>
                 {{ line.counts.hidden }}
               </span>
             }
             @if (line.counts.restrictedView) {
-              <span class="count-restricted" [matTooltip]="tooltipFor('restrictedView') | translate">
+              <span class="count-restricted">
                 <mat-icon aria-hidden="true">blur_on</mat-icon>
                 {{ line.counts.restrictedView }}
               </span>
@@ -81,17 +83,6 @@ export class CountCellComponent {
   /** Only in the combined view does a line need to say which unit it counts. */
   get showUnitIcon(): boolean {
     return this.itemType === ItemType.All;
-  }
-
-  /**
-   * What one state's figure means, on hover: the state explained in words ("Hidden — nothing is
-   * served"), which is the part colour alone conveys. The unit is only ambiguous in the combined view,
-   * where the unit icon carries its own tooltip; elsewhere the filter already fixes it.
-   */
-  tooltipFor(state: 'hidden' | 'restrictedView'): string {
-    return state === 'hidden'
-      ? 'pages.project.viewRestrictions.hiddenCount'
-      : 'pages.project.viewRestrictions.restrictedViewCount';
   }
 
   /** The lines to render: the units in scope for the filter that have something to report. */
