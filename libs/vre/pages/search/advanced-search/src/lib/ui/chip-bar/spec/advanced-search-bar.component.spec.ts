@@ -1,5 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Constants } from '@dasch-swiss/dsp-js';
+import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, of } from 'rxjs';
 import { StatementElement } from '../../../model';
 import { Operator } from '../../../operators.config';
@@ -9,7 +12,12 @@ import { SearchFlowLogger } from '../../../service/search-flow-logger.service';
 import { SearchUrlParams, SearchUrlSyncService } from '../../../service/search-url-sync.service';
 import { StatementDraftStore } from '../../../service/statement-draft.store';
 import { makePredicate } from '../../../testing/test-data-builders';
+import { OrderByComponent } from '../../order-by/order-by.component';
+import { AddFilterButtonComponent } from '../add-filter-button.component';
 import { AdvancedSearchBarComponent } from '../advanced-search-bar.component';
+import { DataModelChipComponent } from '../data-model-chip.component';
+import { FilterChipComponent } from '../filter-chip.component';
+import { ResourceClassChipComponent } from '../resource-class-chip.component';
 
 /**
  * Regression coverage for `onRemoveStatement` (DEV-6576). Removing a filter that is *also* the active
@@ -273,5 +281,77 @@ describe('AdvancedSearchBarComponent — valueLabel URL persistence (DEV-6857)',
     const decoded = decodeSingle(state.filters);
     expect(decoded['value']).toBe(LINK_IRI);
     expect(decoded['valueLabel']).toBe('Rita');
+  });
+});
+
+describe('AdvancedSearchBarComponent fulltext term rules (DEV-6930)', () => {
+  let fixture: ComponentFixture<AdvancedSearchBarComponent>;
+  let component: AdvancedSearchBarComponent;
+  let writeState: jest.Mock;
+
+  const errorText = (): string | null =>
+    (fixture.nativeElement as HTMLElement).querySelector('mat-error')?.textContent?.trim() ?? null;
+
+  beforeEach(() => {
+    jest.useFakeTimers();
+    writeState = jest.fn();
+    TestBed.configureTestingModule({
+      imports: [AdvancedSearchBarComponent, TranslateModule.forRoot()],
+      providers: [
+        provideNoopAnimations(),
+        {
+          provide: SearchUrlSyncService,
+          useValue: { params$: of({}), writeState, readParams: () => ({}), encodeFilters: () => '' },
+        },
+        { provide: OntologyDataService, useValue: { ontologyLoading$: of(false), init: () => {} } },
+        { provide: DerivedSearchStateService, useValue: { searchState$: of({ statements: [] }) } },
+        { provide: SearchFlowLogger, useValue: { fulltextChanged: () => {} } },
+        { provide: StatementDraftStore, useValue: new FakeDraftStore([]) },
+      ],
+    });
+    // Only the fulltext field is under test; the chip children need the whole ontology pipeline.
+    TestBed.overrideComponent(AdvancedSearchBarComponent, {
+      remove: {
+        imports: [
+          DataModelChipComponent,
+          ResourceClassChipComponent,
+          FilterChipComponent,
+          AddFilterButtonComponent,
+          OrderByComponent,
+        ],
+      },
+      add: { schemas: [NO_ERRORS_SCHEMA] },
+    });
+    fixture = TestBed.createComponent(AdvancedSearchBarComponent);
+    component = fixture.componentInstance;
+    component.projectUuid = 'test';
+    fixture.detectChanges();
+  });
+
+  afterEach(() => jest.useRealTimers());
+
+  it('does not search a two-character term', () => {
+    component.fulltextControl.setValue('de');
+    jest.advanceTimersByTime(400);
+    fixture.detectChanges();
+
+    expect(writeState).not.toHaveBeenCalled();
+  });
+
+  it('shows the message without needing the field to be blurred first', () => {
+    component.fulltextControl.setValue('de');
+    jest.advanceTimersByTime(400);
+    fixture.detectChanges();
+
+    expect(errorText()).toBe('pages.search.termValidation.tooShort');
+  });
+
+  it('searches a three-character term', () => {
+    component.fulltextControl.setValue('ide');
+    jest.advanceTimersByTime(400);
+    fixture.detectChanges();
+
+    expect(writeState).toHaveBeenCalledWith({ q: 'ide' }, { replaceUrl: false });
+    expect(errorText()).toBeNull();
   });
 });

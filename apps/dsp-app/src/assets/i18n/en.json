@@ -397,6 +397,10 @@
         "title": "Search failed",
         "message": "Something went wrong and the search could not be completed. Please try again."
       },
+      "termValidation": {
+        "tooShort": "Enter at least 3 characters",
+        "wildcardTooShort": "A wildcard needs at least 3 other characters in the same word"
+      },
       "searchTips": {
         "title": "Search tips",
         "exactPhrases": "Use quotation marks for exact phrases: \"down the rabbit hole\"",

@@ -60,6 +60,9 @@ const STORY_TRANSLATIONS = {
         title: 'Search failed',
         message: 'Something went wrong and the search could not be completed. Please try again.',
       },
+      termValidation: {
+        tooShort: 'Enter at least 3 characters',
+      },
       advancedSearch: {
         allResourceClasses: 'All resources',
         dataModel: 'Data model',
