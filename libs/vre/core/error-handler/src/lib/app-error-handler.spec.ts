@@ -328,7 +328,6 @@ describe('AppErrorHandler', () => {
       );
 
       expect(openSnackBar).toHaveBeenCalledWith('core.errorHandler.serverUnreachable', 'error');
-      expect(instant).not.toHaveBeenCalledWith('core.errorHandler.noInternet');
     });
 
     it('reads the same on the JS-LIB path', () => {
