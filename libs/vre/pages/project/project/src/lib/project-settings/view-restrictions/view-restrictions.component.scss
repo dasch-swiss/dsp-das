@@ -192,8 +192,31 @@
       background: $secondary_50;
     }
 
+    // A row with nothing to drill into is a data line, not a control: no pointer, no hover response.
+    // It keeps the normal text colour — it is ordinary data, and greying it out would read as
+    // "unavailable" when the row is in fact reporting a perfectly good result (nothing restricted).
+    &.is-inert {
+      cursor: default;
+      // `disabled` makes the UA grey the text; restate it, since the row is ordinary data and not an
+      // unavailable control. `font: inherit` above does not carry colour.
+      color: inherit;
+
+      &:hover {
+        background: $white;
+      }
+    }
+
     .chevron {
       color: rgba($black, 0.4);
+    }
+
+    // Holds the chevron's place on an inert row so every group label starts at the same x, whether or
+    // not the row opens. Matches mat-icon's default box, which the chevron does not override.
+    .chevron-spacer {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      flex: none;
     }
 
     .group-label {

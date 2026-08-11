@@ -432,6 +432,54 @@ describe('ViewRestrictionsComponent', () => {
     });
   });
 
+  // In class mode the API lists every class, so most rows on a healthy project have nothing beneath
+  // them. Those used to expand onto an empty list, which read as a panel opening and shutting by
+  // itself; they are inert instead.
+  describe('isExpandable (rows with nothing to drill into do not open)', () => {
+    const zero = { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } };
+    const emptyCounts = { anonymous: zero, authenticated: zero, projectMember: zero };
+    const group = (counts: typeof emptyCounts) => ({ id: 'g', label: 'G', counts });
+
+    it('is false when no audience has anything to report', () => {
+      expect(component.isExpandable(group(emptyCounts))).toBe(false);
+    });
+
+    it('is true when any single audience has a finding', () => {
+      expect(
+        component.isExpandable(
+          group({ ...emptyCounts, projectMember: { ...zero, resources: { hidden: 1, restrictedView: 0 } } })
+        )
+      ).toBe(true);
+    });
+
+    // Restricted-view-only is still a finding — folding it in would make a row with real content inert.
+    it('is true when an audience has only restricted-view counts', () => {
+      expect(
+        component.isExpandable(
+          group({ ...emptyCounts, anonymous: { ...zero, resources: { hidden: 0, restrictedView: 2 } } })
+        )
+      ).toBe(true);
+    });
+
+    // The drill-down reports item-level findings too, so a row whose only content is inside resources
+    // must still open — judging by the resources unit alone would hide it.
+    it('is true when the findings are item-level only', () => {
+      expect(
+        component.isExpandable(
+          group({ ...emptyCounts, anonymous: { ...zero, items: { hidden: 4, restrictedView: 0 } } })
+        )
+      ).toBe(true);
+    });
+
+    // The template disables the row, but a click already in flight when the filter changed must not
+    // open a row that is now empty — hence the guard on the handler itself.
+    it('refuses to expand an empty row even when toggled directly', () => {
+      component.toggleGroup(group(emptyCounts));
+      expect(component.isExpanded('g')).toBe(false);
+      expect(adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems).not.toHaveBeenCalled();
+    });
+  });
+
   // Red and amber are otherwise the only thing separating the two states. The legend is where that is
   // explained, so it has to survive template edits — without it the matrix is a wall of undecodable
   // colour. Needs the real template, which the suite's shared TestBed replaces with a mock.
@@ -472,6 +520,75 @@ describe('ViewRestrictionsComponent', () => {
     it('keys on the glyphs the cells actually use', () => {
       expect(el.querySelector('.legend .legend-hidden')?.textContent?.trim()).toBe('visibility_off');
       expect(el.querySelector('.legend .legend-restricted')?.textContent?.trim()).toBe('blur_on');
+    });
+  });
+
+  // The rendered counterpart of `isExpandable`: a row with nothing beneath it must not present itself
+  // as openable in the first place, which is a template concern the predicate's own tests cannot see.
+  describe('inert rows (rendered)', () => {
+    let rows: HTMLButtonElement[];
+
+    beforeEach(async () => {
+      const zero = { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } };
+      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsSummary.mockReturnValue(
+        of({
+          ...summary,
+          groups: [
+            ...summary.groups!,
+            // listed with its population intact, but nothing restricted — the common case in class mode
+            {
+              id: 'http://www.knora.org/ontology/0001/anything#OpenThing',
+              label: 'Open thing',
+              ontology: 'anything',
+              counts: { anonymous: zero, authenticated: zero, projectMember: zero },
+              totalResources: 500,
+            },
+          ],
+        })
+      );
+
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [ViewRestrictionsComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        providers: [
+          { provide: AdminAPIApiService, useValue: adminApiMock },
+          { provide: ProjectPageService, useValue: projectPageServiceMock },
+          {
+            provide: ResourceService,
+            useValue: { getResourcePath: (iri: string) => iri.replace('http://rdfh.ch', '') },
+          },
+          provideTranslateService(),
+          TranslateService,
+        ],
+      }).compileComponents();
+
+      const f = TestBed.createComponent(ViewRestrictionsComponent);
+      f.detectChanges();
+      rows = Array.from((f.nativeElement as HTMLElement).querySelectorAll('.matrix-row'));
+    });
+
+    afterEach(() => {
+      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsSummary.mockReturnValue(of(summary));
+    });
+
+    it('disables the row that has nothing to drill into, and only that row', () => {
+      expect(rows.length).toBe(2);
+      expect(rows[0].disabled).toBe(false);
+      expect(rows[1].disabled).toBe(true);
+      expect(rows[1].textContent).toContain('Open thing');
+    });
+
+    // The chevron is the affordance; leaving it on a row that cannot open is the thing being fixed.
+    // A spacer keeps every group label starting at the same x.
+    it('drops the chevron but holds its place', () => {
+      expect(rows[0].querySelector('.chevron')).not.toBeNull();
+      expect(rows[1].querySelector('.chevron')).toBeNull();
+      expect(rows[1].querySelector('.chevron-spacer')).not.toBeNull();
+    });
+
+    it('still reports the row and its population — inert is not hidden', () => {
+      expect(rows[1].textContent).toContain('500');
     });
   });
 

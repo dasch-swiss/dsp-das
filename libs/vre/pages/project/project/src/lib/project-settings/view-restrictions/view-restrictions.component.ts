@@ -187,6 +187,27 @@ export class ViewRestrictionsComponent {
   }
 
   /**
+   * Whether a row has anything to drill into, and so whether it opens at all.
+   *
+   * In class mode the API lists *every* class in the project, restricted or not, so most rows on a
+   * healthy project have nothing beneath them. Those rows used to expand onto an empty list — the
+   * chevron turned, no content appeared, and it read as a panel that opened and shut by itself. They
+   * are inert instead: no chevron, no hover, not focusable (see the template).
+   *
+   * Judged from the counts rather than by fetching and seeing: the drill-down takes the same
+   * `itemType` filter as the summary, so a row whose every audience is empty under the active filter
+   * is exactly a row whose drill-down comes back empty. That also means the answer changes with the
+   * filter — a class restricted only on whole resources goes inert under `Value` — which is correct,
+   * since the drill-down would have nothing to show there either.
+   */
+  isExpandable(group: RestrictionGroup): boolean {
+    const c = group.counts;
+    return (
+      !this.isEmptyCount(c.anonymous) || !this.isEmptyCount(c.authenticated) || !this.isEmptyCount(c.projectMember)
+    );
+  }
+
+  /**
    * Whether the report found no restriction anywhere, even though rows are listed.
    *
    * In class mode the API reports every class in the project, so `groups` is non-empty whenever the
@@ -199,6 +220,11 @@ export class ViewRestrictionsComponent {
   }
 
   toggleGroup(group: RestrictionGroup): void {
+    // The template already makes an empty row inert; this guards the path itself, so a row that
+    // became empty under a new filter cannot be opened by a click that was already in flight.
+    if (!this.isExpandable(group)) {
+      return;
+    }
     if (this.expanded()[group.id]) {
       const next = { ...this.expanded() };
       delete next[group.id];

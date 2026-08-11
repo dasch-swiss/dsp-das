@@ -466,6 +466,62 @@ export const ShowsManyRestrictedValuesOnOneResource: Story = {
 };
 
 /**
+ * In class mode the API lists every class, restricted or not, so most rows on a healthy project have
+ * nothing beneath them. Clicking one used to expand it onto an empty list — the chevron turned, no
+ * content appeared, and it read as a panel that opened and shut by itself.
+ */
+export const DoesNotOpenAClassWithNothingToShow: Story = {
+  name: 'Makes a class with nothing restricted inert instead of opening it onto an empty list',
+  decorators: [
+    withApi(
+      of(
+        makeSummary({
+          groups: [
+            ...makeSummary().groups!,
+            {
+              id: 'http://www.knora.org/ontology/0001/anything#OpenThing',
+              label: 'Open thing',
+              ontology: 'anything',
+              counts: {
+                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+              },
+              totalResources: 500,
+            },
+          ],
+        })
+      ),
+      of(makeItemsPage([makeResource()]))
+    ),
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const rowFor = (label: string) =>
+      Array.from(canvasElement.querySelectorAll<HTMLButtonElement>('.matrix-row')).find(r =>
+        r.textContent?.includes(label)
+      )!;
+
+    await step('The unrestricted class is still listed, with its population', async () => {
+      await expect(canvas.getByText('Open thing')).toBeInTheDocument();
+      await expect(canvas.getByText('500')).toBeInTheDocument();
+    });
+    await step('It offers no chevron, so it does not present itself as openable', async () => {
+      await expect(rowFor('Open thing').querySelector('.chevron')).toBeNull();
+      await expect(rowFor('Thing').querySelector('.chevron')).not.toBeNull();
+    });
+    await step('Clicking it does nothing — no drill-down appears', async () => {
+      await userEvent.click(canvas.getByText('Open thing'), { pointerEventsCheck: 0 });
+      await expect(canvas.queryByText('A thing')).not.toBeInTheDocument();
+    });
+    await step('A class that does have findings still opens', async () => {
+      await userEvent.click(canvas.getByText('Thing'));
+      await expect(canvas.getByText('A thing')).toBeInTheDocument();
+    });
+  },
+};
+
+/**
  * Colour is the only thing separating hidden from restricted view at a glance. Explained once in a
  * legend rather than per figure — a matrix carries dozens of them, and the same two glyphs mark the
  * drill-down rows, so one key serves the whole page.

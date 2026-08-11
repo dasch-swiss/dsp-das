@@ -79,9 +79,20 @@
     </div>
 
     @for (group of summary.groups; track group.id) {
-      <button type="button" class="matrix-row" (click)="toggleGroup(group)">
+      <!--
+        In class mode every class is listed, restricted or not, so most rows on a healthy project have
+        nothing beneath them. Such a row is inert rather than a button that expands onto an empty list:
+        `disabled` takes it out of the tab order and off the pointer, and the chevron gives way to a
+        spacer that preserves the label's alignment. See `isExpandable`.
+      -->
+      @let expandable = isExpandable(group);
+      <button type="button" class="matrix-row" [class.is-inert]="!expandable" [disabled]="!expandable" (click)="toggleGroup(group)">
         <span class="col-group">
-          <mat-icon class="chevron">{{ isExpanded(group.id) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+          @if (expandable) {
+            <mat-icon class="chevron">{{ isExpanded(group.id) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+          } @else {
+            <span class="chevron-spacer" aria-hidden="true"></span>
+          }
           <span class="group-label">
             <span class="group-name">{{ group.label }}</span>
             @if (group.propertyName || group.ontology) {
