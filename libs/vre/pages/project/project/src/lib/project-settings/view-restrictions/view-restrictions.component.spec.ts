@@ -26,18 +26,18 @@ const summary: ViewRestrictionsSummary = {
       label: 'Thing',
       ontology: 'anything',
       counts: {
-        anonymous: { hidden: 15, restrictedView: 4 },
-        authenticated: { hidden: 14, restrictedView: 2 },
-        projectMember: { hidden: 5, restrictedView: 0 },
+        anonymous: { resources: { hidden: 15, restrictedView: 4 }, items: { hidden: 0, restrictedView: 0 } },
+        authenticated: { resources: { hidden: 14, restrictedView: 2 }, items: { hidden: 0, restrictedView: 0 } },
+        projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
       },
       // the class population, of which the counts above are a part
       totalResources: 120,
     },
   ],
   totals: {
-    anonymous: { hidden: 15, restrictedView: 4 },
-    authenticated: { hidden: 14, restrictedView: 2 },
-    projectMember: { hidden: 5, restrictedView: 0 },
+    anonymous: { resources: { hidden: 15, restrictedView: 4 }, items: { hidden: 0, restrictedView: 0 } },
+    authenticated: { resources: { hidden: 14, restrictedView: 2 }, items: { hidden: 0, restrictedView: 0 } },
+    projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
   },
 };
 
@@ -105,8 +105,8 @@ describe('ViewRestrictionsComponent', () => {
       states.push(state);
       if (!state.loading) {
         expect(state.summary?.groups?.length).toBe(1);
-        expect(state.summary?.totals.anonymous.hidden).toBe(15);
-        expect(state.summary?.totals.anonymous.restrictedView).toBe(4);
+        expect(state.summary?.totals.anonymous.resources.hidden).toBe(15);
+        expect(state.summary?.totals.anonymous.resources.restrictedView).toBe(4);
         // the first emission must have been the loading sentinel
         expect((states[0] as { loading: boolean }).loading).toBe(true);
         done();
@@ -363,9 +363,9 @@ describe('ViewRestrictionsComponent', () => {
     // resource count, and it still counts towards the footer total.
     it('counts an unrestricted class towards the total', () => {
       const zero = {
-        anonymous: { hidden: 0, restrictedView: 0 },
-        authenticated: { hidden: 0, restrictedView: 0 },
-        projectMember: { hidden: 0, restrictedView: 0 },
+        anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+        authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+        projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
       };
       expect(
         component.totalResources([
@@ -378,9 +378,9 @@ describe('ViewRestrictionsComponent', () => {
 
   describe('hasNoRestrictions', () => {
     const zero = {
-      anonymous: { hidden: 0, restrictedView: 0 },
-      authenticated: { hidden: 0, restrictedView: 0 },
-      projectMember: { hidden: 0, restrictedView: 0 },
+      anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+      authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+      projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
     };
 
     // Class mode lists every class, so rows exist even with nothing restricted — the component has to
@@ -400,7 +400,7 @@ describe('ViewRestrictionsComponent', () => {
           ...summary,
           totals: {
             ...zero,
-            anonymous: { hidden: 0, restrictedView: 2 },
+            anonymous: { resources: { hidden: 0, restrictedView: 2 }, items: { hidden: 0, restrictedView: 0 } },
           },
         })
       ).toBe(false);
@@ -408,33 +408,27 @@ describe('ViewRestrictionsComponent', () => {
   });
 
   describe('isEmptyCount', () => {
-    it('is empty only when both states are zero', () => {
-      expect(component.isEmptyCount({ hidden: 0, restrictedView: 0 })).toBe(true);
+    const noCounts = { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } };
+
+    it('is empty only when every unit and state is zero', () => {
+      expect(component.isEmptyCount(noCounts)).toBe(true);
       expect(component.isEmptyCount(undefined)).toBe(true);
     });
 
-    // A cell with only restricted-view items must still render — folding it into "no restrictions"
-    // is exactly the conflation screen 1i exists to undo.
+    // Restricted-view-only must still count as a finding — folding it into "no restrictions" is exactly
+    // the conflation screen 1i exists to undo.
     it('is not empty when only restricted view is non-zero', () => {
-      expect(component.isEmptyCount({ hidden: 0, restrictedView: 3 })).toBe(false);
+      expect(component.isEmptyCount({ ...noCounts, resources: { hidden: 0, restrictedView: 3 } })).toBe(false);
     });
 
     it('is not empty when only hidden is non-zero', () => {
-      expect(component.isEmptyCount({ hidden: 2, restrictedView: 0 })).toBe(false);
+      expect(component.isEmptyCount({ ...noCounts, resources: { hidden: 2, restrictedView: 0 } })).toBe(false);
     });
 
-    // The API is inconsistent: `totals` is flat but `groups[].counts` is nested. Reading only the flat
-    // shape called every nested cell empty, which blanked the whole matrix against live data.
-    it('reads the nested shape too, rather than calling it empty', () => {
-      expect(
-        component.isEmptyCount({
-          resources: { hidden: 7, restrictedView: 3 },
-          items: { hidden: 12, restrictedView: 4 },
-        })
-      ).toBe(false);
-      expect(
-        component.isEmptyCount({ resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } })
-      ).toBe(true);
+    // Wider than what a cell renders on purpose: the matrix shows the resources unit only, but a project
+    // whose sole restrictions are item-level still has restrictions and must not be reported as clean.
+    it('is not empty when only the items unit is non-zero', () => {
+      expect(component.isEmptyCount({ ...noCounts, items: { hidden: 4, restrictedView: 0 } })).toBe(false);
     });
   });
 
@@ -447,7 +441,10 @@ describe('ViewRestrictionsComponent', () => {
           {
             id: 'c',
             label: 'C',
-            counts: { ...summary.totals, anonymous: { hidden: 3, restrictedView: 0 } },
+            counts: {
+              ...summary.totals,
+              anonymous: { resources: { hidden: 3, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            },
             totalResources: 1,
           },
         ])

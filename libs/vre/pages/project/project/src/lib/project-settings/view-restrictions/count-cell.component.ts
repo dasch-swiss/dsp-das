@@ -1,44 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { RestrictionCounts } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { RestrictionCounts, UnitCounts } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { TranslatePipe } from '@ngx-translate/core';
 
-/** The nested form: the two units, each with its own pair of states. */
-interface NestedCounts {
-  resources?: RestrictionCounts;
-  items?: RestrictionCounts;
-}
-
 /**
- * One audience's figure as it actually arrives. The API is not consistent: `totals` is flat, while
- * `groups[].counts` is still nested, so every consumer has to cope with both.
- */
-export type AudienceCount = RestrictionCounts | NestedCounts;
-
-const isNested = (value: AudienceCount): value is NestedCounts => 'resources' in value || 'items' in value;
-
-/**
- * Collapse either shape to a single pair of state counts.
- *
- * A nested payload is summed across its units — one resource holding three hidden values reports 4 hidden.
- * That conflates two different questions, and the split form answered them separately, but the deployed API
- * no longer sends the split consistently and a summed figure beats a blank cell.
- */
-export function normaliseCounts(value: AudienceCount | undefined): RestrictionCounts | undefined {
-  if (!value) {
-    return undefined;
-  }
-  if (!isNested(value)) {
-    return value;
-  }
-  return {
-    hidden: (value.resources?.hidden ?? 0) + (value.items?.hidden ?? 0),
-    restrictedView: (value.resources?.restrictedView ?? 0) + (value.items?.restrictedView ?? 0),
-  };
-}
-
-/**
- * One audience cell of the summary matrix: what that audience cannot fully see.
+ * One audience cell of the summary matrix: how many *resources* that audience cannot fully see.
  *
  * A single count per state, shown side by side on one line:
  *
@@ -47,6 +13,12 @@ export function normaliseCounts(value: AudienceCount | undefined): RestrictionCo
  *
  * The two states are distinct outcomes, not degrees of one, so they are never added together. A state
  * with a zero count renders nothing; a cell with neither renders a single dash.
+ *
+ * **Unit.** The API reports each audience in two units — `resources` (whole restricted resources) and
+ * `items` (restricted values inside them). This cell shows `resources` only, because that is the figure
+ * comparable to the row's `totalResources`. The two are never summed: one resource holding three hidden
+ * values is 1 resource and 3 items, and adding them to "4" produces rows reading "4 of 1" against a class
+ * of one resource. Item-level detail lives in the drill-down, not in the matrix.
  *
  * Icons are `aria-hidden` because the numbers beside them are the content; the cell carries one
  * `aria-label` naming both states, so colour is never the only channel.
@@ -78,16 +50,12 @@ export function normaliseCounts(value: AudienceCount | undefined): RestrictionCo
   imports: [MatIcon, TranslatePipe],
 })
 export class CountCellComponent {
-  /**
-   * Accepts either shape the API emits, because it is not consistent between them: `totals` arrives flat
-   * as `{hidden, restrictedView}`, while `groups[].counts` still nests the figures under `resources` and
-   * `items`. Reading only one shape left the other rendering a dash over live data, so both are read here
-   * rather than in each call site. A nested payload is collapsed by summing the two units per state.
-   */
-  @Input({ required: true }) set counts(value: AudienceCount | undefined) {
-    this._counts = normaliseCounts(value);
+  /** One audience's figure, in both units, straight off the API. */
+  @Input({ required: true }) set counts(value: UnitCounts | undefined) {
+    this._counts = value?.resources;
   }
 
+  /** The resources unit — the only one this cell renders (see the class doc). */
   get counts(): RestrictionCounts | undefined {
     return this._counts;
   }

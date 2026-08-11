@@ -11,7 +11,9 @@ import {
   PagedResponseRestrictedResource,
   RestrictedItem,
   RestrictedResource,
+  RestrictionCounts,
   RestrictionGroup,
+  UnitCounts,
   ViewRestrictionsSummary,
   Visibility,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
@@ -21,7 +23,7 @@ import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
-import { AudienceCount, CountCellComponent, normaliseCounts } from './count-cell.component';
+import { CountCellComponent } from './count-cell.component';
 import { ViewRestrictionsPageService } from './view-restrictions-page.service';
 import { VisibilityCellComponent } from './visibility-cell.component';
 
@@ -168,15 +170,20 @@ export class ViewRestrictionsComponent {
   }
 
   /**
-   * Whether an audience cell has nothing to report, so it renders a dash rather than zeroes.
+   * Whether an audience has nothing to report at all, in either unit.
    *
-   * Normalises first, because the API sends `totals` flat but `groups[].counts` nested — reading the flat
-   * shape alone would call every nested cell empty and wrongly announce "no restrictions". Checks both
-   * states: a cell with only restricted-view counts and nothing hidden is still a finding.
+   * Deliberately wider than what a cell renders: the matrix shows the `resources` unit only, but a project
+   * whose sole restrictions are on values inside otherwise-visible resources still has restrictions. Judging
+   * that by `resources` alone would announce "no restrictions" over a report that has findings in it.
+   *
+   * Checks both states too — a cell with only restricted-view counts and nothing hidden is still a finding.
    */
-  isEmptyCount(counts: AudienceCount | undefined): boolean {
-    const c = normaliseCounts(counts);
-    return !c?.hidden && !c?.restrictedView;
+  isEmptyCount(counts: UnitCounts | undefined): boolean {
+    return this._isEmptyUnit(counts?.resources) && this._isEmptyUnit(counts?.items);
+  }
+
+  private _isEmptyUnit(unit: RestrictionCounts | undefined): boolean {
+    return !unit?.hidden && !unit?.restrictedView;
   }
 
   /**

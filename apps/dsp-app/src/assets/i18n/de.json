@@ -228,8 +228,8 @@
         "itemsLoadFailed": "Die betroffenen Ressourcen konnten nicht geladen werden. Schliessen und öffnen Sie die Zeile erneut.",
         "hiddenCount": "Verborgen – es wird nichts ausgeliefert",
         "restrictedViewCount": "Eingeschränkte Ansicht – es wird eine reduzierte Version ausgeliefert",
-        "countAria": "{{hidden}} verborgen, {{restricted}} in eingeschränkter Ansicht",
-        "countNone": "Keine Einschränkungen"
+        "countAria": "{{hidden}} Ressourcen verborgen, {{restricted}} in eingeschränkter Ansicht",
+        "countNone": "Keine eingeschränkten Ressourcen"
       }
     },
     "system": {

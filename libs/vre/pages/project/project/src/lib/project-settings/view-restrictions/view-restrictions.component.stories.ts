@@ -43,9 +43,9 @@ const makeSummary = (overrides: Partial<ViewRestrictionsSummary> = {}): ViewRest
       label: 'Thing',
       ontology: 'anything',
       counts: {
-        anonymous: { hidden: 37, restrictedView: 11 },
-        authenticated: { hidden: 23, restrictedView: 5 },
-        projectMember: { hidden: 5, restrictedView: 0 },
+        anonymous: { resources: { hidden: 37, restrictedView: 11 }, items: { hidden: 0, restrictedView: 0 } },
+        authenticated: { resources: { hidden: 23, restrictedView: 5 }, items: { hidden: 0, restrictedView: 0 } },
+        projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
       },
       totalResources: 120,
     },
@@ -55,17 +55,17 @@ const makeSummary = (overrides: Partial<ViewRestrictionsSummary> = {}): ViewRest
       label: 'Blue thing',
       ontology: 'anything',
       counts: {
-        anonymous: { hidden: 3, restrictedView: 0 },
-        authenticated: { hidden: 0, restrictedView: 0 },
-        projectMember: { hidden: 0, restrictedView: 0 },
+        anonymous: { resources: { hidden: 3, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+        authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+        projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
       },
       totalResources: 30,
     },
   ],
   totals: {
-    anonymous: { hidden: 40, restrictedView: 11 },
-    authenticated: { hidden: 23, restrictedView: 5 },
-    projectMember: { hidden: 5, restrictedView: 0 },
+    anonymous: { resources: { hidden: 40, restrictedView: 11 }, items: { hidden: 0, restrictedView: 0 } },
+    authenticated: { resources: { hidden: 23, restrictedView: 5 }, items: { hidden: 0, restrictedView: 0 } },
+    projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
   },
   ...overrides,
 });
@@ -168,8 +168,8 @@ export const ShowsMatrixWithPerAudienceCounts: Story = {
       await expect(canvas.getByText('Blue thing')).toBeInTheDocument();
     });
     await step('The totals row sums the hidden counts across groups', async () => {
-      // 15 (Thing) + 3 (Blue thing) hidden from the anonymous audience
-      await expect(canvas.getByText('18')).toBeInTheDocument();
+      // 37 (Thing) + 3 (Blue thing) hidden resources for the anonymous audience
+      await expect(canvas.getByText('40')).toBeInTheDocument();
     });
   },
 };
@@ -221,9 +221,9 @@ export const ShowsEmptyStateWhenNoRestrictionsExist: Story = {
         makeSummary({
           groups: [],
           totals: {
-            anonymous: { hidden: 0, restrictedView: 0 },
-            authenticated: { hidden: 0, restrictedView: 0 },
-            projectMember: { hidden: 0, restrictedView: 0 },
+            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
           },
         })
       ),
@@ -271,9 +271,9 @@ export const ShowsUnrestrictedClassWithItsPopulation: Story = {
               label: 'Open thing',
               ontology: 'anything',
               counts: {
-                anonymous: { hidden: 0, restrictedView: 0 },
-                authenticated: { hidden: 0, restrictedView: 0 },
-                projectMember: { hidden: 0, restrictedView: 0 },
+                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
               },
               totalResources: 500,
             },
@@ -308,17 +308,17 @@ export const ShowsNoteWhenNothingIsRestricted: Story = {
               label: 'Open thing',
               ontology: 'anything',
               counts: {
-                anonymous: { hidden: 0, restrictedView: 0 },
-                authenticated: { hidden: 0, restrictedView: 0 },
-                projectMember: { hidden: 0, restrictedView: 0 },
+                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
               },
               totalResources: 500,
             },
           ],
           totals: {
-            anonymous: { hidden: 0, restrictedView: 0 },
-            authenticated: { hidden: 0, restrictedView: 0 },
-            projectMember: { hidden: 0, restrictedView: 0 },
+            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
           },
         })
       ),
@@ -360,23 +360,24 @@ export const ShowsManyRestrictedValuesOnOneResource: Story = {
         makeSummary({
           groups: [
             {
-              // ONE resource in the class, itself fully visible, carrying THREE hidden values. The old
-              // summed count rendered "3" against a population of 1.
+              // ONE resource in the class, itself fully visible, carrying THREE hidden values. Summing the
+              // units would render "3" against a population of 1; the matrix reports the resources unit
+              // only, so the cell stays empty and the three values surface in the drill-down.
               id: 'http://www.knora.org/ontology/0001/anything#Sparse',
               label: 'Sparse thing',
               ontology: 'anything',
               counts: {
-                anonymous: { hidden: 3, restrictedView: 0 },
-                authenticated: { hidden: 3, restrictedView: 0 },
-                projectMember: { hidden: 0, restrictedView: 0 },
+                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
+                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
+                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
               },
               totalResources: 1,
             },
           ],
           totals: {
-            anonymous: { hidden: 3, restrictedView: 0 },
-            authenticated: { hidden: 3, restrictedView: 0 },
-            projectMember: { hidden: 0, restrictedView: 0 },
+            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
+            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
+            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
           },
         })
       ),
@@ -385,14 +386,17 @@ export const ShowsManyRestrictedValuesOnOneResource: Story = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('The population is 1 and the three restrictions are reported as values', async () => {
+    await step('The population column shows the true population, not the restriction count', async () => {
       await expect(canvas.getByText('Sparse thing')).toBeInTheDocument();
-      await expect(canvas.getByText('3')).toBeInTheDocument();
-      // the Resources column shows the true population, not the restriction count
       await expect(canvas.getAllByText('1').length).toBeGreaterThan(0);
     });
-    await step('The cell reports the restriction rather than reading as empty', async () => {
-      await expect(canvasElement.querySelector('.count-hidden')).not.toBeNull();
+    await step('No cell claims a restricted resource, since the class has none', async () => {
+      // "3" would be the summed figure; it must appear nowhere in the matrix.
+      await expect(canvas.queryByText('3')).toBeNull();
+      await expect(canvasElement.querySelector('.count-hidden')).toBeNull();
+    });
+    await step('The row is still reported rather than announced as unrestricted', async () => {
+      await expect(canvasElement.querySelector('.empty-note')).toBeNull();
     });
   },
 };

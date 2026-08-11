@@ -228,8 +228,8 @@
         "itemsLoadFailed": "Les ressources concernées n'ont pas pu être chargées. Fermez et rouvrez la ligne pour réessayer.",
         "hiddenCount": "Masqué – rien n’est servi",
         "restrictedViewCount": "Vue restreinte – une version dégradée est servie",
-        "countAria": "{{hidden}} masqués, {{restricted}} en vue restreinte",
-        "countNone": "Aucune restriction"
+        "countAria": "{{hidden}} ressources masquées, {{restricted}} en vue restreinte",
+        "countNone": "Aucune ressource restreinte"
       }
     },
     "system": {
