@@ -1,8 +1,14 @@
 <h2>{{ 'pages.project.viewRestrictions.title' | translate }}</h2>
 <p class="subtitle">{{ 'pages.project.viewRestrictions.intro' | translate }}</p>
 
-<!-- Group by: resource class <-> property -->
+<!--
+  The two control rows share one grid so their labels form a column and both sets of controls start at
+  the same x. The label column is sized by content rather than by a fixed width, so it follows whichever
+  label is widest in the active language ("Gruppieren nach" is far wider than "Group by") instead of
+  being tuned for English and misaligning everywhere else.
+-->
 <div class="controls">
+  <!-- Group by: resource class <-> property -->
   <span class="control-label">{{ 'pages.project.viewRestrictions.groupBy' | translate }}</span>
   <mat-button-toggle-group
     [value]="(groupBy$ | async)"
@@ -15,10 +21,8 @@
       {{ 'pages.project.viewRestrictions.byProperty' | translate }}
     </mat-button-toggle>
   </mat-button-toggle-group>
-</div>
 
-<!-- Item-type filter chips -->
-<div class="controls">
+  <!-- Item-type filter chips -->
   <span class="control-label">
     <mat-icon>filter_list</mat-icon>
     {{ 'pages.project.viewRestrictions.filters' | translate }}

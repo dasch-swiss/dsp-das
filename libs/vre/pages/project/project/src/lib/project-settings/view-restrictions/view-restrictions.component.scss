@@ -10,12 +10,15 @@
   max-width: 640px;
 }
 
+// Label column + control column, so "Group by" and "Filters" stack into a column and the toggle group
+// and the chips both start at the same x. `max-content` on the first column lets the label column take
+// the width of the widest label in the active language, which a fixed width could only get right for one.
 .controls {
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content 1fr;
   align-items: center;
   gap: 12px;
   margin-bottom: 16px;
-  flex-wrap: wrap;
 
   .control-label {
     display: inline-flex;
@@ -32,6 +35,15 @@
       width: 18px;
       height: 18px;
     }
+  }
+
+  // The grid stretches every cell to the column's full width, which would blow the toggle group out
+  // from its two buttons to the whole row. Both controls size to their content and sit at the start of
+  // the column instead; alignment comes from the shared column, not from them filling it.
+  mat-button-toggle-group,
+  mat-chip-listbox {
+    justify-self: start;
+    min-width: 0;
   }
 }
 
