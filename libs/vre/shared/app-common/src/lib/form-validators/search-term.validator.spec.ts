@@ -54,4 +54,14 @@ describe('fulltextSearchTermValidator', () => {
     expect(validate('d*e*')).toEqual({ searchWildcardTooShort: { requiredLength: 3 } });
     expect(validate('a?b?c')).toBeNull();
   });
+
+  // Inside quotes a `*` is a literal, so the endpoint answers `"a b*"` with a 200 while refusing the
+  // same characters unquoted. Splitting the phrase on its space would make `b*"` a term of its own.
+  it.each(['"a b*"', '"de*"', '"down the rabbit*"'])('keeps the quoted phrase %p whole', term => {
+    expect(validate(term)).toBeNull();
+  });
+
+  it('still refuses a short wildcard term standing outside a phrase', () => {
+    expect(validate('"a b*" de*')).toEqual({ searchWildcardTooShort: { requiredLength: 3 } });
+  });
 });

@@ -31,10 +31,20 @@ export function searchTermMinLengthValidator(): ValidatorFn {
 }
 
 /**
+ * Splits a term the way dsp-api's `LuceneQueryString.termsAndPhrases` does, keeping a quoted phrase
+ * (`"down the rabbit hole"`) whole instead of chopping it on its spaces. Same expression as
+ * `ApacheLuceneSupport.separateTermsAndPhrasesRegex`, and it has to stay the same: splitting a phrase
+ * on whitespace makes its last word a token of its own, so `"a b*"` looks like a wildcard on a
+ * one-character stem and gets refused — while the endpoint answers it with a 200, since inside quotes
+ * the `*` is a literal.
+ */
+const TERMS_AND_PHRASES = /[^\s]*".*?"[^\s]*|[^\s]+/g;
+
+/**
  * The rule of the fulltext endpoint (`/v2/search/:term`): the min-length rule above, plus — unlike it —
- * a *per-token* one. Every whitespace-separated token holding a wildcard needs at least
- * {@link MIN_SEARCH_TERM_LENGTH} characters besides its wildcards, so `de*` and `hello de*` are both
- * rejected while `ide*`, `de*x` and `buch de` pass.
+ * a *per-term* one. Every term holding a wildcard needs at least {@link MIN_SEARCH_TERM_LENGTH}
+ * characters besides its wildcards, so `de*` and `hello de*` are both rejected while `ide*`, `de*x`
+ * and `buch de` pass.
  *
  * Measured against the dev API. Do NOT use this on the advanced search bar: its term travels through
  * Gravsearch `matchFulltext`, which accepts `de*` (200) and only enforces the min-length half.
@@ -49,11 +59,10 @@ export function fulltextSearchTermValidator(): ValidatorFn {
     }
 
     const term = (control.value ?? '').trim();
-    const hasShortWildcardToken = term
-      .split(/\s+/)
+    const hasShortWildcardTerm = (term.match(TERMS_AND_PHRASES) ?? [])
       .filter((token: string) => WILDCARD.test(token))
       .some((token: string) => token.replace(WILDCARDS_GLOBAL, '').length < MIN_SEARCH_TERM_LENGTH);
 
-    return hasShortWildcardToken ? { searchWildcardTooShort: { requiredLength: MIN_SEARCH_TERM_LENGTH } } : null;
+    return hasShortWildcardTerm ? { searchWildcardTooShort: { requiredLength: MIN_SEARCH_TERM_LENGTH } } : null;
   };
 }
