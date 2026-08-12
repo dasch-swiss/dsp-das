@@ -4,10 +4,12 @@
   display: block;
 }
 
+// Runs the full width of the page, like the matrix it introduces. No measure cap: at this width the
+// intro is three lines rather than the six a 640px column gave it, and it no longer ends in a ragged
+// gap beside a full-width table.
 .subtitle {
   color: $black-60-opacity;
   margin: 0 0 20px;
-  max-width: 640px;
 }
 
 // Label column + control column, so "Group by" and "Filters" stack into a column and the toggle group
