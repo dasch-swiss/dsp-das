@@ -192,8 +192,8 @@
         "readMore": "Leggi di più"
       },
       "viewRestrictions": {
-        "tab": "Restrizioni di visualizzazione",
-        "title": "Restrizioni di visualizzazione",
+        "tab": "Restrizioni di Visualizzazione",
+        "title": "Restrizioni di Visualizzazione",
         "intro": "Ogni classe di risorsa del progetto con il numero di risorse che contiene e, per ogni pubblico, quanti elementi sono nascosti o serviti in vista limitata. Apri una riga per vedere le risorse interessate e la loro visibilità per ogni pubblico.",
         "groupBy": "Raggruppa per",
         "byClass": "Classe di risorsa",

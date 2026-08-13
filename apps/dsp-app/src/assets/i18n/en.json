@@ -192,8 +192,8 @@
         "readMore": "Read more"
       },
       "viewRestrictions": {
-        "tab": "View restrictions",
-        "title": "View restrictions",
+        "tab": "View Restrictions",
+        "title": "View Restrictions",
         "intro": "Every resource class in the project with how many resources it holds, and for each audience how many items are hidden or served in restricted view. Open a row to see the affected resources and their per-audience visibility.",
         "groupBy": "Group by",
         "byClass": "Resource class",

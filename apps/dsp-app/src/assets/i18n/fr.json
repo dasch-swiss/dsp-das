@@ -192,8 +192,8 @@
         "readMore": "Lire la suite"
       },
       "viewRestrictions": {
-        "tab": "Restrictions d'affichage",
-        "title": "Restrictions d'affichage",
+        "tab": "Restrictions d'Affichage",
+        "title": "Restrictions d'Affichage",
         "intro": "Chaque classe de ressource du projet avec le nombre de ressources qu'elle contient et, pour chaque audience, combien d'éléments sont masqués ou servis en vue restreinte. Ouvrez une ligne pour voir les ressources concernées et leur visibilité par audience.",
         "groupBy": "Grouper par",
         "byClass": "Classe de ressource",
