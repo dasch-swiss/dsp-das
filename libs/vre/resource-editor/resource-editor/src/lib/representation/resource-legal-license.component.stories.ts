@@ -1,6 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/angular';
 import { expect } from 'storybook/test';
 
+import { PLACEHOLDER_FILE_SENTINEL } from './is-placeholder-file-value';
 import { ResourceLegalLicenseComponent } from './resource-legal-license.component';
 
 const ccByLicense = {
@@ -19,9 +20,9 @@ const unknownLicense = {
 
 // The sentinel is both id and uri, so the uri is not dereferenceable. See DEV-6982.
 const placeholderLicense = {
-  id: 'urn:dasch:placeholder',
+  id: PLACEHOLDER_FILE_SENTINEL,
   labelEn: 'Placeholder License - Not a Real License only to be used when the real license is not known yet.',
-  uri: 'urn:dasch:placeholder',
+  uri: PLACEHOLDER_FILE_SENTINEL,
   labelDe: 'Platzhalter-Lizenz',
 };
 

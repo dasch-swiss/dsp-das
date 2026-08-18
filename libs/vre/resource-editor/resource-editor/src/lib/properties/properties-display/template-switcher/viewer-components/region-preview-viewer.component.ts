@@ -11,16 +11,17 @@ import { MatIconModule } from '@angular/material/icon';
 import type { ReadRegionPreviewValue } from '@dasch-swiss/dsp-js';
 import { AdminAPIApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { forkJoin, Subscription, switchMap, take } from 'rxjs';
 // Direct relative imports (NOT the lib barrel) for same-lib components to avoid the intra-lib DI cycle.
 import { AlertInfoComponent } from '../../../../header/alert-info.component';
-import { isPlaceholderLegalValue } from '../../../../representation/is-placeholder-file-value';
+import {
+  isPlaceholderLegalValue,
+  joinPlaceholderLegalValues,
+} from '../../../../representation/is-placeholder-file-value';
 import { RepresentationService } from '../../../../representation/representation.service';
 import { ResourceFetcherService } from '../../../../representation/resource-fetcher.service';
 import { ResourceExplorerButtonComponent } from '../../../resource-explorer-button.component';
-
-const PLACEHOLDER_LABEL_KEY = 'resourceEditor.legal.placeholder';
 
 /**
  * Renders a RegionPreviewValue: the region crop image, the full-page thumbnail with the region
@@ -108,15 +109,24 @@ const PLACEHOLDER_LABEL_KEY = 'resourceEditor.legal.placeholder';
           }
           @if (value.authorship?.length) {
             <span class="legal-label">{{ 'resourceEditor.legal.authorship' | translate }}</span>
-            <span class="legal-value">{{ authorship }}</span>
+            <span class="legal-value">{{ authorshipWith('resourceEditor.legal.placeholder' | translate) }}</span>
           }
           @if (resolvedLicense) {
             <span class="legal-label">{{ 'resourceEditor.legal.license' | translate }}</span>
             <span class="legal-value">
               @if (isPlaceholder(resolvedLicense.id)) {
-                <span class="license-pill">{{ 'resourceEditor.legal.placeholder' | translate }}</span>
+                <span class="license-pill license-pill--static">{{
+                  'resourceEditor.legal.placeholder' | translate
+                }}</span>
               } @else {
-                <a class="license-pill" [href]="resolvedLicense.uri" target="_blank">{{ resolvedLicense.labelEn }}</a>
+                <a
+                  class="license-pill"
+                  [href]="resolvedLicense.uri"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  [attr.aria-label]="resolvedLicense.labelEn + ', ' + ('legal.dataSide.opensInNewTab' | translate)"
+                  >{{ resolvedLicense.labelEn }}</a
+                >
               }
             </span>
           }
@@ -285,10 +295,24 @@ const PLACEHOLDER_LABEL_KEY = 'resourceEditor.legal.placeholder';
         padding: 0;
       }
 
+      /* Non-interactive variant (placeholder): same geometry, but no link affordance — otherwise it
+         is pixel-identical to the clickable pill. */
+      .license-pill--static {
+        cursor: default;
+      }
+
+      /* Interactive variant: hover feedback distinguishes it from the static placeholder pill. */
+      a.license-pill:hover {
+        border-color: #336790;
+        color: #336790;
+      }
+
       .license-pill {
         display: inline-flex;
         align-items: center;
-        border: 1px solid #9ca3af;
+        /* #6b7280 on #f9fafb is 4.6:1, clearing the 3:1 non-text contrast bar (WCAG 1.4.11) that
+           the previous #9ca3af border missed at 2.4:1. */
+        border: 1px solid #6b7280;
         border-radius: 3px;
         padding: 0 6px;
         font-weight: 600;
@@ -317,8 +341,7 @@ export class RegionPreviewViewerComponent implements OnChanges, OnDestroy, OnIni
     private readonly _adminApiService: AdminAPIApiService,
     private readonly _resourceFetcher: ResourceFetcherService,
     private readonly _representationService: RepresentationService,
-    private readonly _cd: ChangeDetectorRef,
-    private readonly _translate: TranslateService
+    private readonly _cd: ChangeDetectorRef
   ) {}
 
   ngOnChanges() {
@@ -391,12 +414,11 @@ export class RegionPreviewViewerComponent implements OnChanges, OnDestroy, OnIni
   // Placeholder-aware predicate used by the legal rows; a plain function reference, stable under OnPush.
   readonly isPlaceholder = isPlaceholderLegalValue;
 
-  // Returns a primitive (value-equal across CD passes) → safe under OnPush. Placeholder entries are
-  // translated to the readable marker; the sentinel is per-entry, so a mixed list is handled too.
-  get authorship(): string {
-    return (this.value.authorship ?? [])
-      .map(author => (isPlaceholderLegalValue(author) ? this._translate.instant(PLACEHOLDER_LABEL_KEY) : author))
-      .join(', ');
+  // Returns a primitive (value-equal across CD passes) → safe under OnPush. The placeholder label
+  // arrives already translated from the template's `| translate` pipe, so this component needs no
+  // TranslateService injection.
+  authorshipWith(placeholderLabel: string): string {
+    return joinPlaceholderLegalValues(this.value.authorship, placeholderLabel);
   }
 
   // These getters return primitives (value-equal across CD passes) → safe under OnPush.

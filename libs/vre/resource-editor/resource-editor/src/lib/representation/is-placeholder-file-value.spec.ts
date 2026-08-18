@@ -2,6 +2,7 @@ import { ReadFileValue } from '@dasch-swiss/dsp-js';
 import {
   isPlaceholderFileValue,
   isPlaceholderLegalValue,
+  joinPlaceholderLegalValues,
   PLACEHOLDER_FILE_SENTINEL,
 } from './is-placeholder-file-value';
 
@@ -44,5 +45,27 @@ describe('isPlaceholderLegalValue', () => {
     expect(isPlaceholderLegalValue(null)).toBe(false);
     expect(isPlaceholderLegalValue(undefined)).toBe(false);
     expect(isPlaceholderLegalValue('')).toBe(false);
+  });
+});
+
+describe('joinPlaceholderLegalValues', () => {
+  it('substitutes the label for the sentinel and keeps real names', () => {
+    expect(joinPlaceholderLegalValues(['Ada Lovelace', PLACEHOLDER_FILE_SENTINEL], 'Placeholder')).toBe(
+      'Ada Lovelace, Placeholder'
+    );
+  });
+
+  it('joins with ", " so the separator lands in the text (copy/paste and screen readers)', () => {
+    expect(joinPlaceholderLegalValues(['A', 'B', 'C'], 'Placeholder')).toBe('A, B, C');
+  });
+
+  it('uses the label given, so a translated marker flows through', () => {
+    expect(joinPlaceholderLegalValues([PLACEHOLDER_FILE_SENTINEL], 'Platzhalter')).toBe('Platzhalter');
+  });
+
+  it('returns an empty string for an empty, null or undefined list', () => {
+    expect(joinPlaceholderLegalValues([], 'Placeholder')).toBe('');
+    expect(joinPlaceholderLegalValues(null, 'Placeholder')).toBe('');
+    expect(joinPlaceholderLegalValues(undefined, 'Placeholder')).toBe('');
   });
 });

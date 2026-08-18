@@ -3,11 +3,11 @@ import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular'
 import { of } from 'rxjs';
 import { expect } from 'storybook/test';
 
+import { PLACEHOLDER_FILE_SENTINEL } from './is-placeholder-file-value';
 import { ResourceFetcherService } from './resource-fetcher.service';
 import { ResourceLegalComponent } from './resource-legal.component';
 
 const LONG_LICENSE_ID = 'http://rdfh.ch/licenses/ai-generated';
-const PLACEHOLDER_SENTINEL = 'urn:dasch:placeholder';
 
 const makeLicenses = () => [
   {
@@ -26,9 +26,9 @@ const makeLicenses = () => [
   },
   {
     // The sentinel is both id and uri, and the label is a 96-char sentence. See DEV-6982.
-    id: PLACEHOLDER_SENTINEL,
+    id: PLACEHOLDER_FILE_SENTINEL,
     labelEn: 'Placeholder License - Not a Real License only to be used when the real license is not known yet.',
-    uri: PLACEHOLDER_SENTINEL,
+    uri: PLACEHOLDER_FILE_SENTINEL,
     labelDe: 'Platzhalter-Lizenz',
   },
 ];
@@ -124,14 +124,14 @@ export const WithPlaceholderValues: Story = {
   name: 'Shows "Placeholder" instead of the raw sentinel, with no dead link',
   args: {
     fileValue: makeFileValue({
-      copyrightHolder: PLACEHOLDER_SENTINEL,
-      authorship: [PLACEHOLDER_SENTINEL],
-      license: { id: PLACEHOLDER_SENTINEL },
+      copyrightHolder: PLACEHOLDER_FILE_SENTINEL,
+      authorship: [PLACEHOLDER_FILE_SENTINEL],
+      license: { id: PLACEHOLDER_FILE_SENTINEL },
     }),
   },
   play: async ({ canvasElement, step }) => {
     await step('The raw sentinel is never shown', async () => {
-      await expect(canvasElement.textContent).not.toContain(PLACEHOLDER_SENTINEL);
+      await expect(canvasElement.textContent).not.toContain(PLACEHOLDER_FILE_SENTINEL);
     });
     await step('The placeholder license prose sentence is not shown', async () => {
       await expect(canvasElement.textContent).not.toContain('Not a Real License');

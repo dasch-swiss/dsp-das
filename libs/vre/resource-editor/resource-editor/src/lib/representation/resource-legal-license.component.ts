@@ -13,13 +13,24 @@ import { isPlaceholderLegalValue } from './is-placeholder-file-value';
            the readable marker as plain text, with no link and no open_in_new icon (DEV-6982). -->
       <span>{{ 'resourceEditor.legal.placeholder' | translate }}</span>
     } @else if (licenseLogo) {
-      <a [href]="license.uri" target="_blank"><img [src]="licenseLogo" alt="license" style="width: 110px" /></a>
+      <a
+        [href]="license.uri"
+        target="_blank"
+        rel="noopener noreferrer"
+        [attr.aria-label]="license.labelEn + ', ' + ('legal.dataSide.opensInNewTab' | translate)"
+        ><img [src]="licenseLogo" [alt]="license.labelEn" style="width: 110px"
+      /></a>
     } @else {
       <!-- Inline (not flex) so a wrapped label keeps the icon right after its last word instead of
            pushing it out to the far right as a flex sibling (DEV-6983). -->
-      <a class="license-link" [href]="license.uri" target="_blank">
+      <a
+        class="license-link"
+        [href]="license.uri"
+        target="_blank"
+        rel="noopener noreferrer"
+        [attr.aria-label]="license.labelEn + ', ' + ('legal.dataSide.opensInNewTab' | translate)">
         <span>{{ license.labelEn }} </span>
-        <mat-icon class="license-icon">open_in_new</mat-icon>
+        <mat-icon class="license-icon" aria-hidden="true">open_in_new</mat-icon>
       </a>
     }
   `,

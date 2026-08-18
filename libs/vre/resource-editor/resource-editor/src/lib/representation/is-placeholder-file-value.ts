@@ -26,3 +26,15 @@ export function isPlaceholderFileValue(fileValue: ReadFileValue | null | undefin
 export function isPlaceholderLegalValue(value: string | null | undefined): boolean {
   return value === PLACEHOLDER_FILE_SENTINEL;
 }
+
+/**
+ * Joins a legal value list (e.g. authorship) into a display string, replacing any placeholder
+ * sentinel with `placeholderLabel`.
+ *
+ * `placeholderLabel` is passed in already translated so callers resolve it with the `| translate`
+ * pipe in their template — the repo's dominant convention for rendered text — instead of injecting
+ * `TranslateService` just to call `.instant()` during change detection. See DEV-6982.
+ */
+export function joinPlaceholderLegalValues(values: string[] | null | undefined, placeholderLabel: string): string {
+  return (values ?? []).map(value => (isPlaceholderLegalValue(value) ? placeholderLabel : value)).join(', ');
+}

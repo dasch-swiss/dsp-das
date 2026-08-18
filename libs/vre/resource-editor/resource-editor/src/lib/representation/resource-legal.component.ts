@@ -2,13 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ReadFileValue } from '@dasch-swiss/dsp-js';
 import { AdminAPIApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { switchMap, take } from 'rxjs';
-import { isPlaceholderLegalValue } from './is-placeholder-file-value';
+import { isPlaceholderLegalValue, joinPlaceholderLegalValues } from './is-placeholder-file-value';
 import { ResourceFetcherService } from './resource-fetcher.service';
 import { ResourceLegalLicenseComponent } from './resource-legal-license.component';
-
-const PLACEHOLDER_LABEL_KEY = 'resourceEditor.legal.placeholder';
 
 @Component({
   selector: 'app-resource-legal',
@@ -31,8 +29,7 @@ const PLACEHOLDER_LABEL_KEY = 'resourceEditor.legal.placeholder';
           }
           @if (fileValue.authorship.length > 0) {
             <span class="label">{{ 'resourceEditor.legal.authorship' | translate }}</span>
-            <!-- Joined in the component so the separator cannot pick up stray template whitespace. -->
-            <span class="value">{{ authorship }}</span>
+            <span class="value">{{ authorshipWith('resourceEditor.legal.placeholder' | translate) }}</span>
           }
           @if (license) {
             <span class="label">{{ 'resourceEditor.legal.license' | translate }}</span>
@@ -105,18 +102,22 @@ export class ResourceLegalComponent implements OnInit {
     return isPlaceholderLegalValue(this.fileValue.copyrightHolder);
   }
 
-  /** Placeholder entries are replaced by the readable marker; the sentinel is per-entry, so a mixed
-   *  list is handled too. */
-  get authorship(): string {
-    return this.fileValue.authorship
-      .map(author => (isPlaceholderLegalValue(author) ? this._translate.instant(PLACEHOLDER_LABEL_KEY) : author))
-      .join(', ');
+  /**
+   * Joins the authorship entries, substituting `placeholderLabel` for any placeholder sentinel.
+   *
+   * The label arrives already translated from the `| translate` pipe in the template, so this
+   * component needs no `TranslateService` — matching how the repo renders text elsewhere. Joining
+   * here (rather than with a CSS `::before` separator) keeps the ", " in a real text node, so
+   * copy/paste and screen readers get it. The sentinel is per-entry, so a mixed list works too.
+   * See DEV-6982.
+   */
+  authorshipWith(placeholderLabel: string): string {
+    return joinPlaceholderLegalValues(this.fileValue.authorship, placeholderLabel);
   }
 
   constructor(
     private readonly _adminApiService: AdminAPIApiService,
-    private readonly _resourceFetcher: ResourceFetcherService,
-    private readonly _translate: TranslateService
+    private readonly _resourceFetcher: ResourceFetcherService
   ) {}
 
   ngOnInit() {
