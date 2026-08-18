@@ -22,6 +22,7 @@ describe('ResourceMetadataComponent', () => {
   let component: ResourceMetadataComponent;
   let fixture: ComponentFixture<ResourceMetadataComponent>;
   let mockV2ApiService: jest.Mocked<Pick<APIV2ApiService, 'getV2MetadataProjectsProjectshortcodeResources'>>;
+  let createElementSpy: jest.SpyInstance;
   let createObjectURLSpy: jest.SpyInstance;
 
   const shortcode = '0810';
@@ -33,12 +34,20 @@ describe('ResourceMetadataComponent', () => {
     jest.advanceTimersByTime(1000);
   };
 
+  const lastAnchor = () =>
+    createElementSpy.mock.results
+      .map(result => result.value as HTMLElement)
+      .filter((element): element is HTMLAnchorElement => element instanceof HTMLAnchorElement)
+      .pop()!;
+
   beforeEach(async () => {
     jest.useFakeTimers();
 
     mockV2ApiService = {
       getV2MetadataProjectsProjectshortcodeResources: jest.fn().mockReturnValue(of(csvText)),
     } as any;
+
+    createElementSpy = jest.spyOn(document, 'createElement');
 
     if (!window.URL.createObjectURL) window.URL.createObjectURL = jest.fn();
     if (!window.URL.revokeObjectURL) window.URL.revokeObjectURL = jest.fn();
@@ -67,6 +76,14 @@ describe('ResourceMetadataComponent', () => {
   });
 
   describe('exportMetadata', () => {
+    // DEV-6987: the filename was built without any extension, so the download did not open as a
+    // spreadsheet at all.
+    it('names the downloaded file with a .csv extension', () => {
+      runDownload();
+
+      expect(lastAnchor().download).toBe(`project_${shortcode}_metadata.csv`);
+    });
+
     // DEV-6987: without the BOM, Excel/Numbers on macOS decode the file as Mac OS Roman and render
     // "für" as "f√ºr". The BOM is the only thing that tells them the file is UTF-8.
     it('prefixes the CSV with a UTF-8 BOM so spreadsheet apps decode non-ASCII correctly', async () => {

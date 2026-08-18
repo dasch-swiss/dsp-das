@@ -94,7 +94,7 @@ export class ResourceMetadataComponent implements OnDestroy {
     const isJson = format.toLowerCase() === 'json';
     const body = isJson ? response : UTF8_BOM + response;
     const blob = new Blob([body], { type: this._getMimeType(format) });
-    const filename = `project_${shortcode}_metadata`;
+    const filename = `project_${shortcode}_metadata.${this._getFileExtension(format)}`;
 
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
@@ -115,6 +115,19 @@ export class ResourceMetadataComponent implements OnDestroy {
         return 'application/json';
       default:
         return 'text/plain;charset=utf-8';
+    }
+  }
+
+  private _getFileExtension(format: string): string {
+    switch (format.toLowerCase()) {
+      case 'csv':
+        return 'csv';
+      case 'tsv':
+        return 'tsv';
+      case 'json':
+        return 'json';
+      default:
+        return 'txt';
     }
   }
 
