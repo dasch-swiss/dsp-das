@@ -20,7 +20,7 @@ import {
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { PropertyInfoValues, isPlaceholderLegalValue } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectDataRightsService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AppProgressIndicatorComponent, LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
@@ -219,11 +219,17 @@ export class CreateResourceFormComponent implements OnInit {
       .forProject(this.projectIri)
       .pipe(take(1), takeUntilDestroyed(this._destroyRef))
       .subscribe(rights => {
-        this.dataLicenseLabel = rights.licenseLabel;
-        this.dataLicenseUrl = rights.licenseUrl;
-        this.dataCopyrightHolder = rights.copyrightHolder;
-        if (rights.defaultDataAuthorship.length > 0) {
-          this.form.controls.resourceAuthorship.setValue(rights.defaultDataAuthorship);
+        // Placeholder legal info renders as the readable marker, never the raw sentinel: the license's
+        // own label is a 96-character sentence and its uri is a dead link. See DEV-6994.
+        const placeholder = this._translate.instant('legal.dataSide.placeholder');
+        this.dataLicenseLabel = rights.isPlaceholderLicense ? placeholder : rights.licenseLabel;
+        this.dataLicenseUrl = rights.isPlaceholderLicense ? undefined : rights.licenseUrl;
+        this.dataCopyrightHolder = rights.isPlaceholderCopyrightHolder ? placeholder : rights.copyrightHolder;
+        // Seed the editable authorship field with the project default, but never carry the sentinel
+        // into a new resource — the user would silently persist it back (it is not a real author).
+        const seed = rights.defaultDataAuthorship.filter(author => !isPlaceholderLegalValue(author));
+        if (seed.length > 0) {
+          this.form.controls.resourceAuthorship.setValue(seed);
         }
       });
   }

@@ -5,6 +5,7 @@
       "license": "Lizenz",
       "copyrightHolder": "Rechteinhaber:in",
       "authorship": "Urheber:innen",
+      "placeholder": "Platzhalter",
       "authorshipHint": "Namen eingeben und mit Enter bestätigen, um Urheber:innen hinzuzufügen.",
       "edit": "Bearbeiten",
       "removeAuthor": "{{name}} entfernen",

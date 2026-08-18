@@ -6,6 +6,7 @@ import {
   ProjectLicenseDto,
   ResourceSideLegalInfo,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { isPlaceholderLegalValue } from '@dasch-swiss/vre/shared/app-common';
 import { catchError, map, Observable, of, shareReplay, switchMap, tap, throwError } from 'rxjs';
 
 export interface ProjectDataRights {
@@ -13,6 +14,11 @@ export interface ProjectDataRights {
   defaultDataAuthorship: string[];
   licenseLabel?: string;
   licenseUrl?: string;
+  /** True when `copyrightHolder` is the placeholder sentinel; consumers show the readable marker. */
+  isPlaceholderCopyrightHolder: boolean;
+  /** True when the project's license is the placeholder sentinel. `licenseLabel` and `licenseUrl` are
+   *  then both undefined: the sentinel's prose label is not worth showing and its uri is a dead link. */
+  isPlaceholderLicense: boolean;
 }
 
 /**
@@ -97,9 +103,18 @@ export class ProjectDataRightsService {
     const base: ProjectDataRights = {
       copyrightHolder: project.dataCopyrightHolder,
       defaultDataAuthorship: project.defaultDataAuthorship ?? [],
+      isPlaceholderCopyrightHolder: isPlaceholderLegalValue(project.dataCopyrightHolder),
+      isPlaceholderLicense: false,
     };
     if (!project.dataLicense) {
       return of(base);
+    }
+    // The placeholder license is a real entry in the catalog (`allow-placeholder` defaults to true in
+    // dsp-api), so a lookup on the sentinel *does* match and would otherwise surface its 96-character
+    // prose label behind a dead `urn:dasch:placeholder` link. Flag it and drop the URL instead, so
+    // every consumer gets the readable marker as plain text without repeating the check. See DEV-6994.
+    if (isPlaceholderLegalValue(project.dataLicense)) {
+      return of({ ...base, isPlaceholderLicense: true });
     }
     return this._cachedLicenses(project.shortcode).pipe(
       map(licenses => {

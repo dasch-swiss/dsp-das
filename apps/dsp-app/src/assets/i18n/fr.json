@@ -5,6 +5,7 @@
       "license": "Licence",
       "copyrightHolder": "Titulaire des droits",
       "authorship": "Auteur·ice",
+      "placeholder": "Espace réservé",
       "authorshipHint": "Saisissez un nom et appuyez sur Entrée pour ajouter chaque auteur·ice.",
       "edit": "Modifier",
       "removeAuthor": "Supprimer {{name}}",

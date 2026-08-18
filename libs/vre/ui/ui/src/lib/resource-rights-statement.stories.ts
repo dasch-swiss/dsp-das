@@ -37,6 +37,16 @@ const meta: Meta<ResourceRightsStatementComponent> = {
       description: 'Render the authorship row. Project-level displays pass false — authorship is per-resource.',
       control: 'boolean',
     },
+    isPlaceholderLicense: {
+      description:
+        'Whether the project license is the placeholder sentinel. Renders the readable marker as plain text instead of a link (the sentinel uri is not dereferenceable).',
+      control: 'boolean',
+    },
+    isPlaceholderCopyrightHolder: {
+      description:
+        'Whether the copyright holder is the placeholder sentinel. Renders the readable marker instead of the raw URN.',
+      control: 'boolean',
+    },
     editLegalInfo: { description: 'Emitted when an admin clicks "Edit legal info" on the unconfigured callout.' },
     saveAuthorship: { description: 'Emitted with the new authorship list when a Modify user saves the inline editor.' },
   },
@@ -220,6 +230,72 @@ export const RendersNothingForNonAdminsWhenUnconfigured: Story = {
   play: async ({ canvasElement, step }) => {
     await step('No rights block is rendered', async () => {
       await expect(canvasElement.querySelector('.rights-statement')).toBeNull();
+    });
+  },
+};
+
+// DEV-6994: placeholder legal info must never surface the raw sentinel or its dead link. The flags are
+// resolved centrally by ProjectDataRightsService; this component only renders the marker.
+export const ShowsMarkerForPlaceholderLicenseWithoutALink: Story = {
+  name: 'Shows "Placeholder" as plain text for a placeholder license, with no link',
+  args: {
+    isPlaceholderLicense: true,
+    licenseLabel: undefined,
+    licenseUrl: undefined,
+    copyrightHolder: 'University of Basel',
+    showAuthorship: false,
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('The license row is rendered even though there is no label', async () => {
+      await expect(canvasElement.textContent).toContain('License');
+    });
+    await step('The readable marker is shown', async () => {
+      await expect(canvasElement.textContent).toContain('Placeholder');
+    });
+    await step('No link is rendered for the license', async () => {
+      await expect(canvasElement.querySelector('a')).toBeNull();
+    });
+    await step('The real copyright holder is untouched', async () => {
+      await expect(canvasElement.textContent).toContain('University of Basel');
+    });
+  },
+};
+
+export const ShowsMarkerForPlaceholderCopyrightHolder: Story = {
+  name: 'Shows "Placeholder" instead of the raw sentinel for the copyright holder',
+  args: {
+    isPlaceholderCopyrightHolder: true,
+    copyrightHolder: 'urn:dasch:placeholder',
+    licenseLabel: 'CC BY 4.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
+    showAuthorship: false,
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('The raw sentinel is never shown', async () => {
+      await expect(canvasElement.textContent).not.toContain('urn:dasch:placeholder');
+    });
+    await step('The readable marker is shown instead', async () => {
+      await expect(canvasElement.textContent).toContain('Placeholder');
+    });
+    await step('The real license still renders as a link', async () => {
+      await expect(canvasElement.querySelector('a')).not.toBeNull();
+    });
+  },
+};
+
+export const ReplacesPlaceholderAuthorshipEntries: Story = {
+  name: 'Replaces a placeholder authorship entry with the marker, keeping real names',
+  args: {
+    resourceAuthorship: ['Ada Lovelace', 'urn:dasch:placeholder'],
+    copyrightHolder: 'University of Basel',
+    showAuthorship: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('The raw sentinel is never shown', async () => {
+      await expect(canvasElement.textContent).not.toContain('urn:dasch:placeholder');
+    });
+    await step('The real name is kept and the sentinel becomes the marker', async () => {
+      await expect(canvasElement.textContent).toContain('Ada Lovelace, Placeholder');
     });
   },
 };
