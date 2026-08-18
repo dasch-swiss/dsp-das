@@ -8,7 +8,7 @@ import { MatDialogActions } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BASE_PATH, ExportRequest } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { PropertyInfoValues, triggerBlobDownload } from '@dasch-swiss/vre/shared/app-common';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -257,12 +257,6 @@ export class DownloadDialogResourcesTabComponent {
     const blob = new Blob([UTF8_BOM + csvText], { type: 'text/csv;charset=utf-8' });
     const filename = `resources_export_${new Date().toISOString().split('T')[0]}.csv`;
 
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(link.href);
+    triggerBlobDownload(blob, filename);
   }
 }
