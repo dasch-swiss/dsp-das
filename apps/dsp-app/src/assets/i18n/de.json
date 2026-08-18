@@ -766,7 +766,8 @@
     "legal": {
       "copyrightHolder": "Urheberrechtsinhaber",
       "authorship": "Autorenschaft",
-      "license": "Lizenz"
+      "license": "Lizenz",
+      "placeholder": "Platzhalter"
     },
     "navigation": {
       "firstPage": "Erste Seite",

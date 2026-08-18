@@ -8,7 +8,7 @@ import { MatDialogActions } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BASE_PATH, ExportRequest } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { PropertyInfoValues, triggerBlobDownload } from '@dasch-swiss/vre/shared/app-common';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -20,6 +20,9 @@ import { DownloadPropertyListComponent } from './download-property-list.componen
 // shows a real X-of-N progress bar. Defined here (the leaf the dialog already imports) rather
 // than in download-dialog.component.ts so the dialog can reuse it without a circular import.
 export const CSV_EXPORT_LARGE_THRESHOLD = 1_000;
+
+// U+FEFF, encoded by Blob as the three-byte UTF-8 BOM (ef bb bf).
+const UTF8_BOM = '\uFEFF';
 
 @Component({
   selector: 'app-download-dialog-properties-tab',
@@ -249,15 +252,11 @@ export class DownloadDialogResourcesTabComponent {
   }
 
   private _createBlob(csvText: string) {
-    const blob = new Blob([csvText], { type: 'text/csv' });
+    // Excel and Numbers on macOS do not auto-detect UTF-8 without a byte-order mark and fall back
+    // to Mac OS Roman, rendering "für" as "f√ºr". The BOM is what tells them how to read the file.
+    const blob = new Blob([UTF8_BOM + csvText], { type: 'text/csv;charset=utf-8' });
     const filename = `resources_export_${new Date().toISOString().split('T')[0]}.csv`;
 
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(link.href);
+    triggerBlobDownload(blob, filename);
   }
 }

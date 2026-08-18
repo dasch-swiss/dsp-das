@@ -180,6 +180,11 @@
       "enabled": false
     },
     {
+      "description": "@swc/core: capped at ~1.15.x by @jscutlery/swc-angular@0.22.0 (frozen above; latest published), which declares peer @swc/core ~1.15.0 — a tilde range accepting patches only. Its companion @jscutlery/swc-angular-plugin ships a compiled WASM swc plugin, loaded via swcAngularJestTransformer in jest.preset.js on every unit-test run, so the narrow range is the author's ABI contract rather than conservatism: overriding the peer would break the jest transform, not just the install. Any minor bump therefore makes npm lock regeneration fail with ERESOLVE — Renovate produces no lock, the PR carries a package.json change alone, and every npm ci in CI fails with EUSAGE (#3346). Lift this cap only together with a @jscutlery/swc-angular release that widens its peer range, and set allowedVersions to that new range verbatim. Only @swc/core needs the cap: @swc/helpers, @swc/jest and @swc-node/register are not peer-constrained by swc-angular, and the @swc/core-* platform binaries are lock-only.",
+      "matchPackageNames": ["@swc/core"],
+      "allowedVersions": "~1.15.0"
+    },
+    {
       "description": "Angular-coupled ecosystem: major version must align with Angular major — upgrade only after ng update",
       "matchPackageNames": [
         "rxjs",

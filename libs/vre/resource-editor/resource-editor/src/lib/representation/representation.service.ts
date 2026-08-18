@@ -4,6 +4,7 @@ import { ReadDocumentFileValue } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { AccessTokenService, UserService } from '@dasch-swiss/vre/core/session';
+import { triggerBlobDownload } from '@dasch-swiss/vre/shared/app-common';
 import { map, Observable, take } from 'rxjs';
 import { FileRepresentationInput, ParentResourceInput } from './representation-inputs';
 import { ResourceUtil } from './resource.util';
@@ -98,11 +99,7 @@ export class RepresentationService {
           fileName = url.split('/').pop()!;
         }
 
-        const a = document.createElement('a');
-        a.href = window.URL.createObjectURL(res.body!);
-        a.download = fileName;
-        a.click();
-        window.URL.revokeObjectURL(a.href);
+        triggerBlobDownload(res.body!, fileName);
       });
   }
 }

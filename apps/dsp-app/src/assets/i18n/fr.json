@@ -568,7 +568,8 @@
     "legal": {
       "copyrightHolder": "Titulaire des droits d'auteur",
       "authorship": "Auteur·ice",
-      "license": "Licence"
+      "license": "Licence",
+      "placeholder": "Espace réservé"
     },
     "navigation": {
       "firstPage": "Première page",
