@@ -120,6 +120,6 @@ Stories are auto-discovered from any `*.stories.ts` file under `libs/` or `apps/
 
 ## Issues & Contributions
 
-- [Developer docs](https://docs.dasch.swiss/latest/DSP-APP/contribution)
+- [Developer docs](https://docs.dasch.swiss/DSP-APP/contribution)
 
 To report an issue or contribute, contact us at [support@dasch.swiss](mailto:support@dasch.swiss).
