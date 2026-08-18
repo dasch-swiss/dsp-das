@@ -4,10 +4,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { APIV2ApiService, ExportFormat } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
+import { triggerBlobDownload } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, finalize, Subject, switchMap, takeUntil } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
+
+// U+FEFF, encoded by Blob as the three-byte UTF-8 BOM (ef bb bf).
+const UTF8_BOM = '\uFEFF';
 
 @Component({
   selector: 'app-resource-metadata',
@@ -52,7 +56,6 @@ export class ResourceMetadataComponent implements OnDestroy {
   private _getResourceMetadata(shortcode: string, format: ExportFormat) {
     this.isDownloadingFile = true;
 
-    const mimeType = this._getMimeType(format);
     const classIris: string[] | undefined = undefined;
 
     this._v2ApiService
@@ -72,7 +75,7 @@ export class ResourceMetadataComponent implements OnDestroy {
             this._translateService.instant('pages.project.resourceMetadata.downloadSuccess', { shortcode })
           );
           setTimeout(() => {
-            this._handleDownload(response, shortcode, mimeType);
+            this._handleDownload(response, shortcode, format);
           }, 1000);
         },
         error => {
@@ -86,29 +89,39 @@ export class ResourceMetadataComponent implements OnDestroy {
       );
   }
 
-  private _handleDownload(response: string, shortcode: string, mimeType: string): void {
-    const blob = new Blob([response], { type: mimeType });
-    const filename = `project_${shortcode}_metadata`;
+  private _handleDownload(response: string, shortcode: string, format: ExportFormat): void {
+    // Excel and Numbers on macOS do not auto-detect UTF-8 without a byte-order mark and fall back
+    // to Mac OS Roman, rendering "für" as "f√ºr". JSON is excluded: a BOM breaks strict parsers.
+    const isJson = format.toLowerCase() === 'json';
+    const body = isJson ? response : UTF8_BOM + response;
+    const blob = new Blob([body], { type: this._getMimeType(format) });
+    const filename = `project_${shortcode}_metadata.${this._getFileExtension(format)}`;
 
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(link.href);
+    triggerBlobDownload(blob, filename);
   }
 
   private _getMimeType(format: string): string {
     switch (format.toLowerCase()) {
       case 'csv':
-        return 'text/csv';
+        return 'text/csv;charset=utf-8';
       case 'tsv':
-        return 'text/tab-separated-values';
+        return 'text/tab-separated-values;charset=utf-8';
       case 'json':
         return 'application/json';
       default:
-        return 'text/plain';
+        return 'text/plain;charset=utf-8';
+    }
+  }
+
+  private _getFileExtension(format: string): string {
+    const extension = format.toLocaleLowerCase();
+    switch (extension) {
+      case 'csv':
+      case 'tsv':
+      case 'json':
+        return extension;
+      default:
+        return 'txt';
     }
   }
 
