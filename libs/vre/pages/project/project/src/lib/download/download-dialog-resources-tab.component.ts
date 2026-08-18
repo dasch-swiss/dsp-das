@@ -21,6 +21,9 @@ import { DownloadPropertyListComponent } from './download-property-list.componen
 // than in download-dialog.component.ts so the dialog can reuse it without a circular import.
 export const CSV_EXPORT_LARGE_THRESHOLD = 1_000;
 
+// U+FEFF, encoded by Blob as the three-byte UTF-8 BOM (ef bb bf).
+const UTF8_BOM = '\uFEFF';
+
 @Component({
   selector: 'app-download-dialog-properties-tab',
   standalone: true,
@@ -249,7 +252,9 @@ export class DownloadDialogResourcesTabComponent {
   }
 
   private _createBlob(csvText: string) {
-    const blob = new Blob([csvText], { type: 'text/csv' });
+    // Excel and Numbers on macOS do not auto-detect UTF-8 without a byte-order mark and fall back
+    // to Mac OS Roman, rendering "für" as "f√ºr". The BOM is what tells them how to read the file.
+    const blob = new Blob([UTF8_BOM + csvText], { type: 'text/csv;charset=utf-8' });
     const filename = `resources_export_${new Date().toISOString().split('T')[0]}.csv`;
 
     const link = document.createElement('a');
