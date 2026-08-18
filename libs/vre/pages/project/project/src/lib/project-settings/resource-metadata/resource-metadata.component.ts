@@ -114,13 +114,12 @@ export class ResourceMetadataComponent implements OnDestroy {
   }
 
   private _getFileExtension(format: string): string {
-    switch (format.toLowerCase()) {
+    const extension = format.toLocaleLowerCase();
+    switch (extension) {
       case 'csv':
-        return 'csv';
       case 'tsv':
-        return 'tsv';
       case 'json':
-        return 'json';
+        return extension;
       default:
         return 'txt';
     }
