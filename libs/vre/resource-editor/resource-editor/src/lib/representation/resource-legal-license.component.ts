@@ -1,27 +1,53 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { TranslatePipe } from '@ngx-translate/core';
 import { LicensesLogoMapping } from '../licenses-logo-mapping';
+import { isPlaceholderLegalValue } from './is-placeholder-file-value';
 
 @Component({
   selector: 'app-resource-legal-license',
   template: `
-    @if (licenseLogo) {
+    @if (isPlaceholder) {
+      <!-- The placeholder license's uri is the sentinel itself, which is not dereferenceable — render
+           the readable marker as plain text, with no link and no open_in_new icon (DEV-6982). -->
+      <span>{{ 'resourceEditor.legal.placeholder' | translate }}</span>
+    } @else if (licenseLogo) {
       <a [href]="license.uri" target="_blank"><img [src]="licenseLogo" alt="license" style="width: 110px" /></a>
     } @else {
-      <a style="display: flex; align-items: center; color: white" [href]="license.uri" target="_blank">
-        <span style="color: white">{{ license.labelEn }} </span>
-        <mat-icon style="font-size: 18px">open_in_new</mat-icon>
+      <!-- Inline (not flex) so a wrapped label keeps the icon right after its last word instead of
+           pushing it out to the far right as a flex sibling (DEV-6983). -->
+      <a class="license-link" [href]="license.uri" target="_blank">
+        <span>{{ license.labelEn }} </span>
+        <mat-icon class="license-icon">open_in_new</mat-icon>
       </a>
     }
   `,
-  imports: [MatIconModule],
+  styles: [
+    `
+      .license-link {
+        color: white;
+      }
+
+      .license-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        /* Inline with the label text, so it trails the last wrapped line. */
+        display: inline;
+        vertical-align: middle;
+      }
+    `,
+  ],
+  imports: [MatIconModule, TranslatePipe],
 })
 export class ResourceLegalLicenseComponent implements OnChanges {
   @Input({ required: true }) license!: ProjectLicenseDto;
   licenseLogo?: string;
+  isPlaceholder = false;
 
   ngOnChanges() {
     this.licenseLogo = LicensesLogoMapping.get(this.license.id) ?? undefined;
+    this.isPlaceholder = isPlaceholderLegalValue(this.license.id);
   }
 }

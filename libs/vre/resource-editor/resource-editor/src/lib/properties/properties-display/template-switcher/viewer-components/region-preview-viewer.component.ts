@@ -11,13 +11,16 @@ import { MatIconModule } from '@angular/material/icon';
 import type { ReadRegionPreviewValue } from '@dasch-swiss/dsp-js';
 import { AdminAPIApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { forkJoin, Subscription, switchMap, take } from 'rxjs';
 // Direct relative imports (NOT the lib barrel) for same-lib components to avoid the intra-lib DI cycle.
 import { AlertInfoComponent } from '../../../../header/alert-info.component';
+import { isPlaceholderLegalValue } from '../../../../representation/is-placeholder-file-value';
 import { RepresentationService } from '../../../../representation/representation.service';
 import { ResourceFetcherService } from '../../../../representation/resource-fetcher.service';
 import { ResourceExplorerButtonComponent } from '../../../resource-explorer-button.component';
+
+const PLACEHOLDER_LABEL_KEY = 'resourceEditor.legal.placeholder';
 
 /**
  * Renders a RegionPreviewValue: the region crop image, the full-page thumbnail with the region
@@ -91,18 +94,30 @@ import { ResourceExplorerButtonComponent } from '../../../resource-explorer-butt
             <app-resource-explorer-button [resourceIri]="value.regionIri" />
           </span>
 
+          <!-- Placeholder legal values render as the readable marker, and the placeholder license as a
+               plain pill: its uri is the sentinel itself and is not dereferenceable (DEV-6982). -->
           @if (value.copyrightHolder) {
             <span class="legal-label">{{ 'resourceEditor.legal.copyrightHolder' | translate }}</span>
-            <span class="legal-value">{{ value.copyrightHolder }}</span>
+            <span class="legal-value">
+              @if (isPlaceholder(value.copyrightHolder)) {
+                {{ 'resourceEditor.legal.placeholder' | translate }}
+              } @else {
+                {{ value.copyrightHolder }}
+              }
+            </span>
           }
           @if (value.authorship?.length) {
             <span class="legal-label">{{ 'resourceEditor.legal.authorship' | translate }}</span>
-            <span class="legal-value">{{ value.authorship.join(', ') }}</span>
+            <span class="legal-value">{{ authorship }}</span>
           }
           @if (resolvedLicense) {
             <span class="legal-label">{{ 'resourceEditor.legal.license' | translate }}</span>
             <span class="legal-value">
-              <a class="license-pill" [href]="resolvedLicense.uri" target="_blank">{{ resolvedLicense.labelEn }}</a>
+              @if (isPlaceholder(resolvedLicense.id)) {
+                <span class="license-pill">{{ 'resourceEditor.legal.placeholder' | translate }}</span>
+              } @else {
+                <a class="license-pill" [href]="resolvedLicense.uri" target="_blank">{{ resolvedLicense.labelEn }}</a>
+              }
             </span>
           }
         </div>
@@ -302,7 +317,8 @@ export class RegionPreviewViewerComponent implements OnChanges, OnDestroy, OnIni
     private readonly _adminApiService: AdminAPIApiService,
     private readonly _resourceFetcher: ResourceFetcherService,
     private readonly _representationService: RepresentationService,
-    private readonly _cd: ChangeDetectorRef
+    private readonly _cd: ChangeDetectorRef,
+    private readonly _translate: TranslateService
   ) {}
 
   ngOnChanges() {
@@ -370,6 +386,17 @@ export class RegionPreviewViewerComponent implements OnChanges, OnDestroy, OnIni
   // Returns a stable DTO reference (value-equal across CD passes) → safe under OnPush.
   get resolvedLicense() {
     return this._licenses.find(license => license.id === this.value.license?.id);
+  }
+
+  // Placeholder-aware predicate used by the legal rows; a plain function reference, stable under OnPush.
+  readonly isPlaceholder = isPlaceholderLegalValue;
+
+  // Returns a primitive (value-equal across CD passes) → safe under OnPush. Placeholder entries are
+  // translated to the readable marker; the sentinel is per-entry, so a mixed list is handled too.
+  get authorship(): string {
+    return (this.value.authorship ?? [])
+      .map(author => (isPlaceholderLegalValue(author) ? this._translate.instant(PLACEHOLDER_LABEL_KEY) : author))
+      .join(', ');
   }
 
   // These getters return primitives (value-equal across CD passes) → safe under OnPush.

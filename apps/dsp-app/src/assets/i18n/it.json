@@ -568,7 +568,8 @@
     "legal": {
       "copyrightHolder": "Titolare del copyright",
       "authorship": "Autore",
-      "license": "Licenza"
+      "license": "Licenza",
+      "placeholder": "Segnaposto"
     },
     "navigation": {
       "firstPage": "Prima pagina",
