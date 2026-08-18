@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { APIV2ApiService, ExportFormat } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
+import { triggerBlobDownload } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, finalize, Subject, switchMap, takeUntil } from 'rxjs';
@@ -96,13 +97,7 @@ export class ResourceMetadataComponent implements OnDestroy {
     const blob = new Blob([body], { type: this._getMimeType(format) });
     const filename = `project_${shortcode}_metadata.${this._getFileExtension(format)}`;
 
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(link.href);
+    triggerBlobDownload(blob, filename);
   }
 
   private _getMimeType(format: string): string {
