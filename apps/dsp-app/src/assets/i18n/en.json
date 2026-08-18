@@ -568,7 +568,8 @@
     "legal": {
       "copyrightHolder": "Copyright holder",
       "authorship": "Authorship",
-      "license": "License"
+      "license": "License",
+      "placeholder": "Placeholder"
     },
     "navigation": {
       "firstPage": "First page",

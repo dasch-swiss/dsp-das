@@ -1,6 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/angular';
 import { expect } from 'storybook/test';
 
+import { PLACEHOLDER_FILE_SENTINEL } from './is-placeholder-file-value';
 import { ResourceLegalLicenseComponent } from './resource-legal-license.component';
 
 const ccByLicense = {
@@ -15,6 +16,14 @@ const unknownLicense = {
   labelEn: 'Custom License',
   uri: 'https://example.org/license',
   labelDe: 'Eigene Lizenz',
+};
+
+// The sentinel is both id and uri, so the uri is not dereferenceable. See DEV-6982.
+const placeholderLicense = {
+  id: PLACEHOLDER_FILE_SENTINEL,
+  labelEn: 'Placeholder License - Not a Real License only to be used when the real license is not known yet.',
+  uri: PLACEHOLDER_FILE_SENTINEL,
+  labelDe: 'Platzhalter-Lizenz',
 };
 
 const meta: Meta<ResourceLegalLicenseComponent> = {
@@ -51,6 +60,23 @@ export const WithTextLicense: Story = {
     await step('Open in new icon is shown', async () => {
       const icon = canvasElement.querySelector('mat-icon');
       await expect(icon?.textContent?.trim()).toBe('open_in_new');
+    });
+  },
+};
+
+export const WithPlaceholderLicense: Story = {
+  name: 'Shows "Placeholder" as plain text with no dead link',
+  args: { license: placeholderLicense as any },
+  play: async ({ canvasElement, step }) => {
+    await step('No link is rendered, since the sentinel uri is not dereferenceable', async () => {
+      await expect(canvasElement.querySelector('a')).toBeNull();
+    });
+    await step('No open_in_new icon is shown', async () => {
+      await expect(canvasElement.querySelector('mat-icon')).toBeNull();
+    });
+    await step('The readable marker replaces the prose label', async () => {
+      await expect(canvasElement.textContent).toContain('Placeholder');
+      await expect(canvasElement.textContent).not.toContain('Not a Real License');
     });
   },
 };
