@@ -28,7 +28,7 @@ const Editor = (EditorNs as EditorNamespace).default ?? EditorNs;
       [config]="ckEditor.config"
       [editor]="editor"
       style="margin-bottom: 22px; display: block;"
-      (ready)="onEditorReady()" />
+      (ready)="onEditorReady($event)" />
     @if (control.touched && control.errors?.['crossProjectLink']; as error) {
       <mat-error>
         <div>{{ crossProjectLinkError.message | translate }}</div>
@@ -68,38 +68,48 @@ export class CkEditorComponent implements OnInit, OnDestroy {
 
   private readonly _destroy$ = new Subject<void>();
   private _crossProjectValidator?: ValidatorFn;
+  private _floatingUiHost?: HTMLElement;
 
   constructor(private readonly _elementRef: ElementRef<HTMLElement>) {}
 
   /**
    * CKEditor renders its floating UI (link balloon, dropdown panels) into a
-   * `.ck-body-wrapper` it appends to `document.body`. Since Angular CDK 21 a
-   * dialog is a `popover`, which the browser promotes to the *top layer* — it
-   * paints above all ordinary content no matter how high a z-index the balloon
-   * asks for. So inside a dialog the balloon opens and is positioned correctly
-   * but stays hidden behind the dialog, which is why the link button looked
-   * dead there while in-DOM toggles such as bold kept working (DEV-6997).
+   * container it appends to a `.ck-body-wrapper` on `document.body`. Since
+   * Angular CDK 21 a dialog is a `popover`, which the browser promotes to the
+   * *top layer* — it paints above all ordinary content no matter how high a
+   * z-index the balloon asks for. So inside a dialog the balloon opened and
+   * positioned itself correctly but stayed behind the dialog surface and never
+   * received a click, which is why the link button looked dead there while
+   * in-DOM toggles such as bold kept working (DEV-6997).
    *
-   * Nothing can win against the top layer from the outside, so move the wrapper
-   * into the popover to put it in the same layer. CKEditor recreates the
-   * wrapper whenever it is no longer connected, so relocating it is safe.
+   * Nothing can win against the top layer from the outside, so move the
+   * floating UI into the popover to put it in the same layer.
    *
-   * The popover itself is `pointer-events: none` — the CDK re-enables clicks on
-   * the pane inside it — so the relocated wrapper has to opt back in, otherwise
-   * the balloon is visible but its input and Save/Cancel buttons swallow no
-   * clicks.
+   * Move only *this* editor's container, never the `.ck-body-wrapper` itself:
+   * that wrapper is a page-wide singleton shared by every editor, so relocating
+   * it would drag the floating UI of all other live editors into this dialog
+   * and leave them detached — and dead — once it closes.
+   *
+   * The popover is `pointer-events: none` and the CDK re-enables clicks only on
+   * the pane inside it, so the container has to opt back in; otherwise the
+   * balloon is visible but its input and Save/Cancel buttons swallow no clicks.
    */
-  onEditorReady() {
+  onEditorReady(editor: { ui: { view: { body: unknown } } }) {
     const popover = this._elementRef.nativeElement.closest('[popover]');
     if (!popover) {
       return;
     }
 
-    const bodyWrapper = document.querySelector<HTMLElement>('.ck-body-wrapper');
-    if (bodyWrapper && !popover.contains(bodyWrapper)) {
-      bodyWrapper.style.pointerEvents = 'auto';
-      popover.appendChild(bodyWrapper);
+    const container = (editor.ui.view.body as { _bodyCollectionContainer?: HTMLElement })._bodyCollectionContainer;
+    if (!container) {
+      return;
     }
+
+    this._floatingUiHost = document.createElement('div');
+    this._floatingUiHost.classList.add('ck-body-wrapper');
+    this._floatingUiHost.style.pointerEvents = 'auto';
+    this._floatingUiHost.appendChild(container);
+    popover.appendChild(this._floatingUiHost);
   }
 
   ngOnInit() {
@@ -141,6 +151,11 @@ export class CkEditorComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._destroy$.next();
     this._destroy$.complete();
+
+    // CKEditor removes its own container on teardown; drop the host we added
+    // around it so nothing is left behind in the popover.
+    this._floatingUiHost?.remove();
+    this._floatingUiHost = undefined;
 
     // Remove the validator that was added in ngOnInit
     if (this._crossProjectValidator) {
