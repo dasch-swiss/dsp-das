@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ProjectDataRightsService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectDataRights, ProjectDataRightsService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { CreateResourceFormComponent } from './create-resource-form.component';
@@ -98,6 +98,55 @@ describe('CreateResourceFormComponent', () => {
       component.submitData();
 
       expect(mockDspApiConnection.v2.res.createResource).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('resource-side legal info', () => {
+    const PLACEHOLDER = 'urn:dasch:placeholder';
+
+    /** Re-stub the rights service before init, since `ngOnInit` is what reads it. */
+    const givenProjectRights = (rights: Partial<ProjectDataRights>) => {
+      const service = TestBed.inject(ProjectDataRightsService);
+      (service.forProject as jest.Mock).mockReturnValue(
+        of({
+          defaultDataAuthorship: [],
+          isPlaceholderLicense: false,
+          isPlaceholderCopyrightHolder: false,
+          ...rights,
+        })
+      );
+      component.ngOnInit();
+    };
+
+    it('should seed the authorship field with the project default', () => {
+      givenProjectRights({ defaultDataAuthorship: ['Ada Lovelace'] });
+
+      expect(component.form.controls.resourceAuthorship.value).toEqual(['Ada Lovelace']);
+    });
+
+    it('should flag a placeholder license and drop its dead url', () => {
+      givenProjectRights({ isPlaceholderLicense: true });
+
+      expect(component.isPlaceholderLicense).toBe(true);
+      expect(component.dataLicenseUrl).toBeUndefined();
+    });
+
+    it('should flag a placeholder copyright holder rather than showing the raw sentinel', () => {
+      givenProjectRights({ copyrightHolder: PLACEHOLDER, isPlaceholderCopyrightHolder: true });
+
+      expect(component.isPlaceholderCopyrightHolder).toBe(true);
+    });
+
+    it('should never render the raw sentinel in the locked legal rows', () => {
+      givenProjectRights({
+        copyrightHolder: PLACEHOLDER,
+        isPlaceholderCopyrightHolder: true,
+        isPlaceholderLicense: true,
+      });
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.textContent).not.toContain(PLACEHOLDER);
+      expect(fixture.nativeElement.innerHTML).not.toContain(PLACEHOLDER);
     });
   });
 });

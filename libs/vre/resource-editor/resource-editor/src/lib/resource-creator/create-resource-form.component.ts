@@ -20,7 +20,7 @@ import {
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { PropertyInfoValues, isPlaceholderLegalValue } from '@dasch-swiss/vre/shared/app-common';
+import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectDataRightsService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AppProgressIndicatorComponent, LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
@@ -78,8 +78,20 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
         <app-create-resource-form-row [label]="'legal.dataSide.license' | translate">
           <div
             style="display: flex; align-items: center; gap: 4px; padding: 16px 0"
-            [attr.aria-label]="'legal.dataSide.readOnlyValue' | translate: { value: dataLicenseLabel || '—' }">
-            @if (dataLicenseUrl) {
+            [attr.aria-label]="
+              'legal.dataSide.readOnlyValue'
+                | translate
+                  : {
+                      value: isPlaceholderLicense
+                        ? ('legal.dataSide.placeholder' | translate)
+                        : dataLicenseLabel || '—',
+                    }
+            ">
+            @if (isPlaceholderLicense) {
+              <!-- The sentinel's own label is a 96-character sentence and its uri is not
+                   dereferenceable, so show the readable marker as plain text. See DEV-6994. -->
+              <span>{{ 'legal.dataSide.placeholder' | translate }}</span>
+            } @else if (dataLicenseUrl) {
               <a
                 [href]="dataLicenseUrl"
                 target="_blank"
@@ -96,8 +108,20 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
         <app-create-resource-form-row [label]="'legal.dataSide.copyrightHolder' | translate">
           <div
             style="display: flex; align-items: center; gap: 4px; padding: 16px 0"
-            [attr.aria-label]="'legal.dataSide.readOnlyValue' | translate: { value: dataCopyrightHolder || '—' }">
-            <span>{{ dataCopyrightHolder || '—' }}</span>
+            [attr.aria-label]="
+              'legal.dataSide.readOnlyValue'
+                | translate
+                  : {
+                      value: isPlaceholderCopyrightHolder
+                        ? ('legal.dataSide.placeholder' | translate)
+                        : dataCopyrightHolder || '—',
+                    }
+            ">
+            @if (isPlaceholderCopyrightHolder) {
+              <span>{{ 'legal.dataSide.placeholder' | translate }}</span>
+            } @else {
+              <span>{{ dataCopyrightHolder || '—' }}</span>
+            }
             <mat-icon aria-hidden="true" style="font-size: 16px; height: 16px; width: 16px">lock</mat-icon>
           </div>
         </app-create-resource-form-row>
@@ -177,6 +201,10 @@ export class CreateResourceFormComponent implements OnInit {
   dataLicenseLabel?: string;
   dataLicenseUrl?: string;
   dataCopyrightHolder?: string;
+  // Placeholder markers stay as flags so the template resolves the label with `| translate`, which
+  // keeps it correct across a runtime language switch. See DEV-6994.
+  isPlaceholderLicense = false;
+  isPlaceholderCopyrightHolder = false;
 
   mapping = new Map<string, string>();
   readonly resourceClassTypes = [
@@ -220,16 +248,16 @@ export class CreateResourceFormComponent implements OnInit {
       .pipe(take(1), takeUntilDestroyed(this._destroyRef))
       .subscribe(rights => {
         // Placeholder legal info renders as the readable marker, never the raw sentinel: the license's
-        // own label is a 96-character sentence and its uri is a dead link. See DEV-6994.
-        const placeholder = this._translate.instant('legal.dataSide.placeholder');
-        this.dataLicenseLabel = rights.isPlaceholderLicense ? placeholder : rights.licenseLabel;
-        this.dataLicenseUrl = rights.isPlaceholderLicense ? undefined : rights.licenseUrl;
-        this.dataCopyrightHolder = rights.isPlaceholderCopyrightHolder ? placeholder : rights.copyrightHolder;
-        // Seed the editable authorship field with the project default, but never carry the sentinel
-        // into a new resource — the user would silently persist it back (it is not a real author).
-        const seed = rights.defaultDataAuthorship.filter(author => !isPlaceholderLegalValue(author));
-        if (seed.length > 0) {
-          this.form.controls.resourceAuthorship.setValue(seed);
+        // own label is a 96-character sentence and its uri is a dead link. The template branches on
+        // these flags so the marker is resolved with `| translate`. See DEV-6994.
+        this.isPlaceholderLicense = rights.isPlaceholderLicense;
+        this.isPlaceholderCopyrightHolder = rights.isPlaceholderCopyrightHolder;
+        this.dataLicenseLabel = rights.licenseLabel;
+        // `_resolve()` leaves licenseUrl undefined on the placeholder branch, so no guard is needed.
+        this.dataLicenseUrl = rights.licenseUrl;
+        this.dataCopyrightHolder = rights.copyrightHolder;
+        if (rights.defaultDataAuthorship.length > 0) {
+          this.form.controls.resourceAuthorship.setValue(rights.defaultDataAuthorship);
         }
       });
   }
