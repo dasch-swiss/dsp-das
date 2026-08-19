@@ -52,7 +52,7 @@ import { SearchFlowLogger } from './service/search-flow-logger.service';
       } @else {
         <app-resource-browser
           [data]="{ resources: resources, selectFirstResource: true }"
-          [showResourceClass]="true"
+          [showResourceClass]="showResourceClass"
           [loading]="queryIsExecuting()" />
       }
     }
@@ -62,6 +62,8 @@ import { SearchFlowLogger } from './service/search-flow-logger.service';
 })
 export class AdvancedSearchResultsComponent implements OnChanges {
   @Input({ required: true }) query!: string;
+  /** Off when the query is restricted to one resource class, where every row would repeat it. */
+  @Input() showResourceClass = false;
 
   private readonly _dspApiConnection = inject<KnoraApiConnection>(DspApiConnectionToken);
   private readonly _resourceResultService = inject(ResourceResultService);
