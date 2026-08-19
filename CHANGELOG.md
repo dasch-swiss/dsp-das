@@ -1,5 +1,31 @@
 # Changelog
 
+## [13.12.5](https://github.com/dasch-swiss/dsp-app/compare/v13.12.4...v13.12.5) (2026-08-19)
+
+
+### Bug Fixes
+
+* add UTF-8 BOM and file extension to CSV downloads ([#3349](https://github.com/dasch-swiss/dsp-app/issues/3349)) ([19e9fda](https://github.com/dasch-swiss/dsp-app/commit/19e9fda8ed068f02a1186f560922b53c8c82e9e3))
+* **ck-editor:** show the link balloon inside dialogs (DEV-6997) ([#3358](https://github.com/dasch-swiss/dsp-app/issues/3358)) ([5250f5f](https://github.com/dasch-swiss/dsp-app/commit/5250f5f7d15a3bc938b39785ddff620a12e79522))
+* show "Placeholder" in the legal overlay and stop its license column colliding into the other rows ([#3352](https://github.com/dasch-swiss/dsp-app/issues/3352)) ([3e83f63](https://github.com/dasch-swiss/dsp-app/commit/3e83f63aeb6a509d89032ff7664ffac72e7d14e6))
+* stop the rights statement rendering the raw placeholder sentinel ([#3355](https://github.com/dasch-swiss/dsp-app/issues/3355)) ([db2c1b7](https://github.com/dasch-swiss/dsp-app/commit/db2c1b7c45881d7bdbbe7ffdaefa8d462d12fe64))
+
+
+### Maintenances
+
+* **deps:** cap @swc/core at the @jscutlery/swc-angular peer range ([#3354](https://github.com/dasch-swiss/dsp-app/issues/3354)) ([b1b345e](https://github.com/dasch-swiss/dsp-app/commit/b1b345e38b1e870d26388eaa2112171b633e5eab))
+* **deps:** Lock file maintenance ([#3350](https://github.com/dasch-swiss/dsp-app/issues/3350)) ([2faf90b](https://github.com/dasch-swiss/dsp-app/commit/2faf90b67b56f86317436df4e2dc7dd1d2e7fb89))
+* **deps:** pin jsdom to unblock lock file maintenance ([#3343](https://github.com/dasch-swiss/dsp-app/issues/3343)) ([370ca2c](https://github.com/dasch-swiss/dsp-app/commit/370ca2cd8b3bd35a426cc75547be00d53181015d))
+* **deps:** Update dependency @faker-js/faker from 10.5.0 to 10.6.0 ([#3345](https://github.com/dasch-swiss/dsp-app/issues/3345)) ([0c39f83](https://github.com/dasch-swiss/dsp-app/commit/0c39f8341b5eb42344bc502da674bfc5c284370b))
+* **deps:** Update dependency postcss-import from 16.2.0 to 17.0.0 ([#3348](https://github.com/dasch-swiss/dsp-app/issues/3348)) ([b6a9bd1](https://github.com/dasch-swiss/dsp-app/commit/b6a9bd1d9bd0aa33d9198b8e50643325730fc807))
+* **deps:** Update dependency postcss-preset-env from 11.3.2 to 11.4.0 ([#3356](https://github.com/dasch-swiss/dsp-app/issues/3356)) ([4c91d42](https://github.com/dasch-swiss/dsp-app/commit/4c91d422bb7c50c2f174136cf02847b1ebc5ac89))
+* **deps:** Update typescript-eslint monorepo from 8.66.0 to 8.67.0 ([#3347](https://github.com/dasch-swiss/dsp-app/issues/3347)) ([a26c41c](https://github.com/dasch-swiss/dsp-app/commit/a26c41ce7fd3494ec86a0f060e654bbb2c2a1648))
+
+
+### Documentation
+
+* drop /latest segment from docs.dasch.swiss links ([#3353](https://github.com/dasch-swiss/dsp-app/issues/3353)) ([a05cb48](https://github.com/dasch-swiss/dsp-app/commit/a05cb482c9e2f6a0a84250c30a7b524f59244819))
+
 ## [13.12.4](https://github.com/dasch-swiss/dsp-app/compare/v13.12.3...v13.12.4) (2026-08-17)
 
 
