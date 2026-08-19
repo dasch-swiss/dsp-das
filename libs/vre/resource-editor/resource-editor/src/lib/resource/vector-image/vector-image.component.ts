@@ -122,6 +122,7 @@ export class VectorImageComponent implements OnChanges, AfterViewInit, OnDestroy
   private _lastTranslateY = 0;
   private _containerWidth = 0;
   private _containerHeight = 0;
+  private _wheelZoomEnabled = false;
   private readonly _destroyRef = inject(DestroyRef);
 
   constructor(
@@ -205,7 +206,23 @@ export class VectorImageComponent implements OnChanges, AfterViewInit, OnDestroy
     }
   }
 
+  /**
+   * Enables wheel zooming only once the user presses inside the viewer, and disables it again on a
+   * press anywhere else — the same gate the still image viewer applies, so that the wheel stays
+   * available to scroll the resource page while the pointer merely passes over the SVG (DEV-6998).
+   */
+  @HostListener('document:pointerdown', ['$event'])
+  onDocumentPointerDown(event: PointerEvent): void {
+    const container = this.containerRef?.nativeElement;
+    this._wheelZoomEnabled = !!container && container.contains(event.target as Node);
+  }
+
   onWheel(event: WheelEvent): void {
+    // Fullscreen has no page left to scroll, so the wheel keeps zooming there unconditionally.
+    if (!this._wheelZoomEnabled && !this.isFullscreen) {
+      return;
+    }
+
     event.preventDefault();
     if (!this.containerRef?.nativeElement) return;
     const direction = event.deltaY > 0 ? -1 : 1;

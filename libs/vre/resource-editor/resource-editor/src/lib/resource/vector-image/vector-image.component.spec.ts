@@ -240,6 +240,8 @@ describe('VectorImageComponent', () => {
   });
 
   describe('onWheel', () => {
+    const insideTarget = {};
+
     beforeEach(() => {
       // Mock containerRef
       component.containerRef = {
@@ -250,8 +252,20 @@ describe('VectorImageComponent', () => {
             left: 0,
             top: 0,
           }),
+          contains: (node: unknown) => node === insideTarget,
         },
       } as any;
+      // wheel zooming is gated behind a press inside the viewer
+      component.onDocumentPointerDown({ target: insideTarget } as unknown as PointerEvent);
+    });
+
+    it('should zoom in on wheel up', () => {
+      const zoomSpy = jest.spyOn(component.viewerService, 'zoom');
+      const event = new WheelEvent('wheel', { deltaY: -100 });
+
+      component.onWheel(event);
+
+      expect(zoomSpy).toHaveBeenCalledWith(1, expect.any(Number), expect.any(Number));
     });
 
     it('should zoom out on wheel down', () => {
@@ -263,11 +277,40 @@ describe('VectorImageComponent', () => {
       expect(zoomSpy).toHaveBeenCalledWith(-1, expect.any(Number), expect.any(Number));
     });
 
-    it('should zoom in on wheel up', () => {
-      const zoomSpy = jest.spyOn(component.viewerService, 'zoom');
-      const event = new WheelEvent('wheel', { deltaY: -100 });
+    it('should suppress the page scroll while it zooms', () => {
+      const event = new WheelEvent('wheel', { deltaY: -100, cancelable: true });
 
       component.onWheel(event);
+
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should let the page scroll before the viewer has been pressed', () => {
+      component.onDocumentPointerDown({ target: {} } as unknown as PointerEvent);
+      const zoomSpy = jest.spyOn(component.viewerService, 'zoom');
+      const event = new WheelEvent('wheel', { deltaY: 100, cancelable: true });
+
+      component.onWheel(event);
+
+      expect(zoomSpy).not.toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(false);
+    });
+
+    it('should stop zooming again once the press lands outside the viewer', () => {
+      component.onDocumentPointerDown({ target: {} } as unknown as PointerEvent);
+      const zoomSpy = jest.spyOn(component.viewerService, 'zoom');
+
+      component.onWheel(new WheelEvent('wheel', { deltaY: -100 }));
+
+      expect(zoomSpy).not.toHaveBeenCalled();
+    });
+
+    it('should zoom without a press while in fullscreen', () => {
+      component.onDocumentPointerDown({ target: {} } as unknown as PointerEvent);
+      component.isFullscreen = true;
+      const zoomSpy = jest.spyOn(component.viewerService, 'zoom');
+
+      component.onWheel(new WheelEvent('wheel', { deltaY: -100 }));
 
       expect(zoomSpy).toHaveBeenCalledWith(1, expect.any(Number), expect.any(Number));
     });
