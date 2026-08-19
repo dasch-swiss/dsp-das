@@ -19,6 +19,12 @@ const meta: Meta<ResourceListItemComponent> = {
       control: 'boolean',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' }, category: 'Behavior' },
     },
+    showResourceClass: {
+      description:
+        'When true, shows the resource class below the resource label. Enabled for search results, which can mix classes, and left off for lists already scoped to one class.',
+      control: 'boolean',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' }, category: 'Behavior' },
+    },
   },
 };
 export default meta;
@@ -109,6 +115,62 @@ export const WithProjectShortname: Story = {
     const canvas = within(canvasElement);
     await step('Project shortname is displayed', async () => {
       await expect(canvas.getByText('testproj')).toBeInTheDocument();
+    });
+  },
+};
+
+export const ShowsResourceClassWhenEnabled: Story = {
+  name: 'Shows the resource class when showResourceClass is true',
+  decorators: [applicationConfig({ providers: STORY_PROVIDERS })],
+  args: {
+    resource: makeReadResource({ label: 'Book of Hours (1460)' }),
+    showResourceClass: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('Resource class is displayed', async () => {
+      await expect(canvas.getByTestId('resource-class-label')).toHaveTextContent('Book');
+    });
+  },
+};
+
+export const ShowsResourceClassWithoutSearchKeyword: Story = {
+  name: 'Shows the resource class on advanced search results, where no keyword produced a match',
+  decorators: [
+    applicationConfig({
+      providers: [
+        ...STORY_PROVIDERS,
+        {
+          provide: MultipleViewerService,
+          useValue: makeMultipleViewerServiceStub({ searchKeyword: undefined }),
+        },
+      ],
+    }),
+  ],
+  args: {
+    resource: makeReadResource({ label: 'Book of Hours (1460)' }),
+    showResourceClass: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('Resource class is displayed without a "Found in:" section', async () => {
+      await expect(canvas.getByTestId('resource-class-label')).toHaveTextContent('Book');
+      await expect(canvas.queryByText(/Found in:/i)).not.toBeInTheDocument();
+    });
+  },
+};
+
+export const HidesResourceClassWhenDisabled: Story = {
+  name: 'Hides the resource class when showResourceClass is false',
+  decorators: [applicationConfig({ providers: STORY_PROVIDERS })],
+  args: {
+    resource: makeReadResource({ label: 'Book of Hours (1460)' }),
+    showResourceClass: false,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('Resource class is not displayed', async () => {
+      await expect(canvas.queryByTestId('resource-class-label')).not.toBeInTheDocument();
     });
   },
 };

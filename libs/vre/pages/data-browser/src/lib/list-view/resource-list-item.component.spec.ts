@@ -179,6 +179,40 @@ describe('ResourceListItemComponent', () => {
     });
   });
 
+  describe('resourceClassLabels', () => {
+    it('should prefer the multi-language labels from entityInfo', () => {
+      component.resource = {
+        ...mockResource,
+        type: 'http://example.org/onto/v2#Letter',
+        resourceClassLabel: 'Stale label',
+        entityInfo: {
+          classes: {
+            'http://example.org/onto/v2#Letter': { labels: [{ language: 'en', value: 'Letter' }] },
+          },
+        },
+      } as unknown as ReadResource;
+
+      expect(component.resourceClassLabels).toEqual([{ language: 'en', value: 'Letter' }]);
+    });
+
+    it('should fall back to resourceClassLabel when entityInfo has no labels for the type', () => {
+      component.resource = {
+        ...mockResource,
+        type: 'http://example.org/onto/v2#Letter',
+        resourceClassLabel: 'Letter',
+        entityInfo: { classes: {} },
+      } as unknown as ReadResource;
+
+      expect(component.resourceClassLabels).toEqual([{ value: 'Letter' }]);
+    });
+
+    it('should return an empty array when neither source has a label', () => {
+      component.resource = mockResource;
+
+      expect(component.resourceClassLabels).toEqual([]);
+    });
+  });
+
   describe('isHighlighted$', () => {
     it('should highlight resource when it is the only selected resource (not in selectMode)', done => {
       mockMultipleViewerService.selectMode = false;

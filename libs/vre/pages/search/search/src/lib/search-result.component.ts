@@ -37,6 +37,7 @@ import { BehaviorSubject, catchError, combineLatest, map, Observable, of, switch
           [data]="{ resources: resources, selectFirstResource: true }"
           [searchKeyword]="query"
           [showProjectShortname]="showProjectShortname"
+          [showResourceClass]="true"
           [loading]="loading()" />
       }
     }

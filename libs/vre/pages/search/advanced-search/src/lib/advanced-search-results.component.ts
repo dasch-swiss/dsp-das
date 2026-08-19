@@ -52,6 +52,7 @@ import { SearchFlowLogger } from './service/search-flow-logger.service';
       } @else {
         <app-resource-browser
           [data]="{ resources: resources, selectFirstResource: true }"
+          [showResourceClass]="true"
           [loading]="queryIsExecuting()" />
       }
     }
