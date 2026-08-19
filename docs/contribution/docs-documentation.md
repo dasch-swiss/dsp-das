@@ -1,7 +1,7 @@
 # DSP-APP Documentation
 
 This is the DSP-APP documentation, based on [MkDocs](https://www.mkdocs.org) and published
-under [https://docs.dasch.swiss/latest/DSP-APP/](https://docs.dasch.swiss/latest/DSP-APP/).
+under [https://docs.dasch.swiss/DSP-APP/](https://docs.dasch.swiss/DSP-APP/).
 
 Images like screenshots and so on have to be stored in `assets/images`.
 

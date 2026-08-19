@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
@@ -27,7 +27,8 @@ const Editor = (EditorNs as EditorNamespace).default ?? EditorNs;
       [formControl]="footnoteControl"
       [config]="ckEditor.config"
       [editor]="editor"
-      style="margin-bottom: 22px; display: block;" />
+      style="margin-bottom: 22px; display: block;"
+      (ready)="onEditorReady()" />
     @if (control.touched && control.errors?.['crossProjectLink']; as error) {
       <mat-error>
         <div>{{ crossProjectLinkError.message | translate }}</div>
@@ -67,6 +68,39 @@ export class CkEditorComponent implements OnInit, OnDestroy {
 
   private readonly _destroy$ = new Subject<void>();
   private _crossProjectValidator?: ValidatorFn;
+
+  constructor(private readonly _elementRef: ElementRef<HTMLElement>) {}
+
+  /**
+   * CKEditor renders its floating UI (link balloon, dropdown panels) into a
+   * `.ck-body-wrapper` it appends to `document.body`. Since Angular CDK 21 a
+   * dialog is a `popover`, which the browser promotes to the *top layer* — it
+   * paints above all ordinary content no matter how high a z-index the balloon
+   * asks for. So inside a dialog the balloon opens and is positioned correctly
+   * but stays hidden behind the dialog, which is why the link button looked
+   * dead there while in-DOM toggles such as bold kept working (DEV-6997).
+   *
+   * Nothing can win against the top layer from the outside, so move the wrapper
+   * into the popover to put it in the same layer. CKEditor recreates the
+   * wrapper whenever it is no longer connected, so relocating it is safe.
+   *
+   * The popover itself is `pointer-events: none` — the CDK re-enables clicks on
+   * the pane inside it — so the relocated wrapper has to opt back in, otherwise
+   * the balloon is visible but its input and Save/Cancel buttons swallow no
+   * clicks.
+   */
+  onEditorReady() {
+    const popover = this._elementRef.nativeElement.closest('[popover]');
+    if (!popover) {
+      return;
+    }
+
+    const bodyWrapper = document.querySelector<HTMLElement>('.ck-body-wrapper');
+    if (bodyWrapper && !popover.contains(bodyWrapper)) {
+      bodyWrapper.style.pointerEvents = 'auto';
+      popover.appendChild(bodyWrapper);
+    }
+  }
 
   ngOnInit() {
     if (this.projectShortcode) {
