@@ -26,6 +26,8 @@ export class OpenSeaDragonService {
 
   private _drawing = false;
 
+  private _wheelZoomEnabled = false;
+
   get drawing() {
     return this._drawing;
   }
@@ -57,6 +59,7 @@ export class OpenSeaDragonService {
 
     this._viewer = new OpenSeadragon.Viewer(viewerConfig);
     this._addCustomHandlers(this._viewer);
+    this._gateWheelZoomBehindInteraction(this._viewer);
   }
 
   toggleDrawing(): void {
@@ -89,6 +92,39 @@ export class OpenSeaDragonService {
 
   zoom(direction: 1 | -1) {
     this._viewer.viewport.zoomBy(1 + direction * this._ZOOM_FACTOR);
+  }
+
+  /**
+   * Keeps the wheel available to the resource page until the user actually works with the image.
+   *
+   * OpenSeadragon consumes every wheel event over its canvas in order to zoom, which left the
+   * resource page unscrollable by mouse whenever the pointer sat over the image (DEV-6998). A
+   * pointer press inside the viewer enables wheel zooming, a press anywhere else disables it again,
+   * so the zoom gesture itself is unchanged for anyone who is looking at the image.
+   *
+   * The wheel listener runs in the capture phase on the viewer's outer element so that
+   * `stopPropagation()` keeps the event away from OpenSeadragon's own listener on the inner canvas —
+   * and away from its scroll throttle, which calls `preventDefault()` on the events it skips and
+   * would otherwise make the page scroll stutter. The default action is deliberately left intact,
+   * because the default *is* the page scroll.
+   */
+  private _gateWheelZoomBehindInteraction(viewer: OpenSeadragon.Viewer): void {
+    const onPressOutside = (event: PointerEvent) => {
+      this._wheelZoomEnabled = viewer.element.contains(event.target as Node);
+    };
+    document.addEventListener('pointerdown', onPressOutside);
+    viewer.addOnceHandler('destroy', () => document.removeEventListener('pointerdown', onPressOutside));
+
+    viewer.element.addEventListener(
+      'wheel',
+      (event: WheelEvent) => {
+        // Fullscreen has no page left to scroll, so the wheel keeps zooming there unconditionally.
+        if (!this._wheelZoomEnabled && !viewer.isFullPage()) {
+          event.stopPropagation();
+        }
+      },
+      { capture: true }
+    );
   }
 
   private _addCustomHandlers(viewer: OpenSeadragon.Viewer): void {
