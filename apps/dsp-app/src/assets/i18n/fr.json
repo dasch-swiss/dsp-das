@@ -5,6 +5,7 @@
       "license": "Licence",
       "copyrightHolder": "Titulaire des droits",
       "authorship": "Auteur·ice",
+      "placeholder": "Espace réservé",
       "authorshipHint": "Saisissez un nom et appuyez sur Entrée pour ajouter chaque auteur·ice.",
       "edit": "Modifier",
       "removeAuthor": "Supprimer {{name}}",
@@ -439,6 +440,10 @@
         "title": "La recherche a échoué",
         "message": "Une erreur s'est produite et la recherche n'a pas pu être effectuée. Veuillez réessayer."
       },
+      "termValidation": {
+        "tooShort": "Saisissez au moins 3 caractères",
+        "wildcardTooShort": "Un caractère générique nécessite au moins 3 autres caractères dans le même mot"
+      },
       "searchTips": {
         "title": "Conseils de recherche",
         "exactPhrases": "Utilisez des guillemets pour des phrases exactes : \"down the rabbit hole\"",
@@ -606,7 +611,8 @@
     "legal": {
       "copyrightHolder": "Titulaire des droits d'auteur",
       "authorship": "Auteur·ice",
-      "license": "Licence"
+      "license": "Licence",
+      "placeholder": "Espace réservé"
     },
     "navigation": {
       "firstPage": "Première page",
@@ -1009,7 +1015,7 @@
   },
   "core": {
     "errorHandler": {
-      "noInternet": "Il semble que vous ne soyez pas connecté à Internet.",
+      "serverUnreachable": "Le serveur n'a pas pu être joint. Veuillez vérifier votre connexion et réessayer.",
       "iiifServerError": "Erreur du serveur IIIF : L'image n'a pas pu être chargée. Veuillez réessayer plus tard.",
       "noPermission": "Vous n'avez pas la permission de voir une ou plusieurs ressources.",
       "notFound": "La ressource demandée n'a pas été trouvée.",

@@ -15,6 +15,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { forkJoin, Subscription, switchMap, take } from 'rxjs';
 // Direct relative imports (NOT the lib barrel) for same-lib components to avoid the intra-lib DI cycle.
 import { AlertInfoComponent } from '../../../../header/alert-info.component';
+import {
+  isPlaceholderLegalValue,
+  joinPlaceholderLegalValues,
+} from '../../../../representation/is-placeholder-file-value';
 import { RepresentationService } from '../../../../representation/representation.service';
 import { ResourceFetcherService } from '../../../../representation/resource-fetcher.service';
 import { ResourceExplorerButtonComponent } from '../../../resource-explorer-button.component';
@@ -91,18 +95,39 @@ import { ResourceExplorerButtonComponent } from '../../../resource-explorer-butt
             <app-resource-explorer-button [resourceIri]="value.regionIri" />
           </span>
 
+          <!-- Placeholder legal values render as the readable marker, and the placeholder license as a
+               plain pill: its uri is the sentinel itself and is not dereferenceable (DEV-6982). -->
           @if (value.copyrightHolder) {
             <span class="legal-label">{{ 'resourceEditor.legal.copyrightHolder' | translate }}</span>
-            <span class="legal-value">{{ value.copyrightHolder }}</span>
+            <span class="legal-value">
+              @if (isPlaceholder(value.copyrightHolder)) {
+                {{ 'resourceEditor.legal.placeholder' | translate }}
+              } @else {
+                {{ value.copyrightHolder }}
+              }
+            </span>
           }
           @if (value.authorship?.length) {
             <span class="legal-label">{{ 'resourceEditor.legal.authorship' | translate }}</span>
-            <span class="legal-value">{{ value.authorship.join(', ') }}</span>
+            <span class="legal-value">{{ authorshipWith('resourceEditor.legal.placeholder' | translate) }}</span>
           }
           @if (resolvedLicense) {
             <span class="legal-label">{{ 'resourceEditor.legal.license' | translate }}</span>
             <span class="legal-value">
-              <a class="license-pill" [href]="resolvedLicense.uri" target="_blank">{{ resolvedLicense.labelEn }}</a>
+              @if (isPlaceholder(resolvedLicense.id)) {
+                <span class="license-pill license-pill--static">{{
+                  'resourceEditor.legal.placeholder' | translate
+                }}</span>
+              } @else {
+                <a
+                  class="license-pill"
+                  [href]="resolvedLicense.uri"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  [attr.aria-label]="resolvedLicense.labelEn + ', ' + ('legal.dataSide.opensInNewTab' | translate)"
+                  >{{ resolvedLicense.labelEn }}</a
+                >
+              }
             </span>
           }
         </div>
@@ -270,10 +295,24 @@ import { ResourceExplorerButtonComponent } from '../../../resource-explorer-butt
         padding: 0;
       }
 
+      /* Non-interactive variant (placeholder): same geometry, but no link affordance — otherwise it
+         is pixel-identical to the clickable pill. */
+      .license-pill--static {
+        cursor: default;
+      }
+
+      /* Interactive variant: hover feedback distinguishes it from the static placeholder pill. */
+      a.license-pill:hover {
+        border-color: #336790;
+        color: #336790;
+      }
+
       .license-pill {
         display: inline-flex;
         align-items: center;
-        border: 1px solid #9ca3af;
+        /* #6b7280 on #f9fafb is 4.6:1, clearing the 3:1 non-text contrast bar (WCAG 1.4.11) that
+           the previous #9ca3af border missed at 2.4:1. */
+        border: 1px solid #6b7280;
         border-radius: 3px;
         padding: 0 6px;
         font-weight: 600;
@@ -370,6 +409,16 @@ export class RegionPreviewViewerComponent implements OnChanges, OnDestroy, OnIni
   // Returns a stable DTO reference (value-equal across CD passes) → safe under OnPush.
   get resolvedLicense() {
     return this._licenses.find(license => license.id === this.value.license?.id);
+  }
+
+  // Placeholder-aware predicate used by the legal rows; a plain function reference, stable under OnPush.
+  readonly isPlaceholder = isPlaceholderLegalValue;
+
+  // Returns a primitive (value-equal across CD passes) → safe under OnPush. The placeholder label
+  // arrives already translated from the template's `| translate` pipe, so this component needs no
+  // TranslateService injection.
+  authorshipWith(placeholderLabel: string): string {
+    return joinPlaceholderLegalValues(this.value.authorship, placeholderLabel);
   }
 
   // These getters return primitives (value-equal across CD passes) → safe under OnPush.

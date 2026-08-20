@@ -36,6 +36,12 @@ const meta: Meta<AdvancedSearchResultsComponent> = {
   component: AdvancedSearchResultsComponent,
   argTypes: {
     query: { description: 'Gravsearch query string to execute against the API.' },
+    showResourceClass: {
+      description:
+        'Whether each result shows its resource class. The page turns this off when the query is restricted to one class, where every row would repeat it.',
+      control: 'boolean',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
   },
 };
 export default meta;

@@ -13,6 +13,16 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { DownloadDialogResourcesTabComponent } from './download-dialog-resources-tab.component';
 
+// jsdom's Blob implements neither arrayBuffer() nor text(), so FileReader is the only way to get
+// at the raw bytes of a Blob under test.
+const readBlobBytes = (blob: Blob): Promise<Uint8Array> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsArrayBuffer(blob);
+  });
+
 describe('DownloadDialogResourcesTabComponent', () => {
   let component: DownloadDialogResourcesTabComponent;
   let fixture: ComponentFixture<DownloadDialogResourcesTabComponent>;
@@ -297,7 +307,26 @@ describe('DownloadDialogResourcesTabComponent', () => {
 
         expect(createObjectURLSpy).toHaveBeenCalled();
         const blobArg = createObjectURLSpy.mock.calls[0][0] as Blob;
-        expect(blobArg.type).toBe('text/csv');
+        expect(blobArg.type).toBe('text/csv;charset=utf-8');
+      });
+
+      // DEV-6987: without the BOM, Excel/Numbers on macOS decode the file as Mac OS Roman and
+      // render "für" as "f√ºr". The BOM is the only thing that tells them the file is UTF-8.
+      it('prefixes the CSV with a UTF-8 BOM so spreadsheet apps decode non-ASCII correctly', async () => {
+        const nonAsciiBody = 'label,description\nMuseum für Kommunikation,Genève — Moritz Mähr\n';
+
+        component.downloadCsv();
+        events$.next(new HttpResponse({ body: nonAsciiBody, status: 200 }));
+        events$.complete();
+
+        const blobArg = createObjectURLSpy.mock.calls[0][0] as Blob;
+        const bytes = await readBlobBytes(blobArg);
+
+        // Asserted at byte level, not as a decoded string: UTF-8 decoding strips a leading BOM, so
+        // a string-level assertion would pass against the unfixed code too.
+        expect([...bytes.slice(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
+        // "für" must still be the precomposed two-byte c3 bc — the BOM is the only change.
+        expect(new TextDecoder('utf-8').decode(bytes.slice(3))).toBe(nonAsciiBody);
       });
 
       it('creates and clicks a download anchor', () => {

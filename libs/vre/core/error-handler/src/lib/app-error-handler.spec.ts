@@ -308,4 +308,51 @@ describe('AppErrorHandler', () => {
       expect(openSnackBar).toHaveBeenCalledWith('duplicate value', 'error');
     });
   });
+
+  /**
+   * `status: 0` was read as proof the user was offline. It is what the browser reports for any failure
+   * it cannot attribute to a response — including a rejection by our own ingress, which is how a search
+   * for `\*bc` produced it with the connection perfectly fine (DEV-6935).
+   */
+  describe('status 0 (no response the browser can attribute)', () => {
+    it('does not claim the user is offline for a CORS-less rejection (DEV-6935)', () => {
+      // The shape the browser hands to Angular when the response carries no CORS headers: nothing of
+      // the response is exposed, so status collapses to 0 — what the ingress returns for a path
+      // containing %5C.
+      handler.handleError(
+        new HttpErrorResponse({
+          status: 0,
+          statusText: 'Unknown Error',
+          url: 'https://api.dev.dasch.swiss/v2/search/%5C*bc',
+        })
+      );
+
+      expect(openSnackBar).toHaveBeenCalledWith('core.errorHandler.serverUnreachable', 'error');
+    });
+
+    it('reads the same on the JS-LIB path', () => {
+      handler.handleError(jsLibError(0, undefined));
+
+      expect(openSnackBar).toHaveBeenCalledWith('core.errorHandler.serverUnreachable', 'error');
+    });
+
+    /**
+     * A Sipi failure is a status-0 failure too — Angular writes the status into the message, so the
+     * `0` in `knora.json: 0 Unknown Error` is that same status. Testing the generic case first left
+     * the IIIF message with no reachable input; it is now tried before the fallback (DEV-6946).
+     */
+    it('names Sipi rather than the server when the failed request was for knora.json (DEV-6946)', () => {
+      // The shape Angular produces when the request `RepresentationService.getFileInfo` issues fails
+      // at the network layer: `message` is composed from the url, status and statusText.
+      handler.handleError(
+        new HttpErrorResponse({
+          status: 0,
+          statusText: 'Unknown Error',
+          url: 'https://iiif.dasch.swiss/0801/aB1cD2eF3gH-image.jp2/knora.json',
+        })
+      );
+
+      expect(openSnackBar).toHaveBeenCalledWith('core.errorHandler.iiifServerError', 'error');
+    });
+  });
 });

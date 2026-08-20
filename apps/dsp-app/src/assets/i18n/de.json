@@ -5,6 +5,7 @@
       "license": "Lizenz",
       "copyrightHolder": "Rechteinhaber:in",
       "authorship": "Urheber:innen",
+      "placeholder": "Platzhalter",
       "authorshipHint": "Namen eingeben und mit Enter bestätigen, um Urheber:innen hinzuzufügen.",
       "edit": "Bearbeiten",
       "removeAuthor": "{{name}} entfernen",
@@ -439,6 +440,10 @@
         "title": "Suche fehlgeschlagen",
         "message": "Etwas ist schiefgelaufen und die Suche konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut."
       },
+      "termValidation": {
+        "tooShort": "Mindestens 3 Zeichen eingeben",
+        "wildcardTooShort": "Ein Platzhalter benötigt mindestens 3 weitere Zeichen im selben Wort"
+      },
       "searchTips": {
         "title": "Suchtipps",
         "exactPhrases": "Verwenden Sie Anführungszeichen für exakte Phrasen: \"down the rabbit hole\"",
@@ -804,7 +809,8 @@
     "legal": {
       "copyrightHolder": "Urheberrechtsinhaber",
       "authorship": "Autorenschaft",
-      "license": "Lizenz"
+      "license": "Lizenz",
+      "placeholder": "Platzhalter"
     },
     "navigation": {
       "firstPage": "Erste Seite",
@@ -1009,7 +1015,7 @@
   },
   "core": {
     "errorHandler": {
-      "noInternet": "Es scheint, dass Sie nicht mit dem Internet verbunden sind.",
+      "serverUnreachable": "Der Server konnte nicht erreicht werden. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
       "iiifServerError": "IIIF-Serverfehler: Das Bild konnte nicht geladen werden. Bitte versuchen Sie es später erneut.",
       "noPermission": "Sie haben keine Berechtigung, eine oder mehrere Ressourcen zu sehen.",
       "notFound": "Die angeforderte Ressource wurde nicht gefunden.",

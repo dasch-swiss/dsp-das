@@ -9,6 +9,7 @@ import { ResourceListItemComponent } from './resource-list-item.component';
       <app-resource-list-item
         [resource]="resource"
         [showProjectShortname]="showProjectShortname"
+        [showResourceClass]="showResourceClass"
         data-cy="resource-list-item" />
     }
   `,
@@ -17,4 +18,5 @@ import { ResourceListItemComponent } from './resource-list-item.component';
 export class ResourceListComponent {
   @Input({ required: true }) resources: ReadResource[] = [];
   @Input() showProjectShortname = false;
+  @Input() showResourceClass = false;
 }

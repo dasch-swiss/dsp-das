@@ -4,6 +4,7 @@ import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { provideTranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
+import { PLACEHOLDER_FILE_SENTINEL } from '../../../../representation/is-placeholder-file-value';
 import { RepresentationService } from '../../../../representation/representation.service';
 import { ResourceFetcherService } from '../../../../representation/resource-fetcher.service';
 import { RegionPreviewViewerComponent } from './region-preview-viewer.component';
@@ -60,6 +61,85 @@ describe('RegionPreviewViewerComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegionPreviewViewerComponent);
+  });
+
+  // DEV-6982: dsp-tools writes the sentinel into the legal fields when the real legal info is not
+  // known yet; the overlay must show the readable marker, never the raw URN.
+  describe('placeholder legal values', () => {
+    const placeholderValue = () =>
+      ({
+        ...(fullValue() as unknown as Record<string, unknown>),
+        copyrightHolder: PLACEHOLDER_FILE_SENTINEL,
+        authorship: [PLACEHOLDER_FILE_SENTINEL],
+        license: { id: PLACEHOLDER_FILE_SENTINEL },
+      }) as unknown as ReadRegionPreviewValue;
+
+    const withPlaceholderLicenseAvailable = async () => {
+      // The component resolves the license IRI against the project license list, so the placeholder
+      // license must be present there for the license row to render at all.
+      TestBed.resetTestingModule();
+      URL.createObjectURL = jest.fn().mockReturnValue('blob:mock');
+      URL.revokeObjectURL = jest.fn();
+      await TestBed.configureTestingModule({
+        imports: [RegionPreviewViewerComponent],
+        providers: [
+          provideTranslateService(),
+          { provide: ResourceService, useValue: { getResourcePath: jest.fn().mockReturnValue('/project/0001/img') } },
+          { provide: RepresentationService, useValue: { getImageBlob: jest.fn().mockReturnValue(of(new Blob())) } },
+          { provide: ResourceFetcherService, useValue: { projectShortcode$: of('0001') } },
+          {
+            provide: AdminAPIApiService,
+            useValue: {
+              getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses: jest.fn().mockReturnValue(
+                of({
+                  data: [
+                    {
+                      id: PLACEHOLDER_FILE_SENTINEL,
+                      uri: PLACEHOLDER_FILE_SENTINEL,
+                      labelEn:
+                        'Placeholder License - Not a Real License only to be used when the real license is not known yet.',
+                    },
+                  ],
+                })
+              ),
+            },
+          },
+        ],
+      }).compileComponents();
+      fixture = TestBed.createComponent(RegionPreviewViewerComponent);
+      fixture.componentRef.setInput('value', placeholderValue());
+      fixture.detectChanges();
+    };
+
+    it('never renders the raw sentinel for copyright holder or authorship', () => {
+      setValue(placeholderValue());
+      const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+      expect(text).not.toContain(PLACEHOLDER_FILE_SENTINEL);
+      // The i18n key resolves to itself with no loaded bundle, which is how we know the marker was used.
+      expect(text).toContain('resourceEditor.legal.placeholder');
+    });
+
+    it('renders the placeholder license as a non-link pill, since its uri is not dereferenceable', async () => {
+      await withPlaceholderLicenseAvailable();
+      const el: HTMLElement = fixture.nativeElement;
+
+      const staticPill = el.querySelector('span.license-pill');
+      expect(staticPill).not.toBeNull();
+      expect(staticPill!.classList).toContain('license-pill--static');
+      // No anchor may point at the sentinel.
+      expect(el.querySelector(`a[href="${PLACEHOLDER_FILE_SENTINEL}"]`)).toBeNull();
+      expect(el.textContent).not.toContain('Not a Real License');
+    });
+
+    it('keeps real legal values untouched', () => {
+      setValue(fullValue());
+      const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+      expect(text).toContain('DaSCH');
+      expect(text).toContain('Ada Lovelace');
+      expect(text).not.toContain('resourceEditor.legal.placeholder');
+    });
   });
 
   it('highlights the region by lightening + desaturating the surroundings and revealing the region window', () => {

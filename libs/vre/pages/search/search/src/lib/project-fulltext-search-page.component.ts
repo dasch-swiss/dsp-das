@@ -4,10 +4,11 @@ import { AsyncPipe, NgClass } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatDivider } from '@angular/material/divider';
-import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { MatError, MatFormField, MatSuffix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { fulltextSearchTermValidator } from '@dasch-swiss/vre/shared/app-common';
 import { SearchTipsComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { TranslatePipe } from '@ngx-translate/core';
 import { map, startWith, Subject } from 'rxjs';
@@ -20,6 +21,7 @@ import { SearchResultComponent } from './search-result.component';
     NgClass,
     ReactiveFormsModule,
     MatDivider,
+    MatError,
     MatFormField,
     MatIcon,
     MatInput,
@@ -42,6 +44,16 @@ import { SearchResultComponent } from './search-result.component';
             (focus)="showSearchTips()"
             (blur)="hideSearchTips()" />
           <mat-icon matSuffix>search</mat-icon>
+          <!-- Gated on an actual submit: complaining at the second keystroke would flag "de" on the way
+               to "deutsch". Once a submit has been refused the message tracks the term live. -->
+          @if (searchAttempted) {
+            @if (formGroup.controls.query.hasError('searchTermTooShort')) {
+              <mat-error>{{ 'pages.search.termValidation.tooShort' | translate }}</mat-error>
+            }
+            @if (formGroup.controls.query.hasError('searchWildcardTooShort')) {
+              <mat-error>{{ 'pages.search.termValidation.wildcardTooShort' | translate }}</mat-error>
+            }
+          }
         </mat-form-field>
       </form>
     </div>
@@ -63,7 +75,11 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnDest
     startWith(true)
   );
 
-  formGroup = this._fb.group({ query: [''] });
+  // The form had no validators at all, so the `formGroup.valid` guard in `onSubmit` was always true and
+  // a term dsp-api rejects out of hand ("de", "de*") still cost a request and a 400 (DEV-6930).
+  formGroup = this._fb.group({ query: ['', fulltextSearchTermValidator()] });
+
+  searchAttempted = false;
 
   projectId = this._projectPageService.currentProject.id;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
@@ -118,8 +134,12 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnDest
 
   onSubmit() {
     if (!this.formGroup.valid) {
+      this.searchAttempted = true;
       return;
     }
+    // Cleared on a search that goes through, so the next term starts quiet again — `FormGroupDirective`
+    // keeps `submitted` true forever, so this flag is the only thing holding the message back.
+    this.searchAttempted = false;
     this.searchInput.nativeElement.blur();
 
     this.querySubject.next(this.formGroup.controls.query.value!);
