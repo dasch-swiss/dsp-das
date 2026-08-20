@@ -192,6 +192,8 @@ describe('ResourceListItemComponent', () => {
         },
       } as unknown as ReadResource;
 
+      component.ngOnInit();
+
       expect(component.resourceClassLabels).toEqual([{ language: 'en', value: 'Letter' }]);
     });
 
@@ -203,13 +205,75 @@ describe('ResourceListItemComponent', () => {
         entityInfo: { classes: {} },
       } as unknown as ReadResource;
 
+      component.ngOnInit();
+
       expect(component.resourceClassLabels).toEqual([{ value: 'Letter' }]);
     });
 
-    it('should return an empty array when neither source has a label', () => {
+    it('should be null when neither source has a label', () => {
       component.resource = mockResource;
 
-      expect(component.resourceClassLabels).toEqual([]);
+      component.ngOnInit();
+
+      expect(component.resourceClassLabels).toBeNull();
+    });
+
+    it('should keep the same array reference across reads, so the impure label pipe can memoize', () => {
+      component.resource = {
+        ...mockResource,
+        type: 'http://example.org/onto/v2#Letter',
+        entityInfo: {
+          classes: {
+            'http://example.org/onto/v2#Letter': { labels: [{ language: 'en', value: 'Letter' }] },
+          },
+        },
+      } as unknown as ReadResource;
+
+      component.ngOnInit();
+
+      expect(component.visibleResourceClassLabels).toBe(component.visibleResourceClassLabels);
+    });
+  });
+
+  describe('visibleResourceClassLabels', () => {
+    const resourceWithClass = (base: ReadResource) =>
+      ({
+        ...base,
+        type: 'http://example.org/onto/v2#Letter',
+        entityInfo: {
+          classes: {
+            'http://example.org/onto/v2#Letter': { labels: [{ language: 'en', value: 'Letter' }] },
+          },
+        },
+      }) as unknown as ReadResource;
+
+    it('should expose the labels when the class is shown', () => {
+      component.resource = resourceWithClass(mockResource);
+      component.showResourceClass = true;
+
+      component.ngOnInit();
+
+      expect(component.visibleResourceClassLabels).toEqual([{ language: 'en', value: 'Letter' }]);
+    });
+
+    it('should be null when the class is not shown, even though labels exist', () => {
+      component.resource = resourceWithClass(mockResource);
+      component.showResourceClass = false;
+
+      component.ngOnInit();
+
+      expect(component.visibleResourceClassLabels).toBeNull();
+    });
+
+    // Without this, the row rendered an empty metadata line (and a dangling "|" before "Found in:")
+    // for resources whose class label could not be resolved.
+    it('should be null when the class is shown but no label could be resolved', () => {
+      component.resource = mockResource;
+      component.showResourceClass = true;
+
+      component.ngOnInit();
+
+      expect(component.visibleResourceClassLabels).toBeNull();
     });
   });
 

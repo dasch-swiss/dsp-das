@@ -174,3 +174,34 @@ export const HidesResourceClassWhenDisabled: Story = {
     });
   },
 };
+
+export const OmitsTheMetadataLineWhenTheClassLabelIsMissing: Story = {
+  name: 'Omits the metadata line when the resource class has no resolvable label',
+  decorators: [
+    applicationConfig({
+      providers: [
+        ...STORY_PROVIDERS,
+        { provide: MultipleViewerService, useValue: makeMultipleViewerServiceStub({ searchKeyword: 'Hours' }) },
+      ],
+    }),
+  ],
+  args: {
+    resource: makeReadResource({
+      label: 'Book of Hours (1460)',
+      resourceClassLabel: undefined,
+      entityInfo: { classes: {}, properties: {} } as never,
+    }),
+    showResourceClass: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('No class label is rendered', async () => {
+      await expect(canvas.queryByTestId('resource-class-label')).not.toBeInTheDocument();
+    });
+    await step('The keyword match is shown without a leading separator', async () => {
+      const foundIn = canvasElement.querySelector('.found-in');
+      await expect(foundIn).toBeInTheDocument();
+      await expect(foundIn!.textContent!.trim()).not.toMatch(/^\|/);
+    });
+  },
+};

@@ -15,7 +15,7 @@ import { ProjectShortnameService } from '../project-shortname.service';
       class="item"
       [ngClass]="{
         highlighted: isHighlighted$ | async,
-        search: multipleViewerService.searchKeyword !== undefined || showResourceClass,
+        search: multipleViewerService.searchKeyword !== undefined || visibleResourceClassLabels !== null,
       }"
       data-cy="resource-list-item"
       (mouseenter)="showCheckbox = true"
@@ -26,16 +26,17 @@ import { ProjectShortnameService } from '../project-shortname.service';
           <div style="color: black">
             {{ resource.label }}
           </div>
-          @if (showResourceClass || foundIn.length > 0) {
+          @let classLabels = visibleResourceClassLabels;
+          @if (classLabels || foundIn.length > 0) {
             <div class="found-in">
-              @if (showResourceClass) {
+              @if (classLabels) {
                 <span class="semibold" data-cy="resource-class-label">{{
-                  resourceClassLabels | appStringifyStringLiteral
+                  classLabels | appStringifyStringLiteral
                 }}</span>
               }
               @if (foundIn.length > 0) {
                 <span>
-                  @if (showResourceClass) {
+                  @if (classLabels) {
                     |
                   }
                   {{ 'pages.dataBrowser.resourceListItem.foundIn' | translate
@@ -128,15 +129,19 @@ export class ResourceListItemComponent implements OnInit {
   /**
    * Prefers the multi-language labels off entityInfo so the class follows the UI language, and falls
    * back to the single-language resourceClassLabel, which dsp-js also fills in for deleted resources
-   * and classes of unknown ontologies.
+   * and classes of unknown ontologies. `null` when neither source has a label, which the template
+   * uses to drop the metadata line entirely rather than render it empty.
+   *
+   * Resolved once in `ngOnInit` rather than through a getter: `appStringifyStringLiteral` is impure
+   * and memoizes on the array's identity, so handing it a freshly built array per change-detection
+   * cycle would defeat that memo on every row.
    */
-  get resourceClassLabels(): StringLiteralV2[] {
-    const labels = this.resource.entityInfo?.classes[this.resource.type]?.labels;
-    if (labels?.length) {
-      return labels;
-    }
+  resourceClassLabels: StringLiteralV2[] | null = null;
 
-    return this.resource.resourceClassLabel ? [{ value: this.resource.resourceClassLabel } as StringLiteralV2] : [];
+  /** The class labels only when they are actually shown, so the row's padding and the metadata
+   * line agree on whether there is anything below the label. */
+  get visibleResourceClassLabels(): StringLiteralV2[] | null {
+    return this.showResourceClass ? this.resourceClassLabels : null;
   }
 
   constructor(
@@ -145,6 +150,8 @@ export class ResourceListItemComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.resourceClassLabels = this._resolveResourceClassLabels();
+
     const searchKeyword = this.multipleViewerService.searchKeyword;
     if (searchKeyword) {
       this._searchInResourceLabel(searchKeyword);
@@ -160,6 +167,15 @@ export class ResourceListItemComponent implements OnInit {
     } else {
       this.multipleViewerService.removeResources([this.resource]);
     }
+  }
+
+  private _resolveResourceClassLabels(): StringLiteralV2[] | null {
+    const labels = this.resource.entityInfo?.classes[this.resource.type]?.labels;
+    if (labels?.length) {
+      return labels;
+    }
+
+    return this.resource.resourceClassLabel ? [{ value: this.resource.resourceClassLabel } as StringLiteralV2] : null;
   }
 
   private _searchInResourceLabel(keyword: string) {
