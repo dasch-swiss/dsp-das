@@ -26,7 +26,10 @@ import { ResourceListComponent } from './resource-list.component';
           {{ 'pages.dataBrowser.resourcesList.resultsCount' | translate: { count: numberOfResults } }}
         </div>
       }
-      <app-resource-list [resources]="resources" [showProjectShortname]="showProjectShortname" />
+      <app-resource-list
+        [resources]="resources"
+        [showProjectShortname]="showProjectShortname"
+        [showResourceClass]="showResourceClass" />
     }
   `,
   styleUrls: ['./resources-list.component.scss'],
@@ -35,6 +38,7 @@ import { ResourceListComponent } from './resource-list.component';
 export class ResourcesListComponent {
   @Input({ required: true }) resources!: ReadResource[];
   @Input() showProjectShortname = false;
+  @Input() showResourceClass = false;
   @Input() loading = false;
 
   constructor(public resourceResultService: ResourceResultService) {}
