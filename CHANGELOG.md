@@ -1,5 +1,26 @@
 # Changelog
 
+## [13.13.0](https://github.com/dasch-swiss/dsp-app/compare/v13.12.5...v13.13.0) (2026-08-24)
+
+
+### Enhancements
+
+* scroll outer container if min zoom is reached ([#3359](https://github.com/dasch-swiss/dsp-app/issues/3359)) ([7a45406](https://github.com/dasch-swiss/dsp-app/commit/7a454063d7f160bb037b1b3a1a49fdcbb36415e8))
+* show the resource class on search results (DEV-5452) ([#3360](https://github.com/dasch-swiss/dsp-app/issues/3360)) ([4a9ad21](https://github.com/dasch-swiss/dsp-app/commit/4a9ad2144b6a21d1a71376bee4df5307ba475f19))
+
+
+### Bug Fixes
+
+* render the pager's "Next" label before its arrow icon ([#3366](https://github.com/dasch-swiss/dsp-app/issues/3366)) ([3b5b836](https://github.com/dasch-swiss/dsp-app/commit/3b5b836241aa20d84d970ecd9b5cfb8fda2d25b0))
+
+
+### Maintenances
+
+* **deps:** Lock file maintenance ([#3365](https://github.com/dasch-swiss/dsp-app/issues/3365)) ([5ba4593](https://github.com/dasch-swiss/dsp-app/commit/5ba45936f7803a77caa419324defd426bd320daa))
+* **deps:** Update dependency ng-mocks from 14.17.1 to 14.17.2 ([#3362](https://github.com/dasch-swiss/dsp-app/issues/3362)) ([c013f65](https://github.com/dasch-swiss/dsp-app/commit/c013f650174d5395dfde5cecdbe6a7c12656d9ad))
+* **deps:** Update dependency uuid from 14.0.1 to 14.0.2 ([#3363](https://github.com/dasch-swiss/dsp-app/issues/3363)) ([9b770b2](https://github.com/dasch-swiss/dsp-app/commit/9b770b264460f6de2361309723d6e1a70b44a4cc))
+* **deps:** Update storybook monorepo from 10.5.8 to 10.5.10 ([#3364](https://github.com/dasch-swiss/dsp-app/issues/3364)) ([12bff0a](https://github.com/dasch-swiss/dsp-app/commit/12bff0a0d9bb3d0b5b63b60e5f51a09e99f5db70))
+
 ## [13.12.5](https://github.com/dasch-swiss/dsp-app/compare/v13.12.4...v13.12.5) (2026-08-19)
 
 
