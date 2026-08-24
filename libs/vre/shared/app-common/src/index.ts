@@ -14,3 +14,4 @@ export * from './lib/handle-xml';
 export * from './lib/user-permissions';
 export * from './lib/generate-dsp-resource';
 export * from './lib/list-gui-attributes';
+export * from './lib/legal/placeholder-sentinel';

@@ -5,6 +5,7 @@
       "license": "License",
       "copyrightHolder": "Copyright holder",
       "authorship": "Authorship",
+      "placeholder": "Placeholder",
       "authorshipHint": "Type a name and press Enter to add each author.",
       "edit": "Edit",
       "removeAuthor": "Remove {{name}}",

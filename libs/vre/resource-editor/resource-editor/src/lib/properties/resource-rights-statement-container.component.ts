@@ -26,6 +26,8 @@ import { ResourceUtil } from '../representation/resource.util';
         [licenseLabel]="vm.rights.licenseLabel"
         [licenseUrl]="vm.rights.licenseUrl"
         [copyrightHolder]="vm.rights.copyrightHolder"
+        [isPlaceholderLicense]="vm.rights.isPlaceholderLicense"
+        [isPlaceholderCopyrightHolder]="vm.rights.isPlaceholderCopyrightHolder"
         [defaultResourceAuthorship]="vm.rights.defaultDataAuthorship"
         [resourceAuthorship]="vm.resourceAuthorship"
         [isAdmin]="vm.isAdmin"

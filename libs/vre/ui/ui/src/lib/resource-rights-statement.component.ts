@@ -4,6 +4,7 @@ import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { joinPlaceholderLegalValues } from '@dasch-swiss/vre/shared/app-common';
 import { TranslatePipe } from '@ngx-translate/core';
 
 /**
@@ -31,11 +32,15 @@ import { TranslatePipe } from '@ngx-translate/core';
       <section class="rights-statement" [class.label-start]="labelAlign === 'start'">
         <h3 class="mat-subtitle-2">{{ 'legal.dataSide.heading' | translate }}</h3>
 
-        @if (licenseLabel) {
+        @if (licenseLabel || isPlaceholderLicense) {
           <div class="row">
             <span class="label mat-subtitle-2">{{ 'legal.dataSide.license' | translate }}</span>
             <span class="value">
-              @if (licenseUrl) {
+              @if (isPlaceholderLicense) {
+                <!-- The sentinel's own label is a 96-character sentence and its uri is not
+                     dereferenceable, so show the readable marker as plain text. See DEV-6994. -->
+                {{ 'legal.dataSide.placeholder' | translate }}
+              } @else if (licenseUrl) {
                 <a
                   [href]="licenseUrl"
                   target="_blank"
@@ -53,7 +58,13 @@ import { TranslatePipe } from '@ngx-translate/core';
         @if (copyrightHolder) {
           <div class="row">
             <span class="label mat-subtitle-2">{{ 'legal.dataSide.copyrightHolder' | translate }}</span>
-            <span class="value">{{ copyrightHolder }}</span>
+            <span class="value">
+              @if (isPlaceholderCopyrightHolder) {
+                {{ 'legal.dataSide.placeholder' | translate }}
+              } @else {
+                {{ copyrightHolder }}
+              }
+            </span>
           </div>
         }
 
@@ -108,15 +119,21 @@ import { TranslatePipe } from '@ngx-translate/core';
                   @if (defaultResourceAuthorship.length) {
                     <em>{{
                       'legal.dataSide.noAuthorshipFallback'
-                        | translate: { default: defaultResourceAuthorship.join(', ') }
+                        | translate
+                          : {
+                              default: authorshipWith(
+                                defaultResourceAuthorship,
+                                'legal.dataSide.placeholder' | translate
+                              ),
+                            }
                     }}</em>
                   } @else {
                     <em>{{ 'legal.dataSide.noAuthorshipFallbackNoDefault' | translate }}</em>
                   }
                 } @else if (resourceAuthorship) {
-                  {{ resourceAuthorship.join(', ') }}
+                  {{ authorshipWith(resourceAuthorship, 'legal.dataSide.placeholder' | translate) }}
                 } @else if (defaultResourceAuthorship.length) {
-                  {{ defaultResourceAuthorship.join(', ') }}
+                  {{ authorshipWith(defaultResourceAuthorship, 'legal.dataSide.placeholder' | translate) }}
                 } @else {
                   <em>{{ 'legal.dataSide.noAuthorshipFallbackNoDefault' | translate }}</em>
                 }
@@ -274,6 +291,10 @@ export class ResourceRightsStatementComponent {
   @Input() labelAlign: 'start' | 'end' = 'end';
   /** Whether to render the authorship row. Authorship is per-resource; project-level displays pass `false`. */
   @Input() showAuthorship = true;
+  /** True when the project's license is the placeholder sentinel; renders the marker instead of a link. */
+  @Input() isPlaceholderLicense = false;
+  /** True when `copyrightHolder` is the placeholder sentinel; renders the marker instead of the URN. */
+  @Input() isPlaceholderCopyrightHolder = false;
 
   /** Emitted when an admin clicks "Edit legal info" on the unconfigured callout (routes to Settings → Legal). */
   @Output() editLegalInfo = new EventEmitter<void>();
@@ -289,7 +310,16 @@ export class ResourceRightsStatementComponent {
   @ViewChild('editButton') private _editButton?: ElementRef<HTMLButtonElement>;
 
   get configured(): boolean {
-    return !!this.licenseLabel || !!this.copyrightHolder || this._hasDisplayableAuthorship;
+    return !!this.licenseLabel || this.isPlaceholderLicense || !!this.copyrightHolder || this._hasDisplayableAuthorship;
+  }
+
+  /**
+   * Joins authorship entries, substituting `placeholderLabel` for any placeholder sentinel. The label
+   * arrives already translated from the `| translate` pipe in the template, so this component needs no
+   * `TranslateService`. See DEV-6994.
+   */
+  authorshipWith(values: string[], placeholderLabel: string): string {
+    return joinPlaceholderLegalValues(values, placeholderLabel);
   }
 
   /** Per-resource authorship worth showing: only in an authorship context (`showAuthorship`), and

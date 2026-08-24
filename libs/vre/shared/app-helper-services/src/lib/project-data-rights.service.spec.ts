@@ -54,6 +54,8 @@ describe('ProjectDataRightsService', () => {
           defaultDataAuthorship: ['Author A'],
           licenseLabel: 'CC BY 4.0',
           licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
+          isPlaceholderCopyrightHolder: false,
+          isPlaceholderLicense: false,
         });
         done();
       });
@@ -79,6 +81,66 @@ describe('ProjectDataRightsService', () => {
         expect(rights.licenseLabel).toBeUndefined();
         expect(rights.licenseUrl).toBeUndefined();
         expect(legalInfoApi.getLicenses).not.toHaveBeenCalled();
+        done();
+      });
+    });
+  });
+
+  // DEV-6994: dsp-tools writes `urn:dasch:placeholder` when the real legal info is unknown. The
+  // sentinel IS a real entry in the license catalog (dsp-api's `allow-placeholder` defaults to true),
+  // so a naive lookup matches it and surfaces a 96-char prose label behind a dead link.
+  describe('placeholder sentinel', () => {
+    const SENTINEL = 'urn:dasch:placeholder';
+
+    it('flags a placeholder license and emits no label or url, without hitting the catalog', done => {
+      projectApi.get.mockReturnValue(of({ project: makeProject({ dataLicense: SENTINEL }) }));
+
+      service.forProject('http://rdfh.ch/projects/0001').subscribe(rights => {
+        expect(rights.isPlaceholderLicense).toBe(true);
+        expect(rights.licenseLabel).toBeUndefined();
+        expect(rights.licenseUrl).toBeUndefined();
+        // No point resolving a sentinel against the catalog — it would match and yield the prose label.
+        expect(legalInfoApi.getLicenses).not.toHaveBeenCalled();
+        done();
+      });
+    });
+
+    it('flags a placeholder copyright holder', done => {
+      projectApi.get.mockReturnValue(of({ project: makeProject({ dataCopyrightHolder: SENTINEL }) }));
+      legalInfoApi.getLicenses.mockReturnValue(of(licenseCatalog));
+
+      service.forProject('http://rdfh.ch/projects/0001').subscribe(rights => {
+        expect(rights.isPlaceholderCopyrightHolder).toBe(true);
+        done();
+      });
+    });
+
+    it('leaves real legal info unflagged', done => {
+      projectApi.get.mockReturnValue(of({ project: makeProject() }));
+      legalInfoApi.getLicenses.mockReturnValue(of(licenseCatalog));
+
+      service.forProject('http://rdfh.ch/projects/0001').subscribe(rights => {
+        expect(rights.isPlaceholderLicense).toBe(false);
+        expect(rights.isPlaceholderCopyrightHolder).toBe(false);
+        expect(rights.licenseLabel).toBe('CC BY 4.0');
+        expect(rights.licenseUrl).toBe('https://creativecommons.org/licenses/by/4.0/');
+        done();
+      });
+    });
+
+    it('never leaks the sentinel prose label or its dead uri, even though the catalog contains them', done => {
+      // The short-circuit exists precisely because the sentinel IS a resolvable catalog entry: without
+      // it, `licenses.find(...)` matches and both the prose label and the dead uri reach the UI.
+      projectApi.get.mockReturnValue(of({ project: makeProject({ dataLicense: SENTINEL }) }));
+      legalInfoApi.getLicenses.mockReturnValue(
+        of([...licenseCatalog, { id: SENTINEL, uri: SENTINEL, labelEn: 'Placeholder License - Not a Real License…' }])
+      );
+
+      service.forProject('http://rdfh.ch/projects/0001').subscribe(rights => {
+        expect(rights.isPlaceholderLicense).toBe(true);
+        // Nothing sentinel-derived is exposed: consumers render the marker from the flag instead.
+        expect(rights.licenseUrl).toBeUndefined();
+        expect(rights.licenseLabel).toBeUndefined();
         done();
       });
     });
