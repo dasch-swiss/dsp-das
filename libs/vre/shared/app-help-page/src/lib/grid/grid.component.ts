@@ -4,6 +4,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
+/**
+ * A card rendered by {@link GridComponent}.
+ *
+ * `title`, `text` and `urlText` are passed through the `translate` pipe, so they
+ * should be translation keys. Values that are not keys (e.g. a title carrying a
+ * version number) are rendered verbatim, because the pipe echoes back anything
+ * it cannot resolve.
+ */
 export interface GridItem {
   icon?: string;
   title: string;

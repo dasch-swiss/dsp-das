@@ -45,6 +45,53 @@
       "notUsersProjects": "Altri progetti di ricerca",
       "filterProjects": "Filtra progetti"
     },
+    "help": {
+      "devVersion": "Questa è una versione di sviluppo di DSP (release {{release}}) in esecuzione nell'ambiente {{environment}}",
+      "needHelp": "Serve aiuto?",
+      "userGuide": "Consulta la guida utente: esplora per argomento",
+      "docs": {
+        "projectAdmin": {
+          "title": "Amministrazione del progetto",
+          "text": "Scopri di più sull'amministrazione del progetto e sulla gestione dei membri del progetto."
+        },
+        "dataModel": {
+          "title": "Creazione del modello di dati",
+          "text": "Trova tutto sulla modellazione dei dati e sulla configurazione della banca dati del progetto."
+        },
+        "researchTools": {
+          "title": "Strumenti di ricerca",
+          "text": "Ottieni maggiori informazioni sulla gestione dei dati, sui metodi di ricerca e sull'uso degli strumenti di ricerca."
+        }
+      },
+      "openDocumentation": "Apri la documentazione",
+      "software": {
+        "heading": "Scopri i nostri prodotti software",
+        "mainProduct": "La DaSCH Service Platform (DSP) è il nostro prodotto principale, la cui versione attuale è",
+        "releaseNews": "Clicca qui per le ultime novità su questa versione principale",
+        "moreDetails": "Se desideri maggiori dettagli sulle singole applicazioni di DSP, dai un'occhiata ai seguenti prodotti software — tutti sviluppati dal team DaSCH in Svizzera.",
+        "dspApp": "Questo è lo strumento dell'interfaccia che stai utilizzando in questo momento. L'applicazione web generica di DaSCH.",
+        "dspApi": "Framework per archiviare, condividere ed elaborare fonti primarie nelle scienze umane.",
+        "sipi": "Server di media ad alte prestazioni, compatibile con IIIF.",
+        "releaseNotes": "Note di rilascio"
+      },
+      "support": {
+        "heading": "Ottieni ulteriore supporto o contribuisci a migliorare",
+        "needMoreHelp": {
+          "title": "Serve ulteriore aiuto?",
+          "text": "Hai riscontrato problemi utilizzando il nostro software? Faccelo sapere e mettiti in contatto con il team di sviluppo:",
+          "urlText": "Contattaci"
+        },
+        "infrastructure": {
+          "title": "Infrastruttura DaSCH",
+          "text": "Ti chiedi cosa sia esattamente il Centro svizzero di competenza per i dati e i servizi nelle scienze umane DaSCH? Maggiori informazioni sul nostro sito web:"
+        },
+        "sourceCode": {
+          "title": "Codice sorgente",
+          "text": "Il nostro software è open source e disponibile su GitHub con licenza Apache 2.0. Per supporto o domande:",
+          "urlText": "Contatta il supporto"
+        }
+      }
+    },
     "userSettings": {
       "loginForm": {
         "login": "Accedi"
@@ -969,6 +1016,19 @@
     },
     "grid": {
       "readMore": "Leggi di più"
+    },
+    "footer": {
+      "legalNotice": "Note legali",
+      "privacyPolicy": "Informativa sulla privacy",
+      "privacyPolicyEnglish": "Informativa sulla privacy (inglese)",
+      "impressum": "Impressum",
+      "contact": "Contatto",
+      "downloads": "Download",
+      "termsAndConditions": "Condizioni generali di contratto (CGC)",
+      "depositAgreement": "Contratto di deposito",
+      "statutes": "Statuto DaSCH 2026",
+      "termsOfService": "Condizioni di servizio",
+      "copyright": "© {{year}} DaSCH – Centro svizzero di competenza per i dati e i servizi nelle scienze umane. Tutti i diritti riservati."
     }
   },
   "core": {
