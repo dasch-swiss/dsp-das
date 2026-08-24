@@ -24,7 +24,7 @@ import { TranslatePipe } from '@ngx-translate/core';
           [disabled]="itemRangeEnd === itemsNumber"
           (click)="changePage(1)">
           <span>{{ 'ui.common.actions.next' | translate }}</span>
-          <mat-icon>east</mat-icon>
+          <mat-icon iconPositionEnd>east</mat-icon>
         </button>
       </div>
     </div>
