@@ -25,18 +25,6 @@
     }
 
     .pagination-button {
-      &.previous {
-        span {
-          padding-left: 14px;
-        }
-      }
-
-      &.next {
-        span {
-          padding-right: 14px;
-        }
-      }
-
       span,
       mat-icon {
         color: $primary;

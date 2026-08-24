@@ -11,7 +11,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       <div class="navigation">
         <button mat-button class="pagination-button previous" [disabled]="pageIndex === 0" (click)="changePage(-1)">
           <mat-icon>west</mat-icon>
-          <span>{{ 'ui.pager.previous' | translate }}</span>
+          <span class="previous-label">{{ 'ui.pager.previous' | translate }}</span>
         </button>
         <span class="fill-remaining-space"></span>
         <div class="range">
@@ -23,8 +23,8 @@ import { TranslatePipe } from '@ngx-translate/core';
           class="pagination-button next"
           [disabled]="itemRangeEnd === itemsNumber"
           (click)="changePage(1)">
-          <span>{{ 'ui.common.actions.next' | translate }}</span>
-          <mat-icon>east</mat-icon>
+          <span class="next-label">{{ 'ui.common.actions.next' | translate }}</span>
+          <mat-icon iconPositionEnd>east</mat-icon>
         </button>
       </div>
     </div>
