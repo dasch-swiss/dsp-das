@@ -4,7 +4,7 @@
     <app-representation-error-message />
     }
 
-    <div style="margin-bottom: -4px">
+    <div class="video-stage" [class.is-loading]="!isPlayerReady && !videoError">
       @if (video) {
       <video
         style="width: 100%"
@@ -14,11 +14,16 @@
         type="video/mp4"
         preload="auto"
         [muted]="false"
-        (canplay)="onVideoPlayerReady()"
+        (loadedmetadata)="onVideoPlayerReady()"
         (click)="videoPlayer.togglePlay()"
         (error)="handleVideoError($event)"></video>
-      } @else {
-      <app-progress-indicator />
+      }
+      <!-- Overlaid rather than swapped in: the <video> element must stay mounted while it
+           initialises, otherwise the browser stops loading it. See DEV-7026. -->
+      @if (!isPlayerReady && !videoError) {
+      <div class="video-loading" data-cy="video-loading">
+        <app-progress-indicator size="medium" [compact]="true" [onDark]="true" />
+      </div>
       } @if (false) {
       <app-video-overlay />
       }

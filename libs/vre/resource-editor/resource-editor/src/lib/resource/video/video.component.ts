@@ -44,6 +44,27 @@ import { VideoToolbarComponent } from './video-toolbar.component';
     RepresentationErrorMessageComponent,
     ResourceRepresentationContainerComponent,
   ],
+  styles: [
+    `
+      .video-stage {
+        position: relative;
+        margin-bottom: -4px;
+      }
+
+      /* Keeps a visible area for the overlaid indicator before the video reports its dimensions. */
+      .video-stage.is-loading {
+        min-height: 160px;
+      }
+
+      .video-loading {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    `,
+  ],
 })
 export class VideoComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) src!: FileRepresentationInput;
@@ -106,6 +127,11 @@ export class VideoComponent implements OnChanges, OnDestroy {
       });
   }
 
+  /**
+   * Driven by `loadedmetadata`, not `canplay`: everything below needs only the duration and the
+   * ability to seek, both available at HAVE_METADATA. `canplay` additionally waits for a playable
+   * buffer, which on a large file delays the whole player chrome. See DEV-7026.
+   */
   onVideoPlayerReady() {
     if (this.isPlayerReady) return;
 
