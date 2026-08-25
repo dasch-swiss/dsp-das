@@ -483,7 +483,9 @@
       },
       "resourcesList": {
         "resultsCount": "{{count}} résultats",
-        "countUnavailable": "Nombre de résultats indisponible"
+        "countUnavailable": "Nombre de résultats indisponible",
+        "listView": "Vue liste",
+        "gridView": "Vue grille"
       },
       "resourcesListFetcher": {
         "noResourcesFound": "Aucune ressource trouvée pour cette classe.",

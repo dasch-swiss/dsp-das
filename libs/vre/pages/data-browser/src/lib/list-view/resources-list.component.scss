@@ -9,3 +9,20 @@ app-pager {
   text-align: center;
   border-radius: 10px;
 }
+
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  app-pager,
+  .results-count {
+    flex: 1;
+  }
+
+  mat-button-toggle-group {
+    margin: 8px;
+    flex: none;
+  }
+}
