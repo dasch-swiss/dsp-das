@@ -6,20 +6,36 @@ import { ResourceRequests, ResponseUtil } from '../../fixtures/requests';
 import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
 import { ResourcePage } from '../../support/pages/resource-page';
 
+const getAuthHeaders = () => ({
+  Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+});
+
 describe('Resource', () => {
   let finalLastModificationDate: string;
+  let propertyName: string;
   let po: AddResourceInstancePage;
   const project00FFPayloads = new Project00FFPayloads();
 
   beforeEach(() => {
-    po = new AddResourceInstancePage();
+    const className = `class${faker.string.alphanumeric(8)}`;
+    propertyName = `prop${faker.string.alphanumeric(8)}`;
+    po = new AddResourceInstancePage(className);
 
-    cy.request(
-      'POST',
-      `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
-      project00FFPayloads.createClassPayload('datamodelclass')
-    ).then(response => {
-      finalLastModificationDate = ResponseUtil.lastModificationDate(response);
+    const ontologyIri = encodeURIComponent(`${Cypress.env('apiUrl')}/ontology/00FF/images/v2`);
+    cy.request({
+      method: 'GET',
+      url: `${Cypress.env('apiUrl')}/v2/ontologies/allentities/${ontologyIri}`,
+      headers: getAuthHeaders(),
+    }).then(ontResponse => {
+      const currentLmd = ontResponse.body['knora-api:lastModificationDate']['@value'];
+      cy.request({
+        method: 'POST',
+        url: `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
+        headers: getAuthHeaders(),
+        body: project00FFPayloads.createClassPayload(className, undefined, currentLmd),
+      }).then(response => {
+        finalLastModificationDate = ResponseUtil.lastModificationDate(response);
+      });
     });
   });
 
@@ -28,7 +44,7 @@ describe('Resource', () => {
       // Intercept the POST request
       cy.intercept('POST', 'http://0.0.0.0:3333/v2/resources').as('postRequest');
 
-      ResourceRequests.resourceRequest(ClassPropertyPayloads.richText(finalLastModificationDate));
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.richText(finalLastModificationDate, propertyName), false, po.className, propertyName);
       po.visitAddPage();
 
       // create
@@ -72,8 +88,13 @@ describe('Resource', () => {
         },
       };
 
-      ResourceRequests.resourceRequest(ClassPropertyPayloads.richText(finalLastModificationDate));
-      cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, footnote).then(v => {
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.richText(finalLastModificationDate, propertyName), false, po.className, propertyName);
+      cy.request({
+        method: 'POST',
+        url: `${Cypress.env('apiUrl')}/v2/resources`,
+        headers: getAuthHeaders(),
+        body: footnote,
+      }).then(v => {
         const id = v.body['@id'].match(/\/([^\/]+)$/)[1];
         const page = new ResourcePage();
         page.visit(id);
@@ -104,7 +125,7 @@ describe('Resource', () => {
       const initialValue = faker.lorem.word();
       const editedValue = faker.lorem.word();
 
-      ResourceRequests.resourceRequest(ClassPropertyPayloads.textShort(finalLastModificationDate));
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.textShort(finalLastModificationDate, propertyName), false, po.className, propertyName);
       po.visitAddPage();
 
       // create
@@ -128,7 +149,7 @@ describe('Resource', () => {
       const initialValue = faker.number.int({ min: 0, max: 100 });
       const editedValue = faker.number.int({ min: 0, max: 100 });
 
-      ResourceRequests.resourceRequest(ClassPropertyPayloads.number(finalLastModificationDate));
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.number(finalLastModificationDate, propertyName), false, po.className, propertyName);
       po.visitAddPage();
 
       // create
@@ -150,7 +171,7 @@ describe('Resource', () => {
     it('boolean', () => {
       const addBoolToggle = () => cy.get('[data-cy=add-value-button]');
       const boolToggle = () => cy.get('[data-cy=bool-toggle]');
-      ResourceRequests.resourceRequest(ClassPropertyPayloads.boolean(finalLastModificationDate));
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.boolean(finalLastModificationDate, propertyName), false, po.className, propertyName);
       po.visitAddPage();
 
       // create
@@ -181,7 +202,7 @@ describe('Resource', () => {
         cy.get('[data-cy=color-box]').should('have.css', 'background-color').and('eq', rgb);
       };
 
-      ResourceRequests.resourceRequest(ClassPropertyPayloads.color(finalLastModificationDate));
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.color(finalLastModificationDate, propertyName), false, po.className, propertyName);
       po.visitAddPage();
 
       // create
@@ -212,7 +233,7 @@ describe('Resource', () => {
           .type('{downarrow}{enter}');
       };
 
-      ResourceRequests.resourceRequest(ClassPropertyPayloads.place(finalLastModificationDate));
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.place(finalLastModificationDate, propertyName), false, po.className, propertyName);
       po.visitAddPage();
 
       // create
@@ -231,7 +252,7 @@ describe('Resource', () => {
       po.delete();
     });
 
-    const propertyListPayload = (lastModificationDate: string, listId: string) => {
+    const propertyListPayload = (lastModificationDate: string, listId: string, pName: string) => {
       return {
         '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
         '@type': 'http://www.w3.org/2002/07/owl#Ontology',
@@ -246,7 +267,7 @@ describe('Resource', () => {
             },
             'http://www.w3.org/2000/01/rdf-schema#label': {
               '@language': 'de',
-              '@value': 'property',
+              '@value': pName,
             },
             'http://www.w3.org/2000/01/rdf-schema#subPropertyOf': {
               '@id': 'http://api.knora.org/ontology/knora-api/v2#hasValue',
@@ -255,7 +276,7 @@ describe('Resource', () => {
               '@id': 'http://api.knora.org/ontology/salsah-gui/v2#Pulldown',
             },
             'http://api.knora.org/ontology/salsah-gui/v2#guiAttribute': [`hlist=<${listId}>`],
-            '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#property',
+            '@id': `http://0.0.0.0:3333/ontology/00FF/images/v2#${pName}`,
             '@type': 'http://www.w3.org/2002/07/owl#ObjectProperty',
           },
         ],
@@ -267,16 +288,21 @@ describe('Resource', () => {
       const item2Name = faker.lorem.word();
 
       const sendCreateListItemRequest = (_listId: string, name: string) => {
-        return cy.request('POST', `${Cypress.env('apiUrl')}/admin/lists/${encodeURIComponent(_listId)}`, {
-          parentNodeIri: listId,
-          projectIri: 'http://rdfh.ch/projects/00FF',
-          labels: [
-            {
-              language: 'de',
-              value: name,
-            },
-          ],
-          name: `RandomName${name}`,
+        return cy.request({
+          method: 'POST',
+          url: `${Cypress.env('apiUrl')}/admin/lists/${encodeURIComponent(_listId)}`,
+          headers: getAuthHeaders(),
+          body: {
+            parentNodeIri: listId,
+            projectIri: 'http://rdfh.ch/projects/00FF',
+            labels: [
+              {
+                language: 'de',
+                value: name,
+              },
+            ],
+            name: `RandomName${name}`,
+          },
         });
       };
 
@@ -285,17 +311,22 @@ describe('Resource', () => {
         cy.get('[data-cy=list-item-button]').eq(index).click();
       };
 
-      cy.request<ListGetResponseADM>('POST', `${Cypress.env('apiUrl')}/admin/lists`, {
-        comments: [{ language: 'de', value: faker.lorem.words(2) }],
-        labels: [{ language: 'de', value: faker.lorem.words(2) }],
-        projectIri: 'http://rdfh.ch/projects/00FF',
+      cy.request<ListGetResponseADM>({
+        method: 'POST',
+        url: `${Cypress.env('apiUrl')}/admin/lists`,
+        headers: getAuthHeaders(),
+        body: {
+          comments: [{ language: 'de', value: faker.lorem.words(2) }],
+          labels: [{ language: 'de', value: faker.lorem.words(2) }],
+          projectIri: 'http://rdfh.ch/projects/00FF',
+        },
       })
         .then(response => {
           listId = response.body.list.listinfo.id;
           sendCreateListItemRequest(listId, item1Name);
         })
         .then(() => sendCreateListItemRequest(listId, item2Name))
-        .then(() => ResourceRequests.resourceRequest(propertyListPayload(finalLastModificationDate, listId)))
+        .then(() => ResourceRequests.resourceRequest(propertyListPayload(finalLastModificationDate, listId, propertyName), false, po.className, propertyName))
         .then(() => {
           po.visitAddPage();
 
@@ -318,23 +349,28 @@ describe('Resource', () => {
 
     it('link', () => {
       // create John Smith person
-      cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, {
-        '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#person',
-        'http://www.w3.org/2000/01/rdf-schema#label': 'john',
-        'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
-          '@id': 'http://rdfh.ch/projects/00FF',
-        },
-        'http://0.0.0.0:3333/ontology/00FF/images/v2#lastname': {
-          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-          'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'john',
-        },
-        'http://0.0.0.0:3333/ontology/00FF/images/v2#firstname': {
-          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-          'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'smith',
+      cy.request({
+        method: 'POST',
+        url: `${Cypress.env('apiUrl')}/v2/resources`,
+        headers: getAuthHeaders(),
+        body: {
+          '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#person',
+          'http://www.w3.org/2000/01/rdf-schema#label': 'john',
+          'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
+            '@id': 'http://rdfh.ch/projects/00FF',
+          },
+          'http://0.0.0.0:3333/ontology/00FF/images/v2#lastname': {
+            '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+            'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'john',
+          },
+          'http://0.0.0.0:3333/ontology/00FF/images/v2#firstname': {
+            '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+            'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'smith',
+          },
         },
       })
         .then(response => {
-          ResourceRequests.resourceRequest(ClassPropertyPayloads.link(finalLastModificationDate));
+          ResourceRequests.resourceRequest(ClassPropertyPayloads.link(finalLastModificationDate, po.className, propertyName), false, po.className, propertyName);
         })
         .then(() => {
           po.visitAddPage();
@@ -356,7 +392,7 @@ describe('Resource', () => {
         });
     });
     it.skip('date', () => {
-      ResourceRequests.resourceRequest(ClassPropertyPayloads.date(finalLastModificationDate));
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.date(finalLastModificationDate, propertyName), false, po.className, propertyName);
       po.visitAddPage();
 
       // create
@@ -376,7 +412,7 @@ describe('Resource', () => {
     });
 
     it('timestamp', () => {
-      ResourceRequests.resourceRequest(ClassPropertyPayloads.timestamp(finalLastModificationDate));
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.timestamp(finalLastModificationDate, propertyName), false, po.className, propertyName);
       po.visitAddPage();
 
       // create
@@ -385,7 +421,8 @@ describe('Resource', () => {
       cy.get(':nth-child(4) > [data-mat-col="3"] > .mat-calendar-body-cell > .mat-calendar-body-cell-content').type(
         '{enter}'
       );
-      cy.get('[data-cy=time-input]').clear({ force: true }).type('00:00');
+      cy.get('body').type('{esc}');
+      cy.get('[data-cy=time-input]').clear().type('00:00');
       po.clickOnSubmit();
 
       // edit
@@ -398,9 +435,9 @@ describe('Resource', () => {
     });
 
     it('time sequence', () => {
-      ResourceRequests.resourceRequest(ClassPropertyPayloads.timesequence(finalLastModificationDate));
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.timesequence(finalLastModificationDate, propertyName), false, po.className, propertyName);
       po.visitAddPage();
-      const start = () => cy.get('[data-cy=start-input] input');
+      const start = () => cy.get('[data-cy=start-input] input', { force: true });
       const end = () => cy.get('[data-cy=end-input] input');
 
       const randomTime = () => {
@@ -429,16 +466,16 @@ describe('Resource', () => {
 
   describe('can not add an empty value when it is required', () => {
     const types = new Map<string, any>([
-      ['text', () => ClassPropertyPayloads.textShort(finalLastModificationDate)],
-      ['number', () => ClassPropertyPayloads.number(finalLastModificationDate)],
-      ['place', () => ClassPropertyPayloads.place(finalLastModificationDate)],
-      ['time sequence', () => ClassPropertyPayloads.timesequence(finalLastModificationDate)],
-      ['link', () => ClassPropertyPayloads.link(finalLastModificationDate)],
+      ['text', () => ClassPropertyPayloads.textShort(finalLastModificationDate, propertyName)],
+      ['number', () => ClassPropertyPayloads.number(finalLastModificationDate, propertyName)],
+      ['place', () => ClassPropertyPayloads.place(finalLastModificationDate, propertyName)],
+      ['time sequence', () => ClassPropertyPayloads.timesequence(finalLastModificationDate, propertyName)],
+      ['link', () => ClassPropertyPayloads.link(finalLastModificationDate, po.className, propertyName)],
     ]);
 
     types.forEach((value, name) => {
       it(name, () => {
-        ResourceRequests.resourceRequest(value(), true);
+        ResourceRequests.resourceRequest(value(), true, po.className, propertyName);
         // po.visitAddPage();
         // po.addInitialLabel();
         // po.clickOnSubmit();

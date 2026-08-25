@@ -1,0 +1,229 @@
+name: Claude Code
+
+on:
+  issue_comment:
+    types: [ created ]
+  pull_request_review_comment:
+    types: [ created ]
+  pull_request_review:
+    types: [ submitted ]
+  issues:
+    types: [ opened, assigned ]
+
+# Prevent multiple Claude runs from interfering with each other
+concurrency:
+  group: claude-${{ github.event.issue.number || github.event.pull_request.number || github.event.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  # Job 1: Dedicated code review with predefined prompt which triggers on commands: '@claude review' posted in the comments of a PR
+  #
+  # Both jobs gate on author_association (DEV-6884): comment-triggered workflows always run
+  # from the default branch with secrets available, and the repo setting "Require approval
+  # for all external contributors" gates only fork pull_request events — not comment events,
+  # so without this gate any GitHub account that can comment could spend the org's API key.
+  # CONTRIBUTOR is deliberately outside the allowlist; a member can trigger on an outside
+  # contributor's behalf. A blocked trigger skips silently, like a non-matching comment.
+  claude-code-review:
+    if: |
+      (github.event.issue.pull_request || github.event.pull_request) &&
+      (contains(github.event.comment.body, '@claude review') || contains(github.event.review.body, '@claude review')) &&
+      (
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) ||
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.review.author_association)
+      )
+    runs-on: ubuntu-latest
+    # 30, not 15: the action writes its result only at the end, so a killed run yields no
+    # review at all — and measured review runs have peaked within a few minutes of 15.
+    # A generous ceiling costs nothing on the runs that finish early.
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ (github.event.issue.pull_request && format('refs/pull/{0}/head', github.event.issue.number)) || (github.event.pull_request && format('refs/pull/{0}/head', github.event.pull_request.number)) || github.ref }}
+          fetch-depth: 1
+
+      - name: Run Claude Code Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Merge readiness is gated on a verified wrong outcome, not on a severity label.
+          # Why: severity was the least stable token in the output. In the 2026-08 benchmark the
+          # same defect on the same commit was graded Major at --effort high (2/2 runs, merge
+          # cleared) and Critical at medium (merge blocked), and a documented-deliberate trap was
+          # mislabelled Major by 6 of 7 runs. What was stable across every run was the pair
+          # (named trigger, wrong outcome). Under the old Critical-only rule two of three gate
+          # failures were rule-forced: the review identified a real defect and its own rubric
+          # obliged it to clear, arguing against its own verdict in the same paragraph.
+          #
+          # The trade, measured and accepted: the block rate goes up and the added blocks are on
+          # real findings. Across 20 runs on 9 commits this rule produced one wrong merge call --
+          # a genuine but minor pager/page-index desync on a clean diff, held at --effort high and
+          # not at medium (see the --effort note below).
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
+
+            Please review this pull request and provide feedback on:
+            - Code quality and best practices
+            - Potential bugs or issues
+            - Performance considerations
+            - Security concerns
+            - Test coverage (only for modified code)
+
+            Report issues **only in lines this PR changed** — but read whatever you need to
+            decide whether an issue is real: the changed files in full (diff hunks alone give
+            too little context), their callers, their tests, and neighbouring implementations
+            of the same pattern. Reading widely is fine; reporting widely is not.
+            Do **not** make any code changes, run commands, or push code; only provide analysis and suggestions.
+
+            Before reporting an issue, name the concrete input or state that triggers it and
+            the wrong output, crash, or regression that results. Drop any issue where you
+            cannot; where the justification is only "more robust" or "best practice"; or where
+            a code comment explains it as a deliberate decision (read the comments before
+            flagging). If you checked a concern and could not prove it but still believe it
+            matters, report it as Suspected rather than dropping it or inflating its severity.
+            A few defensible issues beat many speculative ones, and reporting no issues at all
+            is a valid and useful outcome.
+
+            Do not assert how a library or external service behaves from memory — in either
+            direction. When the diff constructs a string that some other system parses (a
+            SPARQL or SQL query, a URL or IIIF image request, a path template, a regex, a
+            cron expression, a media-type string), you must check the constructed form
+            against that system's own specification before you either report it **or clear
+            it**. Well-formed is not the same as accepted: a form can be valid syntax, and
+            listed as supported by the receiving system, and still be rejected at runtime
+            because of a precondition attached to that form — a permitted value range, a
+            limit that depends on the input data rather than on the string, a flag that must
+            be present for the operation to be allowed. So do not stop at "the syntax is
+            valid" or "the server supports this feature": find the preconditions the
+            specification attaches to the form you built, and for each one name the input
+            that would violate it or state why none can. Confirm against the version this
+            repo installs (`package.json` and the lock file) or the spec itself via web
+            search. If you cannot complete that check, say so explicitly and grade the line
+            Suspected — do not declare it correct.
+
+            Structure your review as follows:
+            1. Summary of PR changes (one paragraph)
+            2. Identified issues, blocking ones first. For each: `file:line`, the trigger and
+               wrong outcome you named above, how you verified the mechanism, and a suggested
+               fix. Mark each issue Blocking or Non-blocking. This is independent of how bad
+               the outcome is:
+              - Blocking: you established, from the code or an authoritative external source,
+                that a reachable input or state produces a wrong outcome — an error thrown on
+                a normal path, incorrect data written or returned, access incorrectly granted
+                or denied, or a deterministic CI failure. "Reachable" means you can name the
+                input. It does **not** require the feature to stop working, and it does
+                **not** require the outcome to be severe.
+              - Non-blocking: everything else — style, naming, missing tests, performance that
+                is not a regression, and anything you could not verify.
+              - Suspected: a concern you could not prove. Always Non-blocking. State what
+                would confirm or refute it.
+              Separately, grade impact High, Medium or Low, for triage ordering only. Impact
+              never determines Blocking.
+            3. Clear statement whether the PR is ready to merge: "not ready" if any issue is
+               Blocking, otherwise "ready", and state the number of blocking issues. Do not
+               override this in prose — if you find yourself arguing that a Non-blocking issue
+               should hold the PR, it is Blocking; re-mark it.
+
+            Be constructive, precise, and concise. Avoid verbose explanations unless necessary for clarity.
+            Read `REVIEW.md` at the repository root if it exists; its rules override the
+            defaults above. Otherwise use the repository's CLAUDE.md for style, conventions,
+            and repository-specific best practices.
+            Use `gh pr comment` to leave your review as a comment on the PR.
+
+          # --allowed-tools is the complete, resolved tool set: the action adds nothing to it.
+          # Verified by reading a real run's `SDK options:` echo in the job log (dsp-api run
+          # 31606435936). An earlier version of this comment claimed Read came from an action
+          # base tool set; it does not, and the prompt above tells the reviewer to read the
+          # changed files in full — so Read is granted explicitly here. The other entries: Grep
+          # and Glob to check a suspicion against the rest of the repo instead of guessing,
+          # WebSearch/WebFetch to check a dependency's real API instead of recalling it. Bash
+          # stays confined to read-only gh commands.
+          #
+          # --setting-sources user: do NOT load the repo's own .claude/settings.json. That file
+          # is a local-developer convenience list (it arrived in a dependency-bot PR as
+          # claude-flow scaffolding and outlived the tool), and loading it silently widened this
+          # job's permissions with git/npm/node grants that differ per repository — dsp-api had
+          # them, dsp-app did not, so the same review job behaved differently in each. The tool
+          # set for this job is defined on this line and nowhere else.
+          #
+          # --model: pinned to Opus. In the 2026-08 prompt benchmark the model choice dominated
+          # the prompt choice: Opus caught 6/6 planted bugs with zero blocking false positives;
+          # Sonnet caught 1/6 and produced the only merge-blocking false positives.
+          #
+          # --effort: medium. Detection is identical to high -- across 9 commits run at both
+          # levels the two agreed on every catch, every miss and every clean pass. The only
+          # behavioural difference is that high additionally held one clean diff on a genuine
+          # but minor pager desync (2/2 runs), which medium did not, and medium never produced
+          # a wrong merge call in 10 runs. high retrieves pinned external sources more reliably
+          # (3/3 vs 1/3 on one commit) but that never changed a merge outcome. medium is ~16%
+          # cheaper per run.
+          claude_args: '--model claude-opus-5 --effort medium --setting-sources user --allowed-tools "Read,Grep,Glob,WebSearch,WebFetch,Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
+
+      # cancelled() as well as failure(): a `timeout-minutes` kill marks the job cancelled,
+      # not failed, so `if: failure()` alone lets a timed-out review pass silently with no
+      # comment on the PR.
+      - name: Notify on failure
+        if: failure() || cancelled()
+        run: |
+          PR_NUMBER="${{ github.event.issue.number || github.event.pull_request.number }}"
+          if [ -n "$PR_NUMBER" ]; then
+            gh issue comment "$PR_NUMBER" --body "⚠️ Claude Code Review did not complete (failed, timed out, or was cancelled). Check [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details."
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  # Job 2: General Claude assistant (flexible) available on this repository PRs, issues etc. triggered by "@claude <PROMPT>"
+  claude-general:
+    # The allowlist check sits inside each trigger arm instead of being AND-ed once across
+    # all three: issue_comment payloads also carry issue.author_association, so a single
+    # OR-ed check would let a stranger's comment pass on any issue or PR a member opened.
+    if: |
+      (
+        contains(github.event.comment.body, '@claude') && !contains(github.event.comment.body, '@claude review') &&
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+      ) ||
+      (
+        contains(github.event.review.body, '@claude') && !contains(github.event.review.body, '@claude review') &&
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.review.author_association)
+      ) ||
+      (
+        github.event_name == 'issues' &&
+        (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')) &&
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association)
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ (github.event.issue.pull_request && format('refs/pull/{0}/head', github.event.issue.number)) || (github.event.pull_request && format('refs/pull/{0}/head', github.event.pull_request.number)) || github.ref }}
+          fetch-depth: 1
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          PR_NUMBER="${{ github.event.issue.number || github.event.pull_request.number }}"
+          if [ -n "$PR_NUMBER" ]; then
+            gh issue comment "$PR_NUMBER" --body "⚠️ Claude Code failed. Check [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details."
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}

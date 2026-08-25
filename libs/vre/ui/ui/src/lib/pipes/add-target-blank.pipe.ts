@@ -3,7 +3,6 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({
   name: 'addTargetBlank',
-  standalone: false,
 })
 export class AddTargetBlankPipe implements PipeTransform {
   constructor(private readonly _sanitizer: DomSanitizer) {}
@@ -13,7 +12,12 @@ export class AddTargetBlankPipe implements PipeTransform {
       return value; // Return as is if value is empty or null
     }
 
-    const htmlString = typeof value === 'string' ? value : value['changingThisBreaksApplicationSecurity'];
+    const htmlString =
+      typeof value === 'string'
+        ? value
+        : (value as unknown as { changingThisBreaksApplicationSecurity: string })[
+            'changingThisBreaksApplicationSecurity'
+          ];
 
     // Create a temporary DOM element to manipulate the HTML string
     const tempDiv = document.createElement('div');

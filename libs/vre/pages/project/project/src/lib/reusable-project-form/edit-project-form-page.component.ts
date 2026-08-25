@@ -1,11 +1,17 @@
-import { Component } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { UpdateProjectRequest } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { ensureWithDefaultLanguage } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { map, switchMap, take } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 import { ProjectForm } from './project-form.type';
+import { ReusableProjectFormComponent } from './reusable-project-form.component';
 
 @Component({
   selector: 'app-edit-project-form-page',
@@ -14,40 +20,49 @@ import { ProjectForm } from './project-form.type';
       <app-reusable-project-form [formData]="formData" (afterFormInit)="form = $event" />
     }
 
-    <div style="display: flex; justify-content: space-between">
-      <button
-        mat-raised-button
-        type="submit"
-        color="primary"
-        (click)="onSubmit()"
-        appLoadingButton
-        [isLoading]="loading"
-        data-cy="submit-button">
-        {{ 'ui.form.action.submit' | translate }}
-      </button>
-    </div>
+    <!-- Gate the submit button on the built form so it appears together with the fields, not before
+         them. Without this it renders on the first pass, ahead of the async project fetch and form
+         build, leaving a lone Submit button over empty content. See DEV-6746. -->
+    @if (form) {
+      <div style="display: flex; justify-content: space-between">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          (click)="onSubmit()"
+          appLoadingButton
+          [isLoading]="loading"
+          data-cy="submit-button">
+          {{ 'ui.common.actions.submit' | translate }}
+        </button>
+      </div>
+    }
   `,
-  standalone: false,
+  imports: [AsyncPipe, MatButton, TranslatePipe, LoadingButtonDirective, ReusableProjectFormComponent],
 })
 export class EditProjectFormPageComponent {
   form!: ProjectForm;
   loading = false;
+
+  private _translateService = inject(TranslateService);
+
   formData$ = this._projectPageService.currentProject$.pipe(
     map(project => {
       return {
         shortcode: project.shortcode,
         shortname: project.shortname,
         longname: project.longname,
-        description: project.description as MultiLanguages,
+        description: ensureWithDefaultLanguage(project.description, this._localizationService.currentLanguage),
         keywords: project.keywords,
       };
     })
   );
 
   constructor(
-    private _projectPageService: ProjectPageService,
-    private _projectApiService: ProjectApiService,
-    private _notification: NotificationService
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _projectApiService: ProjectApiService,
+    private readonly _notification: NotificationService,
+    private readonly _localizationService: LocalizationService
   ) {}
 
   onSubmit() {
@@ -64,7 +79,9 @@ export class EditProjectFormPageComponent {
       )
       .subscribe(() => {
         this._projectPageService.reloadProject();
-        this._notification.openSnackBar('Project updated');
+        this._notification.openSnackBar(
+          this._translateService.instant('pages.project.editProjectFormPage.projectUpdated')
+        );
       });
   }
 }

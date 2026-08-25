@@ -28,12 +28,12 @@ describe('Authentication', () => {
 
     cy.get(po.loginButton).click();
 
-    cy.get(po.username).type(faker.internet.userName());
+    cy.get(po.username).type(faker.internet.username());
     cy.get(po.password).type(faker.internet.password());
     cy.get(po.submitButton).click();
 
     cy.get('body').click('topLeft');
     cy.get(po.loginButton).should('be.visible');
-    cy.get('.data-cy-snackbar').should('contain', 'The username and / or password do not match.');
+    cy.get('[data-cy=login-error]').should('contain', 'The username and / or password do not match.');
   });
 });

@@ -1,6 +1,18 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, forwardRef, inject, Input, OnChanges } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { ListNode } from '@dasch-swiss/dsp-js';
-import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageFormArray } from '@dasch-swiss/vre/ui/string-literal';
+import { ensureWithDefaultLanguage } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import {
+  DEFAULT_MULTILANGUAGE_FORM,
+  MultiLanguageFormArray,
+  MultiLanguageInputComponent,
+  StringifyStringLiteralPipe,
+} from '@dasch-swiss/vre/ui/string-literal';
+import { TruncatePipe } from '@dasch-swiss/vre/ui/ui';
+import { ActionBubbleComponent } from '../action-bubble/action-bubble.component';
+import { ListItemComponent } from '../list-item/list-item.component';
 
 @Component({
   selector: 'app-list-item-element',
@@ -13,7 +25,7 @@ import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageFormArray } from '@dasch-swiss
       <div style="flex: 1">
         <div (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()" style="position: relative">
           <app-multi-language-input
-            [placeholder]="node.labels | appStringifyStringLiteral: true | appTruncate: 128"
+            [placeholder]="node.labels | appStringifyStringLiteral | appTruncate: 128"
             [editable]="false"
             [formArray]="readOnlyFormArray"
             [validators]="[]"
@@ -31,7 +43,15 @@ import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageFormArray } from '@dasch-swiss
     </div>
   `,
   styles: [':host ::ng-deep app-multi-language-input .mat-mdc-form-field-bottom-align { display: none;}'],
-  standalone: false,
+  imports: [
+    MatIconButton,
+    MatIcon,
+    MultiLanguageInputComponent,
+    ActionBubbleComponent,
+    forwardRef(() => ListItemComponent),
+    StringifyStringLiteralPipe,
+    TruncatePipe,
+  ],
 })
 export class ListItemElementComponent implements OnChanges {
   @Input({ required: true }) node!: ListNode;
@@ -45,12 +65,16 @@ export class ListItemElementComponent implements OnChanges {
 
   readOnlyFormArray: MultiLanguageFormArray = DEFAULT_MULTILANGUAGE_FORM([]);
 
+  private readonly _localizationService = inject(LocalizationService);
+
   ngOnChanges() {
     this.buildForm();
   }
 
   private buildForm() {
-    this.readOnlyFormArray = DEFAULT_MULTILANGUAGE_FORM(this.node.labels);
+    this.readOnlyFormArray = DEFAULT_MULTILANGUAGE_FORM(
+      ensureWithDefaultLanguage(this.node.labels, this._localizationService.currentLanguage)
+    );
   }
 
   mouseEnter() {

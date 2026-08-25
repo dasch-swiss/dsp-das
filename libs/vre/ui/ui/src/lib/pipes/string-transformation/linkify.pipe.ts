@@ -6,7 +6,6 @@ import { Pipe, PipeTransform } from '@angular/core';
  */
 @Pipe({
   name: 'appLinkify',
-  standalone: false,
 })
 export class LinkifyPipe implements PipeTransform {
   transform(value: string): string {

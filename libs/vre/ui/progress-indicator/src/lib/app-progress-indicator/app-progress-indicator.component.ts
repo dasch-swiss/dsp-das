@@ -5,16 +5,16 @@ import { ProgressSize, SIZE_TO_PXL } from './progress-indicator.type';
 @Component({
   selector: 'app-progress-indicator',
   imports: [MatIconModule],
-  standalone: true,
+
   template: `
-    <div class="app-progress-indicator default" data-cy="loader">
+    <div class="app-progress-indicator default" [class.compact]="compact" data-cy="loader">
       <svg
         class="loader"
         [attr.width]="widthAndHeight"
         [attr.height]="widthAndHeight"
         viewBox="5 20 200 170"
         preserveAspectRatio="xMidYMid meet">
-        <g stroke-width="11" fill="none">
+        <g stroke-width="11" fill="none" stroke="#336790">
           <path
             d="m 107.19141,27.064453 c 19.40811,0.72674 40.31867,-1.456974 57.69737,9.089791 21.86918,11.995467 35.15372,37.302817
             32.81003,62.109081 -1.44162,27.181075 -22.18624,51.396565 -48.36746,58.105135 -15.52706,3.91583 -31.7106,1.96603
@@ -45,6 +45,10 @@ import { ProgressSize, SIZE_TO_PXL } from './progress-indicator.type';
       .app-progress-indicator.default {
         margin: 48px auto;
 
+        &.compact {
+          margin: 12px auto;
+        }
+
         .loader {
           display: block;
           margin: 0 auto;
@@ -68,6 +72,7 @@ import { ProgressSize, SIZE_TO_PXL } from './progress-indicator.type';
 })
 export class AppProgressIndicatorComponent implements OnInit {
   @Input() size: ProgressSize = 'small';
+  @Input() compact = false;
   widthAndHeight!: string;
 
   ngOnInit() {

@@ -5,7 +5,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { HumanReadableErrorPipe } from './human-readable-error.pipe';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MultiLanguageFormArray } from './multi-language-form-array.type';
 import { MultiLanguageFormService } from './multi-language-form.service';
 
@@ -21,8 +22,9 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     FormsModule,
     ReactiveFormsModule,
     HumanReadableErrorPipe,
+    TranslatePipe,
   ],
-  standalone: true,
+
   template: `
     <div style="display: flex; flex-direction: row-reverse">
       <mat-form-field style="flex: 1" subscriptSizing="dynamic" class="formfield">
@@ -54,7 +56,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
       @if (formService.formArray.invalid && formService.formArray.touched) {
         <mat-error>
           @if (formService.invalidErrors?.language) {
-            Language {{ formService.invalidErrors.language }}:
+            {{ 'ui.common.fields.language' | translate }} {{ formService.invalidErrors.language }}:
             {{ formService.invalidErrors.error | humanReadableError }}
           }
           @if (!formService.invalidErrors?.language) {

@@ -1,7 +1,10 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
-import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { Constants, PermissionsData, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
@@ -45,7 +48,7 @@ import { UsersTabService } from '../users-tab.service';
       }
     </mat-menu>
   `,
-  standalone: false,
+  imports: [AsyncPipe, MatIcon, MatIconButton, MatMenu, MatMenuItem, MatMenuTrigger],
 })
 export class UsersListRowMenuComponent {
   @Input({ required: true }) user!: ReadUser;
@@ -54,11 +57,11 @@ export class UsersListRowMenuComponent {
   user$ = this._userService.user$;
 
   constructor(
-    private _matDialog: MatDialog,
-    private _userService: UserService,
-    private _dialog: DialogService,
+    private readonly _matDialog: MatDialog,
+    private readonly _userService: UserService,
+    private readonly _dialog: DialogService,
     private readonly _userApiService: UserApiService,
-    private _usersTabService: UsersTabService
+    private readonly _usersTabService: UsersTabService
   ) {}
 
   isSystemAdmin(permissions: PermissionsData): boolean {
@@ -103,10 +106,14 @@ export class UsersListRowMenuComponent {
   }
 
   editUser(user: ReadUser) {
+    // Determine ownership from identity, not the entry point — a sysadmin
+    // can land here while editing their own record, in which case the
+    // dialog must behave as self-edit (no language picker, no `lang` submit).
+    const isOwnAccount = user.username === this._userService.currentUser?.username;
     this._matDialog
       .open<EditUserDialogComponent, EditUserDialogProps, boolean>(
         EditUserDialogComponent,
-        DspDialogConfig.dialogDrawerConfig({ user, isOwnAccount: false }, true)
+        DspDialogConfig.dialogDrawerConfig({ user, isOwnAccount }, true)
       )
       .afterClosed()
       .subscribe(success => {

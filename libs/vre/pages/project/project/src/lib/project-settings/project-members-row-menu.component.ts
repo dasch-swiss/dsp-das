@@ -1,10 +1,13 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
-import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
+import { PermissionsData, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import {
@@ -14,6 +17,7 @@ import {
 } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs';
 import { CollaborationPageService } from './collaboration/collaboration-page.service';
 
@@ -26,33 +30,46 @@ import { CollaborationPageService } from './collaboration/collaboration-page.ser
 
     <mat-menu #projectUserMenu="matMenu" xPosition="before" class="menu">
       @if (!isProjectAdmin(user.permissions)) {
-        <button mat-menu-item (click)="addProjectAdminMembership()">Add as project admin</button>
+        <button mat-menu-item (click)="addProjectAdminMembership()">
+          {{ 'pages.project.collaboration.addAsProjectAdmin' | translate }}
+        </button>
       }
       @if (isProjectAdmin(user.permissions)) {
-        <button mat-menu-item (click)="removeProjectAdminMembership()">Remove as project admin</button>
+        <button mat-menu-item (click)="removeProjectAdminMembership()">
+          {{ 'pages.project.collaboration.removeAsProjectAdmin' | translate }}
+        </button>
       }
-      <button mat-menu-item (click)="editUser(user)">Edit member</button>
-      <button mat-menu-item (click)="openEditPasswordDialog(user)">Change member's password</button>
+      @if (isSysAdmin$ | async) {
+        <button mat-menu-item (click)="editUser(user)">
+          {{ 'pages.project.collaboration.editMember' | translate }}
+        </button>
+        <button mat-menu-item (click)="openEditPasswordDialog(user)">
+          {{ 'pages.project.collaboration.changeMemberPassword' | translate }}
+        </button>
+      }
       <button mat-menu-item (click)="askToRemoveFromProject(user)" data-cy="remove-member-button">
-        Remove member from project
+        {{ 'pages.project.collaboration.removeMemberFromProject' | translate }}
       </button>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [AsyncPipe, MatIcon, MatIconButton, MatMenu, MatMenuItem, MatMenuTrigger, TranslatePipe],
 })
 export class ProjectMembersRowMenuComponent {
   @Input({ required: true }) user!: ReadUser;
   @Input({ required: true }) project!: ReadProject;
   @Output() refreshParent = new EventEmitter<void>();
 
+  isSysAdmin$ = this._userService.isSysAdmin$;
+
   constructor(
-    private _userService: UserService,
-    private _userApiService: UserApiService,
-    private _router: Router,
-    private _matDialog: MatDialog,
-    private _dialog: DialogService,
-    private _adminUsersApi: AdminUsersApiService,
-    private _collaborationPageService: CollaborationPageService
+    private readonly _adminApiService: AdminAPIApiService,
+    private readonly _collaborationPageService: CollaborationPageService,
+    private readonly _dialog: DialogService,
+    private readonly _matDialog: MatDialog,
+    private readonly _router: Router,
+    private readonly _userApiService: UserApiService,
+    private readonly _userService: UserService,
+    private readonly _translateService: TranslateService
   ) {}
 
   isProjectAdmin(permissions: PermissionsData): boolean {
@@ -106,10 +123,14 @@ export class ProjectMembersRowMenuComponent {
   }
 
   editUser(user: ReadUser) {
+    // Determine ownership from identity — a project admin can edit their
+    // own record here, in which case the dialog must behave as self-edit
+    // (no language picker, no `lang` submit).
+    const isOwnAccount = user.username === this._userService.currentUser?.username;
     this._matDialog
       .open<EditUserDialogComponent, EditUserDialogProps, boolean>(
         EditUserDialogComponent,
-        DspDialogConfig.dialogDrawerConfig<EditUserDialogProps>({ user, isOwnAccount: false }, true)
+        DspDialogConfig.dialogDrawerConfig<EditUserDialogProps>({ user, isOwnAccount }, true)
       )
       .afterClosed()
       .subscribe(success => {
@@ -125,10 +146,10 @@ export class ProjectMembersRowMenuComponent {
 
   askToRemoveFromProject(user: ReadUser) {
     this._dialog
-      .afterConfirmation('Do you want to remove this user from the project?')
+      .afterConfirmation(this._translateService.instant('pages.project.collaboration.confirmRemoveMember'))
       .pipe(
         switchMap(() =>
-          this._adminUsersApi.deleteAdminUsersIriUseririProjectMembershipsProjectiri(user.id, this.project.id)
+          this._adminApiService.deleteAdminUsersIriUseririProjectMembershipsProjectiri(user.id, this.project.id)
         )
       )
       .subscribe(() => {

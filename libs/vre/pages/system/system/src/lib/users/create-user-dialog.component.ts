@@ -1,41 +1,68 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
+import { AvailableLanguage } from '@dasch-swiss/vre/core/config';
+import { PasswordConfirmFormComponent, UserForm, UserFormComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-create-user-dialog',
   template: `
-    <app-dialog-header [title]="'Create a new user'" />
+    <app-dialog-header [title]="'pages.system.createUserDialog.title' | translate" />
     <div mat-dialog-content>
       <app-user-form [data]="data" (afterFormInit)="afterUserFormInit($event)" />
       <app-password-confirm-form (afterFormInit)="afterPasswordFormInit($event)" />
-      <mat-slide-toggle [formControl]="form.controls.isSystemAdmin">Is a system admin user</mat-slide-toggle>
+      <mat-slide-toggle [formControl]="form.controls.isSystemAdmin">{{
+        'pages.system.createUserDialog.isSystemAdmin' | translate
+      }}</mat-slide-toggle>
     </div>
 
     <div mat-dialog-actions align="end">
-      <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+      <button color="primary" mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button mat-raised-button color="primary" appLoadingButton [isLoading]="isLoading" (click)="createUser()">
-        {{ 'ui.form.action.submit' | translate }}
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>
   `,
-  standalone: false,
+  imports: [
+    DialogHeaderComponent,
+    LoadingButtonDirective,
+    MatButton,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatSlideToggle,
+    PasswordConfirmFormComponent,
+    ReactiveFormsModule,
+    TranslatePipe,
+    UserFormComponent,
+  ],
 })
 export class CreateUserDialogComponent implements OnInit {
   form = this._fb.group(
     {} as {
       user: UserForm;
-      password: FormControl<string>;
+      passwordForm: FormGroup;
       isSystemAdmin: FormControl<boolean>;
     }
   );
   isLoading = false;
 
-  readonly data = { givenName: '', familyName: '', email: '', username: '', lang: 'en', isSystemAdmin: false };
+  readonly data: {
+    givenName: string;
+    familyName: string;
+    email: string;
+    username: string;
+    lang: AvailableLanguage;
+    isSystemAdmin: boolean;
+  } = { givenName: '', familyName: '', email: '', username: '', lang: 'en', isSystemAdmin: false };
 
   constructor(
     private readonly _dialogRef: MatDialogRef<CreateUserDialogComponent>,
@@ -51,8 +78,8 @@ export class CreateUserDialogComponent implements OnInit {
     this.form.addControl('user', form);
   }
 
-  afterPasswordFormInit(form: FormControl<string>): void {
-    this.form.addControl('password', form);
+  afterPasswordFormInit(form: FormGroup): void {
+    this.form.addControl('passwordForm', form);
   }
 
   createUser(): void {
@@ -69,7 +96,7 @@ export class CreateUserDialogComponent implements OnInit {
     user.givenName = userFormControls.givenName.value;
     user.email = userFormControls.email.value;
     user.username = userFormControls.username.value;
-    user.password = this.form.controls.password.value;
+    user.password = this.form.controls.passwordForm.get('password')?.value;
     user.lang = userFormControls.lang.value;
     user.systemAdmin = this.form.controls.isSystemAdmin.value;
     user.status = true;

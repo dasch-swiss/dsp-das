@@ -1,5 +1,14 @@
 export const LicenseCaptionsMapping = new Map<string, string>([
   [
+    '0108',
+    `Subtitle:
+
+Campanile di Aurigeno. © Romeo Dell’Era
+
+Belltower of Aurigeno. © Romeo Dell’Era`,
+  ],
+  ['0113', '© Fabrice Ducrest, Unil'],
+  [
     '0117',
     'René Sigrist, 2023, Collaborations les plus significatives entre chimistes de la période 1810-1860, CC BY-SA 4.0.',
   ],
@@ -30,4 +39,16 @@ export const LicenseCaptionsMapping = new Map<string, string>([
   Staatsbibliothek Bamberg, Msc.Bibl.95, fol. 9r, Detail. Public Domain Mark 1.0 Universal Deed (https://creativecommons.org/publicdomain/mark/1.0/)`,
   ],
   ['0862', 'Author: Christian von Zimmermann.'],
+  [
+    '085C',
+    'Edition und Übersetzung der beiden von den St. Galler Mönchen Ekkehart I. und Herimannus verfassten Viten Wiboradas von St. Gallen († 926) durch Walter Berschin.',
+  ],
+  [
+    '0868',
+    'Licence Image:  CC BY\n' +
+      '\n' +
+      '"When did the Sun darken in antiquity? Discover calculated solar eclipses and their traces in ancient historical sources."',
+  ],
+  ['082A', 'Foto: Archiv Verein Folk Festivals Lenzburg'],
+  ['085F', 'Fotographer: Marie Migeon, CC BY SA 4.0'],
 ]);

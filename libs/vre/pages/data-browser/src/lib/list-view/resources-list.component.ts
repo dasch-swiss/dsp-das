@@ -1,49 +1,49 @@
 import { Component, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ResourceResultService } from '../resource-result.service';
+import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
+import { ResourceListComponent } from './resource-list.component';
 
 @Component({
   selector: 'app-resources-list',
-  template: ` @if (showBackToFormButton) {
-      <div style="padding: 16px; display: flex; flex-direction: row-reverse">
-        <a mat-stroked-button (click)="navigate()"><mat-icon>chevron_left</mat-icon>Back to search form</a>
-      </div>
-    }
-
-    @if (resourceResultService.numberOfResults > resourceResultService.MAX_RESULTS_PER_PAGE) {
-      <app-pager
-        (pageIndexChanged)="updatePageIndex($event)"
-        [numberOfAllResults]="resourceResultService.numberOfResults" />
-    }
-
-    <app-resource-image-list [resources]="resources" />`,
-  styles: [
-    `
-      app-pager {
-        margin: 8px;
+  template: `
+    @if (loading) {
+      <app-progress-indicator data-testid="loader" />
+    } @else {
+      @let numberOfResults = resourceResultService.numberOfResults;
+      @if (numberOfResults === null) {
+        <!-- The count query failed. Say so rather than asserting a total we do not have: the pager
+             cannot be sized either, so paging is unavailable until the next successful load. -->
+        <div class="results-count" data-cy="count-unavailable">
+          {{ 'pages.dataBrowser.resourcesList.countUnavailable' | translate }}
+        </div>
+      } @else if (numberOfResults > resourceResultService.MAX_RESULTS_PER_PAGE) {
+        <app-pager (pageIndexChanged)="updatePageIndex($event)" [numberOfAllResults]="numberOfResults" />
+      } @else {
+        <div class="results-count">
+          {{ 'pages.dataBrowser.resourcesList.resultsCount' | translate: { count: numberOfResults } }}
+        </div>
       }
-    `,
-  ],
-  standalone: false,
+      <app-resource-list
+        [resources]="resources"
+        [showProjectShortname]="showProjectShortname"
+        [showResourceClass]="showResourceClass" />
+    }
+  `,
+  styleUrls: ['./resources-list.component.scss'],
+  imports: [AppProgressIndicatorComponent, PagerComponent, ResourceListComponent, TranslatePipe],
 })
 export class ResourcesListComponent {
   @Input({ required: true }) resources!: ReadResource[];
-  @Input({ required: true }) showBackToFormButton!: boolean;
+  @Input() showProjectShortname = false;
+  @Input() showResourceClass = false;
+  @Input() loading = false;
 
-  constructor(
-    public resourceResultService: ResourceResultService,
-    private _router: Router,
-    private _route: ActivatedRoute
-  ) {}
+  constructor(public resourceResultService: ResourceResultService) {}
 
   updatePageIndex(index: number) {
     this.resourceResultService.updatePageIndex(index);
-  }
-
-  navigate() {
-    const projectUuid = this._route.parent?.snapshot.params['uuid'];
-    this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.advancedSearch]);
   }
 }

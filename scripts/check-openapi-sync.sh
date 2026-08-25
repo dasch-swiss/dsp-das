@@ -46,12 +46,12 @@ check_dependencies() {
         log "Install with: brew install yq (macOS) or apt-get install yq (Ubuntu)"
         exit 1
     fi
-    
+
     if ! command -v curl &> /dev/null; then
         log "${RED}❌ Error: curl is required but not installed.${NC}"
         exit 1
     fi
-    
+
     if ! command -v diff &> /dev/null; then
         log "${RED}❌ Error: diff is required but not installed.${NC}"
         exit 1
@@ -61,9 +61,12 @@ check_dependencies() {
 clean_spec() {
     local input_file="$1"
     local output_file="$2"
-    
+
     log_verbose "Cleaning spec: $input_file -> $output_file"
-    
+
+    # Remove metadata and unused endpoints from comparison
+    # - Metadata: version, descriptions, examples, tags (changes frequently, not meaningful)
+    # - Unused endpoints: SHACL validation (backend-only tool, not used in frontend)
     yq eval '
         del(.info.version, .info.title, .info.description, .info.contact) |
         del(.servers) |
@@ -71,7 +74,9 @@ clean_spec() {
         del(.. | .summary?) |
         del(.. | .examples?) |
         del(.. | .example?) |
-        del(.. | .tags?)
+        del(.. | .tags?) |
+        del(.paths."/shacl/validate") |
+        del(.components.schemas.ValidationFormData)
     ' "$input_file" > "$output_file"
 }
 
@@ -120,11 +125,12 @@ main() {
     TEMP_DIR=$(mktemp -d)
     trap "rm -rf $TEMP_DIR" EXIT
 
-    # Download remote spec
+    # Download remote spec (retry up to 3 times with 30s delay to tolerate DEV deployments)
     log_verbose "Downloading remote spec..."
-    if ! curl -s -f -o "$TEMP_DIR/remote-spec.yaml" "$REMOTE_URL"; then
-        log "${RED}❌ Failed to download remote spec from: $REMOTE_URL${NC}"
-        exit 1
+    if ! curl -s -f --retry 3 --retry-delay 30 --retry-max-time 180 --retry-all-errors \
+         -o "$TEMP_DIR/remote-spec.yaml" "$REMOTE_URL"; then
+        log "${RED}❌ Failed to download remote spec from: $REMOTE_URL (after retries)${NC}"
+        exit 2
     fi
 
     # Clean both specs (remove metadata noise)
@@ -134,26 +140,31 @@ main() {
 
     # Compare cleaned specs
     log_verbose "Comparing cleaned specifications..."
+    LOCAL_VERSION=$(yq '.info.version' "$LOCAL_SPEC")
+    REMOTE_VERSION=$(yq '.info.version' "$TEMP_DIR/remote-spec.yaml")
+
     if diff -q "$TEMP_DIR/clean-local.yaml" "$TEMP_DIR/clean-remote.yaml" > /dev/null; then
         log "${GREEN}✅ OpenAPI spec is up-to-date (no meaningful API changes)${NC}"
+        log_verbose "Version: ${LOCAL_VERSION}"
         exit 0
     else
         log "${RED}❌ API spec has meaningful changes!${NC}"
         log "Detected changes in API structure, endpoints, or schemas (ignoring metadata)."
-        log ""
-        log "${YELLOW}To update the spec file and regenerate OpenAPI code:${NC}"
-        log "  npm run update-openapi"
-        log ""
-        log "${YELLOW}Or manually:${NC}"
-        log "  curl -o $LOCAL_SPEC $REMOTE_URL"
-        log "  npm run generate-openapi-module"
-        
+        log "  Local version:  ${LOCAL_VERSION}"
+        log "  Remote version: ${REMOTE_VERSION}"
+
+        if [ -z "$CI" ]; then
+            log ""
+            log "${YELLOW}To update the spec file and regenerate OpenAPI code:${NC}"
+            log "  npm run update-openapi"
+        fi
+
         if [ "$VERBOSE" = true ]; then
             log ""
             log "${YELLOW}Meaningful changes detected:${NC}"
             diff "$TEMP_DIR/clean-local.yaml" "$TEMP_DIR/clean-remote.yaml" | head -20 || true
         fi
-        
+
         exit 1
     fi
 }

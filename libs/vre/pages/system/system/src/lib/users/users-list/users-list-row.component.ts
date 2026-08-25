@@ -1,6 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
-import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
+import { MatChip, MatChipAvatar, MatChipSet } from '@angular/material/chips';
+import { MatIcon } from '@angular/material/icon';
+import { Constants, PermissionsData, ReadUser } from '@dasch-swiss/dsp-js';
+import { TranslatePipe } from '@ngx-translate/core';
+import { UserDescriptionComponent } from './user-description.component';
+import { UsersListRowMenuComponent } from './users-list-row-menu.component';
 
 @Component({
   selector: 'app-users-list-row',
@@ -30,7 +34,15 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
       }
     `,
   ],
-  standalone: false,
+  imports: [
+    MatChip,
+    MatChipAvatar,
+    MatChipSet,
+    MatIcon,
+    TranslatePipe,
+    UserDescriptionComponent,
+    UsersListRowMenuComponent,
+  ],
 })
 export class UsersListRowComponent {
   @Input({ required: true }) user!: ReadUser;

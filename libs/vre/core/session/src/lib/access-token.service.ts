@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Auth, LocalStorageLanguageKey } from '@dasch-swiss/vre/core/config';
-import jwt_decode, { JwtPayload } from 'jwt-decode';
+import { Auth } from '@dasch-swiss/vre/core/config';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 @Injectable({ providedIn: 'root' })
 export class AccessTokenService {
@@ -8,57 +8,16 @@ export class AccessTokenService {
     return localStorage.getItem(Auth.AccessToken);
   }
 
+  tokenExists(): boolean {
+    return this.getAccessToken() !== null;
+  }
+
   storeToken(token: string): void {
     localStorage.setItem(Auth.AccessToken, token);
-    this.startTokenRefresh();
   }
 
-  removeTokens(): void {
+  removeToken(): void {
     localStorage.removeItem(Auth.AccessToken);
-    localStorage.removeItem(Auth.Refresh_token);
-    localStorage.removeItem(LocalStorageLanguageKey);
-  }
-
-  private isTokenExpired(token: JwtPayload): boolean {
-    const date = this.getTokenExpirationDate(token);
-    if (date == null) {
-      return false;
-    }
-
-    return date.setSeconds(date.getSeconds() - 30).valueOf() <= new Date().valueOf();
-  }
-
-  private getTokenExpirationDate(decoded: JwtPayload): Date | null {
-    if (decoded.exp === undefined) {
-      return null;
-    }
-
-    const date = new Date(0);
-    date.setUTCSeconds(decoded.exp);
-
-    return date;
-  }
-
-  private getTokenExp(token: string): number {
-    const decoded = jwt_decode<JwtPayload>(token);
-
-    if (decoded.exp === undefined) {
-      return 0;
-    }
-
-    return decoded.exp;
-  }
-
-  private startTokenRefresh() {
-    const token = this.getAccessToken();
-
-    if (!token) {
-      return;
-    }
-
-    const exp = this.getTokenExp(token);
-    const date = new Date(0);
-    date.setUTCSeconds(exp);
   }
 
   getTokenUser(): string | null {
@@ -67,7 +26,7 @@ export class AccessTokenService {
       return null;
     }
 
-    const decodedToken = this.decodedAccessToken(token);
+    const decodedToken = this.decodeAccessToken(token);
     if (!decodedToken || !decodedToken.sub) {
       return null;
     }
@@ -75,18 +34,48 @@ export class AccessTokenService {
     return decodedToken.sub;
   }
 
-  decodedAccessToken(token: string): JwtPayload | null {
+  decodeAccessToken(token: string): JwtPayload | null {
     try {
-      return jwt_decode<JwtPayload>(token);
+      return jwtDecode(token);
     } catch (e) {
       return null;
     }
   }
 
-  isValidToken(decoded: JwtPayload): boolean {
-    if (decoded === null) {
-      return false;
+  isValidToken(): boolean {
+    return !this._isInvalidToken();
+  }
+
+  private _isInvalidToken(): boolean {
+    const encodedJWT = this.getAccessToken();
+    if (!encodedJWT) {
+      return true;
     }
-    return this.isTokenExpired(decoded) && decoded.sub !== undefined;
+
+    const decoded = this.decodeAccessToken(encodedJWT);
+    if (!decoded) {
+      return true;
+    }
+    return this._isTokenExpired(decoded) || decoded.sub === undefined;
+  }
+
+  private _isTokenExpired(token: JwtPayload): boolean {
+    const date = this._getTokenExpirationDate(token);
+    if (date == null) {
+      return true;
+    }
+
+    return date.getTime() < Date.now();
+  }
+
+  private _getTokenExpirationDate(decoded: JwtPayload): Date | null {
+    if (decoded.exp === undefined) {
+      return null;
+    }
+
+    const date = new Date(0);
+    date.setUTCSeconds(decoded.exp);
+
+    return date;
   }
 }

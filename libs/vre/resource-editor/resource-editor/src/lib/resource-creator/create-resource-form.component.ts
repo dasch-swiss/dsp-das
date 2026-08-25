@@ -1,0 +1,462 @@
+import { ChangeDetectorRef, Component, DestroyRef, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import {
+  Cardinality,
+  Constants,
+  CreateResource,
+  CreateStillImageExternalFileValue,
+  CreateStillImageFileValue,
+  CreateStillImageVectorFileValue,
+  CreateValue,
+  KnoraApiConnection,
+  ResourceClassAndPropertyDefinitions,
+  ResourceClassDefinitionWithPropertyDefinition,
+  ResourcePropertyDefinition,
+  ResourcePropertyDefinitionWithAllLanguages,
+} from '@dasch-swiss/dsp-js';
+import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { ProjectDataRightsService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { AppProgressIndicatorComponent, LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import {
+  AuthorshipChipEditorComponent,
+  CommonInputComponent,
+  InvalidControlScrollDirective,
+} from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { finalize, switchMap, take } from 'rxjs';
+import { FormValueGroup } from '../properties/properties-display/property-value/form-value-array.type';
+import { propertiesTypeMapping } from '../properties/properties-display/property-value/resource-payloads-mapping';
+import { FileForm } from '../representation/file-form.type';
+import { FileRepresentationType } from '../representation/file-representation.type';
+import { fileValueMapping } from '../representation/file-value-mapping';
+import { CreateResourceFormFileComponent } from './create-resource-form-file.component';
+import { CreateResourceFormPropertiesComponent } from './create-resource-form-properties.component';
+import { CreateResourceFormRowComponent } from './create-resource-form-row.component';
+import { CreateResourceFormInterface } from './create-resource-form.interface';
+
+@Component({
+  selector: 'app-create-resource-form',
+  template: `
+    @if (!loading) {
+      <form [formGroup]="form" appInvalidControlScroll class="form">
+        @if (fileRepresentation) {
+          <h3>{{ 'resourceEditor.resourceCreator.form.file' | translate }}</h3>
+          <app-create-resource-form-file
+            [projectShortcode]="projectShortcode"
+            [fileRepresentation]="fileRepresentation"
+            (afterFormCreated)="afterFileFormCreated($event)" />
+          <h3>{{ 'resourceEditor.resourceCreator.form.properties' | translate }}</h3>
+        }
+        <app-create-resource-form-row
+          [label]="('resourceEditor.resourceCreator.form.resourceLabel' | translate) + ' *'"
+          [tooltip]="'resourceEditor.resourceCreator.form.resourceLabelTooltip' | translate"
+          data-cy="resource-label">
+          <app-common-input
+            [control]="form.controls.label"
+            [withLabel]="false"
+            data-cy="label-input"
+            [label]="'resourceEditor.resourceCreator.form.resourceLabelPlaceholder' | translate" />
+        </app-create-resource-form-row>
+        @if (properties) {
+          <app-create-resource-form-properties
+            [resourceClassIri]="resourceClassIri"
+            [projectIri]="projectIri"
+            [projectShortcode]="projectShortcode"
+            [properties]="properties"
+            [formGroup]="form.controls.properties" />
+        }
+        <!-- Data-side Resource Rights Statement: license + copyright holder are LOCKED (from the project's
+             resource-side legal settings); authorship is pre-filled from the project default for the user
+             to confirm or edit. -->
+        <h3>{{ 'legal.dataSide.heading' | translate }}</h3>
+        <app-create-resource-form-row [label]="'legal.dataSide.license' | translate">
+          <div
+            style="display: flex; align-items: center; gap: 4px; padding: 16px 0"
+            [attr.aria-label]="
+              'legal.dataSide.readOnlyValue'
+                | translate
+                  : {
+                      value: isPlaceholderLicense
+                        ? ('legal.dataSide.placeholder' | translate)
+                        : dataLicenseLabel || '—',
+                    }
+            ">
+            @if (isPlaceholderLicense) {
+              <!-- The sentinel's own label is a 96-character sentence and its uri is not
+                   dereferenceable, so show the readable marker as plain text. See DEV-6994. -->
+              <span>{{ 'legal.dataSide.placeholder' | translate }}</span>
+            } @else if (dataLicenseUrl) {
+              <a
+                [href]="dataLicenseUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                [attr.aria-label]="dataLicenseLabel + ', ' + ('legal.dataSide.opensInNewTab' | translate)"
+                >{{ dataLicenseLabel }}</a
+              >
+            } @else {
+              <span>{{ dataLicenseLabel || '—' }}</span>
+            }
+            <mat-icon aria-hidden="true" style="font-size: 16px; height: 16px; width: 16px">lock</mat-icon>
+          </div>
+        </app-create-resource-form-row>
+        <app-create-resource-form-row [label]="'legal.dataSide.copyrightHolder' | translate">
+          <div
+            style="display: flex; align-items: center; gap: 4px; padding: 16px 0"
+            [attr.aria-label]="
+              'legal.dataSide.readOnlyValue'
+                | translate
+                  : {
+                      value: isPlaceholderCopyrightHolder
+                        ? ('legal.dataSide.placeholder' | translate)
+                        : dataCopyrightHolder || '—',
+                    }
+            ">
+            @if (isPlaceholderCopyrightHolder) {
+              <span>{{ 'legal.dataSide.placeholder' | translate }}</span>
+            } @else {
+              <span>{{ dataCopyrightHolder || '—' }}</span>
+            }
+            <mat-icon aria-hidden="true" style="font-size: 16px; height: 16px; width: 16px">lock</mat-icon>
+          </div>
+        </app-create-resource-form-row>
+        <app-create-resource-form-row [label]="'legal.dataSide.authorship' | translate">
+          <app-authorship-chip-editor
+            [control]="form.controls.resourceAuthorship"
+            [ariaLabel]="'legal.dataSide.authorship' | translate"
+            [placeholder]="'resourceEditor.resourceCreator.authorship.placeholder' | translate"
+            [hint]="'legal.dataSide.authorshipHint' | translate"
+            [removeAuthorLabel]="removeDataAuthorLabel"
+            dataCy="data-authorship-chips" />
+        </app-create-resource-form-row>
+        <div class="form-actions">
+          <button mat-raised-button type="button" data-cy="cancel-button" (click)="onCancel()">
+            {{ 'ui.common.actions.cancel' | translate }}
+          </button>
+          <button
+            mat-raised-button
+            type="submit"
+            color="primary"
+            appLoadingButton
+            data-cy="submit-button"
+            [isLoading]="loading"
+            (click)="submitData()">
+            {{ 'ui.common.actions.submit' | translate }}
+          </button>
+        </div>
+      </form>
+    } @else {
+      <app-progress-indicator />
+    }
+  `,
+  styles: [
+    '.row { display: flex; padding: 16px 0;}',
+    '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
+    '.form { display: block; margin-right: 100px;}',
+    '.form-actions { display: flex; justify-content: end; gap: 8px; margin-top: 16px; }',
+  ],
+  imports: [
+    ReactiveFormsModule,
+    InvalidControlScrollDirective,
+    CreateResourceFormFileComponent,
+    CreateResourceFormRowComponent,
+    CommonInputComponent,
+    CreateResourceFormPropertiesComponent,
+    AuthorshipChipEditorComponent,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    LoadingButtonDirective,
+    TranslatePipe,
+    AppProgressIndicatorComponent,
+  ],
+})
+export class CreateResourceFormComponent implements OnInit {
+  @Input({ required: true }) resourceClassIri!: string;
+  @Input({ required: true }) projectIri!: string;
+  @Input({ required: true }) projectShortcode!: string;
+
+  @Output() createdResourceIri = new EventEmitter<string>();
+  @Output() cancelled = new EventEmitter<void>();
+
+  form: FormGroup<CreateResourceFormInterface> = this._fb.group({
+    label: this._fb.control('', { nonNullable: true, validators: [Validators.required] }),
+    properties: this._fb.group({}),
+    resourceAuthorship: this._fb.control<string[]>([], { nonNullable: true }),
+  });
+
+  resourceClass!: ResourceClassDefinitionWithPropertyDefinition;
+  fileRepresentation: FileRepresentationType | undefined;
+
+  properties!: PropertyInfoValues[];
+  loading = true;
+
+  // Resource-side (data) legal info from the project — license + holder are shown locked.
+  dataLicenseLabel?: string;
+  dataLicenseUrl?: string;
+  dataCopyrightHolder?: string;
+  // Placeholder markers stay as flags so the template resolves the label with `| translate`, which
+  // keeps it correct across a runtime language switch. See DEV-6994.
+  isPlaceholderLicense = false;
+  isPlaceholderCopyrightHolder = false;
+
+  mapping = new Map<string, string>();
+  readonly resourceClassTypes = [
+    Constants.HasStillImageFileValue,
+    Constants.HasDocumentFileValue,
+    Constants.HasAudioFileValue,
+    Constants.HasMovingImageFileValue,
+    Constants.HasArchiveFileValue,
+    Constants.HasTextFileValue,
+  ];
+
+  readonly cardinality = Cardinality;
+
+  protected readonly Constants = Constants;
+
+  get ontologyIri() {
+    return this.resourceClassIri.split('#')[0];
+  }
+
+  constructor(
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection,
+    private _fb: FormBuilder,
+    private _cd: ChangeDetectorRef,
+    private _dataRights: ProjectDataRightsService,
+    private _destroyRef: DestroyRef,
+    private _translate: TranslateService
+  ) {}
+
+  ngOnInit(): void {
+    this._getResourceProperties();
+    this._loadDataSideLegal();
+  }
+
+  private _loadDataSideLegal(): void {
+    // take(1): the cached rights emit synchronously after the initial fetch. We seed the form
+    // authorship from the project default on first emission only — any later re-emission (cache
+    // invalidation elsewhere in the session) must not clobber what the user has typed since.
+    this._dataRights
+      .forProject(this.projectIri)
+      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe(rights => {
+        // Placeholder legal info renders as the readable marker, never the raw sentinel: the license's
+        // own label is a 96-character sentence and its uri is a dead link. The template branches on
+        // these flags so the marker is resolved with `| translate`. See DEV-6994.
+        this.isPlaceholderLicense = rights.isPlaceholderLicense;
+        this.isPlaceholderCopyrightHolder = rights.isPlaceholderCopyrightHolder;
+        this.dataLicenseLabel = rights.licenseLabel;
+        // `_resolve()` leaves licenseUrl undefined on the placeholder branch, so no guard is needed.
+        this.dataLicenseUrl = rights.licenseUrl;
+        this.dataCopyrightHolder = rights.copyrightHolder;
+        if (rights.defaultDataAuthorship.length > 0) {
+          this.form.controls.resourceAuthorship.setValue(rights.defaultDataAuthorship);
+        }
+      });
+  }
+
+  /** Builds the per-chip remove-button aria-label; arrow so it binds correctly when passed as an @Input. */
+  readonly removeDataAuthorLabel = (name: string): string =>
+    this._translate.instant('legal.dataSide.removeAuthor', { name });
+
+  afterFileFormCreated(fileForm: FileForm) {
+    this.form.addControl('file', fileForm);
+  }
+
+  submitData() {
+    this.form.markAllAsTouched();
+
+    if (this.form.invalid) {
+      return;
+    }
+    this.loading = true;
+
+    this._dspApiConnection.v2.res
+      .createResource(this._getPayload())
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe(res => {
+        this.createdResourceIri.emit(res.id);
+      });
+  }
+
+  onCancel() {
+    this.cancelled.emit();
+  }
+
+  private _getResourceProperties() {
+    this._dspApiConnection.v2.ontologyCache
+      .reloadCachedItem(this.ontologyIri)
+      .pipe(
+        switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)),
+        finalize(() => {
+          this.loading = false;
+          this._cd.detectChanges();
+        })
+      )
+      .subscribe(onto => {
+        this.fileRepresentation = this._getFileRepresentation(onto);
+        this.resourceClass = onto.classes[this.resourceClassIri];
+        this.properties = this.resourceClass
+          .getResourcePropertiesList()
+          .filter(v => v.propertyIndex.indexOf(ApiConstants.apiKnoraOntologyUrl))
+          .map(v => {
+            // Safe cast: the ontology was loaded via OntologyCache.reloadCachedItem above,
+            // which always requests allLanguages=true (see OntologyCache.requestItemFromKnora),
+            // so dsp-js deserializes property definitions as the WithAllLanguages subclass.
+            return {
+              guiDef: v,
+              propDef: v.propertyDefinition as ResourcePropertyDefinitionWithAllLanguages,
+              values: [],
+            };
+          });
+
+        this._buildForm();
+        this._cd.detectChanges();
+      });
+  }
+
+  private _buildForm() {
+    this.properties
+      .filter(prop => propertiesTypeMapping.has(prop.propDef.objectType!))
+      .forEach(prop => {
+        const control = propertiesTypeMapping.get(prop.propDef.objectType!)!.control() as AbstractControl;
+        if (prop.guiDef.cardinality === Cardinality._1 || prop.guiDef.cardinality === Cardinality._1_n) {
+          control.addValidators(Validators.required);
+        }
+
+        this.form.controls.properties.addControl(
+          prop.propDef.id,
+          this._fb.array([
+            this._fb.group({
+              item: control,
+              comment: null,
+            }) as unknown as FormValueGroup,
+          ])
+        );
+        this.mapping.set(prop.propDef.id, prop.propDef.objectType!);
+      });
+  }
+
+  private _getFileRepresentation(onto: ResourceClassAndPropertyDefinitions) {
+    for (const item of this.resourceClassTypes) {
+      if (onto.properties[item]) {
+        return item as FileRepresentationType;
+      }
+    }
+    return undefined;
+  }
+
+  private _getPayload() {
+    const createResource = new CreateResource();
+    createResource.label = this.form.controls.label.value;
+    createResource.type = this.resourceClass.id;
+    createResource.properties = this._getPropertiesObj();
+    createResource.attachedToProject = this.projectIri;
+
+    // Per-resource (data-side) authorship: the field is pre-filled with the project default for the
+    // user to confirm or edit; persist whatever they confirmed/entered.
+    const authorshipControl = this.form.controls.resourceAuthorship;
+    if (authorshipControl.value.length > 0) {
+      createResource.resourceAuthorship = authorshipControl.value;
+    }
+
+    return createResource;
+  }
+
+  private _getPropertiesObj() {
+    const propertiesObj: { [index: string]: CreateValue[] } = {};
+
+    Object.keys(this.form.controls.properties.controls)
+      .filter(iri => {
+        const hasPropertyControlValue = this.form.controls.properties.controls[iri].controls.some(
+          control => control.value.item !== null && control.value.item !== ''
+        );
+
+        const optionalItems = this.getOptionalValueItems(
+          iri,
+          this.form.controls.properties.controls[iri].controls,
+          this.properties
+        );
+        return hasPropertyControlValue === true && optionalItems.length === 0 ? hasPropertyControlValue : false;
+      })
+      .forEach(iri => {
+        propertiesObj[iri] = this._getValue(iri);
+      });
+
+    if (this.fileRepresentation && this.form.controls.file!.value) {
+      propertiesObj[this.fileRepresentation] = [this._getCreateFileValue()];
+    }
+    return propertiesObj;
+  }
+
+  private _getCreateFileValue() {
+    const formFileValue = this.form.controls.file!.getRawValue();
+    let createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
+
+    if (createFile instanceof CreateStillImageFileValue && formFileValue.link!.startsWith('http')) {
+      createFile = new CreateStillImageExternalFileValue();
+      (createFile as CreateStillImageExternalFileValue).externalUrl = formFileValue.link!;
+    } else if (createFile instanceof CreateStillImageFileValue && formFileValue.link!.toLowerCase().endsWith('.svg')) {
+      createFile = new CreateStillImageVectorFileValue();
+      (createFile as CreateStillImageVectorFileValue).filename = formFileValue.link!;
+    } else {
+      createFile.filename = formFileValue.link!;
+    }
+
+    createFile.copyrightHolder = formFileValue.legal.copyrightHolder!;
+    createFile.license = formFileValue.legal.license!;
+    createFile.authorship = formFileValue.legal.authorship!;
+
+    return createFile;
+  }
+
+  private getOptionalValueItems = (iri: string, controls: FormValueGroup[], properties: PropertyInfoValues[]) =>
+    controls.filter(group => {
+      let hasOptionalBoolean = false;
+      if (group.value) {
+        const foundProperty = properties.find(property => property.guiDef.propertyIndex === iri);
+        hasOptionalBoolean = !!(
+          foundProperty &&
+          (foundProperty.propDef as ResourcePropertyDefinition).objectType === Constants.BooleanValue &&
+          !this.isRequired(foundProperty.guiDef.cardinality) &&
+          group.value.item === null
+        );
+      }
+      return hasOptionalBoolean;
+    });
+
+  isRequired(cardinality: Cardinality): boolean {
+    return [Cardinality._1, Cardinality._1_n].includes(cardinality);
+  }
+
+  private _getValue(iri: string) {
+    const foundProperty = this.properties.find(property => property.guiDef.propertyIndex === iri);
+    if (!foundProperty) throw new Error(`Property ${iri} not found`);
+    const propertyDefinition = foundProperty.propDef as ResourcePropertyDefinition;
+
+    const controls = this.form.controls.properties.controls[iri].controls;
+    return controls
+      .filter(group => group.value.item !== null)
+      .map(group => {
+        const entity = propertiesTypeMapping
+          .get(this.mapping.get(iri)!)!
+          .createValue(group.controls.item.value, propertyDefinition);
+        if (group.controls.comment.value) {
+          entity.valueHasComment = group.controls.comment.value;
+        }
+        return entity;
+      });
+  }
+}

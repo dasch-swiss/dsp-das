@@ -12,6 +12,5 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
 })
 export class CenteredLayoutComponent {}

@@ -1,14 +1,23 @@
 import { faker } from '@faker-js/faker';
 import { ListGetResponseADM } from '../../../../../libs/vre/open-api/src';
 
+const getAuthHeaders = () => ({
+  Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+});
+
 describe('Lists', () => {
   let listUrl: string;
   let listId: string;
   beforeEach(() => {
-    cy.request<ListGetResponseADM>('POST', `${Cypress.env('apiUrl')}/admin/lists`, {
-      comments: [{ language: 'de', value: faker.lorem.words(2) }],
-      labels: [{ language: 'de', value: faker.lorem.words(2) }],
-      projectIri: 'http://rdfh.ch/projects/00FF',
+    cy.request<ListGetResponseADM>({
+      method: 'POST',
+      url: `${Cypress.env('apiUrl')}/admin/lists`,
+      headers: getAuthHeaders(),
+      body: {
+        comments: [{ language: 'de', value: faker.lorem.words(2) }],
+        labels: [{ language: 'de', value: faker.lorem.words(2) }],
+        projectIri: 'http://rdfh.ch/projects/00FF',
+      },
     }).then(response => {
       listId = response.body.list.listinfo.id.match(/\/([^\/]*)$/)[1];
       listUrl = `/project/00FF/list/${listId}`;
@@ -31,7 +40,7 @@ describe('Lists', () => {
   it('user can edit a list', () => {
     const data = {
       label: faker.lorem.words(2),
-      comment: faker.lorem.word(2),
+      comment: faker.lorem.word({ length: 2 }),
     };
     cy.intercept('PUT', '/admin/lists/*').as('editRequest');
 

@@ -1,21 +1,28 @@
-import { HttpResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ExportFormat, V2MetadataApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { APIV2ApiService, ExportFormat } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
+import { triggerBlobDownload } from '@dasch-swiss/vre/shared/app-common';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, finalize, Subject, switchMap, takeUntil } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
+
+// U+FEFF, encoded by Blob as the three-byte UTF-8 BOM (ef bb bf).
+const UTF8_BOM = '\uFEFF';
 
 @Component({
   selector: 'app-resource-metadata',
   templateUrl: './resource-metadata.component.html',
   styleUrl: './resource-metadata.component.scss',
-  standalone: false,
+  imports: [MatButton, AppProgressIndicatorComponent, TranslatePipe],
 })
 export class ResourceMetadataComponent implements OnDestroy {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
   private readonly _destroy$ = new Subject<void>();
+  private _translateService = inject(TranslateService);
 
   readonly project$ = this._reloadSubject.asObservable().pipe(
     switchMap(() => this._projectPageService.currentProject$),
@@ -25,11 +32,11 @@ export class ResourceMetadataComponent implements OnDestroy {
   isDownloadingFile = false;
 
   constructor(
-    private _ats: AccessTokenService,
-    private _cdr: ChangeDetectorRef,
-    private _ms: V2MetadataApiService,
-    private _snackBar: MatSnackBar,
-    private _projectPageService: ProjectPageService
+    private readonly _ats: AccessTokenService,
+    private readonly _cdr: ChangeDetectorRef,
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _snackBar: MatSnackBar,
+    private readonly _v2ApiService: APIV2ApiService
   ) {}
 
   ngOnDestroy() {
@@ -49,12 +56,10 @@ export class ResourceMetadataComponent implements OnDestroy {
   private _getResourceMetadata(shortcode: string, format: ExportFormat) {
     this.isDownloadingFile = true;
 
-    const mimeType = this._getMimeType(format);
     const classIris: string[] | undefined = undefined;
-    const authToken = this._ats.getAccessToken() ?? undefined;
 
-    this._ms
-      .getV2MetadataProjectsProjectshortcodeResources(shortcode, authToken, format, classIris, 'response', false, {
+    this._v2ApiService
+      .getV2MetadataProjectsProjectshortcodeResources(shortcode, format, classIris, undefined, false, {
         httpHeaderAccept: 'text/plain',
       })
       .pipe(
@@ -65,45 +70,58 @@ export class ResourceMetadataComponent implements OnDestroy {
         })
       )
       .subscribe(
-        (response: HttpResponse<string>) => {
-          if (response.status === 200) {
-            this._showSuccess(`Metadata for project ${shortcode} downloaded successfully.`);
-            setTimeout(() => {
-              this._handleDownload(response, shortcode, mimeType);
-            }, 1000);
-          } else {
-            this._showError(`Failed to download metadata for project ${shortcode}.`);
-          }
+        response => {
+          this._showSuccess(
+            this._translateService.instant('pages.project.resourceMetadata.downloadSuccess', { shortcode })
+          );
+          setTimeout(() => {
+            this._handleDownload(response, shortcode, format);
+          }, 1000);
         },
         error => {
-          this._showError(`Error downloading metadata for project ${shortcode}: ${error.message}`);
+          this._showError(
+            this._translateService.instant('pages.project.resourceMetadata.downloadErrorWithMessage', {
+              shortcode,
+              errorMessage: error.message,
+            })
+          );
         }
       );
   }
 
-  private _handleDownload(response: HttpResponse<string>, shortcode: string, mimeType: string): void {
-    const blob = new Blob([response.body!], { type: mimeType });
-    const filename = `project_${shortcode}_metadata`;
+  private _handleDownload(response: string, shortcode: string, format: ExportFormat): void {
+    // Excel and Numbers on macOS do not auto-detect UTF-8 without a byte-order mark and fall back
+    // to Mac OS Roman, rendering "für" as "f√ºr". JSON is excluded: a BOM breaks strict parsers.
+    const isJson = format.toLowerCase() === 'json';
+    const body = isJson ? response : UTF8_BOM + response;
+    const blob = new Blob([body], { type: this._getMimeType(format) });
+    const filename = `project_${shortcode}_metadata.${this._getFileExtension(format)}`;
 
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(link.href);
+    triggerBlobDownload(blob, filename);
   }
 
   private _getMimeType(format: string): string {
     switch (format.toLowerCase()) {
       case 'csv':
-        return 'text/csv';
+        return 'text/csv;charset=utf-8';
       case 'tsv':
-        return 'text/tab-separated-values';
+        return 'text/tab-separated-values;charset=utf-8';
       case 'json':
         return 'application/json';
       default:
-        return 'text/plain';
+        return 'text/plain;charset=utf-8';
+    }
+  }
+
+  private _getFileExtension(format: string): string {
+    const extension = format.toLocaleLowerCase();
+    switch (extension) {
+      case 'csv':
+      case 'tsv':
+      case 'json':
+        return extension;
+      default:
+        return 'txt';
     }
   }
 

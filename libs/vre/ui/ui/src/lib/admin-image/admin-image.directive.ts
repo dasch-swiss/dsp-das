@@ -4,7 +4,6 @@ import { AdminImageConfig } from './admin-image.config';
 
 @Directive({
   selector: '[appAdminImage]',
-  standalone: false,
 })
 export class AdminImageDirective implements OnChanges {
   /**

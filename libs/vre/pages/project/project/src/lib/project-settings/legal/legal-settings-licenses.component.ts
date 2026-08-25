@@ -1,7 +1,12 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { PaginatedApiService } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { BehaviorSubject, map, shareReplay, switchMap } from 'rxjs';
+import { LegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { ProjectDataRightsService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslatePipe } from '@ngx-translate/core';
+import { BehaviorSubject, catchError, map, shareReplay, switchMap, tap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
+import { LicenseToggleEvent, LicensesEnabledTableComponent } from './licenses-enabled-table.component';
 
 @Component({
   selector: 'app-legal-settings-licenses',
@@ -13,7 +18,7 @@ import { ProjectPageService } from '../../project-page.service';
             [licenses]="recommendedLicenses"
             [project]="project"
             [label]="'pages.project.legalSettings.recommended' | translate"
-            (refresh)="refresh()" />
+            (licenseToggle)="onLicenseToggle($event)" />
         }
       </div>
     }
@@ -23,12 +28,12 @@ import { ProjectPageService } from '../../project-page.service';
           [licenses]="nonRecommendedLicenses"
           [project]="project"
           [label]="'pages.project.legalSettings.notRecommended' | translate"
-          (refresh)="refresh()" />
+          (licenseToggle)="onLicenseToggle($event)" />
       }
     }
   }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [AsyncPipe, LicensesEnabledTableComponent, TranslatePipe],
 })
 export class LegalSettingsLicensesComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
@@ -38,7 +43,7 @@ export class LegalSettingsLicensesComponent {
     .pipe(switchMap(() => this._projectPageService.currentProject$));
 
   licenses$ = this.project$.pipe(
-    switchMap(project => this._paginatedApi.getLicenses(project.shortcode)),
+    switchMap(project => this._legalInfoApi.getLicenses(project.shortcode)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -46,11 +51,30 @@ export class LegalSettingsLicensesComponent {
   nonRecommendedLicenses$ = this.licenses$.pipe(map(licenses => licenses.filter(license => !license.isRecommended)));
 
   constructor(
-    private _paginatedApi: PaginatedApiService,
-    private _projectPageService: ProjectPageService
+    private readonly _legalInfoApi: LegalInfoApiService,
+    private readonly _dataRights: ProjectDataRightsService,
+    private readonly _projectPageService: ProjectPageService,
+    private readonly _notification: NotificationService
   ) {}
 
-  refresh() {
-    this._reloadSubject.next();
+  onLicenseToggle(event: LicenseToggleEvent): void {
+    const project = this._projectPageService.currentProject;
+
+    const apiCall = event.enabled
+      ? this._dataRights.enableLicense(project.shortcode, event.licenseId)
+      : this._dataRights.disableLicense(project.shortcode, event.licenseId);
+
+    apiCall
+      .pipe(
+        tap(() => this._reloadSubject.next()),
+        catchError(error => {
+          this._notification.openSnackBar(
+            `Failed to ${event.enabled ? 'enable' : 'disable'} license. Please try again.`
+          );
+          this._reloadSubject.next();
+          throw error;
+        })
+      )
+      .subscribe();
   }
 }

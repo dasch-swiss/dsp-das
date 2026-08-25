@@ -1,3 +1,5 @@
-export * from './lib/lib.routes';
-export * from './lib/feature/advanced-search/advanced-search.component';
-export { PropertyFormItem } from './lib/data-access/advanced-search-store/advanced-search-store.service';
+export * from './lib/constants';
+export * from './lib/model';
+export * from './lib/providers';
+export * from './lib/advanced-search-page.component';
+export * from './lib/advanced-search-results.component';

@@ -1,0 +1,144 @@
+import { ChangeDetectorRef, Component, Inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { CountQueryResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { catchError, EMPTY, Subject, take, takeUntil } from 'rxjs';
+import { getResourceType } from './get-resource-type';
+import { ResourceAnnotationComponent } from './resource/annotation/resource-annotation.component';
+import { ResourceArchiveComponent } from './resource/archive/resource-archive.component';
+import { ResourceAudioSegmentComponent } from './resource/audio/resource-audio-segment.component';
+import { ResourceAudioComponent } from './resource/audio/resource-audio.component';
+import { ResourceCompoundComponent } from './resource/compound/resource-compound.component';
+import { ResourceDocumentComponent } from './resource/document/resource-document.component';
+import { ResourcePdfComponent } from './resource/document/resource-pdf.component';
+import { ResourcePlainComponent } from './resource/plain/resource-plain.component';
+import { ResourceImageComponent } from './resource/still-image/resource-image.component';
+import { ResourceTextComponent } from './resource/text/resource-text.component';
+import { ResourceVideoSegmentComponent } from './resource/video/resource-video-segment.component';
+import { ResourceVideoComponent } from './resource/video/resource-video.component';
+import { ResourceType } from './resource-type';
+
+@Component({
+  selector: 'app-resource-dispatcher',
+  template: `
+    @if (resourceType === null) {
+      <app-progress-indicator />
+    } @else {
+      @switch (resourceType) {
+        @case (ResourceType.Image) {
+          <app-resource-image [resource]="resource" [annotationIri]="annotationIri" />
+        }
+        @case (ResourceType.Video) {
+          <app-resource-video [resource]="resource" />
+        }
+        @case (ResourceType.Audio) {
+          <app-resource-audio [resource]="resource" />
+        }
+        @case (ResourceType.Compound) {
+          <app-resource-compound [resource]="resource" [compoundCount]="compoundCount" />
+        }
+        @case (ResourceType.Document) {
+          <app-resource-document [resource]="resource" />
+        }
+        @case (ResourceType.Pdf) {
+          <app-resource-pdf [resource]="resource" />
+        }
+        @case (ResourceType.Archive) {
+          <app-resource-archive [resource]="resource" />
+        }
+        @case (ResourceType.Text) {
+          <app-resource-text [resource]="resource" />
+        }
+        @case (ResourceType.Annotation) {
+          <app-resource-annotation [resource]="resource" />
+        }
+        @case (ResourceType.VideoSegment) {
+          <app-resource-video-segment [resource]="resource" />
+        }
+        @case (ResourceType.AudioSegment) {
+          <app-resource-audio-segment [resource]="resource" />
+        }
+        @case (ResourceType.Plain) {
+          <app-resource-plain [resource]="resource" />
+        }
+      }
+    }
+  `,
+  imports: [
+    AppProgressIndicatorComponent,
+    ResourceAnnotationComponent,
+    ResourceArchiveComponent,
+    ResourceAudioComponent,
+    ResourceCompoundComponent,
+    ResourceDocumentComponent,
+    ResourceImageComponent,
+    ResourcePdfComponent,
+    ResourcePlainComponent,
+    ResourceAudioSegmentComponent,
+    ResourceVideoSegmentComponent,
+    ResourceTextComponent,
+    ResourceVideoComponent,
+  ],
+})
+export class ResourceDispatcherComponent implements OnChanges, OnDestroy {
+  @Input({ required: true }) resource!: DspResource;
+  @Input() annotationIri: string | null = null;
+
+  resourceType: ResourceType | null = null;
+  compoundCount = 0;
+  readonly ResourceType = ResourceType;
+
+  private readonly _destroy$ = new Subject<void>();
+
+  constructor(
+    private readonly _cdr: ChangeDetectorRef,
+    @Inject(DspApiConnectionToken) private readonly _dspApi: KnoraApiConnection
+  ) {}
+
+  ngOnChanges(changes?: SimpleChanges) {
+    // Reloading the same resource (same id) cannot change its type — skip re-classification
+    // so the existing subtree (PropertiesDisplay etc.) receives ngOnChanges instead of being
+    // torn down and recreated, which would scroll the page back to the top.
+    const previousResource = changes?.['resource']?.previousValue as DspResource | undefined;
+    const isSameResource =
+      previousResource !== undefined && previousResource.res.id === this.resource.res.id && this.resourceType !== null;
+    if (isSameResource) {
+      return;
+    }
+
+    this._destroy$.next();
+    this.resourceType = null;
+    this.compoundCount = 0;
+
+    const type = getResourceType(this.resource.res);
+    if (type !== null) {
+      this.resourceType = type;
+      return;
+    }
+
+    // null result: needs async compound check to distinguish plain from compound
+    // annotationIri is forwarded only to ResourceType.Image; silently ignored for all other types
+    this._dspApi.v2.search
+      .doSearchStillImageRepresentationsCount(this.resource.res.id)
+      .pipe(
+        take(1),
+        takeUntil(this._destroy$),
+        catchError(() => {
+          this.resourceType = ResourceType.Plain;
+          this._cdr.detectChanges();
+          return EMPTY;
+        })
+      )
+      .subscribe((result: CountQueryResponse) => {
+        this.compoundCount = result.numberOfResults;
+        this.resourceType = result.numberOfResults > 0 ? ResourceType.Compound : ResourceType.Plain;
+        this._cdr.detectChanges();
+      });
+  }
+
+  ngOnDestroy() {
+    this._destroy$.next();
+    this._destroy$.complete();
+  }
+}

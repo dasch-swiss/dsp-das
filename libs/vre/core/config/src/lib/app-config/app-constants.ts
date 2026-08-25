@@ -1,27 +1,15 @@
-export type DaschLanguage = 'en' | 'de' | 'fr' | 'it' | 'rm';
-
-export const AvailableLanguages: { language: DaschLanguage; value: string }[] = [
-  {
-    language: 'en',
-    value: 'English',
-  },
-  {
-    language: 'de',
-    value: 'German (Deutsch)',
-  },
-  {
-    language: 'fr',
-    value: 'French (Francais)',
-  },
-  {
-    language: 'it',
-    value: 'Italian (Italiano)',
-  },
-  {
-    language: 'rm',
-    value: 'Romanic (Rumantsch)',
-  },
+export const AvailableLanguages = [
+  { language: 'en', value: 'English' },
+  { language: 'de', value: 'German (Deutsch)' },
+  { language: 'fr', value: 'French (Francais)' },
+  { language: 'it', value: 'Italian (Italiano)' },
+  // Romansh has no translation file yet; the fallback loader serves en.json for 'rm' (DEV-6629).
+  { language: 'rm', value: 'Romanic (Rumantsch)' },
 ] as const;
+
+export type AvailableLanguage = (typeof AvailableLanguages)[number]['language'];
+
+export const AvailableLanguageKeys = AvailableLanguages.map(l => l.language) as readonly AvailableLanguage[];
 
 export const LocalStorageLanguageKey = 'dsp_language';
 
@@ -70,6 +58,8 @@ export class RouteConstants {
   static readonly notFound = '404';
   static readonly notFoundWildcard = '**';
 
+  static readonly notAllowed = '403';
+
   static readonly uuidParameter = 'uuid';
   static readonly ontoParameter = 'onto';
   static readonly projectParameter = 'project';
@@ -100,13 +90,26 @@ export class RouteConstants {
   static readonly OntologyClassAddRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}/${RouteConstants.addClassInstance}`;
   static readonly OntologyClassRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}`;
 
-  static readonly advancedSearchResultsRelative = `${RouteConstants.advancedSearch}/:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}`;
   static readonly searchProjectRelative = `:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}/:${RouteConstants.projectParameter}`;
   static readonly searchRelative = `${RouteConstants.search}/:${RouteConstants.qParameter}`;
 
   static readonly notFoundWildcardRelative = `/${RouteConstants.notFound}`;
 
   static readonly annotationQueryParam = 'annotation';
+
+  static readonly advancedSearchQ = 'q';
+  static readonly advancedSearchOntology = 'ontology';
+  static readonly advancedSearchClass = 'class';
+  static readonly advancedSearchFilters = 'filters';
+  static readonly advancedSearchOrderBy = 'orderBy';
+
+  /**
+   * Absolute router commands to a project's Legal Settings tab.
+   * Prefer this over hand-building the segments so a route rename only has to happen here.
+   */
+  static legalSettingsFor(projectUuid: string): readonly string[] {
+    return [RouteConstants.project, projectUuid, RouteConstants.settings, RouteConstants.legalSettings];
+  }
 }
 
 export class ApiConstants {
@@ -115,7 +118,6 @@ export class ApiConstants {
 
 export enum Auth {
   AccessToken = 'ACCESS_TOKEN',
-  Refresh_token = 'REFRESH_TOKEN',
   Bearer = 'Bearer',
 }
 

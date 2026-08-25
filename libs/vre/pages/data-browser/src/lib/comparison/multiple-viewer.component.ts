@@ -1,5 +1,10 @@
-import { Component } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { CenteredBoxComponent, CenteredMessageComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import { map } from 'rxjs';
+import { ResourceListSelectionComponent } from '../list-view/resource-list-selection.component';
+import { ComparisonComponent } from './comparison.component';
 import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
@@ -10,29 +15,38 @@ import { MultipleViewerService } from './multiple-viewer.service';
         <app-centered-box>
           <app-centered-message
             [icon]="'arrow_circle_left'"
-            [title]="'Select a resource on the left panel'"
-            [message]="'Choose one or more resources from the left panel to display and compare them here.'" />
+            [title]="'pages.dataBrowser.multipleViewer.selectResource' | translate"
+            [message]="'pages.dataBrowser.multipleViewer.chooseResources' | translate" />
         </app-centered-box>
       } @else {
         @if (multipleViewerService.selectMode) {
           <app-resource-list-selection />
         }
         @if (selectedResourceIds.length <= MAX_RESOURCES) {
-          <app-comparison [resourceIds]="selectedResourceIds" />
+          <app-comparison [resourceIds]="selectedResourceIds" (afterResourceDeleted)="afterResourceDeleted.emit()" />
         } @else {
           <app-centered-box>
             <app-centered-message
               [icon]="'warning'"
-              [title]="'Too many resources selected.'"
-              [message]="'Maximum ' + MAX_RESOURCES + ' resources can be compared at the same time.'" />
+              [title]="'pages.dataBrowser.multipleViewer.tooManyResources' | translate"
+              [message]="'pages.dataBrowser.multipleViewer.maxResources' | translate: { count: MAX_RESOURCES }" />
           </app-centered-box>
         }
       }
     }
   `,
-  standalone: false,
+  imports: [
+    AsyncPipe,
+    TranslatePipe,
+    CenteredBoxComponent,
+    CenteredMessageComponent,
+    ResourceListSelectionComponent,
+    ComparisonComponent,
+  ],
 })
 export class MultipleViewerComponent {
+  @Output() afterResourceDeleted = new EventEmitter<void>();
+
   readonly MAX_RESOURCES = 6;
 
   selectedResourceIds$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.map(r => r.id)));

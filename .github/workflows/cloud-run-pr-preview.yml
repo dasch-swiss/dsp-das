@@ -1,0 +1,361 @@
+name: PR Preview
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, closed]
+    paths:
+      - 'apps/dsp-app/src/**'
+      - 'libs/**'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'  # daily at 02:00 UTC — clean up stale previews
+
+jobs:
+  deploy-preview:
+    name: Build and deploy PR preview
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action != 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      !startsWith(github.head_ref, 'release-please-')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: cloud-run-preview-pr-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    env:
+      SERVICE_NAME: dsp-app-pr-${{ github.event.pull_request.number }}
+      IMAGE_TAG: pr-${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit --ignore-scripts
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
+      - name: Generate OpenAPI client
+        run: npm run generate-openapi-module
+
+      - name: Build Angular app (dev-server config → DEV API)
+        run: npx nx run dsp-app:build:dev-server
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          token_format: 'access_token'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to Artifact Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ secrets.GCP_REGION }}-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - name: Build and push image
+        id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.GCP_ARTIFACT_REGISTRY }}/dsp-app:${{ env.IMAGE_TAG }}
+          build-args: build_tag=pr-${{ github.event.pull_request.number }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v3
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ secrets.GCP_REGION }}
+          # Deploy by immutable digest, not the mutable :pr-N tag. Re-deploying
+          # the same tag string is a no-op on Cloud Run (the revision is pinned
+          # to the digest resolved at the previous deploy), so pushes would not
+          # roll out. The digest changes on every build, forcing a new revision.
+          image: ${{ secrets.GCP_ARTIFACT_REGISTRY }}/dsp-app@${{ steps.build.outputs.digest }}
+          # Wait for the new revision to become ready and take traffic so the
+          # job status reflects deploy success instead of always going green.
+          wait: true
+          flags: >-
+            --port=4200
+            --allow-unauthenticated
+            --cpu=1
+            --memory=256Mi
+            --max-instances=1
+            --cpu-throttling
+
+      - name: Post or update preview URL comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PREVIEW_URL: ${{ steps.deploy.outputs.url }}
+          SERVICE: ${{ env.SERVICE_NAME }}
+          COMMIT: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          MARKER='<!-- dsp-app-preview -->'
+
+          COMMENT_ID=$(gh api \
+            "repos/${REPO}/issues/${PR_NUMBER}/comments" \
+            --paginate \
+            --jq ".[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${MARKER}\")) | .id" \
+            | head -n1 || true)
+
+          if [ -n "${COMMENT_ID}" ]; then
+            ENDPOINT="repos/${REPO}/issues/comments/${COMMENT_ID}"
+            METHOD="PATCH"
+          else
+            ENDPOINT="repos/${REPO}/issues/${PR_NUMBER}/comments"
+            METHOD="POST"
+          fi
+
+          gh api -X "${METHOD}" "${ENDPOINT}" -F body=@- >/dev/null <<EOF
+          ${MARKER}
+          ### DSP-APP Preview
+
+          | | |
+          |---|---|
+          | **Preview URL** | ${PREVIEW_URL} |
+          | **Cloud Run Service** | \`${SERVICE}\` |
+          | **Commit** | ${COMMIT} |
+          | **Backend** | DEV API (\`api.dev.dasch.swiss\`) |
+
+          _Updated on every push. Deleted when PR closes or after 90 days._
+          EOF
+
+          echo "${METHOD} ${ENDPOINT}"
+
+  deploy-preview-manual:
+    name: Build and deploy manual PR preview
+    # No release-please head-ref guard here: github.head_ref is empty on
+    # workflow_dispatch (only set for pull_request events), so the check would
+    # be a no-op. Manual dispatch is intentionally opt-in.
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: cloud-run-preview-pr-${{ github.ref_name }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    steps:
+      - name: Resolve open PR for branch
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=$(gh pr list \
+            --repo "${{ github.repository }}" \
+            --head "${{ github.ref_name }}" \
+            --state open \
+            --json number \
+            --jq '.[0].number // empty')
+          if [ -z "$PR_NUMBER" ]; then
+            echo "::error::No open PR found for branch '${{ github.ref_name }}'. Open a PR first, then re-run this workflow."
+            exit 1
+          fi
+          echo "number=${PR_NUMBER}" >> $GITHUB_OUTPUT
+          echo "SERVICE_NAME=dsp-app-pr-${PR_NUMBER}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=pr-${PR_NUMBER}" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit --ignore-scripts
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
+      - name: Generate OpenAPI client
+        run: npm run generate-openapi-module
+
+      - name: Build Angular app (dev-server config → DEV API)
+        run: npx nx run dsp-app:build:dev-server
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          token_format: 'access_token'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to Artifact Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ secrets.GCP_REGION }}-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - name: Build and push image
+        id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.GCP_ARTIFACT_REGISTRY }}/dsp-app:${{ env.IMAGE_TAG }}
+          build-args: build_tag=${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v3
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ secrets.GCP_REGION }}
+          # Deploy by immutable digest, not the mutable :pr-N tag. Re-deploying
+          # the same tag string is a no-op on Cloud Run (the revision is pinned
+          # to the digest resolved at the previous deploy), so pushes would not
+          # roll out. The digest changes on every build, forcing a new revision.
+          image: ${{ secrets.GCP_ARTIFACT_REGISTRY }}/dsp-app@${{ steps.build.outputs.digest }}
+          # Wait for the new revision to become ready and take traffic so the
+          # job status reflects deploy success instead of always going green.
+          wait: true
+          flags: >-
+            --port=4200
+            --allow-unauthenticated
+            --cpu=1
+            --memory=256Mi
+            --max-instances=1
+            --cpu-throttling
+
+      - name: Post or update preview URL comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          PREVIEW_URL: ${{ steps.deploy.outputs.url }}
+          SERVICE: ${{ env.SERVICE_NAME }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          MARKER='<!-- dsp-app-preview -->'
+
+          COMMENT_ID=$(gh api \
+            "repos/${REPO}/issues/${PR_NUMBER}/comments" \
+            --paginate \
+            --jq ".[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${MARKER}\")) | .id" \
+            | head -n1 || true)
+
+          if [ -n "${COMMENT_ID}" ]; then
+            ENDPOINT="repos/${REPO}/issues/comments/${COMMENT_ID}"
+            METHOD="PATCH"
+          else
+            ENDPOINT="repos/${REPO}/issues/${PR_NUMBER}/comments"
+            METHOD="POST"
+          fi
+
+          gh api -X "${METHOD}" "${ENDPOINT}" -F body=@- >/dev/null <<EOF
+          ${MARKER}
+          ### DSP-APP Preview
+
+          | | |
+          |---|---|
+          | **Preview URL** | ${PREVIEW_URL} |
+          | **Cloud Run Service** | \`${SERVICE}\` |
+          | **Branch** | \`${BRANCH}\` |
+          | **Backend** | DEV API (\`api.dev.dasch.swiss\`) |
+
+          _Deployed manually via workflow_dispatch. Deleted when PR closes or after 90 days._
+          EOF
+
+          echo "${METHOD} ${ENDPOINT}"
+
+  cleanup-preview:
+    name: Clean up PR close
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    env:
+      SERVICE_NAME: dsp-app-pr-${{ github.event.pull_request.number }}
+      IMAGE_TAG: pr-${{ github.event.pull_request.number }}
+    permissions:
+      id-token: write
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Delete Cloud Run service (if it exists)
+        run: |
+          gcloud run services delete "$SERVICE_NAME" \
+            --region="${{ secrets.GCP_REGION }}" \
+            --quiet 2>/dev/null || echo "Service $SERVICE_NAME not found, nothing to clean up."
+
+      - name: Delete container image (if it exists)
+        run: |
+          gcloud artifacts docker images delete \
+            "${{ secrets.GCP_ARTIFACT_REGISTRY }}/dsp-app:${{ env.IMAGE_TAG }}" \
+            --delete-tags --quiet 2>/dev/null || echo "Image not found, nothing to clean up."
+
+  cleanup-stale:
+    name: Clean up stale (>90 days)
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Delete stale PR preview services older than 90 days
+        run: |
+          CUTOFF=$(date -u -d '90 days ago' +%Y-%m-%dT%H:%M:%SZ)
+          SERVICES=$(gcloud run services list \
+            --region="${{ secrets.GCP_REGION }}" \
+            --filter="metadata.name:dsp-app-pr-" \
+            --format="json" 2>/dev/null || echo "[]")
+          echo "$SERVICES" | \
+          jq -r --arg cutoff "$CUTOFF" \
+            '.[] | select(.metadata.creationTimestamp < $cutoff) | .metadata.name' | \
+          while read -r SERVICE; do
+            echo "Deleting stale PR service: $SERVICE"
+            PR_NUM="${SERVICE#dsp-app-pr-}"
+            gcloud run services delete "$SERVICE" \
+              --region="${{ secrets.GCP_REGION }}" --quiet 2>/dev/null || true
+            gcloud artifacts docker images delete \
+              "${{ secrets.GCP_ARTIFACT_REGISTRY }}/dsp-app:pr-${PR_NUM}" \
+              --delete-tags --quiet 2>/dev/null || true
+          done
+

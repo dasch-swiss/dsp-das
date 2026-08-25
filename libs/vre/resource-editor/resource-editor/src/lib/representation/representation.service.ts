@@ -1,0 +1,105 @@
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { ReadDocumentFileValue } from '@dasch-swiss/dsp-js';
+import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { AppConfigService } from '@dasch-swiss/vre/core/config';
+import { AccessTokenService, UserService } from '@dasch-swiss/vre/core/session';
+import { triggerBlobDownload } from '@dasch-swiss/vre/shared/app-common';
+import { map, Observable, take } from 'rxjs';
+import { FileRepresentationInput, ParentResourceInput } from './representation-inputs';
+import { ResourceUtil } from './resource.util';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class RepresentationService {
+  constructor(
+    private readonly _appConfigService: AppConfigService,
+    private readonly _http: HttpClient,
+    private readonly _userService: UserService,
+    private readonly _accessTokenService: AccessTokenService,
+    private readonly _projectApiService: ProjectApiService
+  ) {}
+
+  getFileInfo(url: string) {
+    const pathToJson = `${url.substring(0, url.lastIndexOf('/'))}/knora.json`;
+    return this._http.get<{ originalFilename?: string }>(pathToJson, { withCredentials: true });
+  }
+
+  // A bare <img src> can't carry the JWT, so Sipi treats it as anonymous and denies non-public
+  // images even for admins. Any future Sipi image shown outside OpenSeadragon must fetch through
+  // here (Bearer header) and render the resulting blob, not bind the URL to <img> directly.
+  getImageBlob(url: string): Observable<Blob> {
+    const authToken = this._accessTokenService.getAccessToken();
+    const headers = authToken ? new HttpHeaders({ Authorization: `Bearer ${authToken}` }) : undefined;
+    return this._http.get(url, { responseType: 'blob', headers });
+  }
+
+  getIngestFileUrl(projectShort: string, assetId: string): string {
+    const url = `${this._appConfigService.dspIngestConfig.url}/projects/${projectShort}/assets/${assetId}`;
+    return url;
+  }
+
+  userCanView(fileValue: FileRepresentationInput) {
+    return fileValue && ResourceUtil.userCanView(fileValue);
+  }
+
+  downloadProjectFile(fileValue: FileRepresentationInput, resource: ParentResourceInput) {
+    this.getIngestUrl(fileValue, resource).subscribe(ingestFileUrl => {
+      this.downloadFile(ingestFileUrl, this.userCanView(fileValue));
+    });
+  }
+
+  getIngestUrl(fileValue: FileRepresentationInput, resource: ParentResourceInput) {
+    return this._projectApiService.get(resource.attachedToProject).pipe(
+      map(response => {
+        const assetId = fileValue.filename.split('.')[0] || '';
+        return this.getIngestFileUrl(response.project.shortcode, assetId);
+      })
+    );
+  }
+
+  getIngestOriginalUrl(fileValue: FileRepresentationInput, resource: ParentResourceInput) {
+    return this.getIngestUrl(fileValue, resource).pipe(map(url => `${url}/original`));
+  }
+
+  private downloadFile(url: string, userCanView = true) {
+    let headers = {};
+    const isLoggedIn = !!this._userService.currentUser;
+    if (isLoggedIn && userCanView) {
+      const authToken = this._accessTokenService.getAccessToken();
+      headers = new HttpHeaders({
+        Authorization: `Bearer ${authToken}`,
+      });
+    }
+
+    this._http
+      .get(userCanView ? `${url}/original` : url, {
+        responseType: 'blob',
+        headers,
+        observe: 'response',
+      })
+      .pipe(take(1))
+      .subscribe((res: HttpResponse<Blob>) => {
+        const contentDisposition = res.headers.get('content-disposition');
+        let fileName: string | null = null;
+        if (contentDisposition) {
+          const fileNameRegex = /filename\*=(?:([a-zA-Z0-9-]+)''([^;'\n]*))|filename=([^;'\n]*)/;
+          const matches = fileNameRegex.exec(contentDisposition);
+          fileName =
+            matches && matches[2]
+              ? decodeURIComponent(matches[2].replace(/\+/g, ' '))
+              : matches && matches[3]
+                ? matches[3].replace(/['"]/g, '').replace(/\+/g, ' ')
+                : null;
+        }
+
+        // Fallback to extracting filename from URL if not found
+        if (!fileName) {
+          fileName = url.split('/').pop()!;
+        }
+
+        triggerBlobDownload(res.body!, fileName);
+      });
+  }
+}

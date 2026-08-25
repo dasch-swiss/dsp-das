@@ -4,12 +4,11 @@
 /dist
 /tmp
 /out-tsc
+.swc/
 migrations.json
 
 # dependencies
 /node_modules
-/.yalc
-yalc.lock
 
 # IDEs and editors
 /.idea
@@ -56,7 +55,6 @@ Thumbs.db
 /site
 
 .angular
-libs/jdnconvertiblecalendar/coverage/
 libs/vre/coverage/
 apps/dsp-app/coverage/
 apps/dsp-app/.nyc_output/
@@ -75,3 +73,9 @@ apps/dsp-app/cypress/downloads
 libs/vre/3rd-party-services/open-api/src/generated/
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
+
+# Claude Code
+.claude/worktrees/
+
+# ad-hoc E2E driver scripts (scratch)
+.drive-e2e*.mjs

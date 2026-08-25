@@ -1,126 +1,21 @@
-# Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# ─── Update strategy overview ──────────────────────────────────────────────────
+#
+# Version updates (npm, github-actions, docker) are managed by Renovate.
+# See renovate.json for configuration.
+#
+# The npm entry below is kept solely so that Dependabot security update PRs
+# inherit the labels config. open-pull-requests-limit: 0 disables version
+# update PRs for npm (Renovate handles those); security update PRs are
+# unaffected by the limit and will receive the "security" label.
+# ───────────────────────────────────────────────────────────────────────────────
 
 version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    open-pull-requests-limit: 5
     schedule:
       interval: "weekly"
-    commit-message:
-      prefix: "chore"
-      include: "scope"
-    groups:
-      angular-deps:
-        applies-to: version-updates
-        patterns:
-          - "@angular*"
-          - "@ngrx/component-store"
-          - "zone.js"
-        update-types:
-          - "minor"
-          - "patch"
-      eslint-deps:
-        applies-to: version-updates
-        patterns:
-          - "eslint*"
-        exclude-patterns:
-          - "@angular-eslint/*"
-          - "@nx/eslint/*"
-          - "@nrwl/eslint*"
-        update-types:
-          - "minor"
-          - "patch"
-      grafana-deps:
-        applies-to: version-updates
-        patterns:
-          - "@grafana/*"
-        update-types:
-          - "minor"
-          - "patch"
-      jest-jasmine-deps:
-        applies-to: version-updates
-        patterns:
-          - "jest*"
-          - "ts-jest"
-          - "jasmine-core"
-          - "@types/jasmine"
-          - "@types/jest"
-        update-types:
-          - "minor"
-          - "patch"
-      jwt-decoder-deps:
-        applies-to: version-updates
-        patterns:
-          - "jwt-decode"
-          - "@types/jwt-decode"
-        update-types:
-          - "minor"
-          - "patch"
-      nx-deps:
-        applies-to: version-updates
-        patterns:
-          - "nx*"
-          - "@nx*"
-          - "@nrwl*"
-        update-types:
-          - "minor"
-          - "patch"
-      postcss-deps:
-        applies-to: version-updates
-        patterns:
-          - "postcss*"
-        update-types:
-          - "minor"
-          - "patch"
-      sentry-deps:
-        applies-to: version-updates
-        patterns:
-          - "@sentry/*"
-        update-types:
-          - "minor"
-          - "patch"
-      types-deps:
-        applies-to: version-updates
-        patterns:
-          - "@types/*"
-        update-types:
-          - "minor"
-          - "patch"
-        exclude-patterns:
-          - "@types/jest"
-          - "@types/jasmine*"
-          - "@types/jwt-decode"
-      test-coverage-deps:
-        applies-to: version-updates
-        patterns:
-          - "@cypress/code-coverage"
-          - "@jsdevtools/coverage-istanbul-loader"
-          - "istanbul-lib-coverage"
-          - "ngx-build-plus"
-        update-types:
-          - "minor"
-          - "patch"
-    ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-major" ]
-      # we use github:dasch-swiss/ckeditor_custom_build#v2.0.0 and v2.0.1 seems to be broken
-      - dependency-name: "ckeditor5-custom-build"
-      # all nx and angular dependencies are for now handled manually (also zone.js)
-      - dependency-name: "@angular/*"
-      - dependency-name: "@angular-devkit/*"
-      - dependency-name: "@angular-eslint/*" #angular-eslint should match the angular version, also handled manually
-      - dependency-name: "typescript"
-      - dependency-name: "@ngrx/component-store"
-      - dependency-name: "nx*"
-      - dependency-name: "@nx*"
-      - dependency-name: "@nrwl/*"
-      - dependency-name: "zone.js"
-
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    ignore:
-      - dependency-name: "node"
+    open-pull-requests-limit: 0
+    labels:
+      - "security"
+      - "dependencies"

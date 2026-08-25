@@ -1,123 +1,125 @@
 # DaSCH Applications and Libraries Monorepo
 
-[![Github](https://img.shields.io/github/v/tag/dasch-swiss/dsp-app?include_prereleases&label=Github%20tag)](https://github.com/dasch-swiss/dsp-das)
+[![Github](https://img.shields.io/github/v/tag/dasch-swiss/dsp-app?include_prereleases&label=Github%20tag)](https://github.com/dasch-swiss/dsp-app)
 [![Docker](https://img.shields.io/docker/v/daschswiss/dsp-app?label=Docker%20image)](https://hub.docker.com/r/daschswiss/dsp-app)
-[![CI](https://github.com/dasch-swiss/dsp-das/workflows/CI/badge.svg)](https://github.com/dasch-swiss/dsp-das/actions?query=workflow%3ACI)
+[![CI](https://github.com/dasch-swiss/dsp-app/workflows/CI/badge.svg)](https://github.com/dasch-swiss/dsp-app/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/dasch-swiss/dsp-app/branch/main/graph/badge.svg)](https://codecov.io/gh/dasch-swiss/dsp-app)
 
-This monorepo hosts various libraries of the DaSCH Service Platform and it is built on:
+DSP-APP is the user interface for the [DaSCH Service Platform](https://dasch.swiss) — a software framework for storing, sharing, and working with primary resources and data in the humanities. It connects to [DSP-API](https://github.com/dasch-swiss/dsp-api) via [DSP-JS](libs/dsp-js/) and is released under the [GNU Affero General Public License](http://www.gnu.org/licenses/agpl-3.0.en.html).
 
-- Nx `v21.5.1`
-- Angular `v20.2.4`
-- Node.js `v22.12.0` (stored in [.nvmrc](https://github.com/dasch-swiss/dsp-das/blob/main/.nvmrc) file)
+This monorepo is built on:
 
-# Install libraries
+- **Nx** — See [package.json](https://github.com/dasch-swiss/dsp-app/blob/main/package.json) for current version
+- **Angular** — See [package.json](https://github.com/dasch-swiss/dsp-app/blob/main/package.json) for current version
+- **Node.js** — Version managed via [.nvmrc](.nvmrc)
 
-To install all libraries and external dependencies just run `npm install`.
+## Quick Start
 
-## @dasch-swiss librairies
-
-For more information about specific library, please go to its readme, e.g.:
-
-- [@dasch-swiss/jdnconvertiblecalendar](https://github.com/dasch-swiss/dsp-das/blob/main/libs/jdnconvertiblecalendar/README.md)
-- [@dasch-swiss/jdnconvertiblecalendardateadapter](https://github.com/dasch-swiss/dsp-das/blob/main/libs/jdnconvertiblecalendardateadapter/README.md)
-
-## DSP-APP &mdash; generic user interface of DaSCH Service Platform
-
-DSP (DaSCH Service Platform) is a software framework for storing, sharing, and
-working with primary resources and data in the humanities.
-
-DSP-APP is a simple user interface for the research data repository of the
-Swiss National Data and Service Center for the Humanities (DaSCH), which uses
-the [DSP-API](https://github.com/dasch-swiss/dsp-api) server application in the backend. It's a system for annotation and
-linkage of resources in arts and humanities.
-
-DSP-APP implements [DSP-JS](https://www.npmjs.com/package/@dasch-swiss/dsp-js)
-to connect with [DSP-API](https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/introduction/).
-
-DSP-APP is [free software](http://www.gnu.org/philosophy/free-sw.en.html), released
-under [GNU Affero General Public](http://www.gnu.org/licenses/agpl-3.0.en.html) license.
-
-## User Quickstart
-
-To try DSP-APP out the [DSP-API](https://github.com/dasch-swiss/dsp-api) backend should be started first:
-
-In terminal fo to DSP-API repository and start the API by running following commands:
+Use the NodeJs version supported by the installed Angular version ([compatibility table](https://angular.dev/reference/versions)), or the version pinned in [.nvmrc](.nvmrc).
 
 ```shell
-$ make init-db-test
-$ make stack-without-app
+npm install
+npm run start-local   # app runs at http://localhost:4200
 ```
 
-Once backend is up and running, in the second terminal instance start DSP-APP by running:
+Requires a running [DSP-API](https://github.com/dasch-swiss/dsp-api) backend. To start it locally:
 
 ```shell
-# come back to this repository and start the DSP-APP
-$ npx nx run dsp-app:serve
+# In the dsp-api repository
+make init-db-test
+make stack-without-app
 ```
 
-## Developer Quickstart
+Every PR that touches `apps/dsp-app/src/` or `libs/` gets an automatic live preview deployed to Google Cloud Run — the URL is posted as a PR comment. You can also trigger a preview for any branch manually via the [PR Preview](https://github.com/dasch-swiss/dsp-app/actions/workflows/cloud-run-pr-preview.yml) workflow. To publish a Docker image directly from any branch (e.g. for a hotfix), trigger the [Publish from branch](https://github.com/dasch-swiss/dsp-app/actions/workflows/publish-from-branch.yml) workflow manually.
 
-It is recommended to use `Node.js` version which [is supported by installed Angular version](https://angular.dev/reference/versions).
+## Quick Commands
 
-The monorepo is implemented using [NX](https://nx.dev).
+Most common operations for daily development:
 
-The most common commands are defined in `package.json`.
+| Task                            | Command                                  |
+|---------------------------------|------------------------------------------|
+| Start local development         | `npm run start-local`                    |
+| Start with observability        | `npm run start-local-with-observability` |
+| Run tests                       | `npm run test-local`                     |
+| Run all tests (CI mode)         | `npm run test-ci-all`                    |
+| Lint all libs w/o auto-fix      | `npm run lint-all`                       |
+| Lint all libs with auto-fix     | `npm run lint-fix-all`                   |
+| Open E2E tests UI               | `npm run e2e-local`                      |
+| Run E2E tests (headless)        | `npm run e2e-ci`                         |
+| Build for development           | `npm run build`                          |
+| Build for production            | `npm run build-prod`                     |
+| Generate test coverage          | `npm run unit-test-coverage`             |
+| Browse all component stories    | `npm run storybook`                      |
+| Build static Storybook          | `npm run build-storybook`                |
+| Run Storybook interaction tests | `npm run test-storybook`                 |
 
-> **_NOTE:_** You can install `nx` globally with `npm install -g nx`. If not, then all `nx` commands below need to be prefixed with `npx`.
+For all available commands, see [package.json](https://github.com/dasch-swiss/dsp-app/blob/main/package.json).
 
-| nx                                                   | npm                       |
-|------------------------------------------------------|---------------------------|
-| `nx run dsp-app:test`                                | `npm run test-local`      |
-| `nx run-many --all --target=test --configuration=ci` | `npm run test-ci-all`     |
-| `nx run dsp-app:serve`                               | `npm run start-local`     |
-| `nx run dsp-app:serve:dev-server`                    | `npm run start-dev`       |
-| `nx run dsp-app:serve:ls-test-server`                | `npm run start-ls-test`   |
-| `nx run dsp-app:serve:stage-server`                  | `npm run start-stage`     |
-| `nx run dsp-app:lint`                                | `npm run lint-ci`         |
-| `nx run dsp-app:lint --fix`                          | `npm run lint-local`      |
-| `nx run dsp-app-e2e:e2e:development`                 | `npm run e2e-ci-dev`      |
-| `nx run dsp-app-e2e:e2e:production`                  | `npm run e2e-ci`          |
-| `nx run dsp-app:build`                               | `build`                   |
-| `nx run dsp-app:build:production`                    | `build-prod`              |
+## Developer Guide
 
-| npx                                       | npm                 |
-|-------------------------------------------|---------------------|
-| `cd apps/dsp-app-e2e && npx cypress open` | `npm run e2e-local` |
+### Working with Individual Libraries
+
+The monorepo contains multiple independently buildable libraries:
+
+```bash
+# Test, build, or lint a specific library
+nx run [library-name]:test
+nx run [library-name]:build
+nx run [library-name]:lint
+
+# Example
+nx run vre-ui-date-picker:test
+```
+
+> **Note:** To run `nx` commands, install it globally (`npm install -g nx`) or use `npx nx`.
+
+Library path aliases are defined in [tsconfig.base.json](https://github.com/dasch-swiss/dsp-app/blob/main/tsconfig.base.json) under `paths`. Main VRE libraries use the `@dasch-swiss/vre/*` namespace.
 
 ### OpenAPI Client Generation
 
-For API client generation and maintenance:
-- [OpenAPI Client Generation](https://github.com/dasch-swiss/dsp-app/blob/main/libs/vre/3rd-party-services/open-api/README.md) - Auto-generated TypeScript client for DSP-API
+The TypeScript client for DSP-API is auto-generated from the OpenAPI spec:
 
-### IDE plugins
+```shell
+npm run check-openapi-sync      # Check if the generated client is up to date
+npm run update-openapi           # Update spec and regenerate client
+npm run generate-openapi-module # Regenerate from the local spec only
+```
 
-- https://plugins.jetbrains.com/plugin/15101-nx-console-idea
-- https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console
+The client is also regenerated automatically as part of `npm install` (via `postinstall`), so it stays in sync after dependency updates.
 
-### E2E Tests
+See [OpenAPI Client README](https://github.com/dasch-swiss/dsp-app/blob/main/libs/vre/3rd-party-services/open-api/README.md) for full details.
 
-There are three NPM scripts to run the E2E tests:
+### IDE Plugins
 
-- `npm run e2e-ci-dev` will run the E2E tests in the console in a development environment.
-- `npm run e2e-ci` will run the E2E tests in the console in a production environment. This is the command run also on GitHub CI.
-- `npm run e2e-local` will open the Cypress UI which will enable to run individual tests easily and see every step as it runs.
+- [Nx Console for JetBrains](https://plugins.jetbrains.com/plugin/15101-nx-console-idea)
+- [Nx Console for VS Code](https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console)
 
-## Further Documentation
+### Local Observability
 
-### User guide
+Run a Grafana stack alongside the app to view Faro telemetry (logs, traces, Web Vitals):
 
-➡ [for latest released version](https://docs.dasch.swiss/latest/DSP-APP/user-guide/)
+```shell
+npm run start-local-with-observability
+```
 
-### Developer docs
+Grafana is available at [http://localhost:3001](http://localhost:3001) (credentials: `admin`/`admin`). Includes Loki (logs), Tempo (traces), and Mimir (metrics).
 
-➡ [for developers](https://docs.dasch.swiss/latest/DSP-APP/contribution)
+To stop: `docker compose -f docker-compose.observability.yml down`
 
-## Contribution
+## Storybook
 
-If you would like to contribute to the development of the DSP-APP alongside us,
-please follow the [general DSP contribution guidelines](https://docs.dasch.swiss/latest/developers/contribution/).
+A single global [Storybook](https://storybook.js.org/) instance aggregates stories from all libraries and apps:
 
-### Documentation / User guidelines
+```shell
+npm run storybook           # Start dev server (http://localhost:4400)
+npm run build-storybook     # Build a static bundle to dist/storybook/
+npm run test-storybook      # Run story interaction tests (requires a running server)
+```
 
-We built the user guidelines and developer documentation with [MkDocs](https://www.mkdocs.org/).
-More information can be found in the specific [README](https://github.com/dasch-swiss/dsp-app/blob/main/docs/contribution/docs-documentation.md).
+Stories are auto-discovered from any `*.stories.ts` file under `libs/` or `apps/` — no registration needed when adding new stories.
+
+## Issues & Contributions
+
+- [Developer docs](https://docs.dasch.swiss/DSP-APP/contribution)
+
+To report an issue or contribute, contact us at [support@dasch.swiss](mailto:support@dasch.swiss).

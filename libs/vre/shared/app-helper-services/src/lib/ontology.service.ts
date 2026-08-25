@@ -1,10 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Constants, KnoraApiConfig, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConfigToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from './default-data/default-properties';
-import { LocalizationService } from './localization.service';
 
 /**
  * helper methods for the ontology editor
@@ -16,11 +13,7 @@ export class OntologyService {
   // list of default property types
   defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
-  constructor(
-    @Inject(DspApiConfigToken) private readonly _dspApiConfig: KnoraApiConfig,
-    private readonly _route: ActivatedRoute,
-    private readonly _localizationService: LocalizationService
-  ) {}
+  constructor(@Inject(DspApiConfigToken) private readonly _dspApiConfig: KnoraApiConfig) {}
 
   static getOntologyNameFromIri(ontologyIri: string): string {
     const array = ontologyIri.split('/');
@@ -33,11 +26,6 @@ export class OntologyService {
   static getNameFromIri(iri: string): string {
     const array = iri.split(Constants.HashDelimiter);
     return array[1];
-  }
-
-  getInPreferedLanguage(labels: StringLiteralV2[]): string | undefined {
-    const language = this._localizationService.getCurrentLanguage();
-    return labels.find(l => l.language === language)?.value;
   }
 
   /**
@@ -102,9 +90,11 @@ export class OntologyService {
    * TODO: move to DSP-JS-Lib similar to `get ApiUrl`
    */
   getIriBaseUrl(): string {
-    return `http://${this._dspApiConfig.apiHost}${
-      this._dspApiConfig.apiPort !== null ? `:${this._dspApiConfig.apiPort}` : ''
-    }${this._dspApiConfig.apiPath}`;
+    const includePort =
+      this._dspApiConfig.apiPort !== null &&
+      (this._dspApiConfig.apiHost === '0.0.0.0' || this._dspApiConfig.apiHost === 'localhost');
+
+    return `http://${this._dspApiConfig.apiHost}${includePort ? `:${this._dspApiConfig.apiPort}` : ''}${this._dspApiConfig.apiPath}`;
   }
 
   getOntologyIriFromRoute(projectShortcode: string, ontologyName: string) {

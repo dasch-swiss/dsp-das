@@ -1,14 +1,19 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { MatToolbar } from '@angular/material/toolbar';
+import { RouterLink } from '@angular/router';
+import { HeaderLogoComponent, HeaderUserActionsComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { map } from 'rxjs';
+import { ProjectNavigationTabsComponent } from './project-navigation-tabs.component';
 import { ProjectPageService } from './project-page.service';
 
 @Component({
   selector: 'app-project-page-header',
   template: ` <mat-toolbar style="background-color: inherit; height: 56px">
-      <span style="flex: 1; display: flex; align-items: center">
+      <span style="flex: 1; display: flex; align-items: center; min-width: 0">
         <app-header-logo />
-        <h1 class="title" (click)="goToProjectPage()">{{ currentProjectName$ | async }}</h1>
+        <a class="title" [routerLink]="projectLink$ | async">{{ currentProjectName$ | async }}</a>
       </span>
       <app-header-user-actions />
     </mat-toolbar>
@@ -26,22 +31,37 @@ import { ProjectPageService } from './project-page.service';
         cursor: pointer;
         padding: 4px;
         border-radius: 8px;
+        text-decoration: none;
+        color: inherit;
+        display: inline-block;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         &:hover {
           background-color: #e8e9eb;
         }
       }
+
+      app-header-user-actions {
+        flex-shrink: 0;
+      }
     `,
   ],
-  standalone: false,
+  imports: [
+    AsyncPipe,
+    MatToolbar,
+    RouterLink,
+    HeaderLogoComponent,
+    HeaderUserActionsComponent,
+    ProjectNavigationTabsComponent,
+  ],
 })
 export class ProjectPageHeaderComponent {
   currentProjectName$ = this._projectService.currentProject$.pipe(map(project => project.longname));
-  constructor(
-    private _projectService: ProjectPageService,
-    private _router: Router
-  ) {}
+  projectLink$ = this._projectService.currentProject$.pipe(
+    map(project => ['/project', ProjectService.IriToUuid(project.id)])
+  );
 
-  goToProjectPage() {
-    this._router.navigate(['/project', this._projectService.currentProjectId]);
-  }
+  constructor(private readonly _projectService: ProjectPageService) {}
 }

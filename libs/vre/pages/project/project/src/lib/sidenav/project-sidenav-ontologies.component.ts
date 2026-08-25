@@ -1,37 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
+import { APIV3ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, first, shareReplay } from 'rxjs';
+import { LocalizationService, OntologyService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { catchError, combineLatest, first, map, of, shareReplay, switchMap } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
+import { ResourceClassSidenavComponent } from './resource-class-sidenav/resource-class-sidenav.component';
 
 @Component({
   selector: 'app-projects-sidenav-ontologies',
+  imports: [
+    AsyncPipe,
+    MatExpansionModule,
+    MatTooltipModule,
+    ResourceClassSidenavComponent,
+    AppProgressIndicatorComponent,
+  ],
   template: `
     @if (projectOntologies$ | async; as projectOntologies) {
       @if (projectOntologies.length === 0) {
-        <div class="mat-body-2" style="margin-top: 48px; text-align: center">
-          This project does not have any data yet.
-        </div>
+        <div class="mat-body-2 empty-message">This project does not have any data yet.</div>
       } @else {
         <mat-accordion>
           @for (onto of projectOntologies; let first = $first; track onto) {
             <mat-expansion-panel
+              class="ontology-panel"
               [togglePosition]="'before'"
-              style="box-shadow: none"
               data-cy="sidenav-ontology"
-              [expanded]="shouldExpand(onto.id, projectOntologies.length === 1 && first)">
+              [expanded]="shouldExpand(onto.ontology.iri, projectOntologies.length === 1 && first)">
               <mat-expansion-panel-header>
                 <mat-panel-title
                   #ontoTitle
-                  matTooltip="{{ onto.label }}"
+                  matTooltip="{{ onto.ontology.label }}"
                   matTooltipShowDelay="500"
                   matTooltipPosition="right"
                   [matTooltipDisabled]="compareElementHeights(ontoTitle)">
-                  {{ onto.label }}
+                  {{ onto.ontology.label }}
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <app-resource-class-sidenav [ontology]="onto" style="display: block; margin-left: 40px" />
+              <app-resource-class-sidenav class="resource-class-sidenav" [ontology]="onto" />
             </mat-expansion-panel>
           }
         </mat-accordion>
@@ -42,21 +53,53 @@ import { ProjectPageService } from '../project-page.service';
   `,
   styles: [
     `
-      :host ::ng-deep .mat-expansion-panel-body {
-        padding: 0;
+      .mat-expansion-panel-body {
+        padding: 0 !important;
+      }
+
+      .empty-message {
+        margin-top: 48px;
+        text-align: center;
+      }
+
+      .ontology-panel {
+        box-shadow: none !important;
+      }
+
+      .resource-class-sidenav {
+        display: block;
+        margin-left: 40px;
       }
     `,
   ],
-  standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class ProjectSidenavOntologiesComponent implements OnInit {
-  projectOntologies$ = this._projectPageService.ontologies$.pipe(shareReplay({ bufferSize: 1, refCount: true }));
+  private readonly _projectOntologies$ = this._projectPageService.currentProject$.pipe(
+    switchMap(project =>
+      this._v3.getV3ProjectsProjectiriResourcesperontology(project.id).pipe(
+        catchError(error => {
+          console.error('Error loading project ontologies:', error);
+          return of([]);
+        })
+      )
+    ),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  projectOntologies$ = combineLatest([this._projectOntologies$, this._localizationService.currentLanguage$]).pipe(
+    map(([ontologies, lang]) =>
+      [...ontologies].sort((a, b) => SortingHelper.compareStringsByLanguage(a.ontology.label, b.ontology.label, lang))
+    )
+  );
   initialExpandIri?: string;
 
   constructor(
     private readonly _projectPageService: ProjectPageService,
     private readonly _route: ActivatedRoute,
-    private readonly _ontologyService: OntologyService
+    private readonly _ontologyService: OntologyService,
+    private readonly _v3: APIV3ApiService,
+    private readonly _localizationService: LocalizationService
   ) {}
 
   ngOnInit() {

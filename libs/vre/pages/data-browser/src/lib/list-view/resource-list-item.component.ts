@@ -1,15 +1,22 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { ReadResource } from '@dasch-swiss/dsp-js';
-import { map } from 'rxjs';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { ReadResource, StringLiteralV2 } from '@dasch-swiss/dsp-js';
+import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { TranslatePipe } from '@ngx-translate/core';
+import { map, Observable } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
+import { ProjectShortnameService } from '../project-shortname.service';
 
 @Component({
   selector: 'app-resource-list-item',
   template: `
     <div
       class="item"
-      [ngClass]="{ highlighted: isHighlighted$ | async, search: multipleViewerService.searchKeyword !== undefined }"
+      [ngClass]="{
+        highlighted: isHighlighted$ | async,
+        search: multipleViewerService.searchKeyword !== undefined || visibleResourceClassLabels !== null,
+      }"
       data-cy="resource-list-item"
       (mouseenter)="showCheckbox = true"
       (mouseleave)="showCheckbox = false"
@@ -19,8 +26,29 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
           <div style="color: black">
             {{ resource.label }}
           </div>
-          @if (foundIn.length > 0) {
-            <div class="found-in">Found in: {{ foundIn.join(', ') }}</div>
+          @let classLabels = visibleResourceClassLabels;
+          @if (classLabels || foundIn.length > 0) {
+            <div class="found-in">
+              @if (classLabels) {
+                <span class="semibold" data-cy="resource-class-label">{{
+                  classLabels | appStringifyStringLiteral
+                }}</span>
+              }
+              @if (foundIn.length > 0) {
+                <span>
+                  @if (classLabels) {
+                    |
+                  }
+                  {{ 'pages.dataBrowser.resourceListItem.foundIn' | translate
+                  }}<span class="semibold">{{ foundIn.join(', ') }}</span></span
+                >
+              }
+              @if (showProjectShortname && (projectShortname$ | async); as shortname) {
+                <span>
+                  | Project: <span class="semibold">{{ shortname }}</span></span
+                >
+              }
+            </div>
           }
         </div>
 
@@ -42,6 +70,8 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
         &:hover {
           background-color: #ebebeb;
         }
+        /* Rows with a metadata line below the label need vertical breathing room. Advanced search
+           has no keyword yet still renders the class, so this cannot key on the keyword alone. */
         &.search {
           padding: 8px 16px;
         }
@@ -60,12 +90,22 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
         margin-top: 8px;
         font-size: 12px;
       }
+      .semibold {
+        font-weight: 500;
+      }
     `,
   ],
-  standalone: false,
+  imports: [AsyncPipe, NgClass, MatCheckbox, StringifyStringLiteralPipe, TranslatePipe],
 })
 export class ResourceListItemComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;
+  @Input() showProjectShortname = false;
+  /**
+   * Search results can mix resource classes, so the class is shown to tell them apart (DEV-5452).
+   * Lists that are already scoped to a single class (the project sidenav) leave this off, where it
+   * would repeat the same value on every row.
+   */
+  @Input() showResourceClass = false;
 
   showCheckbox = false;
   foundIn: string[] = [];
@@ -84,12 +124,41 @@ export class ResourceListItemComponent implements OnInit {
     map(resources => resources.map(r => r.id).includes(this.resource.id) && this.multipleViewerService.selectMode)
   );
 
-  constructor(public readonly multipleViewerService: MultipleViewerService) {}
+  projectShortname$!: Observable<string>;
+
+  /**
+   * Prefers the multi-language labels off entityInfo so the class follows the UI language, and falls
+   * back to the single-language resourceClassLabel, which dsp-js also fills in for deleted resources
+   * and classes of unknown ontologies. `null` when neither source has a label, which the template
+   * uses to drop the metadata line entirely rather than render it empty.
+   *
+   * Resolved once in `ngOnInit` rather than through a getter: `appStringifyStringLiteral` is impure
+   * and memoizes on the array's identity, so handing it a freshly built array per change-detection
+   * cycle would defeat that memo on every row.
+   */
+  resourceClassLabels: StringLiteralV2[] | null = null;
+
+  /** The class labels only when they are actually shown, so the row's padding and the metadata
+   * line agree on whether there is anything below the label. */
+  get visibleResourceClassLabels(): StringLiteralV2[] | null {
+    return this.showResourceClass ? this.resourceClassLabels : null;
+  }
+
+  constructor(
+    public readonly multipleViewerService: MultipleViewerService,
+    private readonly _projectShortnameService: ProjectShortnameService
+  ) {}
 
   ngOnInit() {
-    if (this.multipleViewerService.searchKeyword) {
-      this._searchInResource(this.multipleViewerService.searchKeyword);
+    this.resourceClassLabels = this._resolveResourceClassLabels();
+
+    const searchKeyword = this.multipleViewerService.searchKeyword;
+    if (searchKeyword) {
+      this._searchInResourceLabel(searchKeyword);
+      this._searchInResourceProperty(searchKeyword);
     }
+
+    this.projectShortname$ = this._projectShortnameService.getProjectShortname(this.resource.attachedToProject);
   }
 
   onCheckboxChanged(event: MatCheckboxChange) {
@@ -100,15 +169,34 @@ export class ResourceListItemComponent implements OnInit {
     }
   }
 
-  private _searchInResource(keyword: string) {
+  private _resolveResourceClassLabels(): StringLiteralV2[] | null {
+    const labels = this.resource.entityInfo?.classes[this.resource.type]?.labels;
+    if (labels?.length) {
+      return labels;
+    }
+
+    return this.resource.resourceClassLabel ? [{ value: this.resource.resourceClassLabel } as StringLiteralV2] : null;
+  }
+
+  private _searchInResourceLabel(keyword: string) {
+    if (this.resource.label.toLowerCase().includes(keyword.toLowerCase())) {
+      this.foundIn.push('Label');
+    }
+  }
+
+  private _searchInResourceProperty(keyword: string) {
     Object.values(this.resource.properties).forEach(values => {
       values.forEach(value => {
+        if (!value.propertyLabel) {
+          return;
+        }
+
         if (
           value.strval &&
           value.strval.toLowerCase().includes(keyword.toLowerCase()) &&
-          !this.foundIn.includes(value.propertyLabel!)
+          !this.foundIn.includes(value.propertyLabel)
         ) {
-          this.foundIn.push(value.propertyLabel!);
+          this.foundIn.push(value.propertyLabel);
         }
       });
     });

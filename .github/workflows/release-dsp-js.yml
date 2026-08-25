@@ -1,0 +1,51 @@
+name: Release dsp-js
+
+on:
+  push:
+    tags:
+      - 'dsp-js-v*'
+
+jobs:
+  publish:
+    name: Build and publish dsp-js to NPM
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # Required for OIDC trusted publishers
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+          # Note: registry-url is NOT set here to allow OIDC authentication
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
+      - name: Build dsp-js
+        run: npx nx build dsp-js
+
+      - name: Publish to NPM
+        run: npx npm@11 publish dist/libs/dsp-js --access public --provenance
+        # OIDC authentication via trusted publishers - no token needed
+
+  notification:
+    name: Google chat notification about release
+    needs: [ publish ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#dsp-js-v}" >> $GITHUB_OUTPUT
+      - name: Send notification to google chat room "DSP releases"
+        uses: google-github-actions/send-google-chat-webhook@v0.0.4
+        with:
+          webhook_url: ${{ secrets.GOOGLE_CHAT_DSP_RELEASES_WEBHOOK_URL }}
+          mention: '<users/all>'
+          text: '📦 *@dasch-swiss/dsp-js* ${{ steps.version.outputs.version }} released\n\n<https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}|Release Notes> · <https://www.npmjs.com/package/@dasch-swiss/dsp-js|npm>'

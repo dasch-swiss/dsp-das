@@ -6,7 +6,7 @@ export default defineConfig({
   projectId: 'n5b5id',
   e2e: {
     ...nxE2EPreset(__dirname),
-    specPattern: 'cypress/**/**/**/*.cy.ts',
+    specPattern: ['cypress/e2e/system-admin/resource.cy.ts', 'cypress/**/**/**/*.cy.ts'],
     excludeSpecPattern: ['*.spec.js', '*.spec.ts'],
     viewportHeight: 768,
     viewportWidth: 1024,
@@ -23,8 +23,6 @@ export default defineConfig({
     trashAssetsBeforeRuns: true,
     screenshotsFolder: 'cypress/fixtures/screenshots',
     setupNodeEvents(on, config) {
-      // eslint-disable-next-line
-      require('@cypress/code-coverage/task')(on, config);
       on('before:browser:launch', (browser, launchOptions) => {
         if (browser.name === 'chrome' && browser.isHeadless) {
           // fullPage screenshot size is 1600x1400 on non-retina screens

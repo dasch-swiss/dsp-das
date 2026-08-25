@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { AppConfigService, DspConfig } from '@dasch-swiss/vre/core/config';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import packageJson from '../../../../../../../package.json';
-import { GridItem } from '../grid/grid.component';
+import { FooterComponent } from '../footer/footer.component';
+import { GridComponent, GridItem } from '../grid/grid.component';
 
 interface VersionResponse {
   webapi: string;
@@ -19,7 +21,7 @@ interface VersionResponse {
   selector: 'app-help',
   templateUrl: './help-page.component.html',
   styleUrls: ['./help-page.component.scss'],
-  standalone: false,
+  imports: [FooterComponent, GridComponent, MatIconModule],
 })
 export class HelpPageComponent implements OnInit {
   loading = true;
@@ -35,21 +37,21 @@ export class HelpPageComponent implements OnInit {
       icon: 'assignment',
       title: 'Project administration',
       text: 'Read more about project administration and how to manage project members.',
-      url: 'https://docs.dasch.swiss/latest/DSP-APP/user-guide/project',
+      url: 'https://dasch.swiss/knowledge-hub/dsp-app/project-admin',
       urlText: 'Open Documentation',
     },
     {
       icon: 'bubble_chart',
       title: 'Data model creation',
       text: 'Find everything about data modelling and how to setup the project database.',
-      url: 'https://docs.dasch.swiss/latest/DSP-APP/user-guide/project/#data-model',
+      url: 'https://dasch.swiss/knowledge-hub/dsp-app/project-admin#data-model',
       urlText: 'Open Documentation',
     },
     {
       icon: 'image_search',
       title: 'Research tools',
       text: 'Get more information about data handling, search methods and how to use the research tools.',
-      url: 'https://docs.dasch.swiss/latest/DSP-APP/user-guide/',
+      url: 'https://dasch.swiss/knowledge-hub/dsp-app',
       urlText: 'Open Documentation',
     },
   ];
@@ -89,10 +91,10 @@ export class HelpPageComponent implements OnInit {
       urlText: 'dasch.swiss',
     },
     {
-      title: 'Contribute',
-      text: 'All our software code is open source and accessible on Github. If you want to improve the tools, feel free to contact us on:',
-      url: 'https://github.com/dasch-swiss',
-      urlText: 'Github',
+      title: 'Source Code',
+      text: 'Our software is open source and available on Github under Apache 2.0 license. For support or questions:',
+      url: 'mailto:support@dasch.swiss',
+      urlText: 'Contact Support',
     },
   ];
 
@@ -106,10 +108,11 @@ export class HelpPageComponent implements OnInit {
 
     this.support[0].url += `${this.dsp.environment}: ${this.dsp.release}`;
 
-    this.releaseNotesUrl = `https://github.com/dasch-swiss/dsp-das/releases/tag/v${this.appVersion}`;
+    this.releaseNotesUrl = `https://github.com/dasch-swiss/dsp-app/releases/tag/v${this.appVersion}`;
 
     const apiConfig = this._appConfigService.dspApiConfig;
-    const versionUrl = `${apiConfig.apiProtocol}://${apiConfig.apiHost}:${apiConfig.apiPort}/version`;
+    const portSuffix = apiConfig.apiPort !== null ? `:${apiConfig.apiPort}` : '';
+    const versionUrl = `${apiConfig.apiProtocol}://${apiConfig.apiHost}${portSuffix}/version`;
     this._http.get<VersionResponse>(versionUrl).subscribe(apiVersion => {
       this.apiVersion = apiVersion;
 

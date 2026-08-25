@@ -1,10 +1,17 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { ListNodeInfo } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
+import {
+  LocalizationService,
+  pickPreferredLanguageString,
+  ProjectService,
+} from '@dasch-swiss/vre/shared/app-helper-services';
+import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageInputComponent } from '@dasch-swiss/vre/ui/string-literal';
+import { TranslateService } from '@ngx-translate/core';
 import { ListItemService } from '../list-item/list-item.service';
 
 @Component({
@@ -30,23 +37,27 @@ import { ListItemService } from '../list-item/list-item.service';
       }
     `,
   ],
-  standalone: false,
+  imports: [ReactiveFormsModule, MatIconButton, MatIcon, MultiLanguageInputComponent],
 })
 export class ListItemFormComponent {
   @Input({ required: true }) parentNode!: ListNodeInfo;
   loading = false;
   form = this._fb.group({ labels: DEFAULT_MULTILANGUAGE_FORM([], [], [atLeastOneStringRequired('value')]) });
 
+  private readonly _translate = inject(TranslateService);
   readonly labelsValidators = [Validators.maxLength(2000)];
 
   get placeholder() {
-    return `Append item to ${this.parentNode.labels[0].value}`;
+    return this._translate.instant('pages.ontology.list.listItemForm.appendItem', {
+      parent: pickPreferredLanguageString(this.parentNode.labels, this._localizationService.currentLanguage),
+    });
   }
 
   constructor(
-    private _listApiService: ListApiService,
-    private _listItemService: ListItemService,
-    private _fb: FormBuilder
+    private readonly _listApiService: ListApiService,
+    private readonly _listItemService: ListItemService,
+    private readonly _fb: FormBuilder,
+    private readonly _localizationService: LocalizationService
   ) {}
 
   createChildNode() {

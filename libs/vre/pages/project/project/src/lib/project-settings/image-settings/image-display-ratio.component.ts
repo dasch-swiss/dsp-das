@@ -1,4 +1,6 @@
+import { NgStyle } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-image-display-ratio',
@@ -67,7 +69,7 @@ import { Component, Input } from '@angular/core';
       }
     `,
   ],
-  standalone: false,
+  imports: [NgStyle, TranslatePipe],
 })
 export class ImageDisplayRatioComponent {
   @Input({ required: true }) ratio!: number;

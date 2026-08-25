@@ -1,0 +1,81 @@
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { ApplicationConfig, inject, provideAppInitializer } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter, withComponentInputBinding, withRouterConfig } from '@angular/router';
+import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
+import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import {
+  AppConfigService,
+  buildTagFactory,
+  BuildTagToken,
+  DspApiConfigToken,
+  DspAppConfigToken,
+  DspInstrumentationToken,
+} from '@dasch-swiss/vre/core/config';
+import { provideAppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
+import { apiConnectionTokenProvider } from '@dasch-swiss/vre/pages/user-settings/user';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { provideCalendarDateAdapter } from '@dasch-swiss/vre/ui/date-picker';
+import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
+import { TRANSLATE_HTTP_LOADER_CONFIG } from '@ngx-translate/http-loader';
+import { routes } from './app.routes';
+import { I18nFallbackTranslateLoader } from './i18n-fallback-translate-loader';
+import { authInterceptorFn } from './main/http-interceptors/auth.interceptor.fn';
+import { iiifWithCredentialsInterceptorFn } from './main/http-interceptors/iiif-with-credentials.interceptor.fn';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      withRouterConfig({
+        onSameUrlNavigation: 'reload',
+      })
+    ),
+    provideAnimations(),
+    provideHttpClient(withInterceptors([authInterceptorFn, iiifWithCredentialsInterceptorFn])),
+    provideTranslateService({
+      loader: [
+        { provide: TRANSLATE_HTTP_LOADER_CONFIG, useValue: { prefix: 'assets/i18n/', suffix: '.json' } },
+        { provide: TranslateLoader, useClass: I18nFallbackTranslateLoader },
+      ],
+    }),
+    AppConfigService,
+    GrafanaFaroService,
+    // Faro is lazy-loaded in its setup() method to reduce initial bundle size
+    provideAppInitializer(() => {
+      const faroService = inject(GrafanaFaroService);
+      return faroService.setup();
+    }),
+    // Sentry is lazy-loaded in main.ts to reduce initial bundle size
+    {
+      provide: DspApiConfigToken,
+      useFactory: (appConfigService: AppConfigService) => appConfigService.dspApiConfig,
+      deps: [AppConfigService],
+    },
+    apiConnectionTokenProvider,
+    {
+      provide: DspAppConfigToken,
+      useFactory: (appConfigService: AppConfigService) => appConfigService.dspAppConfig,
+      deps: [AppConfigService],
+    },
+    {
+      provide: DspInstrumentationToken,
+      useFactory: (appConfigService: AppConfigService) => appConfigService.dspInstrumentationConfig,
+      deps: [AppConfigService],
+    },
+    {
+      provide: BuildTagToken,
+      useFactory: buildTagFactory,
+      deps: [HttpClient],
+    },
+    {
+      provide: BASE_PATH,
+      useFactory: (configService: AppConfigService) => configService.dspApiConfig.apiUrl,
+      deps: [AppConfigService],
+    },
+    ...provideAppErrorHandler(),
+    LocalizationService,
+    ...provideCalendarDateAdapter(),
+  ],
+};

@@ -1,34 +1,121 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import * as Editor from 'ckeditor5-custom-build';
-import { startWith } from 'rxjs/operators';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { TranslatePipe } from '@ngx-translate/core';
+import * as EditorNs from 'ckeditor5-custom-build';
+import { Subject } from 'rxjs';
+import { startWith, takeUntil } from 'rxjs/operators';
+import { HumanReadableErrorPipe } from '../human-readable-error.pipe';
 import { ckEditor } from './ck-editor';
+import { crossProjectLinkValidator } from './cross-project-link.validator';
 import { unescapeHtml } from './unescape-html';
+
+// `ckeditor5-custom-build` is a CommonJS UMD bundle whose `module.exports` is
+// the ClassicEditor class. Under the legacy webpack builder, `import * as`
+// collapsed to the class. The new esbuild `:application` builder follows ESM
+// interop semantics, so the namespace becomes `{ default: ClassicEditor, ... }`.
+// Unwrap defensively so it works under both builders.
+type EditorNamespace = typeof EditorNs & { default?: typeof EditorNs };
+const Editor = (EditorNs as EditorNamespace).default ?? EditorNs;
 
 @Component({
   selector: 'app-ck-editor',
   styleUrl: './ck-editor.component.scss',
-  template: ` <ckeditor
+  template: `
+    <ckeditor
       [formControl]="footnoteControl"
       [config]="ckEditor.config"
       [editor]="editor"
-      style="margin-bottom: 22px; display: block;" />
-    @if (control.touched && control.errors; as errors) {
-      <mat-error>{{ errors | humanReadableError }}</mat-error>
-    }`,
-  standalone: false,
+      style="margin-bottom: 22px; display: block;"
+      (ready)="onEditorReady()" />
+    @if (control.touched && control.errors?.['crossProjectLink']; as error) {
+      <mat-error>
+        <div>{{ crossProjectLinkError.message | translate }}</div>
+        @if (error.invalidLinks && error.invalidLinks.length > 0) {
+          <div style="margin-top: 8px;">
+            <strong>{{ badLinksError.message | translate }}</strong>
+            <ul style="margin: 4px 0; padding-left: 20px;">
+              @for (link of error.invalidLinks; track link.url) {
+                <li>{{ link.url }}</li>
+              }
+            </ul>
+          </div>
+        }
+      </mat-error>
+    } @else if (control.touched && control.errors; as errors) {
+      <mat-error>{{ errors | humanReadableError | translate }}</mat-error>
+    }
+  `,
+  imports: [CKEditorModule, MatFormFieldModule, ReactiveFormsModule, TranslatePipe, HumanReadableErrorPipe],
 })
-export class CkEditorComponent implements OnInit {
+export class CkEditorComponent implements OnInit, OnDestroy {
   @Input({ required: true }) control!: FormControl<string | null>;
+  @Input() projectShortcode?: string;
   footnoteControl = new FormControl('');
 
   readonly editor = Editor;
+  readonly crossProjectLinkError = {
+    errorKey: 'crossProjectLink',
+    message: 'ui.common.errors.crossProjectLink',
+  };
+  readonly badLinksError = {
+    errorKey: 'badLinks',
+    message: 'ui.common.errors.badLinks',
+  };
+
   protected readonly ckEditor = ckEditor;
 
+  private readonly _destroy$ = new Subject<void>();
+  private _crossProjectValidator?: ValidatorFn;
+
+  constructor(private readonly _elementRef: ElementRef<HTMLElement>) {}
+
+  /**
+   * CKEditor renders its floating UI (link balloon, dropdown panels) into a
+   * `.ck-body-wrapper` it appends to `document.body`. Since Angular CDK 21 a
+   * dialog is a `popover`, which the browser promotes to the *top layer* — it
+   * paints above all ordinary content no matter how high a z-index the balloon
+   * asks for. So inside a dialog the balloon opens and is positioned correctly
+   * but stays hidden behind the dialog, which is why the link button looked
+   * dead there while in-DOM toggles such as bold kept working (DEV-6997).
+   *
+   * Nothing can win against the top layer from the outside, so move the wrapper
+   * into the popover to put it in the same layer. CKEditor recreates the
+   * wrapper whenever it is no longer connected, so relocating it is safe.
+   *
+   * The popover itself is `pointer-events: none` — the CDK re-enables clicks on
+   * the pane inside it — so the relocated wrapper has to opt back in, otherwise
+   * the balloon is visible but its input and Save/Cancel buttons swallow no
+   * clicks.
+   */
+  onEditorReady() {
+    const popover = this._elementRef.nativeElement.closest('[popover]');
+    if (!popover) {
+      return;
+    }
+
+    const bodyWrapper = document.querySelector<HTMLElement>('.ck-body-wrapper');
+    if (bodyWrapper && !popover.contains(bodyWrapper)) {
+      bodyWrapper.style.pointerEvents = 'auto';
+      popover.appendChild(bodyWrapper);
+    }
+  }
+
   ngOnInit() {
+    if (this.projectShortcode) {
+      this._crossProjectValidator = crossProjectLinkValidator(this.projectShortcode);
+      this.control.addValidators(this._crossProjectValidator);
+      this.control.updateValueAndValidity();
+    }
     let updating = false;
 
-    this.control.valueChanges.pipe(startWith(this.control.value)).subscribe(change => {
+    this.control.valueChanges.pipe(startWith(this.control.value), takeUntil(this._destroy$)).subscribe(change => {
+      if (change === '') {
+        this.control.patchValue(null);
+        return;
+      }
+
       if (updating) {
         return;
       }
@@ -37,7 +124,7 @@ export class CkEditorComponent implements OnInit {
       updating = false;
     });
 
-    this.footnoteControl.valueChanges.subscribe(value => {
+    this.footnoteControl.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(value => {
       if (updating) {
         return;
       }
@@ -45,6 +132,21 @@ export class CkEditorComponent implements OnInit {
       this.control.patchValue(value ? this._parseFromFootnote(value) : '');
       updating = false;
     });
+
+    if (!this.control.touched) {
+      this.control.markAsTouched();
+    }
+  }
+
+  ngOnDestroy() {
+    this._destroy$.next();
+    this._destroy$.complete();
+
+    // Remove the validator that was added in ngOnInit
+    if (this._crossProjectValidator) {
+      this.control.removeValidators(this._crossProjectValidator);
+      this.control.updateValueAndValidity();
+    }
   }
 
   private _parseToFootnote(rawHtml: string) {

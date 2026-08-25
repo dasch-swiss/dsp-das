@@ -1,8 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
+import { MatChip, MatChipListbox } from '@angular/material/chips';
+import { PermissionsData, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { UserDescriptionComponent } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ProjectPageService } from '../../project-page.service';
+import { ProjectMembersRowMenuComponent } from '../project-members-row-menu.component';
+import { SelectGroupComponent } from './select-group/select-group.component';
 
 @Component({
   selector: 'app-project-members-row',
@@ -12,7 +16,7 @@ import { ProjectPageService } from '../../project-page.service';
 
       <mat-chip-listbox>
         @if (isProjectAdmin(user.permissions)) {
-          <mat-chip class="admin-chip">Admin</mat-chip>
+          <mat-chip class="admin-chip">{{ 'pages.project.collaboration.admin' | translate }}</mat-chip>
         }
       </mat-chip-listbox>
 
@@ -25,7 +29,14 @@ import { ProjectPageService } from '../../project-page.service';
       }
     </div>
   `,
-  standalone: false,
+  imports: [
+    MatChip,
+    MatChipListbox,
+    ProjectMembersRowMenuComponent,
+    SelectGroupComponent,
+    TranslatePipe,
+    UserDescriptionComponent,
+  ],
 })
 export class ProjectMembersRowComponent implements OnInit {
   @Input({ required: true }) user!: ReadUser;
