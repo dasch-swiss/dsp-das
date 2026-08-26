@@ -1,9 +1,13 @@
+---
+name: format-project-image
+description: Format and add a project cover image to DSP-APP — resize any common image format (PNG, JPG, TIFF) to a 500px-wide WebP named by project shortcode, place it under apps/dsp-app/src/assets/images/project/width-500/, and optionally register a license caption. Use when adding or updating a DSP project cover image.
+allowed-tools: Bash, Read, Edit, Glob
+disable-model-invocation: true
+---
+
 # format-project-image
 
 Format and add a project cover image to the DSP-APP.
-
-invocable: user
-allowed-tools: Bash, Read, Edit, Glob
 
 ## Overview
 
