@@ -1,20 +1,17 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
 import { Title } from '@angular/platform-browser';
 import {
-  GroupBy,
   ItemType,
   PagedResponseRestrictedResource,
+  RestrictedClass,
   RestrictedItem,
   RestrictedResource,
   RestrictionCounts,
-  RestrictionGroup,
-  UnitCounts,
-  ViewRestrictionsSummary,
+  ValueItemType,
   Visibility,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
@@ -24,7 +21,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 import { CountCellComponent } from './count-cell.component';
-import { ViewRestrictionsPageService } from './view-restrictions-page.service';
+import { ValuesState, ViewRestrictionsPageService } from './view-restrictions-page.service';
 import { VisibilityCellComponent } from './visibility-cell.component';
 
 interface ExpandedGroup {
@@ -37,9 +34,8 @@ interface ExpandedGroup {
  * generated client currently emits PascalCase (`ItemType.All === 'All'`), and using those verbatim
  * as i18n keys would silently fall back to the raw key if the API ever changes its casing.
  */
-const ITEM_TYPE_SLUG: Record<ItemType, string> = {
+const ITEM_TYPE_SLUG: Record<ValueItemType, string> = {
   All: 'all',
-  Resource: 'resource',
   File: 'file',
   Value: 'value',
   Comment: 'comment',
@@ -71,7 +67,6 @@ const ITEM_TYPE_SLUG: Record<ItemType, string> = {
     AsyncPipe,
     TranslatePipe,
     MatIcon,
-    MatButtonToggleModule,
     MatChipsModule,
     AppProgressIndicatorComponent,
     PagerComponent,
@@ -81,19 +76,19 @@ const ITEM_TYPE_SLUG: Record<ItemType, string> = {
 })
 export class ViewRestrictionsComponent {
   // expose enums to the template
-  readonly GroupBy = GroupBy;
-  readonly ItemType = ItemType;
+  readonly ValueItemType = ValueItemType;
 
-  readonly itemTypeChips: ItemType[] = [
-    ItemType.All,
-    ItemType.Resource,
-    ItemType.File,
-    ItemType.Value,
-    ItemType.Comment,
+  readonly itemTypeChips: ValueItemType[] = [
+    ValueItemType.All,
+    ValueItemType.File,
+    ValueItemType.Value,
+    ValueItemType.Comment,
   ];
 
-  readonly summaryState$ = this.vr.summaryState$;
-  readonly groupBy$ = this.vr.groupBy$;
+  readonly classesState$ = this.vr.classesState$;
+  readonly valuesState$ = this.vr.valuesState$;
+  readonly progress$ = this.vr.progress$;
+  readonly anyFailed$ = this.vr.anyFailed$;
   readonly itemType$ = this.vr.itemType$;
 
   /** Per-group expansion state, keyed by group id. A signal so OnPush re-renders when it changes. */
@@ -133,40 +128,69 @@ export class ViewRestrictionsComponent {
     return valueUuid ? `${base}?highlightValue=${encodeURIComponent(valueUuid)}` : base;
   }
 
-  onGroupBy(value: GroupBy): void {
-    this.expanded.set({});
-    this.vr.setGroupBy(value);
-  }
-
-  onItemType(value: ItemType): void {
+  onItemType(value: ValueItemType): void {
     this.expanded.set({});
     this.vr.setItemType(value);
   }
 
-  /** In property mode the "Resource" filter is not meaningful (whole-resource rows are out of scope). */
-  isChipDisabled(chip: ItemType): boolean {
-    return chip === ItemType.Resource && this.groupBy$.value === GroupBy.Property;
+  /** Re-run step 2 for one class after a failure, leaving every other row's data in place. */
+  onRetryClass(classIri: string, event: Event): void {
+    // The row itself is a button that expands the drill-down, so the retry control inside it must not
+    // also toggle expansion.
+    event.stopPropagation();
+    this.vr.retryClass(classIri);
+  }
+
+  /** Stable empty map, so the template's `?? ` fallback does not allocate on every change detection. */
+  readonly emptyValues = new Map<string, ValuesState>();
+
+  /**
+   * Footer total for one audience's resource counts, summed over the classes on screen.
+   *
+   * Summed here rather than served by the API: the two steps answer in different units and step 2 arrives
+   * per class, so there is no single response a server-side total could live in.
+   */
+  totalCounts(classes: RestrictedClass[], audience: 'anonymous' | 'authenticated' | 'projectMember'): RestrictionCounts {
+    return classes.reduce(
+      (acc, c) => ({
+        hidden: acc.hidden + c.counts[audience].hidden,
+        restrictedView: acc.restrictedView + c.counts[audience].restrictedView,
+      }),
+      { hidden: 0, restrictedView: 0 }
+    );
   }
 
   /**
-   * Whether to render the "Resources" column (design 1i: a 96px column between the label and the
-   * audience cells). Keyed off the grouping rather than off the presence of `totalResources`, so the
-   * column and the grid template can never disagree about how many columns there are — a per-row
-   * check would misalign the header and footer if one group happened to lack the field.
+   * Footer total for one audience's value counts.
+   *
+   * A lower bound whenever a class failed — classes without counts contribute nothing rather than being
+   * guessed at. The banner above the table says so, which is why understating here is safe.
    */
-  showTotals(groupBy: GroupBy | null): boolean {
-    return groupBy === GroupBy.ResourceClass;
+  totalValueCounts(
+    values: Map<string, ValuesState>,
+    audience: 'anonymous' | 'authenticated' | 'projectMember'
+  ): RestrictionCounts {
+    return [...values.values()].reduce(
+      (acc, v) => {
+        const c = v.counts?.counts?.[audience];
+        return c
+          ? { hidden: acc.hidden + c.hidden, restrictedView: acc.restrictedView + c.restrictedView }
+          : acc;
+      },
+      { hidden: 0, restrictedView: 0 }
+    );
   }
 
   /**
    * The project's whole resource count — the footer's "Resources" cell.
    *
-   * Summed over the summary's groups rather than requested separately, so it always agrees with the
-   * rows on screen. In class mode the API reports *every* class, including those with no restrictions,
-   * so this sum is the project's total resource count and not merely the restricted subset.
+   * Summed over the reported classes rather than requested separately, so it always agrees with the rows
+   * on screen. Every class is reported, including those with no restrictions, so this is the project's
+   * total resource count and not merely the restricted subset. Never a lower bound: it comes wholly from
+   * step 1, which either succeeded or left the page in its error state.
    */
-  totalResources(groups: RestrictionGroup[] | undefined): number {
-    return (groups ?? []).reduce((sum, g) => sum + (g.totalResources ?? 0), 0);
+  totalResources(classes: RestrictedClass[] | undefined): number {
+    return (classes ?? []).reduce((sum, c) => sum + c.totalResources, 0);
   }
 
   /**
@@ -178,12 +202,8 @@ export class ViewRestrictionsComponent {
    *
    * Checks both states too — a cell with only restricted-view counts and nothing hidden is still a finding.
    */
-  isEmptyCount(counts: UnitCounts | undefined): boolean {
-    return this._isEmptyUnit(counts?.resources) && this._isEmptyUnit(counts?.items);
-  }
-
-  private _isEmptyUnit(unit: RestrictionCounts | undefined): boolean {
-    return !unit?.hidden && !unit?.restrictedView;
+  isEmptyCount(counts: RestrictionCounts | undefined): boolean {
+    return !counts?.hidden && !counts?.restrictedView;
   }
 
   /**
@@ -200,11 +220,16 @@ export class ViewRestrictionsComponent {
    * filter — a class restricted only on whole resources goes inert under `Value` — which is correct,
    * since the drill-down would have nothing to show there either.
    */
-  isExpandable(group: RestrictionGroup): boolean {
-    const c = group.counts;
-    return (
-      !this.isEmptyCount(c.anonymous) || !this.isEmptyCount(c.authenticated) || !this.isEmptyCount(c.projectMember)
-    );
+  isExpandable(clazz: RestrictedClass, values: ValuesState | undefined): boolean {
+    const r = clazz.counts;
+    const v = values?.counts?.counts;
+    const anyResource =
+      !this.isEmptyCount(r.anonymous) || !this.isEmptyCount(r.authenticated) || !this.isEmptyCount(r.projectMember);
+    const anyValue =
+      !!v && (!this.isEmptyCount(v.anonymous) || !this.isEmptyCount(v.authenticated) || !this.isEmptyCount(v.projectMember));
+    // While step 2 is still in flight a row is left expandable: judging it inert on incomplete data would
+    // make rows stop being clickable as their counts arrive, which reads as the UI fighting the user.
+    return anyResource || anyValue || !!values?.loading;
   }
 
   /**
@@ -214,24 +239,38 @@ export class ViewRestrictionsComponent {
    * project has any resources at all — the `@empty` branch alone would then never fire and a project
    * with nothing restricted would silently render a table of dashes. This says so explicitly.
    */
-  hasNoRestrictions(summary: ViewRestrictionsSummary): boolean {
-    const t = summary.totals;
-    return this.isEmptyCount(t.anonymous) && this.isEmptyCount(t.authenticated) && this.isEmptyCount(t.projectMember);
+  hasNoRestrictions(classes: RestrictedClass[], values: Map<string, ValuesState>): boolean {
+    const noResources = classes.every(
+      c =>
+        this.isEmptyCount(c.counts.anonymous) &&
+        this.isEmptyCount(c.counts.authenticated) &&
+        this.isEmptyCount(c.counts.projectMember)
+    );
+    // Only claim "nothing restricted" once every class has actually answered. Saying it while step 2 is
+    // still running would be a statement the data does not yet support.
+    const allAnswered = [...values.values()].every(v => !v.loading);
+    const noValues = [...values.values()].every(v => {
+      const c = v.counts?.counts;
+      return (
+        !c || (this.isEmptyCount(c.anonymous) && this.isEmptyCount(c.authenticated) && this.isEmptyCount(c.projectMember))
+      );
+    });
+    return noResources && allAnswered && noValues;
   }
 
-  toggleGroup(group: RestrictionGroup): void {
+  toggleGroup(clazz: RestrictedClass, values: ValuesState | undefined): void {
     // The template already makes an empty row inert; this guards the path itself, so a row that
     // became empty under a new filter cannot be opened by a click that was already in flight.
-    if (!this.isExpandable(group)) {
+    if (!this.isExpandable(clazz, values)) {
       return;
     }
-    if (this.expanded()[group.id]) {
+    if (this.expanded()[clazz.id]) {
       const next = { ...this.expanded() };
-      delete next[group.id];
+      delete next[clazz.id];
       this.expanded.set(next);
       return;
     }
-    this.loadPage(group.id, 1);
+    this.loadPage(clazz.id, 1);
   }
 
   loadPage(groupId: string, page: number): void {
@@ -303,9 +342,15 @@ export class ViewRestrictionsComponent {
     return item.type === ItemType.File ? 'image' : item.type === ItemType.Comment ? 'comment' : 'lock';
   }
 
-  /** Translation key for an item-type label (chips and per-row tags). */
-  itemTypeKey(type: ItemType): string {
+  /** Translation key for a filter chip label. */
+  itemTypeKey(type: ValueItemType): string {
     return `pages.project.viewRestrictions.itemType.${ITEM_TYPE_SLUG[type] ?? 'all'}`;
+  }
+
+  /** Translation key for a drill-down row's item-type tag, which still speaks in `ItemType`. */
+  drillItemTypeKey(type: ItemType): string {
+    const slug = type === ItemType.File ? 'file' : type === ItemType.Comment ? 'comment' : 'value';
+    return `pages.project.viewRestrictions.itemType.${slug}`;
   }
 
   /**

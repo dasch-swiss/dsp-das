@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ItemType, RestrictionCounts, UnitCounts } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { RestrictionCounts, ValueItemType } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { TranslatePipe } from '@ngx-translate/core';
 
 /** One rendered line of a cell: a unit, its counts, and the label/tooltip naming that unit. */
@@ -29,9 +29,13 @@ interface CountLine {
  * `Value`, `File` or `Comment` the `resources` unit is structurally zero, so a resources-only cell blanks
  * the entire matrix exactly when the user narrows to what they care about (DEV-6868). So:
  *
- *   - `Resource` → the resources line only
  *   - `File` / `Value` / `Comment` → the items line only
  *   - `All` → both lines, each labelled (design 1i)
+ *
+ * The two units now arrive from two different requests (DEV-6778): resources from step 1, values from
+ * step 2. So a cell can be showing a final resources figure while its values figure is still in flight,
+ * or has failed for that class alone — hence `valuesLoading` / `valuesFailed`, which affect the items
+ * line only. Resource counts are never filtered and never partial.
  *
  * Icons are `aria-hidden` because the numbers beside them are the content; the cell carries one
  * `aria-label` naming the units and states in words, so colour is never the only channel. Sighted
@@ -43,7 +47,11 @@ interface CountLine {
   selector: 'app-count-cell',
   template: `
     <span class="col-aud count" [attr.aria-label]="ariaLabel | translate: ariaParams">
-      @if (lines.length === 0) {
+      @if (valuesLoading && lines.length === 0) {
+        <span class="count-pending" aria-hidden="true">…</span>
+      } @else if (valuesFailed && lines.length === 0) {
+        <span class="count-failed" aria-hidden="true">?</span>
+      } @else if (lines.length === 0) {
         <span class="count-none" aria-hidden="true">–</span>
       } @else {
         @for (line of lines; track line.unit) {
@@ -74,30 +82,37 @@ interface CountLine {
   imports: [MatIcon, MatTooltipModule, TranslatePipe],
 })
 export class CountCellComponent {
-  /** One audience's figure, in both units, straight off the API. */
-  @Input({ required: true }) counts: UnitCounts | undefined;
+  /** This audience's whole-resource figure, from step 1. Always final — never filtered, never partial. */
+  @Input({ required: true }) resourceCounts: RestrictionCounts | undefined;
+
+  /** This audience's value figure, from step 2. Undefined while that class is still loading or failed. */
+  @Input() valueCounts: RestrictionCounts | undefined;
+
+  /** Step 2 still in flight for this row. */
+  @Input() valuesLoading = false;
+
+  /** Step 2 failed for this row alone — the other rows are unaffected. */
+  @Input() valuesFailed = false;
 
   /** The active item-type filter — decides which unit(s) this cell answers with. */
-  @Input() itemType: ItemType = ItemType.All;
+  @Input() itemType: ValueItemType = ValueItemType.All;
 
   /** Only in the combined view does a line need to say which unit it counts. */
   get showUnitIcon(): boolean {
-    return this.itemType === ItemType.All;
+    return this.itemType === ValueItemType.All;
   }
 
   /** The lines to render: the units in scope for the filter that have something to report. */
   get lines(): CountLine[] {
+    // Resource counts are unfiltered, so showing them beside a value figure narrowed to Comment would
+    // put two differently-scoped numbers in one cell. Only the combined view shows both.
     const wanted: Array<'resources' | 'items'> =
-      this.itemType === ItemType.Resource
-        ? ['resources']
-        : this.itemType === ItemType.All
-          ? ['resources', 'items']
-          : ['items'];
+      this.itemType === ValueItemType.All ? ['resources', 'items'] : ['items'];
 
     return wanted
       .map(unit => ({
         unit,
-        counts: this.counts?.[unit],
+        counts: unit === 'resources' ? this.resourceCounts : this.valueCounts,
         icon: unit === 'resources' ? 'description' : 'label',
         tooltipKey:
           unit === 'resources'

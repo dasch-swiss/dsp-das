@@ -196,12 +196,8 @@
         "tab": "View Restrictions",
         "title": "View Restrictions",
         "intro": "Every resource class in the project with how many resources it holds, and for each audience how many items are hidden or served in restricted view. Open a row to see the affected resources and their per-audience visibility.",
-        "groupBy": "Group by",
-        "byClass": "Resource class",
-        "byProperty": "Property",
         "filters": "Filters",
         "resourceClass": "Resource class",
-        "property": "Property",
         "resources": "Resources",
         "total": "Total",
         "itemsInside": "restricted items inside",
@@ -213,12 +209,10 @@
         },
         "itemType": {
           "all": "All items",
-          "resource": "Resources",
           "file": "File values",
           "value": "Values",
           "comment": "Comments"
         },
-        "groupByAria": "Group by",
         "filtersAria": "Filter by item type",
         "visibility": {
           "hidden": "Hidden",
@@ -232,7 +226,15 @@
         "countAria": "{{resourcesHidden}} resources hidden, {{resourcesRestricted}} in restricted view; {{itemsHidden}} values hidden, {{itemsRestricted}} in restricted view",
         "countNone": "No restrictions",
         "resourceUnit": "Whole resources",
-        "itemUnit": "Values inside resources"
+        "itemUnit": "Values inside resources",
+        "stepFetchingClasses": "Fetching resource classes…",
+        "stepGathering": "Gathering restrictions {{done}} / {{total}}",
+        "rowFailed": "Could not be computed",
+        "rowRetry": "Retry",
+        "totalsIncomplete": "Some classes could not be computed, so the totals below are a lower bound.",
+        "noClasses": "This project has no resource classes yet.",
+        "classesLoadFailed": "The resource classes could not be loaded, so the report cannot be shown.",
+        "reload": "Reload"
       }
     },
     "system": {
