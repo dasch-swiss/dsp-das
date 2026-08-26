@@ -158,7 +158,12 @@
           </div>
         } @else if (expandedGroup(group.id); as eg) {
           @if (eg.page.pagination.totalPages > 1) {
-            <div class="pager">
+            <!--
+              app-pager keeps its page index in a private field with no input to set it, so it must stay
+              mounted across a page change: unmounting it resets the index to 0 and the view snaps back to
+              page 1. Hence the current page stays rendered and is only dimmed while the next one loads.
+            -->
+            <div class="pager" [class.is-paging]="isPageLoading(group.id)">
               <app-pager
                 [numberOfAllResults]="eg.page.pagination.totalItems"
                 [pageSize]="pageSize"

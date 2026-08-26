@@ -444,6 +444,14 @@
 
   // wrapper chrome around the shared `app-pager`, which brings its own MUI buttons and layout
   .pager {
+  // Dimmed while the next page loads. The pager stays mounted rather than being swapped for a spinner --
+  // app-pager holds its page index privately with no input to restore it, so remounting resets the view
+  // to page 1 while the data is page 2.
+  &.is-paging {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
     background: $cool_gray_50;
     border-bottom: 1px solid rgba($black, 0.06);
     padding: 0 8px;

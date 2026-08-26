@@ -24,9 +24,18 @@ import { CountCellComponent } from './count-cell.component';
 import { ValuesState, ViewRestrictionsPageService } from './view-restrictions-page.service';
 import { VisibilityCellComponent } from './visibility-cell.component';
 
+/**
+ * An expanded row's drill-down.
+ *
+ * `loading` is a flag on the state rather than a state of its own, so paging keeps the current page — and
+ * with it the pager — mounted while the next page is fetched. Replacing the whole value with a spinner
+ * unmounted `app-pager`, which holds its page index internally (no input for it), so it remounted at index
+ * 0 and the view snapped back to page 1 while the data was page 2.
+ */
 interface ExpandedGroup {
   page: PagedResponseRestrictedResource;
   currentPage: number;
+  loading?: boolean;
 }
 
 /**
@@ -274,7 +283,13 @@ export class ViewRestrictionsComponent {
   }
 
   loadPage(groupId: string, page: number): void {
-    this.expanded.update(e => ({ ...e, [groupId]: 'loading' }));
+    // The first page has nothing to keep on screen, so it gets the page-level spinner. Subsequent pages
+    // keep the current one rendered and only mark it loading, which is what stops the pager unmounting.
+    const current = this.expandedGroup(groupId);
+    this.expanded.update(e => ({
+      ...e,
+      [groupId]: current ? { ...current, loading: true } : 'loading',
+    }));
     this.vr
       .loadItems(groupId, page, this.pageSize)
       .pipe(take(1), takeUntilDestroyed(this._destroyRef))
@@ -308,6 +323,7 @@ export class ViewRestrictionsComponent {
     return !!this.expanded()[id];
   }
 
+  /** The first page is still loading, so there is nothing to show yet. See `isPageLoading` for paging. */
   isLoading(id: string): boolean {
     return this.expanded()[id] === 'loading';
   }
@@ -319,6 +335,11 @@ export class ViewRestrictionsComponent {
   expandedGroup(id: string): ExpandedGroup | null {
     const e = this.expanded()[id];
     return e && e !== 'loading' && e !== 'failed' ? e : null;
+  }
+
+  /** Whether a *subsequent* page is in flight, with the current one still on screen. */
+  isPageLoading(id: string): boolean {
+    return !!this.expandedGroup(id)?.loading;
   }
 
   private isResourceVisible(res: RestrictedResource): boolean {
