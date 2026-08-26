@@ -234,7 +234,15 @@
         "totalsIncomplete": "Einige Klassen konnten nicht berechnet werden; die Summen unten sind daher ein Mindestwert.",
         "noClasses": "Dieses Projekt hat noch keine Ressourcenklassen.",
         "classesLoadFailed": "Die Ressourcenklassen konnten nicht geladen werden; der Bericht kann nicht angezeigt werden.",
-        "reload": "Neu laden"
+        "reload": "Neu laden",
+        "byClass": "Ressourcenklasse",
+        "byProperty": "Eigenschaft",
+        "groupingAria": "Gruppieren nach",
+        "property": "Eigenschaft",
+        "values": "Werte",
+        "stepFetchingProperties": "Eigenschaften werden geladen…",
+        "propertiesLoadFailed": "Die Eigenschaften konnten nicht geladen werden; der Bericht kann nicht angezeigt werden.",
+        "noProperties": "Dieses Projekt hat noch keine Werteigenschaften."
       }
     },
     "system": {

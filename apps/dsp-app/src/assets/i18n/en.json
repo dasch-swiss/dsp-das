@@ -234,7 +234,15 @@
         "totalsIncomplete": "Some classes could not be computed, so the totals below are a lower bound.",
         "noClasses": "This project has no resource classes yet.",
         "classesLoadFailed": "The resource classes could not be loaded, so the report cannot be shown.",
-        "reload": "Reload"
+        "reload": "Reload",
+        "byClass": "Resource class",
+        "byProperty": "Property",
+        "groupingAria": "Group by",
+        "property": "Property",
+        "values": "Values",
+        "stepFetchingProperties": "Fetching properties…",
+        "propertiesLoadFailed": "The properties could not be loaded, so the report cannot be shown.",
+        "noProperties": "This project has no value properties yet."
       }
     },
     "system": {

@@ -1,4 +1,5 @@
 import { AsyncPipe } from '@angular/common';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatChipsModule } from '@angular/material/chips';
@@ -21,6 +22,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 import { CountCellComponent } from './count-cell.component';
+import { ViewRestrictionsByPropertyPageService } from './view-restrictions-by-property-page.service';
+import { ViewRestrictionsByPropertyTableComponent } from './view-restrictions-by-property-table.component';
 import { ValuesState, ViewRestrictionsPageService } from './view-restrictions-page.service';
 import { VisibilityCellComponent } from './visibility-cell.component';
 
@@ -71,7 +74,10 @@ const ITEM_TYPE_SLUG: Record<ValueItemType, string> = {
   selector: 'app-view-restrictions',
   templateUrl: './view-restrictions.component.html',
   styleUrl: './view-restrictions.component.scss',
-  providers: [ViewRestrictionsPageService],
+  // Both services are provided HERE, above the tables, so neither is destroyed when the toggle
+  // unmounts its table. An Angular service provided on a component dies with it, which would clear the
+  // per-row cache on every switch and make the "switch back is instant" requirement unsatisfiable.
+  providers: [ViewRestrictionsPageService, ViewRestrictionsByPropertyPageService],
   imports: [
     AsyncPipe,
     TranslatePipe,
@@ -81,11 +87,24 @@ const ITEM_TYPE_SLUG: Record<ValueItemType, string> = {
     PagerComponent,
     VisibilityCellComponent,
     CountCellComponent,
+    MatButtonToggleModule,
+    ViewRestrictionsByPropertyTableComponent,
   ],
 })
 export class ViewRestrictionsComponent {
   // expose enums to the template
   readonly ValueItemType = ValueItemType;
+
+  /**
+   * Which grouping the screen is showing. A screen-level toggle only — the two tables have separate API
+   * routes and separate state, so this chooses which to mount rather than parameterising one report.
+   */
+  readonly grouping = signal<'class' | 'property'>('class');
+
+  onGrouping(value: 'class' | 'property'): void {
+    this.expanded.set({});
+    this.grouping.set(value);
+  }
 
   readonly itemTypeChips: ValueItemType[] = [
     ValueItemType.All,

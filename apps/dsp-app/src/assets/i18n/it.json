@@ -234,7 +234,15 @@
         "totalsIncomplete": "Alcune classi non è stato possibile calcolarle, quindi i totali sotto sono un valore minimo.",
         "noClasses": "Questo progetto non ha ancora classi di risorse.",
         "classesLoadFailed": "Non è stato possibile caricare le classi di risorse; il rapporto non può essere mostrato.",
-        "reload": "Ricarica"
+        "reload": "Ricarica",
+        "byClass": "Classe di risorsa",
+        "byProperty": "Proprietà",
+        "groupingAria": "Raggruppa per",
+        "property": "Proprietà",
+        "values": "Valori",
+        "stepFetchingProperties": "Caricamento delle proprietà…",
+        "propertiesLoadFailed": "Non è stato possibile caricare le proprietà; il rapporto non può essere mostrato.",
+        "noProperties": "Questo progetto non ha ancora proprietà di valore."
       }
     },
     "system": {

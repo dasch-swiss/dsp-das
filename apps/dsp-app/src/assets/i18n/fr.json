@@ -234,7 +234,15 @@
         "totalsIncomplete": "Certaines classes n'ont pas pu être calculées ; les totaux ci-dessous sont donc un minimum.",
         "noClasses": "Ce projet n'a pas encore de classes de ressources.",
         "classesLoadFailed": "Les classes de ressources n'ont pas pu être chargées ; le rapport ne peut pas être affiché.",
-        "reload": "Recharger"
+        "reload": "Recharger",
+        "byClass": "Classe de ressource",
+        "byProperty": "Propriété",
+        "groupingAria": "Grouper par",
+        "property": "Propriété",
+        "values": "Valeurs",
+        "stepFetchingProperties": "Chargement des propriétés…",
+        "propertiesLoadFailed": "Les propriétés n'ont pas pu être chargées ; le rapport ne peut pas être affiché.",
+        "noProperties": "Ce projet n'a pas encore de propriétés de valeur."
       }
     },
     "system": {

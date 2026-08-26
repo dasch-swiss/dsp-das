@@ -182,10 +182,11 @@ export class ViewRestrictionsPageService {
         if (!project) {
           return EMPTY;
         }
+        // The API dropped `groupBy` from /items when property mode was deleted, so the signature is
+        // (projectIri, resourceClass, itemType?, page?, pageSize?) — one `undefined` fewer than before.
         return this._adminApiService.getAdminProjectsIriProjectiriViewRestrictionsItems(
           project.id,
           resourceClass,
-          undefined,
           undefined,
           page,
           pageSize
