@@ -26,20 +26,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - Request explicit, unambiguous permission before proceeding  
 - If the user does not explicitly grant permission, the assistant must refuse to perform the operation and propose safe alternatives when possible.
 
-### 4. Planning & Execution
+### 3. Planning & Execution
 
 - For multi-step tasks, propose a **step-by-step plan** and request approval before starting.  
 - After approval of the plan, ask before executing **each step**, unless the user explicitly authorizes executing all steps without further prompts.  
 - If a task includes multiple scopes (e.g., refactor + feature + tests), confirm whether to treat them separately.
 
-### 5. Proposing Solutions
+### 4. Proposing Solutions
 
 - Always propose the **best-practice solution first**, followed by clearly labeled alternatives (e.g., “quick fix”, “minimal change”).  
 - When proposing changes, provide **diffs/patch-style output** by default; provide full files only if requested.  
 - If repository conventions conflict with best practices, ask which to prioritize.  
 - If user instructions conflict with conventions or principles, seek clarification.
 
-### 7. Testing Guidelines
+### 5. Testing Guidelines
 
 - Add tests only within the **scope of the task**.  
 - Avoid over-testing or redundant tests; check existing coverage first.  
