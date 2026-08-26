@@ -130,6 +130,7 @@ export class ViewRestrictionsComponent {
   constructor(
     protected titleService: Title,
     public vr: ViewRestrictionsPageService,
+    private readonly vrByProperty: ViewRestrictionsByPropertyPageService,
     private readonly _projectPageService: ProjectPageService,
     private readonly _resourceService: ResourceService
   ) {
@@ -156,9 +157,17 @@ export class ViewRestrictionsComponent {
     return valueUuid ? `${base}?highlightValue=${encodeURIComponent(valueUuid)}` : base;
   }
 
+  /**
+   * The filter chips are shared by both groupings, so both services are updated.
+   *
+   * Keeping them in step matters because each caches per `(itemType, id)`: if only the visible one were
+   * updated, switching grouping would show the other table still filtered by whatever it last saw, with
+   * no indication that the chips and the numbers disagree.
+   */
   onItemType(value: ValueItemType): void {
     this.expanded.set({});
     this.vr.setItemType(value);
+    this.vrByProperty.setItemType(value);
   }
 
   /** Re-run step 2 for one class after a failure, leaving every other row's data in place. */

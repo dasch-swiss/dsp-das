@@ -242,7 +242,8 @@
         "values": "Werte",
         "stepFetchingProperties": "Eigenschaften werden geladen…",
         "propertiesLoadFailed": "Die Eigenschaften konnten nicht geladen werden; der Bericht kann nicht angezeigt werden.",
-        "noProperties": "Dieses Projekt hat noch keine Werteigenschaften."
+        "noProperties": "Dieses Projekt hat noch keine Werteigenschaften.",
+        "groupBy": "Gruppieren nach"
       }
     },
     "system": {

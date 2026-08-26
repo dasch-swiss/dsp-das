@@ -242,7 +242,8 @@
         "values": "Values",
         "stepFetchingProperties": "Fetching properties…",
         "propertiesLoadFailed": "The properties could not be loaded, so the report cannot be shown.",
-        "noProperties": "This project has no value properties yet."
+        "noProperties": "This project has no value properties yet.",
+        "groupBy": "Group by"
       }
     },
     "system": {

@@ -242,7 +242,8 @@
         "values": "Valeurs",
         "stepFetchingProperties": "Chargement des propriétés…",
         "propertiesLoadFailed": "Les propriétés n'ont pas pu être chargées ; le rapport ne peut pas être affiché.",
-        "noProperties": "Ce projet n'a pas encore de propriétés de valeur."
+        "noProperties": "Ce projet n'a pas encore de propriétés de valeur.",
+        "groupBy": "Grouper par"
       }
     },
     "system": {

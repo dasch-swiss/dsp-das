@@ -242,7 +242,8 @@
         "values": "Valori",
         "stepFetchingProperties": "Caricamento delle proprietà…",
         "propertiesLoadFailed": "Non è stato possibile caricare le proprietà; il rapporto non può essere mostrato.",
-        "noProperties": "Questo progetto non ha ancora proprietà di valore."
+        "noProperties": "Questo progetto non ha ancora proprietà di valore.",
+        "groupBy": "Raggruppa per"
       }
     },
     "system": {

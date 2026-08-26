@@ -7,8 +7,9 @@
   label is widest in the active language ("Gruppieren nach" is far wider than "Group by") instead of
   being tuned for English and misaligning everywhere else.
 -->
-<!-- Grouping: resource class <-> property. Two independent reports, one screen. -->
-<div class="grouping">
+<div class="controls">
+  <!-- Grouping: resource class <-> property. Two independent reports sharing one screen. -->
+  <span class="control-label">{{ 'pages.project.viewRestrictions.groupBy' | translate }}</span>
   <mat-button-toggle-group
     [value]="grouping()"
     (change)="onGrouping($event.value)"
@@ -16,14 +17,12 @@
     <mat-button-toggle value="class">{{ 'pages.project.viewRestrictions.byClass' | translate }}</mat-button-toggle>
     <mat-button-toggle value="property">{{ 'pages.project.viewRestrictions.byProperty' | translate }}</mat-button-toggle>
   </mat-button-toggle-group>
-</div>
 
-@if (grouping() === 'property') {
-  <app-view-restrictions-by-property-table />
-} @else {
-
-<div class="controls">
-  <!-- Item-type filter chips. Applies to the value counts only: resource counts are never filtered. -->
+  <!--
+    Item-type filter chips. Shared by both groupings: the four value types mean the same thing either
+    way, and `onItemType` keeps the two page services in step so toggling grouping does not silently
+    reset the filter.
+  -->
   <span class="control-label">
     <mat-icon>filter_list</mat-icon>
     {{ 'pages.project.viewRestrictions.filters' | translate }}
@@ -39,6 +38,10 @@
     }
   </mat-chip-listbox>
 </div>
+
+@if (grouping() === 'property') {
+  <app-view-restrictions-by-property-table />
+} @else {
 
 @if (classesState$ | async; as state) {
   @if (state.loading) {
