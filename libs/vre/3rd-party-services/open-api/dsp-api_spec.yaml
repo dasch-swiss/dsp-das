@@ -1,14 +1,14 @@
 openapi: 3.1.0
 info:
   title: DSP-API
-  version: v37.5.2-5-ge8dcdc8
+  version: v37.8.0-6-g0f4b1e0-dirty-feat-dev-6778-view-restrictions-stepped-fetch
   summary: DSP-API is part of the DaSCH Service Platform, a repository for the long-term
     preservation and reuse of data in the humanities.
   contact:
     name: DaSCH
     url: https://www.dasch.swiss/
 servers:
-- url: https://api.dev.dasch.swiss:443
+- url: http://0.0.0.0:3333
   description: The dsp-api server
 paths:
   /admin/files/{projectShortcode}/{filename}:
@@ -5309,6 +5309,205 @@ paths:
       security:
       - httpAuth: []
       - httpAuth1: []
+  /admin/sparql/query:
+    post:
+      tags:
+      - Admin API
+      description: 'Run a read-only SPARQL 1.1 query against the triplestore and receive
+        the store''s response unchanged. Requires SystemAdmin permissions and a bearer
+        token; HTTP basic and session cookies are not accepted. Only registered when
+        the deployment sets allow-sparql-passthrough. The query is forwarded without
+        being parsed, validated or rewritten, and the store''s status, Content-Type
+        and body are relayed verbatim - so a malformed query yields the store''s own
+        error response, not this API''s error envelope. Send the query as an application/sparql-query
+        body or as the query field of an application/x-www-form-urlencoded body. Guardrails
+        apply: a store-side execution timeout, a request-body size cap, a response
+        size ceiling, and a backstop on concurrent calls.'
+      operationId: postAdminSparqlQuery
+      parameters:
+      - name: Accept
+        in: header
+        description: Forwarded to the store unchanged. Repeated header lines are combined
+          into one comma-separated value, as RFC 9110 permits. If absent, the store's
+          default serialization is returned.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      requestBody:
+        content:
+          application/sparql-query:
+            schema:
+              type: string
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Content-Type:
+              required: false
+              schema:
+                type: string
+            X-Content-Type-Options:
+              required: true
+              schema:
+                type: string
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '413':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SparqlRequestTooLargeException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/SparqlResponseTooLargeException'
+                - $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SparqlUpstreamRejectedException'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/SparqlStoreUnavailableException'
+                - $ref: '#/components/schemas/SparqlPassthroughOverloadedException'
+        '504':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SparqlPassthroughTimedOutException'
+      security:
+      - {}
+      - httpAuth: []
+  /admin/store/ResetTriplestoreContent:
+    get:
+      tags:
+      - Admin API
+      description: Resets the content of the triplestore, only available if configuration
+        `allowReloadOverHttp` is set to `true`.
+      operationId: getAdminStoreResettriplestorecontent
+      parameters:
+      - name: prependDefaults
+        in: query
+        description: Prepend defaults to the data objects.
+        required: false
+        schema:
+          default: true
+          type: boolean
+      requestBody:
+        description: RDF data objects to load into the triplestore, uses defaults
+          if not present.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/RdfDataObject'
+        required: false
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /admin/users/iri/{userIri}/project-memberships:
     get:
       tags:
@@ -5323,7 +5522,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       responses:
         '200':
           description: ''
@@ -5387,7 +5586,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       responses:
         '200':
           description: ''
@@ -5451,7 +5650,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       responses:
         '200':
           description: ''
@@ -5640,7 +5839,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       responses:
         '200':
           description: ''
@@ -5706,7 +5905,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       responses:
         '200':
           description: ''
@@ -5910,7 +6109,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5983,7 +6182,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6057,7 +6256,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6130,7 +6329,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6204,7 +6403,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6277,7 +6476,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6351,7 +6550,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       requestBody:
         content:
           application/json:
@@ -6424,7 +6623,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       requestBody:
         content:
           application/json:
@@ -6497,7 +6696,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       requestBody:
         content:
           application/json:
@@ -6570,7 +6769,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/xwQA3vlsTZa0AtehXM5I3A
+        example: http://rdfh.ch/users/CzODe-_DT2yJD54dacRZpA
       requestBody:
         content:
           application/json:
@@ -6584,6 +6783,204 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - httpAuth: []
+      - httpAuth1: []
+  /admin/projects/iri/{projectIri}/view-restrictions/classes:
+    get:
+      tags:
+      - Admin API
+      description: 'Step 1 of the view-restrictions report: every resource class in
+        the project with its label, ontology, total resource count, and per-audience
+        resource-level restriction counts. Answered by a single triplestore query,
+        so the whole table can be rendered before any value counts arrive. Each audience
+        reports `hidden` (permission code 0 — nothing is served) and `restrictedView`
+        (code 1 — a degraded version is served) separately; the two are disjoint.
+        `totalResources` is the class''s whole population — restricted or not — and
+        is the denominator for the counts here, which are in the same unit. It is
+        derived from the same query rather than from a separate count. **Every** class
+        is reported, including classes with nothing restricted (all-zero counts, non-zero
+        `totalResources`) and classes holding no resources at all (zero population).
+        Takes no item-type filter: resource-level counts are never filtered. The user
+        must be project admin or system admin.'
+      operationId: getAdminProjectsIriProjectiriView-restrictionsClasses
+      parameters:
+      - name: projectIri
+        in: path
+        description: The IRI of a project. Must be URL-encoded.
+        required: true
+        schema:
+          type: string
+        example: http://rdfh.ch/projects/0001
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewRestrictionsClasses'
+              example:
+                projectIri: http://rdfh.ch/projects/0001
+                classes:
+                - id: http://www.knora.org/ontology/0001/anything#Thing
+                  label: Thing
+                  ontology: anything
+                  totalResources: 120
+                  counts:
+                    anonymous:
+                      hidden: 7
+                      restrictedView: 3
+                    authenticated:
+                      hidden: 2
+                      restrictedView: 1
+                    projectMember:
+                      hidden: 0
+                      restrictedView: 0
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - httpAuth: []
+      - httpAuth1: []
+  /admin/projects/iri/{projectIri}/view-restrictions/values:
+    get:
+      tags:
+      - Admin API
+      description: 'Step 2 of the view-restrictions report: the per-audience value-level
+        restriction counts for ONE resource class, answered by a single triplestore
+        query. Clients call this once per class from the step-1 list, which bounds
+        each request and lets a failure affect only that class''s row. Counts restricted
+        values inside the class''s resources — file values, ordinary values, comments
+        — which is a different unit from the resource counts in step 1 and must never
+        be summed with them. `itemType` narrows to one kind of value; `All` means
+        all value types (it does not include whole resources, which step 1 already
+        reports). The user must be project admin or system admin.'
+      operationId: getAdminProjectsIriProjectiriView-restrictionsValues
+      parameters:
+      - name: projectIri
+        in: path
+        description: The IRI of a project. Must be URL-encoded.
+        required: true
+        schema:
+          type: string
+        example: http://rdfh.ch/projects/0001
+      - name: resourceClass
+        in: query
+        description: The IRI of the resource class whose value-level restrictions
+          to count.
+        required: true
+        schema:
+          type: string
+      - name: itemType
+        in: query
+        description: Restrict the value counts to a single value type, or `All` for
+          every value type.
+        required: false
+        schema:
+          $ref: '#/components/schemas/ValueItemType'
+          default: All
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewRestrictionsValues'
+              example:
+                projectIri: http://rdfh.ch/projects/0001
+                resourceClass: http://www.knora.org/ontology/0001/anything#Thing
+                itemType: All
+                counts:
+                  anonymous:
+                    hidden: 12
+                    restrictedView: 4
+                  authenticated:
+                    hidden: 5
+                    restrictedView: 2
+                  projectMember:
+                    hidden: 0
+                    restrictedView: 0
         '400':
           description: ''
           content:
@@ -7049,7 +7446,7 @@ paths:
       - API v2
       operationId: deleteV2Authentication
       parameters:
-      - name: KnoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999
+      - name: KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999
         in: cookie
         required: false
         schema:
@@ -7126,7 +7523,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/Lz1o0HeFSgCy4BQFI8Cmhw
+        example: http://rdfh.ch/lists/0001/wkAEDv1nQ3GCr8d6cEivuA
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -7254,7 +7651,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/Lz1o0HeFSgCy4BQFI8Cmhw
+        example: http://rdfh.ch/lists/0001/wkAEDv1nQ3GCr8d6cEivuA
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -7456,7 +7853,7 @@ paths:
       - API v2
       description: Get a value of a resource. Publicly accessible. Requires appropriate
         object access permissions on the resource. Find detailed documentation on
-        <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
+        <a href="https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: getV2ValuesResourceiriValueuuid
       parameters:
       - name: resourceIri
@@ -7574,7 +7971,7 @@ paths:
       tags:
       - API v2
       description: Update a value of a resource. Requires appropriate object access
-        permissions on the resource. Find detailed documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
+        permissions on the resource. Find detailed documentation on <a href="https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: putV2Values
       requestBody:
         content:
@@ -7653,7 +8050,7 @@ paths:
       tags:
       - API v2
       description: Create a new value for a resource. Requires appropriate object
-        access permissions on the resource. Find detailed documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
+        access permissions on the resource. Find detailed documentation on <a href="https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: postV2Values
       requestBody:
         content:
@@ -7732,7 +8129,7 @@ paths:
       tags:
       - API v2
       description: Reorder values of a property on a resource. Requires modify permission
-        on the resource. Find detailed documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
+        on the resource. Find detailed documentation on <a href="https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: putV2ValuesOrder
       requestBody:
         content:
@@ -7804,7 +8201,7 @@ paths:
       tags:
       - API v2
       description: Mark a value as deleted. Requires appropriate object access permissions
-        on the resource. Find detailed documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
+        on the resource. Find detailed documentation on <a href="https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: postV2ValuesDelete
       requestBody:
         content:
@@ -7883,7 +8280,7 @@ paths:
       tags:
       - API v2
       description: Erase a Value and all of its old versions from the database completely.
-        Requires SystemAdmin permissions. Find detailed documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
+        Requires SystemAdmin permissions. Find detailed documentation on <a href="https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: postV2ValuesErase
       requestBody:
         content:
@@ -7963,7 +8360,7 @@ paths:
       - API v2
       description: Erase all old versions of a Value from the database completely
         and keep only the latest version. Requires SystemAdmin permissions. Find detailed
-        documentation on <a href="https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
+        documentation on <a href="https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/editing-values/">docs.dasch.swiss</a>.
       operationId: postV2ValuesErasehistory
       requestBody:
         content:
@@ -10582,7 +10979,7 @@ paths:
         schema:
           type: string
       requestBody:
-        description: The Gravsearch query. See https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/query-language/
+        description: The Gravsearch query. See https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/query-language/
         content:
           text/plain:
             schema:
@@ -10667,7 +11064,7 @@ paths:
       parameters:
       - name: p1
         in: path
-        description: The Gravsearch query. See https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/query-language/
+        description: The Gravsearch query. See https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/query-language/
         required: true
         schema:
           type: string
@@ -10833,7 +11230,7 @@ paths:
         schema:
           type: string
       requestBody:
-        description: The Gravsearch query. See https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/query-language/
+        description: The Gravsearch query. See https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/query-language/
         content:
           text/plain:
             schema:
@@ -10918,7 +11315,7 @@ paths:
       parameters:
       - name: p1
         in: path
-        description: The Gravsearch query. See https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/query-language/
+        description: The Gravsearch query. See https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/query-language/
         required: true
         schema:
           type: string
@@ -13829,7 +14226,7 @@ paths:
       tags:
       - API v2
       description: Add cardinalities to a class. Requires ProjectAdmin permissions
-        for the ontology's project. For more info check out the <a href="https://docs.dasch.swiss/knora-api-v2/ontologies.html#add-cardinalities-to-a-class">documentation</a>.
+        for the ontology's project. For more info check out the <a href="https://docs.dasch.swiss/DSP-API/03-endpoints/api-v2/ontology-information/#adding-cardinalities-to-a-class">documentation</a>.
       operationId: postV2OntologiesCardinalities
       parameters:
       - name: x-knora-accept-schema
@@ -16597,12 +16994,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/VersionResponse'
               example:
-                webapi: v37.5.2-5-ge8dcdc8
-                buildCommit: e8dcdc8d1
+                webapi: v37.8.0-6-g0f4b1e0-dirty-feat-dev-6778-view-restrictions-stepped-fetch
+                buildCommit: 0f4b1e0d9
                 buildTime: dev
                 fuseki: 6.1.0
                 scala: 3.8.4
-                sipi: v6.3.1
+                sipi: v6.4.1
                 name: version
         '400':
           description: ''
@@ -16838,6 +17235,20 @@ components:
           $ref: '#/components/schemas/UnitCounts'
         projectMember:
           $ref: '#/components/schemas/UnitCounts'
+    AudienceRestrictionCounts:
+      title: AudienceRestrictionCounts
+      type: object
+      required:
+      - anonymous
+      - authenticated
+      - projectMember
+      properties:
+        anonymous:
+          $ref: '#/components/schemas/RestrictionCounts'
+        authenticated:
+          $ref: '#/components/schemas/RestrictionCounts'
+        projectMember:
+          $ref: '#/components/schemas/RestrictionCounts'
     BadCredentialsException:
       title: BadCredentialsException
       type: object
@@ -17893,6 +18304,14 @@ components:
       type: object
       additionalProperties:
         type: string
+    MessageResponse:
+      title: MessageResponse
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
     NodeADM:
       title: NodeADM
       type: object
@@ -18398,6 +18817,17 @@ components:
         lastModificationDate:
           type: string
           format: date-time
+    RdfDataObject:
+      title: RdfDataObject
+      type: object
+      required:
+      - path
+      - name
+      properties:
+        path:
+          type: string
+        name:
+          type: string
     ReorderValuesRequest:
       title: ReorderValuesRequest
       type: object
@@ -18528,6 +18958,26 @@ components:
           minItems: 1
           items:
             type: string
+    RestrictedClass:
+      title: RestrictedClass
+      type: object
+      required:
+      - id
+      - label
+      - totalResources
+      - counts
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        ontology:
+          type: string
+        totalResources:
+          type: integer
+          format: int32
+        counts:
+          $ref: '#/components/schemas/AudienceRestrictionCounts'
     RestrictedItem:
       title: RestrictedItem
       type: object
@@ -18660,6 +19110,54 @@ components:
       - value
       properties:
         value:
+          type: string
+    SparqlPassthroughOverloadedException:
+      title: SparqlPassthroughOverloadedException
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+    SparqlPassthroughTimedOutException:
+      title: SparqlPassthroughTimedOutException
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+    SparqlRequestTooLargeException:
+      title: SparqlRequestTooLargeException
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+    SparqlResponseTooLargeException:
+      title: SparqlResponseTooLargeException
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+    SparqlStoreUnavailableException:
+      title: SparqlStoreUnavailableException
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+    SparqlUpstreamRejectedException:
+      title: SparqlUpstreamRejectedException
+      type: object
+      required:
+      - message
+      properties:
+        message:
           type: string
     Status:
       title: Status
@@ -18899,6 +19397,14 @@ components:
       properties:
         msg:
           type: string
+    ValueItemType:
+      title: ValueItemType
+      type: string
+      enum:
+      - All
+      - Comment
+      - File
+      - Value
     VersionResponse:
       title: VersionResponse
       type: object
@@ -18925,6 +19431,18 @@ components:
           type: string
         name:
           type: string
+    ViewRestrictionsClasses:
+      title: ViewRestrictionsClasses
+      type: object
+      required:
+      - projectIri
+      properties:
+        projectIri:
+          type: string
+        classes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestrictedClass'
     ViewRestrictionsSummary:
       title: ViewRestrictionsSummary
       type: object
@@ -18946,6 +19464,23 @@ components:
             $ref: '#/components/schemas/RestrictionGroup'
         totals:
           $ref: '#/components/schemas/AudienceCounts'
+    ViewRestrictionsValues:
+      title: ViewRestrictionsValues
+      type: object
+      required:
+      - projectIri
+      - resourceClass
+      - itemType
+      - counts
+      properties:
+        projectIri:
+          type: string
+        resourceClass:
+          type: string
+        itemType:
+          $ref: '#/components/schemas/ValueItemType'
+        counts:
+          $ref: '#/components/schemas/AudienceRestrictionCounts'
     Visibility:
       title: Visibility
       type: string
