@@ -79,6 +79,9 @@ export class VideoComponent implements OnChanges, OnDestroy {
   myCurrentTime = 0;
   duration = 0;
   watchForPause: number | null = null;
+  /** HAVE_METADATA: duration, slider range and seeking are available, so the loading state can end. */
+  isMetadataLoaded = false;
+  /** HAVE_FUTURE_DATA: pressing play actually starts playback, so the transport controls may show. */
   isPlayerReady = false;
   fileInfo?: MovingImageSidecar;
 
@@ -103,6 +106,7 @@ export class VideoComponent implements OnChanges, OnDestroy {
   ngOnChanges(): void {
     this._ngUnsubscribe.next();
 
+    this.isMetadataLoaded = false;
     this.isPlayerReady = false;
     this._watchForMediaEvents();
     if (this.overrideSegments) {
@@ -128,12 +132,13 @@ export class VideoComponent implements OnChanges, OnDestroy {
   }
 
   /**
-   * Driven by `loadedmetadata`, not `canplay`: everything below needs only the duration and the
-   * ability to seek, both available at HAVE_METADATA. `canplay` additionally waits for a playable
-   * buffer, which on a large file delays the whole player chrome. See DEV-7026.
+   * `loadedmetadata` (HAVE_METADATA). Everything here needs only the duration and the ability to
+   * seek, both guaranteed at this readyState — so the slider, the seek target and the end of the
+   * loading state need not wait for a playable buffer, which on a large file arrives much later.
+   * Playability is a separate concern, tracked by `onVideoPlayerReady`. See DEV-7026.
    */
-  onVideoPlayerReady() {
-    if (this.isPlayerReady) return;
+  onMetadataLoaded() {
+    if (this.isMetadataLoaded) return;
 
     this.videoPlayer.onInit(this.videoElement.nativeElement);
 
@@ -142,9 +147,9 @@ export class VideoComponent implements OnChanges, OnDestroy {
     }
 
     this.duration = this.videoPlayer.duration();
-    this.isPlayerReady = true;
-    this.loaded.emit(true);
-    this.mediaControl.mediaDurationSecs = this.videoPlayer.duration();
+    this.mediaControl.mediaDurationSecs = this.duration;
+    this.isMetadataLoaded = true;
+
     this.videoPlayer.onTimeUpdate$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(seconds => {
       this.myCurrentTime = seconds;
       this._cdr.detectChanges();
@@ -154,6 +159,18 @@ export class VideoComponent implements OnChanges, OnDestroy {
         this.watchForPause = null;
       }
     });
+  }
+
+  /**
+   * `canplay` (HAVE_FUTURE_DATA). Gates the transport controls only: a play button must not appear
+   * before pressing it starts playback. Always preceded by `loadedmetadata`, so the player service
+   * is already bound to the element by the time this runs.
+   */
+  onVideoPlayerReady() {
+    if (this.isPlayerReady) return;
+
+    this.isPlayerReady = true;
+    this.loaded.emit(true);
   }
 
   ngOnDestroy() {

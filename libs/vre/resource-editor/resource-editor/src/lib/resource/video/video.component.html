@@ -4,7 +4,7 @@
     <app-representation-error-message />
     }
 
-    <div class="video-stage" [class.is-loading]="!isPlayerReady && !videoError">
+    <div class="video-stage" [class.is-loading]="!isMetadataLoaded && !videoError">
       @if (video) {
       <video
         style="width: 100%"
@@ -14,13 +14,14 @@
         type="video/mp4"
         preload="auto"
         [muted]="false"
-        (loadedmetadata)="onVideoPlayerReady()"
+        (loadedmetadata)="onMetadataLoaded()"
+        (canplay)="onVideoPlayerReady()"
         (click)="videoPlayer.togglePlay()"
         (error)="handleVideoError($event)"></video>
       }
       <!-- Overlaid rather than swapped in: the <video> element must stay mounted while it
            initialises, otherwise the browser stops loading it. See DEV-7026. -->
-      @if (!isPlayerReady && !videoError) {
+      @if (!isMetadataLoaded && !videoError) {
       <div class="video-loading" data-cy="video-loading">
         <app-progress-indicator size="medium" [compact]="true" [onDark]="true" />
       </div>
@@ -29,7 +30,7 @@
       }
     </div>
 
-    @if (isPlayerReady) {
+    @if (isMetadataLoaded) {
     <app-media-slider
       [max]="videoPlayer.duration()"
       [currentTime]="myCurrentTime"

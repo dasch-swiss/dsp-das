@@ -215,7 +215,7 @@ describe('VideoComponent — loading and ready state (real template)', () => {
   });
 
   it('shows a loading indicator while the video is still initialising', () => {
-    expect(component.isPlayerReady).toBe(false);
+    expect(component.isMetadataLoaded).toBe(false);
     expect(loader()).not.toBeNull();
   });
 
@@ -223,8 +223,41 @@ describe('VideoComponent — loading and ready state (real template)', () => {
     videoEl().dispatchEvent(new Event('loadedmetadata'));
     fixture.detectChanges();
 
-    expect(component.isPlayerReady).toBe(true);
+    expect(component.isMetadataLoaded).toBe(true);
     expect(loader()).toBeNull();
+  });
+
+  it('offers the slider as soon as metadata is known, without waiting for a playable buffer', () => {
+    videoEl().dispatchEvent(new Event('loadedmetadata'));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-media-slider')).not.toBeNull();
+  });
+
+  it('does not report the player as playable until the video can actually play', () => {
+    videoEl().dispatchEvent(new Event('loadedmetadata'));
+    fixture.detectChanges();
+
+    // Metadata alone must not enable the transport controls: pressing play would not start playback.
+    expect(component.isPlayerReady).toBe(false);
+
+    videoEl().dispatchEvent(new Event('canplay'));
+    fixture.detectChanges();
+
+    expect(component.isPlayerReady).toBe(true);
+  });
+
+  it('emits loaded once the video can play, not merely when metadata arrives', () => {
+    const emitted: boolean[] = [];
+    component.loaded.subscribe(v => emitted.push(v));
+
+    videoEl().dispatchEvent(new Event('loadedmetadata'));
+    expect(emitted).toEqual([]);
+
+    videoEl().dispatchEvent(new Event('canplay'));
+    videoEl().dispatchEvent(new Event('canplay'));
+
+    expect(emitted).toEqual([true]);
   });
 
   it('shows the error state instead of a perpetual loading indicator when the video fails', () => {
