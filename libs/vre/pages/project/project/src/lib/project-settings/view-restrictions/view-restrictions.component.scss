@@ -69,6 +69,41 @@
   }
 }
 
+// Step status line: "Fetching resource classes…", then "Gathering k / N".
+//
+// Sits above the matrix rather than replacing it, because by the time the second message shows, the
+// table is already fully rendered from step 1 — only the value cells are still filling in. Replacing the
+// table with a spinner here would hide data the user already has.
+.step-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+// The value totals are a lower bound because at least one class failed. Amber, not red: the report is
+// usable, it is just incomplete — and the resource totals beside it are exact.
+.totals-incomplete {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba($yellow_800, 0.08);
+  border: 1px solid rgba($yellow_800, 0.4);
+  border-radius: $border-radius;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: $yellow_800;
+  }
+}
+
 .load-error {
   display: flex;
   align-items: center;
@@ -237,6 +272,45 @@
       display: flex;
       flex-direction: column;
       min-width: 0;
+    }
+
+    // Per-class failure, rendered inside .col-group.
+    //
+    // Deliberately not a grid child: the matrix rows are CSS grid with a fixed column list, so an extra
+    // direct child of .matrix-row would land in the next audience column and shift the whole row. Kept
+    // inline after the label, and allowed to shrink so a long class name never pushes it out of the cell.
+    .row-error {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+      flex: 0 1 auto;
+      min-width: 0;
+      font-size: 12px;
+      color: $red;
+      white-space: nowrap;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    // The row itself is a button that expands the drill-down, so this is a nested button. The component
+    // stops propagation on click; this just makes it read as its own control.
+    .row-retry {
+      background: none;
+      border: none;
+      padding: 0 2px;
+      font: inherit;
+      color: $primary;
+      text-decoration: underline;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: none;
+      }
     }
 
     .group-name {

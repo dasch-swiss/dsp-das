@@ -60,3 +60,16 @@
 .count-none {
   color: rgba($black, 0.4);
 }
+
+// Step 2 still in flight for this row. The resource figure beside it may already be final — the two
+// units now come from two different requests, so a cell can legitimately be half-answered.
+.count-pending {
+  color: rgba($black, 0.3);
+}
+
+// Step 2 failed for this row. Deliberately "?" rather than "0": a zero would assert there is nothing
+// restricted here, which is exactly what is not known. The row also carries an explicit error and retry.
+.count-failed {
+  color: $red;
+  font-weight: 500;
+}
