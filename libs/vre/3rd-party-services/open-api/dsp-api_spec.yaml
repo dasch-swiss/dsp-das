@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DSP-API
-  version: v37.8.0-5-g06cbc60
+  version: v37.8.0-6-ge1c71e1
   summary: DSP-API is part of the DaSCH Service Platform, a repository for the long-term
     preservation and reuse of data in the humanities.
   contact:
@@ -2977,635 +2977,6 @@ paths:
       security:
       - httpAuth: []
       - httpAuth1: []
-  /admin/projects/iri/{projectIri}/view-restrictions/classes:
-    get:
-      tags:
-      - Admin API
-      description: 'Step 1 of the view-restrictions report: every resource class in
-        the project with its label, ontology, total resource count, and per-audience
-        resource-level restriction counts. Answered by a single triplestore query,
-        so the whole table can be rendered before any value counts arrive. Each audience
-        reports `hidden` (permission code 0 — nothing is served) and `restrictedView`
-        (code 1 — a degraded version is served) separately; the two are disjoint.
-        `totalResources` is the class''s whole population — restricted or not — and
-        is the denominator for the counts here, which are in the same unit. It is
-        derived from the same query rather than from a separate count. **Every** class
-        is reported, including classes with nothing restricted (all-zero counts, non-zero
-        `totalResources`) and classes holding no resources at all (zero population).
-        Takes no item-type filter: resource-level counts are never filtered. The user
-        must be project admin or system admin.'
-      operationId: getAdminProjectsIriProjectiriView-restrictionsClasses
-      parameters:
-      - name: projectIri
-        in: path
-        description: The IRI of a project. Must be URL-encoded.
-        required: true
-        schema:
-          type: string
-        example: http://rdfh.ch/projects/0001
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ViewRestrictionsClasses'
-              example:
-                projectIri: http://rdfh.ch/projects/0001
-                classes:
-                - id: http://www.knora.org/ontology/0001/anything#Thing
-                  label: Thing
-                  ontology: anything
-                  totalResources: 120
-                  counts:
-                    anonymous:
-                      hidden: 7
-                      restrictedView: 3
-                    authenticated:
-                      hidden: 2
-                      restrictedView: 1
-                    projectMember:
-                      hidden: 0
-                      restrictedView: 0
-        '400':
-          description: ''
-          content:
-            application/json:
-              schema:
-                anyOf:
-                - $ref: '#/components/schemas/OntologyConstraintException'
-                - $ref: '#/components/schemas/DuplicateValueException'
-                - $ref: '#/components/schemas/ValidationException'
-                - $ref: '#/components/schemas/BadRequestException'
-                - $ref: '#/components/schemas/GravsearchException'
-                - $ref: '#/components/schemas/EditConflictException'
-        '401':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadCredentialsException'
-        '403':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '404':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundException'
-        '409':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConflictException'
-        '500':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      security:
-      - httpAuth: []
-      - httpAuth1: []
-  /admin/projects/iri/{projectIri}/view-restrictions/items:
-    get:
-      tags:
-      - Admin API
-      description: Paginated list of resources affected by a restriction under a given
-        resource class, each with its per-audience visibility and the nested restricted
-        file values / values / comments. Ordered by label then IRI, so paging is stable
-        across requests. The user must be project admin or system admin.
-      operationId: getAdminProjectsIriProjectiriView-restrictionsItems
-      parameters:
-      - name: projectIri
-        in: path
-        description: The IRI of a project. Must be URL-encoded.
-        required: true
-        schema:
-          type: string
-        example: http://rdfh.ch/projects/0001
-      - name: resourceClass
-        in: query
-        description: The IRI of the resource class whose affected resources to page
-          through.
-        required: true
-        schema:
-          type: string
-      - name: itemType
-        in: query
-        description: Restrict the report to a single item type, or `all` for the combined
-          view.
-        required: false
-        schema:
-          $ref: '#/components/schemas/ItemType'
-          default: All
-      - name: page
-        in: query
-        description: The number of the desired page to be returned.
-        required: false
-        schema:
-          default: 1
-          type: integer
-          format: int32
-          minimum: 1
-      - name: page-size
-        in: query
-        description: The number of items per page to be returned.
-        required: false
-        schema:
-          default: 25
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 100
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PagedResponse_RestrictedResource'
-              example:
-                data:
-                - resourceIri: http://rdfh.ch/0001/a-thing
-                  label: A thing
-                  resourceClassIri: http://www.knora.org/ontology/0001/anything#Thing
-                  resourceVisibility:
-                    anonymous: Hidden
-                    authenticated: Visible
-                    projectMember: Visible
-                  items:
-                  - type: File
-                    propertyIri: http://www.knora.org/ontology/knora-base#hasStillImageFileValue
-                    propertyLabel: Still image file
-                    valueIri: http://rdfh.ch/0001/a-thing/values/image
-                    visibility:
-                      anonymous: RestrictedView
-                      authenticated: Visible
-                      projectMember: Visible
-                pagination:
-                  pageSize: 25
-                  totalItems: 1
-                  totalPages: 1
-                  currentPage: 1
-        '400':
-          description: ''
-          content:
-            application/json:
-              schema:
-                anyOf:
-                - $ref: '#/components/schemas/OntologyConstraintException'
-                - $ref: '#/components/schemas/DuplicateValueException'
-                - $ref: '#/components/schemas/ValidationException'
-                - $ref: '#/components/schemas/BadRequestException'
-                - $ref: '#/components/schemas/GravsearchException'
-                - $ref: '#/components/schemas/EditConflictException'
-        '401':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadCredentialsException'
-        '403':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '404':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundException'
-        '409':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConflictException'
-        '500':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      security:
-      - httpAuth: []
-      - httpAuth1: []
-  /admin/projects/iri/{projectIri}/view-restrictions/properties:
-    get:
-      tags:
-      - Admin API
-      description: 'Step 1 of the property-grouped report: every value property of
-        the project''s own ontologies and of `knora-base`, with its IRI, label and
-        ontology name. Read from the ontology cache, so it issues no triplestore query
-        and the table can be rendered immediately. Carries **no counts**: unlike a
-        resource class, which has both a resource population and the values inside
-        it, a property only ever has values, so there is nothing step 1 could count
-        that step 2 does not. Every value property is listed, including ones no resource
-        uses — such a row settles at zero, which is a fact worth showing. Takes no
-        filter. The user must be project admin or system admin.'
-      operationId: getAdminProjectsIriProjectiriView-restrictionsProperties
-      parameters:
-      - name: projectIri
-        in: path
-        description: The IRI of a project. Must be URL-encoded.
-        required: true
-        schema:
-          type: string
-        example: http://rdfh.ch/projects/0001
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ViewRestrictionsProperties'
-              example:
-                projectIri: http://rdfh.ch/projects/0001
-                properties:
-                - id: http://www.knora.org/ontology/0001/anything#hasText
-                  label: Text
-                  ontology: anything
-        '400':
-          description: ''
-          content:
-            application/json:
-              schema:
-                anyOf:
-                - $ref: '#/components/schemas/OntologyConstraintException'
-                - $ref: '#/components/schemas/DuplicateValueException'
-                - $ref: '#/components/schemas/ValidationException'
-                - $ref: '#/components/schemas/BadRequestException'
-                - $ref: '#/components/schemas/GravsearchException'
-                - $ref: '#/components/schemas/EditConflictException'
-        '401':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadCredentialsException'
-        '403':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '404':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundException'
-        '409':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConflictException'
-        '500':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      security:
-      - httpAuth: []
-      - httpAuth1: []
-  /admin/projects/iri/{projectIri}/view-restrictions/property-items:
-    get:
-      tags:
-      - Admin API
-      description: 'Paginated list of the resources carrying a restricted value of
-        the given property, each with its restricted values and their per-audience
-        visibility. Each resource reports its **own** resource class: a property spans
-        classes, which is the whole reason this report exists, so the class belongs
-        to the row rather than to the table. Ordered by label then IRI, so paging
-        is stable across requests. The user must be project admin or system admin.'
-      operationId: getAdminProjectsIriProjectiriView-restrictionsProperty-items
-      parameters:
-      - name: projectIri
-        in: path
-        description: The IRI of a project. Must be URL-encoded.
-        required: true
-        schema:
-          type: string
-        example: http://rdfh.ch/projects/0001
-      - name: property
-        in: query
-        description: The IRI of the value property whose restrictions to report.
-        required: true
-        schema:
-          type: string
-      - name: itemType
-        in: query
-        description: Restrict the counts to a single value type, or `All` for every
-          value type.
-        required: false
-        schema:
-          $ref: '#/components/schemas/ValueItemType'
-          default: All
-      - name: page
-        in: query
-        description: The number of the desired page to be returned.
-        required: false
-        schema:
-          default: 1
-          type: integer
-          format: int32
-          minimum: 1
-      - name: page-size
-        in: query
-        description: The number of items per page to be returned.
-        required: false
-        schema:
-          default: 25
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 100
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PagedResponse_RestrictedPropertyResource'
-              example:
-                data:
-                - resourceIri: http://rdfh.ch/0001/a-thing
-                  label: A thing
-                  resourceClassIri: http://www.knora.org/ontology/0001/anything#Thing
-                  values:
-                  - valueIri: http://rdfh.ch/0001/a-thing/values/text
-                    isFile: false
-                    hasComment: true
-                    visibility:
-                      anonymous: Hidden
-                      authenticated: Visible
-                      projectMember: Visible
-                pagination:
-                  pageSize: 25
-                  totalItems: 1
-                  totalPages: 1
-                  currentPage: 1
-        '400':
-          description: ''
-          content:
-            application/json:
-              schema:
-                anyOf:
-                - $ref: '#/components/schemas/OntologyConstraintException'
-                - $ref: '#/components/schemas/DuplicateValueException'
-                - $ref: '#/components/schemas/ValidationException'
-                - $ref: '#/components/schemas/BadRequestException'
-                - $ref: '#/components/schemas/GravsearchException'
-                - $ref: '#/components/schemas/EditConflictException'
-        '401':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadCredentialsException'
-        '403':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '404':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundException'
-        '409':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConflictException'
-        '500':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      security:
-      - httpAuth: []
-      - httpAuth1: []
-  /admin/projects/iri/{projectIri}/view-restrictions/property-values:
-    get:
-      tags:
-      - Admin API
-      description: 'Step 2 of the property-grouped report: the per-audience restriction
-        counts for ONE value property, across every resource class that uses it, answered
-        by a single triplestore query. Each audience reports `hidden` (permission
-        code 0 — nothing is served) and `restrictedView` (code 1 — a degraded version
-        is served) separately; the two are disjoint. `totalValues` is how many values
-        of this property the project holds, restricted or not. It is a true denominator:
-        the counts beside it are in the same unit, so "94 of 66,484 are hidden" is
-        a sound statement. It is derived from the same query rather than from a separate
-        count. The user must be project admin or system admin.'
-      operationId: getAdminProjectsIriProjectiriView-restrictionsProperty-values
-      parameters:
-      - name: projectIri
-        in: path
-        description: The IRI of a project. Must be URL-encoded.
-        required: true
-        schema:
-          type: string
-        example: http://rdfh.ch/projects/0001
-      - name: property
-        in: query
-        description: The IRI of the value property whose restrictions to report.
-        required: true
-        schema:
-          type: string
-      - name: itemType
-        in: query
-        description: Restrict the counts to a single value type, or `All` for every
-          value type.
-        required: false
-        schema:
-          $ref: '#/components/schemas/ValueItemType'
-          default: All
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ViewRestrictionsPropertyValues'
-              example:
-                projectIri: http://rdfh.ch/projects/0001
-                property: http://www.knora.org/ontology/0001/anything#hasText
-                itemType: All
-                totalValues: 120
-                counts:
-                  anonymous:
-                    hidden: 12
-                    restrictedView: 4
-                  authenticated:
-                    hidden: 5
-                    restrictedView: 2
-                  projectMember:
-                    hidden: 0
-                    restrictedView: 0
-        '400':
-          description: ''
-          content:
-            application/json:
-              schema:
-                anyOf:
-                - $ref: '#/components/schemas/OntologyConstraintException'
-                - $ref: '#/components/schemas/DuplicateValueException'
-                - $ref: '#/components/schemas/ValidationException'
-                - $ref: '#/components/schemas/BadRequestException'
-                - $ref: '#/components/schemas/GravsearchException'
-                - $ref: '#/components/schemas/EditConflictException'
-        '401':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadCredentialsException'
-        '403':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '404':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundException'
-        '409':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConflictException'
-        '500':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      security:
-      - httpAuth: []
-      - httpAuth1: []
-  /admin/projects/iri/{projectIri}/view-restrictions/values:
-    get:
-      tags:
-      - Admin API
-      description: 'Step 2 of the view-restrictions report: the per-audience value-level
-        restriction counts for ONE resource class, answered by a single triplestore
-        query. Clients call this once per class from the step-1 list, which bounds
-        each request and lets a failure affect only that class''s row. Counts restricted
-        values inside the class''s resources — file values, ordinary values, comments
-        — which is a different unit from the resource counts in step 1 and must never
-        be summed with them. `itemType` narrows to one kind of value; `All` means
-        all value types (it does not include whole resources, which step 1 already
-        reports). The user must be project admin or system admin.'
-      operationId: getAdminProjectsIriProjectiriView-restrictionsValues
-      parameters:
-      - name: projectIri
-        in: path
-        description: The IRI of a project. Must be URL-encoded.
-        required: true
-        schema:
-          type: string
-        example: http://rdfh.ch/projects/0001
-      - name: resourceClass
-        in: query
-        description: The IRI of the resource class whose value-level restrictions
-          to count.
-        required: true
-        schema:
-          type: string
-      - name: itemType
-        in: query
-        description: Restrict the value counts to a single value type, or `All` for
-          every value type.
-        required: false
-        schema:
-          $ref: '#/components/schemas/ValueItemType'
-          default: All
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ViewRestrictionsValues'
-              example:
-                projectIri: http://rdfh.ch/projects/0001
-                resourceClass: http://www.knora.org/ontology/0001/anything#Thing
-                itemType: All
-                counts:
-                  anonymous:
-                    hidden: 12
-                    restrictedView: 4
-                  authenticated:
-                    hidden: 5
-                    restrictedView: 2
-                  projectMember:
-                    hidden: 0
-                    restrictedView: 0
-        '400':
-          description: ''
-          content:
-            application/json:
-              schema:
-                anyOf:
-                - $ref: '#/components/schemas/OntologyConstraintException'
-                - $ref: '#/components/schemas/DuplicateValueException'
-                - $ref: '#/components/schemas/ValidationException'
-                - $ref: '#/components/schemas/BadRequestException'
-                - $ref: '#/components/schemas/GravsearchException'
-                - $ref: '#/components/schemas/EditConflictException'
-        '401':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadCredentialsException'
-        '403':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '404':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundException'
-        '409':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConflictException'
-        '500':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      security:
-      - httpAuth: []
-      - httpAuth1: []
   /admin/projects/shortcode/{projectShortcode}/legal-info/licenses:
     get:
       tags:
@@ -6077,7 +5448,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       responses:
         '200':
           description: ''
@@ -6141,7 +5512,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       responses:
         '200':
           description: ''
@@ -6205,7 +5576,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       responses:
         '200':
           description: ''
@@ -6394,7 +5765,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       responses:
         '200':
           description: ''
@@ -6460,7 +5831,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       responses:
         '200':
           description: ''
@@ -6664,7 +6035,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6737,7 +6108,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6811,7 +6182,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6884,7 +6255,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6958,7 +6329,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -7031,7 +6402,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -7105,7 +6476,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       requestBody:
         content:
           application/json:
@@ -7178,7 +6549,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       requestBody:
         content:
           application/json:
@@ -7251,7 +6622,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       requestBody:
         content:
           application/json:
@@ -7324,7 +6695,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/7_7Mv-FMRVOKxRIAGmQW9g
+        example: http://rdfh.ch/users/lwRe8zfGSXSTmboJf01xLg
       requestBody:
         content:
           application/json:
@@ -7338,6 +6709,635 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - httpAuth: []
+      - httpAuth1: []
+  /admin/projects/iri/{projectIri}/view-restrictions/classes:
+    get:
+      tags:
+      - Admin API
+      description: 'Step 1 of the view-restrictions report: every resource class in
+        the project with its label, ontology, total resource count, and per-audience
+        resource-level restriction counts. Answered by a single triplestore query,
+        so the whole table can be rendered before any value counts arrive. Each audience
+        reports `hidden` (permission code 0 — nothing is served) and `restrictedView`
+        (code 1 — a degraded version is served) separately; the two are disjoint.
+        `totalResources` is the class''s whole population — restricted or not — and
+        is the denominator for the counts here, which are in the same unit. It is
+        derived from the same query rather than from a separate count. **Every** class
+        is reported, including classes with nothing restricted (all-zero counts, non-zero
+        `totalResources`) and classes holding no resources at all (zero population).
+        Takes no item-type filter: resource-level counts are never filtered. The user
+        must be project admin or system admin.'
+      operationId: getAdminProjectsIriProjectiriView-restrictionsClasses
+      parameters:
+      - name: projectIri
+        in: path
+        description: The IRI of a project. Must be URL-encoded.
+        required: true
+        schema:
+          type: string
+        example: http://rdfh.ch/projects/0001
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewRestrictionsClasses'
+              example:
+                projectIri: http://rdfh.ch/projects/0001
+                classes:
+                - id: http://www.knora.org/ontology/0001/anything#Thing
+                  label: Thing
+                  ontology: anything
+                  totalResources: 120
+                  counts:
+                    anonymous:
+                      hidden: 7
+                      restrictedView: 3
+                    authenticated:
+                      hidden: 2
+                      restrictedView: 1
+                    projectMember:
+                      hidden: 0
+                      restrictedView: 0
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - httpAuth: []
+      - httpAuth1: []
+  /admin/projects/iri/{projectIri}/view-restrictions/values:
+    get:
+      tags:
+      - Admin API
+      description: 'Step 2 of the view-restrictions report: the per-audience value-level
+        restriction counts for ONE resource class, answered by a single triplestore
+        query. Clients call this once per class from the step-1 list, which bounds
+        each request and lets a failure affect only that class''s row. Counts restricted
+        values inside the class''s resources — file values, ordinary values, comments
+        — which is a different unit from the resource counts in step 1 and must never
+        be summed with them. `itemType` narrows to one kind of value; `All` means
+        all value types (it does not include whole resources, which step 1 already
+        reports). The user must be project admin or system admin.'
+      operationId: getAdminProjectsIriProjectiriView-restrictionsValues
+      parameters:
+      - name: projectIri
+        in: path
+        description: The IRI of a project. Must be URL-encoded.
+        required: true
+        schema:
+          type: string
+        example: http://rdfh.ch/projects/0001
+      - name: resourceClass
+        in: query
+        description: The IRI of the resource class whose value-level restrictions
+          to count.
+        required: true
+        schema:
+          type: string
+      - name: itemType
+        in: query
+        description: Restrict the value counts to a single value type, or `All` for
+          every value type.
+        required: false
+        schema:
+          $ref: '#/components/schemas/ValueItemType'
+          default: All
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewRestrictionsValues'
+              example:
+                projectIri: http://rdfh.ch/projects/0001
+                resourceClass: http://www.knora.org/ontology/0001/anything#Thing
+                itemType: All
+                counts:
+                  anonymous:
+                    hidden: 12
+                    restrictedView: 4
+                  authenticated:
+                    hidden: 5
+                    restrictedView: 2
+                  projectMember:
+                    hidden: 0
+                    restrictedView: 0
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - httpAuth: []
+      - httpAuth1: []
+  /admin/projects/iri/{projectIri}/view-restrictions/items:
+    get:
+      tags:
+      - Admin API
+      description: Paginated list of resources affected by a restriction under a given
+        resource class, each with its per-audience visibility and the nested restricted
+        file values / values / comments. Ordered by label then IRI, so paging is stable
+        across requests. The user must be project admin or system admin.
+      operationId: getAdminProjectsIriProjectiriView-restrictionsItems
+      parameters:
+      - name: projectIri
+        in: path
+        description: The IRI of a project. Must be URL-encoded.
+        required: true
+        schema:
+          type: string
+        example: http://rdfh.ch/projects/0001
+      - name: resourceClass
+        in: query
+        description: The IRI of the resource class whose affected resources to page
+          through.
+        required: true
+        schema:
+          type: string
+      - name: itemType
+        in: query
+        description: Restrict the report to a single item type, or `all` for the combined
+          view.
+        required: false
+        schema:
+          $ref: '#/components/schemas/ItemType'
+          default: All
+      - name: page
+        in: query
+        description: The number of the desired page to be returned.
+        required: false
+        schema:
+          default: 1
+          type: integer
+          format: int32
+          minimum: 1
+      - name: page-size
+        in: query
+        description: The number of items per page to be returned.
+        required: false
+        schema:
+          default: 25
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 100
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResponse_RestrictedResource'
+              example:
+                data:
+                - resourceIri: http://rdfh.ch/0001/a-thing
+                  label: A thing
+                  resourceClassIri: http://www.knora.org/ontology/0001/anything#Thing
+                  resourceVisibility:
+                    anonymous: Hidden
+                    authenticated: Visible
+                    projectMember: Visible
+                  items:
+                  - type: File
+                    propertyIri: http://www.knora.org/ontology/knora-base#hasStillImageFileValue
+                    propertyLabel: Still image file
+                    valueIri: http://rdfh.ch/0001/a-thing/values/image
+                    visibility:
+                      anonymous: RestrictedView
+                      authenticated: Visible
+                      projectMember: Visible
+                pagination:
+                  pageSize: 25
+                  totalItems: 1
+                  totalPages: 1
+                  currentPage: 1
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - httpAuth: []
+      - httpAuth1: []
+  /admin/projects/iri/{projectIri}/view-restrictions/properties:
+    get:
+      tags:
+      - Admin API
+      description: 'Step 1 of the property-grouped report: every value property of
+        the project''s own ontologies and of `knora-base`, with its IRI, label and
+        ontology name. Read from the ontology cache, so it issues no triplestore query
+        and the table can be rendered immediately. Carries **no counts**: unlike a
+        resource class, which has both a resource population and the values inside
+        it, a property only ever has values, so there is nothing step 1 could count
+        that step 2 does not. Every value property is listed, including ones no resource
+        uses — such a row settles at zero, which is a fact worth showing. Takes no
+        filter. The user must be project admin or system admin.'
+      operationId: getAdminProjectsIriProjectiriView-restrictionsProperties
+      parameters:
+      - name: projectIri
+        in: path
+        description: The IRI of a project. Must be URL-encoded.
+        required: true
+        schema:
+          type: string
+        example: http://rdfh.ch/projects/0001
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewRestrictionsProperties'
+              example:
+                projectIri: http://rdfh.ch/projects/0001
+                properties:
+                - id: http://www.knora.org/ontology/0001/anything#hasText
+                  label: Text
+                  ontology: anything
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - httpAuth: []
+      - httpAuth1: []
+  /admin/projects/iri/{projectIri}/view-restrictions/property-values:
+    get:
+      tags:
+      - Admin API
+      description: 'Step 2 of the property-grouped report: the per-audience restriction
+        counts for ONE value property, across every resource class that uses it, answered
+        by a single triplestore query. Each audience reports `hidden` (permission
+        code 0 — nothing is served) and `restrictedView` (code 1 — a degraded version
+        is served) separately; the two are disjoint. `totalValues` is how many values
+        of this property the project holds, restricted or not. It is a true denominator:
+        the counts beside it are in the same unit, so "94 of 66,484 are hidden" is
+        a sound statement. It is derived from the same query rather than from a separate
+        count. The user must be project admin or system admin.'
+      operationId: getAdminProjectsIriProjectiriView-restrictionsProperty-values
+      parameters:
+      - name: projectIri
+        in: path
+        description: The IRI of a project. Must be URL-encoded.
+        required: true
+        schema:
+          type: string
+        example: http://rdfh.ch/projects/0001
+      - name: property
+        in: query
+        description: The IRI of the value property whose restrictions to report.
+        required: true
+        schema:
+          type: string
+      - name: itemType
+        in: query
+        description: Restrict the counts to a single value type, or `All` for every
+          value type.
+        required: false
+        schema:
+          $ref: '#/components/schemas/ValueItemType'
+          default: All
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewRestrictionsPropertyValues'
+              example:
+                projectIri: http://rdfh.ch/projects/0001
+                property: http://www.knora.org/ontology/0001/anything#hasText
+                itemType: All
+                totalValues: 120
+                counts:
+                  anonymous:
+                    hidden: 12
+                    restrictedView: 4
+                  authenticated:
+                    hidden: 5
+                    restrictedView: 2
+                  projectMember:
+                    hidden: 0
+                    restrictedView: 0
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OntologyConstraintException'
+                - $ref: '#/components/schemas/DuplicateValueException'
+                - $ref: '#/components/schemas/ValidationException'
+                - $ref: '#/components/schemas/BadRequestException'
+                - $ref: '#/components/schemas/GravsearchException'
+                - $ref: '#/components/schemas/EditConflictException'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadCredentialsException'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundException'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictException'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - httpAuth: []
+      - httpAuth1: []
+  /admin/projects/iri/{projectIri}/view-restrictions/property-items:
+    get:
+      tags:
+      - Admin API
+      description: 'Paginated list of the resources carrying a restricted value of
+        the given property, each with its restricted values and their per-audience
+        visibility. Each resource reports its **own** resource class: a property spans
+        classes, which is the whole reason this report exists, so the class belongs
+        to the row rather than to the table. Ordered by label then IRI, so paging
+        is stable across requests. The user must be project admin or system admin.'
+      operationId: getAdminProjectsIriProjectiriView-restrictionsProperty-items
+      parameters:
+      - name: projectIri
+        in: path
+        description: The IRI of a project. Must be URL-encoded.
+        required: true
+        schema:
+          type: string
+        example: http://rdfh.ch/projects/0001
+      - name: property
+        in: query
+        description: The IRI of the value property whose restrictions to report.
+        required: true
+        schema:
+          type: string
+      - name: itemType
+        in: query
+        description: Restrict the counts to a single value type, or `All` for every
+          value type.
+        required: false
+        schema:
+          $ref: '#/components/schemas/ValueItemType'
+          default: All
+      - name: page
+        in: query
+        description: The number of the desired page to be returned.
+        required: false
+        schema:
+          default: 1
+          type: integer
+          format: int32
+          minimum: 1
+      - name: page-size
+        in: query
+        description: The number of items per page to be returned.
+        required: false
+        schema:
+          default: 25
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 100
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResponse_RestrictedPropertyResource'
+              example:
+                data:
+                - resourceIri: http://rdfh.ch/0001/a-thing
+                  label: A thing
+                  resourceClassIri: http://www.knora.org/ontology/0001/anything#Thing
+                  values:
+                  - valueIri: http://rdfh.ch/0001/a-thing/values/text
+                    isFile: false
+                    hasComment: true
+                    visibility:
+                      anonymous: Hidden
+                      authenticated: Visible
+                      projectMember: Visible
+                pagination:
+                  pageSize: 25
+                  totalItems: 1
+                  totalPages: 1
+                  currentPage: 1
         '400':
           description: ''
           content:
@@ -7595,7 +7595,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/DK12B37tS-ezYNGUvwcO4g
+        example: http://rdfh.ch/lists/0001/Ig0tdvWRTh--pZNhGD5rUQ
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -7723,7 +7723,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/DK12B37tS-ezYNGUvwcO4g
+        example: http://rdfh.ch/lists/0001/Ig0tdvWRTh--pZNhGD5rUQ
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -17066,8 +17066,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/VersionResponse'
               example:
-                webapi: v37.8.0-5-g06cbc60
-                buildCommit: 06cbc6021
+                webapi: v37.8.0-6-ge1c71e1
+                buildCommit: e1c71e1a1
                 buildTime: dev
                 fuseki: 6.1.0
                 scala: 3.8.4
@@ -17307,157 +17307,6 @@ components:
           $ref: '#/components/schemas/RestrictionCounts'
         projectMember:
           $ref: '#/components/schemas/RestrictionCounts'
-    PagedResponse_RestrictedPropertyResource:
-      title: PagedResponse_RestrictedPropertyResource
-      type: object
-      required:
-      - data
-      - pagination
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/RestrictedPropertyResource'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    RestrictedClass:
-      title: RestrictedClass
-      type: object
-      required:
-      - id
-      - label
-      - totalResources
-      - counts
-      properties:
-        id:
-          type: string
-        label:
-          type: string
-        ontology:
-          type: string
-        totalResources:
-          type: integer
-          format: int32
-        counts:
-          $ref: '#/components/schemas/AudienceRestrictionCounts'
-    RestrictedProperty:
-      title: RestrictedProperty
-      type: object
-      required:
-      - id
-      - label
-      properties:
-        id:
-          type: string
-        label:
-          type: string
-        ontology:
-          type: string
-    RestrictedPropertyResource:
-      title: RestrictedPropertyResource
-      type: object
-      required:
-      - resourceIri
-      - label
-      - resourceClassIri
-      properties:
-        resourceIri:
-          type: string
-        label:
-          type: string
-        resourceClassIri:
-          type: string
-        values:
-          type: array
-          items:
-            $ref: '#/components/schemas/RestrictedPropertyValue'
-    RestrictedPropertyValue:
-      title: RestrictedPropertyValue
-      type: object
-      required:
-      - valueIri
-      - isFile
-      - hasComment
-      - visibility
-      properties:
-        valueIri:
-          type: string
-        isFile:
-          type: boolean
-        hasComment:
-          type: boolean
-        visibility:
-          $ref: '#/components/schemas/ItemVisibility'
-    ValueItemType:
-      title: ValueItemType
-      type: string
-      enum:
-      - All
-      - Comment
-      - File
-      - Value
-    ViewRestrictionsClasses:
-      title: ViewRestrictionsClasses
-      type: object
-      required:
-      - projectIri
-      properties:
-        projectIri:
-          type: string
-        classes:
-          type: array
-          items:
-            $ref: '#/components/schemas/RestrictedClass'
-    ViewRestrictionsProperties:
-      title: ViewRestrictionsProperties
-      type: object
-      required:
-      - projectIri
-      properties:
-        projectIri:
-          type: string
-        properties:
-          type: array
-          items:
-            $ref: '#/components/schemas/RestrictedProperty'
-    ViewRestrictionsPropertyValues:
-      title: ViewRestrictionsPropertyValues
-      type: object
-      required:
-      - projectIri
-      - property
-      - itemType
-      - totalValues
-      - counts
-      properties:
-        projectIri:
-          type: string
-        property:
-          type: string
-        itemType:
-          $ref: '#/components/schemas/ValueItemType'
-        totalValues:
-          type: integer
-          format: int32
-        counts:
-          $ref: '#/components/schemas/AudienceRestrictionCounts'
-    ViewRestrictionsValues:
-      title: ViewRestrictionsValues
-      type: object
-      required:
-      - projectIri
-      - resourceClass
-      - itemType
-      - counts
-      properties:
-        projectIri:
-          type: string
-        resourceClass:
-          type: string
-        itemType:
-          $ref: '#/components/schemas/ValueItemType'
-        counts:
-          $ref: '#/components/schemas/AudienceRestrictionCounts'
     BadCredentialsException:
       title: BadCredentialsException
       type: object
@@ -18625,6 +18474,19 @@ components:
             $ref: '#/components/schemas/ProjectLicenseDto'
         pagination:
           $ref: '#/components/schemas/Pagination'
+    PagedResponse_RestrictedPropertyResource:
+      title: PagedResponse_RestrictedPropertyResource
+      type: object
+      required:
+      - data
+      - pagination
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestrictedPropertyResource'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
     PagedResponse_RestrictedResource:
       title: PagedResponse_RestrictedResource
       type: object
@@ -19142,6 +19004,26 @@ components:
           minItems: 1
           items:
             type: string
+    RestrictedClass:
+      title: RestrictedClass
+      type: object
+      required:
+      - id
+      - label
+      - totalResources
+      - counts
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        ontology:
+          type: string
+        totalResources:
+          type: integer
+          format: int32
+        counts:
+          $ref: '#/components/schemas/AudienceRestrictionCounts'
     RestrictedItem:
       title: RestrictedItem
       type: object
@@ -19157,6 +19039,54 @@ components:
           type: string
         valueIri:
           type: string
+        visibility:
+          $ref: '#/components/schemas/ItemVisibility'
+    RestrictedProperty:
+      title: RestrictedProperty
+      type: object
+      required:
+      - id
+      - label
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        ontology:
+          type: string
+    RestrictedPropertyResource:
+      title: RestrictedPropertyResource
+      type: object
+      required:
+      - resourceIri
+      - label
+      - resourceClassIri
+      properties:
+        resourceIri:
+          type: string
+        label:
+          type: string
+        resourceClassIri:
+          type: string
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestrictedPropertyValue'
+    RestrictedPropertyValue:
+      title: RestrictedPropertyValue
+      type: object
+      required:
+      - valueIri
+      - isFile
+      - hasComment
+      - visibility
+      properties:
+        valueIri:
+          type: string
+        isFile:
+          type: boolean
+        hasComment:
+          type: boolean
         visibility:
           $ref: '#/components/schemas/ItemVisibility'
     RestrictedResource:
@@ -19529,6 +19459,14 @@ components:
       properties:
         msg:
           type: string
+    ValueItemType:
+      title: ValueItemType
+      type: string
+      enum:
+      - All
+      - Comment
+      - File
+      - Value
     VersionResponse:
       title: VersionResponse
       type: object
@@ -19555,6 +19493,68 @@ components:
           type: string
         name:
           type: string
+    ViewRestrictionsClasses:
+      title: ViewRestrictionsClasses
+      type: object
+      required:
+      - projectIri
+      properties:
+        projectIri:
+          type: string
+        classes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestrictedClass'
+    ViewRestrictionsProperties:
+      title: ViewRestrictionsProperties
+      type: object
+      required:
+      - projectIri
+      properties:
+        projectIri:
+          type: string
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestrictedProperty'
+    ViewRestrictionsPropertyValues:
+      title: ViewRestrictionsPropertyValues
+      type: object
+      required:
+      - projectIri
+      - property
+      - itemType
+      - totalValues
+      - counts
+      properties:
+        projectIri:
+          type: string
+        property:
+          type: string
+        itemType:
+          $ref: '#/components/schemas/ValueItemType'
+        totalValues:
+          type: integer
+          format: int32
+        counts:
+          $ref: '#/components/schemas/AudienceRestrictionCounts'
+    ViewRestrictionsValues:
+      title: ViewRestrictionsValues
+      type: object
+      required:
+      - projectIri
+      - resourceClass
+      - itemType
+      - counts
+      properties:
+        projectIri:
+          type: string
+        resourceClass:
+          type: string
+        itemType:
+          $ref: '#/components/schemas/ValueItemType'
+        counts:
+          $ref: '#/components/schemas/AudienceRestrictionCounts'
     Visibility:
       title: Visibility
       type: string
