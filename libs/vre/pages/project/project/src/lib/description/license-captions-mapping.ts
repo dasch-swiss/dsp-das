@@ -1,5 +1,9 @@
 export const LicenseCaptionsMapping = new Map<string, string>([
   [
+    '0103',
+    'Victor Constant de Rebecque, Théâtre de Mon-Repos près Lausanne, crayon, gouache et aquarelle, 1851, cote MHL.I.194.K.1.17 © Musée historique de Lausanne.',
+  ],
+  [
     '0108',
     `Subtitle:
 
