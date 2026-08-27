@@ -93,8 +93,7 @@ export class ViewRestrictionsByPropertyTableComponent {
    */
   isExpandable(state: PropertyValuesState | undefined): boolean {
     const c = state?.counts?.counts;
-    const any =
-      !!c && (!this.isEmpty(c.anonymous) || !this.isEmpty(c.authenticated) || !this.isEmpty(c.projectMember));
+    const any = !!c && (!this.isEmpty(c.anonymous) || !this.isEmpty(c.authenticated) || !this.isEmpty(c.projectMember));
     return any || !!state?.loading;
   }
 

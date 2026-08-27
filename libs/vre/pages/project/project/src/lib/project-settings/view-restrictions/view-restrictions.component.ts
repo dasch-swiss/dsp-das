@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
 import { Title } from '@angular/platform-browser';
@@ -187,7 +187,10 @@ export class ViewRestrictionsComponent {
    * Summed here rather than served by the API: the two steps answer in different units and step 2 arrives
    * per class, so there is no single response a server-side total could live in.
    */
-  totalCounts(classes: RestrictedClass[], audience: 'anonymous' | 'authenticated' | 'projectMember'): RestrictionCounts {
+  totalCounts(
+    classes: RestrictedClass[],
+    audience: 'anonymous' | 'authenticated' | 'projectMember'
+  ): RestrictionCounts {
     return classes.reduce(
       (acc, c) => ({
         hidden: acc.hidden + c.counts[audience].hidden,
@@ -210,9 +213,7 @@ export class ViewRestrictionsComponent {
     return [...values.values()].reduce(
       (acc, v) => {
         const c = v.counts?.counts?.[audience];
-        return c
-          ? { hidden: acc.hidden + c.hidden, restrictedView: acc.restrictedView + c.restrictedView }
-          : acc;
+        return c ? { hidden: acc.hidden + c.hidden, restrictedView: acc.restrictedView + c.restrictedView } : acc;
       },
       { hidden: 0, restrictedView: 0 }
     );
@@ -263,7 +264,8 @@ export class ViewRestrictionsComponent {
     const anyResource =
       !this.isEmptyCount(r.anonymous) || !this.isEmptyCount(r.authenticated) || !this.isEmptyCount(r.projectMember);
     const anyValue =
-      !!v && (!this.isEmptyCount(v.anonymous) || !this.isEmptyCount(v.authenticated) || !this.isEmptyCount(v.projectMember));
+      !!v &&
+      (!this.isEmptyCount(v.anonymous) || !this.isEmptyCount(v.authenticated) || !this.isEmptyCount(v.projectMember));
     // While step 2 is still in flight a row is left expandable: judging it inert on incomplete data would
     // make rows stop being clickable as their counts arrive, which reads as the UI fighting the user.
     return anyResource || anyValue || !!values?.loading;
@@ -289,7 +291,8 @@ export class ViewRestrictionsComponent {
     const noValues = [...values.values()].every(v => {
       const c = v.counts?.counts;
       return (
-        !c || (this.isEmptyCount(c.anonymous) && this.isEmptyCount(c.authenticated) && this.isEmptyCount(c.projectMember))
+        !c ||
+        (this.isEmptyCount(c.anonymous) && this.isEmptyCount(c.authenticated) && this.isEmptyCount(c.projectMember))
       );
     });
     return noResources && allAnswered && noValues;
