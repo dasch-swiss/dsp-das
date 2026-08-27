@@ -1,12 +1,15 @@
 import { provideRouter } from '@angular/router';
 import {
   AdminAPIApiService,
-  GroupBy,
   ItemType,
   PagedResponseRestrictedResource,
+  RestrictedClass,
   RestrictedItem,
   RestrictedResource,
-  ViewRestrictionsSummary,
+  RestrictionCounts,
+  ValueItemType,
+  ViewRestrictionsClasses,
+  ViewRestrictionsValues,
   Visibility,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
@@ -19,7 +22,15 @@ import { ViewRestrictionsComponent } from './view-restrictions.component';
 
 // ---------------------------------------------------------------------------
 // Fixtures
+//
+// The report loads in two steps (DEV-6778): step 1 returns the class list with its resource-level
+// counts and populations, step 2 returns one class's value-level counts. The fixtures mirror that
+// split — the two units are never combined here for the same reason the UI never adds them.
 // ---------------------------------------------------------------------------
+
+const THING = 'http://www.knora.org/ontology/0001/anything#Thing';
+const BLUE_THING = 'http://www.knora.org/ontology/0001/anything#BlueThing';
+const OPEN_THING = 'http://www.knora.org/ontology/0001/anything#OpenThing';
 
 const ALL_VISIBLE = {
   anonymous: Visibility.Visible,
@@ -33,41 +44,45 @@ const HIDDEN_FROM_PUBLIC = {
   projectMember: Visibility.Visible,
 };
 
-const makeSummary = (overrides: Partial<ViewRestrictionsSummary> = {}): ViewRestrictionsSummary => ({
-  projectIri: 'http://rdfh.ch/projects/0001',
-  groupBy: GroupBy.ResourceClass,
-  itemType: ItemType.All,
-  groups: [
-    {
-      id: 'http://www.knora.org/ontology/0001/anything#Thing',
-      label: 'Thing',
-      ontology: 'anything',
-      counts: {
-        anonymous: { resources: { hidden: 37, restrictedView: 11 }, items: { hidden: 0, restrictedView: 0 } },
-        authenticated: { resources: { hidden: 23, restrictedView: 5 }, items: { hidden: 0, restrictedView: 0 } },
-        projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-      },
-      totalResources: 120,
-    },
-    {
-      // restricted view only, and nothing hidden — the case a single conflated count would hide
-      id: 'http://www.knora.org/ontology/0001/anything#BlueThing',
-      label: 'Blue thing',
-      ontology: 'anything',
-      counts: {
-        anonymous: { resources: { hidden: 3, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-        authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-        projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-      },
-      totalResources: 30,
-    },
-  ],
-  totals: {
-    anonymous: { resources: { hidden: 40, restrictedView: 11 }, items: { hidden: 0, restrictedView: 0 } },
-    authenticated: { resources: { hidden: 23, restrictedView: 5 }, items: { hidden: 0, restrictedView: 0 } },
-    projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+const NONE: RestrictionCounts = { hidden: 0, restrictedView: 0 };
+const NO_COUNTS = { anonymous: NONE, authenticated: NONE, projectMember: NONE };
+
+const makeClass = (over: Partial<RestrictedClass> = {}): RestrictedClass => ({
+  id: THING,
+  label: 'Thing',
+  ontology: 'anything',
+  counts: {
+    anonymous: { hidden: 37, restrictedView: 11 },
+    authenticated: { hidden: 23, restrictedView: 5 },
+    projectMember: { hidden: 5, restrictedView: 0 },
   },
-  ...overrides,
+  totalResources: 120,
+  ...over,
+});
+
+const makeClasses = (classes?: RestrictedClass[]): ViewRestrictionsClasses => ({
+  projectIri: 'http://rdfh.ch/projects/0001',
+  classes: classes ?? [
+    makeClass(),
+    // restricted for one audience only — the case a single conflated count would hide
+    makeClass({
+      id: BLUE_THING,
+      label: 'Blue thing',
+      counts: { ...NO_COUNTS, anonymous: { hidden: 3, restrictedView: 0 } },
+      totalResources: 30,
+    }),
+  ],
+});
+
+const makeValues = (
+  counts: ViewRestrictionsValues['counts'] = NO_COUNTS,
+  over: Partial<ViewRestrictionsValues> = {}
+): ViewRestrictionsValues => ({
+  projectIri: 'http://rdfh.ch/projects/0001',
+  resourceClass: THING,
+  itemType: ValueItemType.All,
+  counts,
+  ...over,
 });
 
 const makeItem = (overrides: Partial<RestrictedItem> = {}): RestrictedItem => ({
@@ -81,7 +96,7 @@ const makeItem = (overrides: Partial<RestrictedItem> = {}): RestrictedItem => ({
 const makeResource = (overrides: Partial<RestrictedResource> = {}): RestrictedResource => ({
   resourceIri: 'http://rdfh.ch/0001/a-thing',
   label: 'A thing',
-  resourceClassIri: 'http://www.knora.org/ontology/0001/anything#Thing',
+  resourceClassIri: THING,
   resourceVisibility: ALL_VISIBLE,
   items: [makeItem()],
   ...overrides,
@@ -113,19 +128,42 @@ const sharedProviders = [
   },
 ];
 
-const withApi = (summary: unknown, items: unknown) =>
+/**
+ * Three endpoints rather than one, because the page issues three kinds of request: the class list once,
+ * the value counts once per class, and the drill-down on expand. `values` is a function of the class IRI
+ * so a story can make one class fail or answer differently from the rest — which is the whole point of
+ * per-class step 2.
+ *
+ * The property-grouped endpoints are stubbed too: the component provides that page service, so a story
+ * that flips the grouping toggle would otherwise hit an undefined method.
+ */
+const withApi = (
+  classes: unknown,
+  values: unknown | ((classIri: string) => unknown),
+  items: unknown,
+  properties: unknown = of({ projectIri: 'http://rdfh.ch/projects/0001', properties: [] })
+) =>
   applicationConfig({
     providers: [
       ...sharedProviders,
       {
         provide: AdminAPIApiService,
         useValue: {
-          getAdminProjectsIriProjectiriViewRestrictionsSummary: () => summary,
+          getAdminProjectsIriProjectiriViewRestrictionsClasses: () => classes,
+          getAdminProjectsIriProjectiriViewRestrictionsValues: (_iri: string, classIri: string) =>
+            typeof values === 'function' ? (values as (c: string) => unknown)(classIri) : values,
           getAdminProjectsIriProjectiriViewRestrictionsItems: () => items,
+          getAdminProjectsIriProjectiriViewRestrictionsProperties: () => properties,
+          getAdminProjectsIriProjectiriViewRestrictionsPropertyValues: () =>
+            of({ ...makeValues(), property: THING, totalValues: 900 }),
+          getAdminProjectsIriProjectiriViewRestrictionsPropertyItems: () => of(makeItemsPage([])),
         },
       },
     ],
   });
+
+/** The common case: step 2 answers for every class with nothing at the value level. */
+const noValueFindings = of(makeValues());
 
 // ---------------------------------------------------------------------------
 // Meta
@@ -137,9 +175,13 @@ const meta: Meta<ViewRestrictionsComponent> = {
   argTypes: {
     expanded: {
       description:
-        'Per-group drill-down state keyed by group id. Each entry is either the loaded page, ' +
+        'Per-class drill-down state keyed by class id. Each entry is either the loaded page, ' +
         "'loading' while it is being fetched, or 'failed' if the fetch errored.",
       table: { category: 'State', type: { summary: "Signal<Record<string, ExpandedGroup | 'loading' | 'failed'>>" } },
+    },
+    grouping: {
+      description: 'Which report is on screen: the class-grouped one or its property-grouped sibling.',
+      table: { category: 'State', type: { summary: "Signal<'class' | 'property'>" } },
     },
     pageSize: {
       description: 'Drill-down page size; also passed to app-pager so it can compute the page count.',
@@ -147,7 +189,7 @@ const meta: Meta<ViewRestrictionsComponent> = {
     },
     itemTypeChips: {
       description: 'The item-type filter chips, in display order.',
-      table: { category: 'Inputs', type: { summary: 'ItemType[]' } },
+      table: { category: 'Inputs', type: { summary: 'ValueItemType[]' } },
     },
   },
 };
@@ -160,14 +202,14 @@ type Story = StoryObj<ViewRestrictionsComponent>;
 
 export const ShowsMatrixWithPerAudienceCounts: Story = {
   name: 'Shows the per-audience matrix with a totals row',
-  decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
+  decorators: [withApi(of(makeClasses()), noValueFindings, of(makeItemsPage([makeResource()])))],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Both resource-class groups are listed', async () => {
+    await step('Both resource classes are listed', async () => {
       await expect(canvas.getByText('Thing')).toBeInTheDocument();
       await expect(canvas.getByText('Blue thing')).toBeInTheDocument();
     });
-    await step('The totals row sums the hidden counts across groups', async () => {
+    await step('The totals row sums the hidden counts across classes', async () => {
       // 37 (Thing) + 3 (Blue thing) hidden resources for the anonymous audience
       await expect(canvas.getByText('40')).toBeInTheDocument();
     });
@@ -176,7 +218,7 @@ export const ShowsMatrixWithPerAudienceCounts: Story = {
 
 export const ShowsDashForAudiencesWithNoRestrictions: Story = {
   name: 'Shows a dash instead of zero when an audience has no restrictions',
-  decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
+  decorators: [withApi(of(makeClasses()), noValueFindings, of(makeItemsPage([makeResource()])))],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Zero counts render as an en dash rather than "0"', async () => {
@@ -186,65 +228,102 @@ export const ShowsDashForAudiencesWithNoRestrictions: Story = {
   },
 };
 
-export const ShowsSpinnerWhileLoadingSummary: Story = {
-  name: 'Shows a progress indicator while the summary is loading',
-  decorators: [withApi(NEVER, NEVER)],
+// Step 1 is a page-level wait: without the class list there is no table to render at all.
+export const ShowsSpinnerWhileFetchingClasses: Story = {
+  name: 'Shows a progress indicator while the class list is loading',
+  decorators: [withApi(NEVER, NEVER, NEVER)],
   play: async ({ canvasElement, step }) => {
-    await step('Progress indicator is rendered', async () => {
+    const canvas = within(canvasElement);
+    await step('Progress indicator is rendered, and names the step', async () => {
       await expect(canvasElement.querySelector('app-progress-indicator')).not.toBeNull();
+      await expect(canvas.getByText(/Fetching resource classes/i)).toBeInTheDocument();
     });
   },
 };
 
-export const ShowsErrorWhenSummaryFails: Story = {
-  name: 'Shows an error message instead of spinning forever when the summary fails',
+/**
+ * The point of the split: the table renders from step 1 and the value cells fill in behind it. The
+ * single-request form showed nothing at all until every class had been counted, which is what exceeded
+ * the triplestore timeout and produced a 500 on large projects.
+ */
+export const ShowsTableWhileValueCountsAreStillArriving: Story = {
+  name: 'Renders the table from step 1 while step 2 is still gathering',
+  decorators: [withApi(of(makeClasses()), NEVER, of(makeItemsPage([makeResource()])))],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('The class rows are already on screen', async () => {
+      await expect(canvas.getByText('Thing')).toBeInTheDocument();
+      await expect(canvas.getByText('Blue thing')).toBeInTheDocument();
+    });
+    await step('Progress reports how many classes have answered so far', async () => {
+      await expect(canvas.getByText(/Gathering restrictions 0 \/ 2/i)).toBeInTheDocument();
+    });
+    await step('Resource counts from step 1 are final and shown, not withheld', async () => {
+      await expect(canvas.getByText('37')).toBeInTheDocument();
+    });
+  },
+};
+
+export const ShowsErrorWhenClassListFails: Story = {
+  name: 'Shows an error instead of spinning forever when the class list fails',
   decorators: [
     withApi(
       throwError(() => new Error('boom')),
+      NEVER,
       NEVER
     ),
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('The failure message replaces the spinner', async () => {
-      await expect(canvas.getByText(/could not be loaded/i)).toBeInTheDocument();
+      await expect(canvas.getByText(/resource classes could not be loaded/i)).toBeInTheDocument();
       await expect(canvasElement.querySelector('app-progress-indicator')).toBeNull();
     });
   },
 };
 
-export const ShowsEmptyStateWhenNoRestrictionsExist: Story = {
-  name: 'Shows an empty state when no group has restrictions',
+/**
+ * A step-2 failure is confined to its row. Partial data beats no data on a permissions report, provided
+ * the gaps are visible — hence the row marker, the retry, and the banner saying the value totals are a
+ * lower bound.
+ */
+export const ConfinesAFailedClassToItsOwnRow: Story = {
+  name: 'Marks the one class whose counts failed and keeps the rest of the table',
   decorators: [
     withApi(
-      of(
-        makeSummary({
-          groups: [],
-          totals: {
-            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-          },
-        })
-      ),
-      of(makeItemsPage([]))
+      of(makeClasses()),
+      (classIri: string) => (classIri === BLUE_THING ? throwError(() => new Error('boom')) : noValueFindings),
+      of(makeItemsPage([makeResource()]))
     ),
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('The "no restrictions" message is shown', async () => {
-      await expect(canvas.getByText(/No restrictions found/i)).toBeInTheDocument();
+    const rowFor = (label: string) =>
+      Array.from(canvasElement.querySelectorAll<HTMLButtonElement>('.matrix-row')).find(r =>
+        r.textContent?.includes(label)
+      )!;
+
+    await step('Only the failing row is marked', async () => {
+      await expect(rowFor('Blue thing').querySelector('.row-error')).not.toBeNull();
+      await expect(rowFor('Thing').querySelector('.row-error')).toBeNull();
+    });
+    await step('That row offers a retry rather than requiring a page reload', async () => {
+      await expect(rowFor('Blue thing').querySelector('.row-retry')).not.toBeNull();
+    });
+    await step('The value totals are flagged as a lower bound', async () => {
+      await expect(canvas.getByText(/totals below are a lower bound/i)).toBeInTheDocument();
+    });
+    await step('Every other row keeps its data', async () => {
+      await expect(canvas.getByText('37')).toBeInTheDocument();
     });
   },
 };
 
 export const ShowsResourcePopulationPerClass: Story = {
   name: 'Shows each class’s resource population next to its restriction counts',
-  decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
+  decorators: [withApi(of(makeClasses()), noValueFindings, of(makeItemsPage([makeResource()])))],
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('The Resources column header is present in class mode', async () => {
-      // scoped to the header row: the "Resources" item-type chip carries the same label
+    await step('The Resources column header is present', async () => {
       await expect(canvasElement.querySelector('.matrix-head .col-total')?.textContent).toContain('Resources');
     });
     await step('Each class reports its own population', async () => {
@@ -260,145 +339,94 @@ export const ShowsResourcePopulationPerClass: Story = {
   },
 };
 
+/**
+ * Every class is listed, restricted or not. The population is a denominator, not a restriction count, so
+ * an untouched class still contributes its resources to the footer.
+ */
 export const ShowsUnrestrictedClassWithItsPopulation: Story = {
   name: 'Lists a class with no restrictions, with its resource count intact',
   decorators: [
     withApi(
       of(
-        makeSummary({
-          groups: [
-            ...makeSummary().groups!,
-            {
-              // nothing restricted, but the class still has 500 resources — the count is a property of
-              // the class, not of the restrictions
-              id: 'http://www.knora.org/ontology/0001/anything#OpenThing',
-              label: 'Open thing',
-              ontology: 'anything',
-              counts: {
-                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-              },
-              totalResources: 500,
-            },
-          ],
-        })
+        makeClasses([
+          makeClass(),
+          makeClass({ id: OPEN_THING, label: 'Open thing', counts: NO_COUNTS, totalResources: 500 }),
+        ])
       ),
+      noValueFindings,
       of(makeItemsPage([makeResource()]))
     ),
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('The unrestricted class is listed', async () => {
+    await step('The unrestricted class is listed with its population', async () => {
       await expect(canvas.getByText('Open thing')).toBeInTheDocument();
       await expect(canvas.getByText('500')).toBeInTheDocument();
     });
-    await step('Its population counts towards the footer total', async () => {
-      // 120 + 30 + 500
-      await expect(canvas.getByText('650')).toBeInTheDocument();
+    await step('It counts towards the footer total', async () => {
+      await expect(canvasElement.querySelector('.matrix-foot .col-total')?.textContent?.trim()).toBe('620');
     });
   },
 };
 
+/**
+ * Class mode lists every class, so the rows-are-empty branch never fires on a project with any resources
+ * at all. Without saying so explicitly the page would render a table of dashes with no explanation.
+ */
 export const ShowsNoteWhenNothingIsRestricted: Story = {
   name: 'States that nothing is restricted rather than showing a table of dashes',
-  decorators: [
-    withApi(
-      of(
-        makeSummary({
-          groups: [
-            {
-              id: 'http://www.knora.org/ontology/0001/anything#OpenThing',
-              label: 'Open thing',
-              ontology: 'anything',
-              counts: {
-                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-              },
-              totalResources: 500,
-            },
-          ],
-          totals: {
-            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-          },
-        })
-      ),
-      of(makeItemsPage([]))
-    ),
-  ],
+  decorators: [withApi(of(makeClasses([makeClass({ counts: NO_COUNTS })])), noValueFindings, of(makeItemsPage([])))],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('The "no restrictions" note is shown even though a row is listed', async () => {
+    await step('The "no restrictions" note is shown', async () => {
       await expect(canvas.getByText(/No restrictions found/i)).toBeInTheDocument();
-      await expect(canvas.getByText('Open thing')).toBeInTheDocument();
+    });
+    await step('The class is still listed with its population', async () => {
+      await expect(canvas.getByText('Thing')).toBeInTheDocument();
+      // Scoped to the row: with a single class the same figure is also the footer total, so an
+      // unscoped getByText matches twice and throws rather than asserting anything.
+      await expect(canvasElement.querySelector('.matrix-row .col-total')?.textContent?.trim()).toBe('120');
     });
   },
 };
 
 export const ShowsHiddenAndRestrictedViewSeparately: Story = {
   name: 'Splits each count into hidden and restricted view',
-  decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
+  decorators: [withApi(of(makeClasses()), noValueFindings, of(makeItemsPage([makeResource()])))],
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    // "Thing" is 37 hidden + 11 in restricted view for the anonymous audience. Hidden and restricted
-    // view are disjoint outcomes and must appear as their own figures, never as a single summed number.
-    // (getAllByText, not getByText: the same figure legitimately appears in the row and the totals row.)
-    await step('Both states are rendered as distinct counts', async () => {
-      await expect(canvas.getAllByText('37').length).toBeGreaterThan(0);
-      await expect(canvas.getAllByText('11').length).toBeGreaterThan(0);
-    });
-    await step('The two states use their own icons', async () => {
+    await step('Both states render as their own figure, never summed', async () => {
       await expect(canvasElement.querySelector('.count-hidden')).not.toBeNull();
       await expect(canvasElement.querySelector('.count-restricted')).not.toBeNull();
+    });
+    await step('48 — the summed figure — appears nowhere', async () => {
+      // 37 hidden + 11 restricted view for the anonymous audience on "Thing"
+      await expect(within(canvasElement).queryByText('48')).toBeNull();
     });
   },
 };
 
 /**
- * The regression this guards against: filtering by an item type returns findings in the `items` unit and
- * nothing in `resources`, because whole resources are not in scope for that filter. A cell that always
- * rendered the `resources` unit therefore showed a dash in every column over a report that had findings —
- * the matrix blanked exactly when the user narrowed to what they cared about (DEV-6868).
- *
- * The payload mirrors a real response for incunabula with `itemType=Value`.
+ * Four of the five filters are value-level. Under `Value`, `File` or `Comment` the resources unit is
+ * structurally zero, so a resources-only cell would blank the entire matrix exactly when the user
+ * narrows to what they care about (DEV-6868).
  */
-export const ReportsItemLevelFindingsUnderAnItemFilter: Story = {
-  name: 'Reports item-level findings when the item-type filter is item-level',
+export const ReportsValueLevelFindingsUnderAValueFilter: Story = {
+  name: 'Reports value-level findings when the item-type filter is value-level',
   decorators: [
     withApi(
       of(
-        makeSummary({
-          groups: [
-            {
-              id: 'http://www.knora.org/ontology/0803/incunabula#t',
-              label: 't',
-              ontology: 'incunabula',
-              counts: {
-                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 1, restrictedView: 0 } },
-                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 1, restrictedView: 0 } },
-                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-              },
-              totalResources: 1,
-            },
-          ],
-          totals: {
-            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 1, restrictedView: 0 } },
-            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 1, restrictedView: 0 } },
-            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-          },
-        })
+        makeClasses([
+          makeClass({ id: THING, label: 't', ontology: 'incunabula', counts: NO_COUNTS, totalResources: 1 }),
+        ])
       ),
+      of(makeValues({ ...NO_COUNTS, anonymous: { hidden: 1, restrictedView: 0 } })),
       of(makeItemsPage([makeResource()]))
     ),
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Narrow the filter to values, as the user would', async () => {
-      // the page starts on "All"; the cells follow whichever chip is selected.
-      // The chip reads "Values" (itemType.value), not "Value".
+      // the page starts on "All items"; the cells follow whichever chip is selected.
       await userEvent.click(canvas.getByText('Values'));
     });
     await step('The hidden value is reported rather than swallowed', async () => {
@@ -411,33 +439,20 @@ export const ReportsItemLevelFindingsUnderAnItemFilter: Story = {
   },
 };
 
+/**
+ * ONE resource in the class, itself fully visible, carrying THREE hidden values. Summing the units would
+ * render "4" against a population of 1 — the figure the API documents as meaningless.
+ */
 export const ShowsManyRestrictedValuesOnOneResource: Story = {
   name: 'Never claims more restricted resources than the class has (the "3 of 1" case)',
   decorators: [
     withApi(
+      of(makeClasses([makeClass({ id: THING, label: 'Sparse thing', counts: NO_COUNTS, totalResources: 1 })])),
       of(
-        makeSummary({
-          groups: [
-            {
-              // ONE resource in the class, itself fully visible, carrying THREE hidden values. Summing the
-              // units would render "3" against a population of 1; the matrix reports the resources unit
-              // only, so the cell stays empty and the three values surface in the drill-down.
-              id: 'http://www.knora.org/ontology/0001/anything#Sparse',
-              label: 'Sparse thing',
-              ontology: 'anything',
-              counts: {
-                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
-                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
-                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-              },
-              totalResources: 1,
-            },
-          ],
-          totals: {
-            anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
-            authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 3, restrictedView: 0 } },
-            projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-          },
+        makeValues({
+          anonymous: { hidden: 3, restrictedView: 0 },
+          authenticated: { hidden: 3, restrictedView: 0 },
+          projectMember: NONE,
         })
       ),
       of(makeItemsPage([makeResource()]))
@@ -452,11 +467,10 @@ export const ShowsManyRestrictedValuesOnOneResource: Story = {
     await step('The three restrictions are reported as values, in their own line', async () => {
       // the same figure appears in the class row and the totals row, so match all of them
       await expect(canvas.getAllByText('3').length).toBeGreaterThan(0);
-      // one line per unit with something to report; here only the items unit qualifies
       await expect(canvasElement.querySelectorAll('.count-line').length).toBeGreaterThan(0);
     });
     await step('No row claims more restricted resources than the class contains', async () => {
-      // "4" is resources + items summed — the figure the API documents as meaningless
+      // "4" is resources + values summed
       await expect(canvas.queryByText('4')).toBeNull();
     });
     await step('The row is still reported rather than announced as unrestricted', async () => {
@@ -475,23 +489,12 @@ export const DoesNotOpenAClassWithNothingToShow: Story = {
   decorators: [
     withApi(
       of(
-        makeSummary({
-          groups: [
-            ...makeSummary().groups!,
-            {
-              id: 'http://www.knora.org/ontology/0001/anything#OpenThing',
-              label: 'Open thing',
-              ontology: 'anything',
-              counts: {
-                anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-                authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-                projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-              },
-              totalResources: 500,
-            },
-          ],
-        })
+        makeClasses([
+          makeClass(),
+          makeClass({ id: OPEN_THING, label: 'Open thing', counts: NO_COUNTS, totalResources: 500 }),
+        ])
       ),
+      noValueFindings,
       of(makeItemsPage([makeResource()]))
     ),
   ],
@@ -528,32 +531,29 @@ export const DoesNotOpenAClassWithNothingToShow: Story = {
  */
 export const ExplainsTheStateIconsInALegend: Story = {
   name: 'Explains the two state icons in a legend under the matrix',
-  decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
+  decorators: [withApi(of(makeClasses()), noValueFindings, of(makeItemsPage([makeResource()])))],
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Both states are spelled out, consequence and all', async () => {
-      await expect(canvas.getByText(/Hidden — nothing is served/i)).toBeInTheDocument();
-      await expect(canvas.getByText(/Restricted view — a degraded version is served/i)).toBeInTheDocument();
+    await step('Both states are explained, once each', async () => {
+      const entries = Array.from(canvasElement.querySelectorAll('.legend .legend-entry')).map(e =>
+        e.textContent?.trim()
+      );
+      await expect(entries.length).toBe(2);
+      await expect(entries[0]).toContain('Hidden');
+      await expect(entries[1]).toContain('Restricted view');
     });
-    await step('The legend keys on the same glyphs the cells render', async () => {
-      const legend = canvasElement.querySelector('.legend');
-      await expect(legend?.querySelector('.legend-hidden')?.textContent?.trim()).toBe('visibility_off');
-      await expect(legend?.querySelector('.legend-restricted')?.textContent?.trim()).toBe('blur_on');
-    });
-    await step('It is a key to the table, not a replacement for it', async () => {
-      // the legend follows the matrix rather than pushing it down the page
-      const matrix = canvasElement.querySelector('.matrix')!;
-      const legend = canvasElement.querySelector('.legend')!;
-      await expect(matrix.compareDocumentPosition(legend) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    await step('The legend keys on the glyphs the cells actually use', async () => {
+      await expect(canvasElement.querySelector('.legend .legend-hidden')?.textContent?.trim()).toBe('visibility_off');
+      await expect(canvasElement.querySelector('.legend .legend-restricted')?.textContent?.trim()).toBe('blur_on');
     });
   },
 };
 
 export const ExpandsGroupToRevealAffectedResources: Story = {
-  name: 'Reveals the affected resources when a group row is clicked',
+  name: 'Reveals the affected resources when a class row is clicked',
   decorators: [
     withApi(
-      of(makeSummary()),
+      of(makeClasses()),
+      noValueFindings,
       of(
         makeItemsPage([
           makeResource({
@@ -569,7 +569,7 @@ export const ExpandsGroupToRevealAffectedResources: Story = {
     await step('The drill-down is collapsed initially', async () => {
       await expect(canvas.queryByText('A thing')).not.toBeInTheDocument();
     });
-    await step('User clicks the group row', async () => {
+    await step('User clicks the class row', async () => {
       await userEvent.click(canvas.getByText('Thing'));
     });
     await step('The affected resource and its restricted items appear', async () => {
@@ -581,13 +581,17 @@ export const ExpandsGroupToRevealAffectedResources: Story = {
 };
 
 export const CollapsesGroupOnSecondClick: Story = {
-  name: 'Collapses the drill-down when the group row is clicked again',
+  name: 'Collapses the drill-down when the class row is clicked again',
   decorators: [
-    withApi(of(makeSummary()), of(makeItemsPage([makeResource({ resourceVisibility: HIDDEN_FROM_PUBLIC })]))),
+    withApi(
+      of(makeClasses()),
+      noValueFindings,
+      of(makeItemsPage([makeResource({ resourceVisibility: HIDDEN_FROM_PUBLIC })]))
+    ),
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('User expands then collapses the group', async () => {
+    await step('User expands then collapses the class', async () => {
       await userEvent.click(canvas.getByText('Thing'));
       await expect(canvas.getByText('A thing')).toBeInTheDocument();
       await userEvent.click(canvas.getByText('Thing'));
@@ -602,13 +606,14 @@ export const ShowsErrorWhenDrillDownFails: Story = {
   name: 'Shows an error in the expanded row when the drill-down fails',
   decorators: [
     withApi(
-      of(makeSummary()),
+      of(makeClasses()),
+      noValueFindings,
       throwError(() => new Error('boom'))
     ),
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('User expands a group whose items fail to load', async () => {
+    await step('User expands a class whose items fail to load', async () => {
       await userEvent.click(canvas.getByText('Thing'));
     });
     await step('The row shows a failure message rather than a stuck spinner', async () => {
@@ -622,14 +627,15 @@ export const RendersSingleItemResourceAsOneComboRow: Story = {
   name: 'Collapses a fully-visible resource with one restricted item onto a single row',
   decorators: [
     withApi(
-      of(makeSummary()),
+      of(makeClasses()),
+      noValueFindings,
       // resource itself fully visible + exactly one item => combo row
       of(makeItemsPage([makeResource({ resourceVisibility: ALL_VISIBLE, items: [makeItem()] })]))
     ),
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('User expands the group', async () => {
+    await step('User expands the class', async () => {
       await userEvent.click(canvas.getByText('Thing'));
     });
     await step('The resource and its single item share one row', async () => {
@@ -645,7 +651,8 @@ export const FallsBackToTranslatedTypeWhenItemHasNoLabel: Story = {
   name: 'Uses the translated item type as the label when a property label is missing',
   decorators: [
     withApi(
-      of(makeSummary()),
+      of(makeClasses()),
+      noValueFindings,
       of(
         makeItemsPage([
           makeResource({
@@ -659,7 +666,7 @@ export const FallsBackToTranslatedTypeWhenItemHasNoLabel: Story = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('User expands the group', async () => {
+    await step('User expands the class', async () => {
       await userEvent.click(canvas.getByText('Thing'));
     });
     await step('The label reads the translated type, never the raw "File" enum value', async () => {
@@ -673,13 +680,14 @@ export const LabelsVisibilityForAssistiveTechWhenNoIconIsShown: Story = {
   name: 'Labels a fully-visible cell even though it renders no icon',
   decorators: [
     withApi(
-      of(makeSummary()),
+      of(makeClasses()),
+      noValueFindings,
       of(makeItemsPage([makeResource({ resourceVisibility: HIDDEN_FROM_PUBLIC, items: [] })]))
     ),
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('User expands the group', async () => {
+    await step('User expands the class', async () => {
       await userEvent.click(canvas.getByText('Thing'));
     });
     await step('Visible cells carry an accessible name despite showing no glyph', async () => {
@@ -704,13 +712,19 @@ export const PagesThroughAffectedResources: Story = {
         {
           provide: AdminAPIApiService,
           useValue: {
-            getAdminProjectsIriProjectiriViewRestrictionsSummary: () => of(makeSummary()),
-            // echo the requested page into the label so the story can assert which page is shown
+            getAdminProjectsIriProjectiriViewRestrictionsClasses: () => of(makeClasses()),
+            getAdminProjectsIriProjectiriViewRestrictionsValues: () => noValueFindings,
+            getAdminProjectsIriProjectiriViewRestrictionsProperties: () =>
+              of({ projectIri: 'http://rdfh.ch/projects/0001', properties: [] }),
+            getAdminProjectsIriProjectiriViewRestrictionsPropertyValues: () =>
+              of({ ...makeValues(), property: THING, totalValues: 900 }),
+            getAdminProjectsIriProjectiriViewRestrictionsPropertyItems: () => of(makeItemsPage([])),
+            // echo the requested page into the label so the story can assert which page is shown.
+            // `groupBy` was dropped from /items with property mode, so page is the 4th argument now.
             getAdminProjectsIriProjectiriViewRestrictionsItems: (
               _iri: string,
-              _group: string,
-              _groupBy: GroupBy,
-              _itemType: ItemType,
+              _resourceClass: string,
+              _itemType: ValueItemType,
               page = 1
             ) =>
               of(
@@ -733,7 +747,7 @@ export const PagesThroughAffectedResources: Story = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('User expands a group with several pages', async () => {
+    await step('User expands a class with several pages', async () => {
       await userEvent.click(canvas.getByText('Thing'));
     });
     await step('The first page is shown', async () => {
@@ -746,25 +760,35 @@ export const PagesThroughAffectedResources: Story = {
       await expect(canvas.getByText('Thing on page 2')).toBeInTheDocument();
       await expect(canvas.queryByText('Thing on page 1')).not.toBeInTheDocument();
     });
+    await step('The pager survives the page change, so the view does not snap back to page 1', async () => {
+      // app-pager holds its index privately with no input to set it: unmounting it resets to 0.
+      await expect(canvasElement.querySelector('app-pager')).not.toBeNull();
+    });
   },
 };
 
-export const DisablesResourceChipInPropertyMode: Story = {
-  name: 'Disables the Resource filter when grouping by property',
-  decorators: [withApi(of(makeSummary()), of(makeItemsPage([makeResource()])))],
+/**
+ * The two reports are deliberately separate — different endpoints, different services, no shared code —
+ * and share only this screen. The toggle is the seam, so it is worth a story.
+ */
+export const SwitchesToThePropertyGroupedReport: Story = {
+  name: 'Switches between the class-grouped and property-grouped reports',
+  decorators: [withApi(of(makeClasses()), noValueFindings, of(makeItemsPage([makeResource()])))],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    await step('The class report is on screen first', async () => {
+      await expect(canvas.getByText('Thing')).toBeInTheDocument();
+      await expect(canvasElement.querySelector('app-view-restrictions-by-property-table')).toBeNull();
+    });
     await step('User switches the grouping to Property', async () => {
       await userEvent.click(canvas.getByText('Property'));
     });
-    await step('The Resource chip becomes disabled (whole-resource rows are out of scope)', async () => {
-      // The column header shares the "Resources" label, so find the chip among the chips. Material puts
-      // aria-disabled on the inner [role="option"], not on the mat-chip-option host (which is
-      // role="presentation") — asserting on the host silently reads null and passes nothing.
-      const chip = Array.from(canvasElement.querySelectorAll('mat-chip-option')).find(c =>
-        c.textContent?.trim().startsWith('Resources')
-      );
-      await expect(chip?.querySelector('[role="option"]')?.getAttribute('aria-disabled')).toBe('true');
+    await step('The property table replaces the class matrix', async () => {
+      await expect(canvasElement.querySelector('app-view-restrictions-by-property-table')).not.toBeNull();
+      await expect(canvasElement.querySelector('.matrix')).toBeNull();
+    });
+    await step('The item-type filter stays on screen — it means the same thing either way', async () => {
+      await expect(canvas.getByText('Values')).toBeInTheDocument();
     });
   },
 };
