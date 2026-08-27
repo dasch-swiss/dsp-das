@@ -11,7 +11,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, EMPTY, Subject, takeUntil } from 'rxjs';
@@ -57,7 +56,7 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
 
   originalFilename?: string;
   failedToLoad = false;
-  audioFileUrl!: SafeUrl;
+  audioFileUrl = '';
 
   duration = 0;
   watchForPause: number | null = null;
@@ -70,7 +69,6 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
   private readonly _translateService = inject(TranslateService);
 
   constructor(
-    private readonly _sanitizer: DomSanitizer,
     public segmentsService: SegmentsService,
     private readonly _mediaControl: MediaControlService,
     private readonly _notification: NotificationService,
@@ -89,7 +87,9 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
         this._resetPlayer();
       }
 
-      this.audioFileUrl = this._sanitizer.bypassSecurityTrustUrl(this.src.fileUrl);
+      // Bound as a plain string: Angular maps audio|src to SecurityContext.NONE, so a SafeUrl
+      // would never be unwrapped and would reach the DOM as its toString() output. See DEV-7010.
+      this.audioFileUrl = this.src.fileUrl;
 
       this._rs
         .getFileInfo(this.src.fileUrl)
