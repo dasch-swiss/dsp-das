@@ -1,6 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, SimpleChange } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ReadAudioFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -72,7 +71,6 @@ describe('AudioComponent — behavior', () => {
             { provide: MediaPlayerService, useFactory: () => mediaPlayerMock },
             { provide: RepresentationService, useValue: representationServiceMock },
             { provide: NotificationService, useValue: notificationMock },
-            { provide: DomSanitizer, useValue: { bypassSecurityTrustUrl: (url: string) => url } },
           ],
         },
       })
@@ -145,5 +143,52 @@ describe('AudioComponent — behavior', () => {
     it('completes without error', () => {
       expect(() => component.ngOnDestroy()).not.toThrow();
     });
+  });
+});
+
+describe('AudioComponent — audio element source binding', () => {
+  let fixture: ComponentFixture<AudioComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [AudioComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [provideTranslateService()],
+    })
+      .overrideComponent(AudioComponent, {
+        set: {
+          providers: [
+            {
+              provide: SegmentsService,
+              useValue: { onInit: jest.fn(), setSegments: jest.fn(), segments: [], playSegment$: EMPTY },
+            },
+            { provide: MediaControlService, useValue: { play$: EMPTY, watchForPause$: EMPTY, playMedia: jest.fn() } },
+            { provide: MediaPlayerService, useValue: { duration: () => 0, onTimeUpdate$: EMPTY } },
+            {
+              provide: RepresentationService,
+              useValue: { getFileInfo: jest.fn().mockReturnValue(of({ originalFilename: 'audio-file.mp3' })) },
+            },
+            { provide: NotificationService, useValue: { openSnackBar: jest.fn() } },
+          ],
+        },
+      })
+      .compileComponents();
+
+    fixture = TestBed.createComponent(AudioComponent);
+    const component = fixture.componentInstance;
+    component.src = makeSrc();
+    component.parentResource = makeParentResource();
+    component.ngOnChanges({
+      src: new SimpleChange(null, component.src, true),
+      parentResource: new SimpleChange(null, component.parentResource, true),
+    });
+    fixture.detectChanges();
+  });
+
+  it('gives the <audio> element the real file URL so the browser can load it', () => {
+    const audio: HTMLAudioElement | null = fixture.nativeElement.querySelector('audio');
+
+    expect(audio).not.toBeNull();
+    expect(audio!.getAttribute('src')).toBe('http://example.org/audio.mp3');
   });
 });

@@ -7,6 +7,7 @@ import { ResourceMediaTabsComponent } from '../../properties/resource-media-tabs
 import { getFileValue } from '../../representation/get-file-value';
 import { isPlaceholderFileValue } from '../../representation/is-placeholder-file-value';
 import { RepresentationPlaceholderComponent } from '../../representation/representation-placeholder.component';
+import { RepresentationRestrictedComponent } from '../../representation/representation-restricted.component';
 import { ResourceLegalComponent } from '../../representation/resource-legal.component';
 import { SegmentsService } from '../../representation/segments/segments.service';
 import { VideoComponent } from './video.component';
@@ -18,11 +19,15 @@ import { VideoComponent } from './video.component';
       <app-resource-restriction />
     }
     <app-resource-header [resource]="resource" />
-    <app-resource-legal [fileValue]="fileValue" />
-    @if (isPlaceholder) {
-      <app-representation-placeholder />
+    @if (fileValue; as file) {
+      <app-resource-legal [fileValue]="file" />
+      @if (isPlaceholder) {
+        <app-representation-placeholder />
+      } @else {
+        <app-video [src]="file" [parentResource]="resource.res" />
+      }
     } @else {
-      <app-video [src]="fileValue" [parentResource]="resource.res" />
+      <app-representation-restricted />
     }
     <app-resource-media-tabs [resource]="resource" style="display: block; margin-top: 50px" />
   `,
@@ -32,6 +37,7 @@ import { VideoComponent } from './video.component';
     ResourceHeaderComponent,
     ResourceLegalComponent,
     RepresentationPlaceholderComponent,
+    RepresentationRestrictedComponent,
     VideoComponent,
     ResourceMediaTabsComponent,
   ],
@@ -40,7 +46,7 @@ export class ResourceVideoComponent {
   @Input({ required: true }) resource!: DspResource;
 
   get fileValue() {
-    return getFileValue(this.resource.res)!;
+    return getFileValue(this.resource.res);
   }
 
   get isPlaceholder() {
