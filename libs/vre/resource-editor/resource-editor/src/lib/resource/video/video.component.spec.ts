@@ -170,3 +170,105 @@ describe('VideoComponent — behavior', () => {
     });
   });
 });
+
+describe('VideoComponent — loading and ready state (real template)', () => {
+  let fixture: ComponentFixture<VideoComponent>;
+  let component: VideoComponent;
+
+  const loader = () => fixture.nativeElement.querySelector('[data-cy="video-loading"]');
+  const videoEl = (): HTMLVideoElement => fixture.nativeElement.querySelector('video');
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [VideoComponent],
+      providers: [provideTranslateService()],
+    })
+      .overrideComponent(VideoComponent, {
+        set: {
+          providers: [
+            {
+              provide: SegmentsService,
+              useValue: { onInit: jest.fn(), setSegments: jest.fn(), segments: [], playSegment$: EMPTY },
+            },
+            {
+              provide: MediaControlService,
+              useValue: { play$: EMPTY, watchForPause$: EMPTY, playMedia: jest.fn(), mediaDurationSecs: undefined },
+            },
+            {
+              provide: MediaPlayerService,
+              useValue: { onInit: jest.fn(), navigate: jest.fn(), duration: () => 788, onTimeUpdate$: EMPTY },
+            },
+            // Leaves fileInfo undefined, so the toolbar stays out of this fixture.
+            { provide: RepresentationService, useValue: { getFileInfo: jest.fn().mockReturnValue(EMPTY) } },
+            { provide: NotificationService, useValue: { openSnackBar: jest.fn() } },
+          ],
+        },
+      })
+      .compileComponents();
+
+    fixture = TestBed.createComponent(VideoComponent);
+    component = fixture.componentInstance;
+    component.src = makeSrc();
+    component.parentResource = makeParentResource();
+    component.ngOnChanges();
+    fixture.detectChanges();
+  });
+
+  it('shows a loading indicator while the video is still initialising', () => {
+    expect(component.isMetadataLoaded).toBe(false);
+    expect(loader()).not.toBeNull();
+  });
+
+  it('hides the loading indicator once the video reports its metadata', () => {
+    videoEl().dispatchEvent(new Event('loadedmetadata'));
+    fixture.detectChanges();
+
+    expect(component.isMetadataLoaded).toBe(true);
+    expect(loader()).toBeNull();
+  });
+
+  it('offers the slider as soon as metadata is known, without waiting for a playable buffer', () => {
+    videoEl().dispatchEvent(new Event('loadedmetadata'));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-media-slider')).not.toBeNull();
+  });
+
+  it('does not report the player as playable until the video can actually play', () => {
+    videoEl().dispatchEvent(new Event('loadedmetadata'));
+    fixture.detectChanges();
+
+    // Metadata alone must not enable the transport controls: pressing play would not start playback.
+    expect(component.isPlayerReady).toBe(false);
+
+    videoEl().dispatchEvent(new Event('canplay'));
+    fixture.detectChanges();
+
+    expect(component.isPlayerReady).toBe(true);
+  });
+
+  it('emits loaded once the video can play, not merely when metadata arrives', () => {
+    const emitted: boolean[] = [];
+    component.loaded.subscribe(v => emitted.push(v));
+
+    videoEl().dispatchEvent(new Event('loadedmetadata'));
+    expect(emitted).toEqual([]);
+
+    videoEl().dispatchEvent(new Event('canplay'));
+    videoEl().dispatchEvent(new Event('canplay'));
+
+    expect(emitted).toEqual([true]);
+  });
+
+  it('shows the error state instead of a perpetual loading indicator when the video fails', () => {
+    component.handleVideoError({ target: { error: { code: 2 } } } as unknown as ErrorEvent);
+    fixture.detectChanges();
+
+    expect(loader()).toBeNull();
+    expect(fixture.nativeElement.querySelector('app-representation-error-message')).not.toBeNull();
+  });
+
+  it('gives the <video> element the real file URL so the browser can load it', () => {
+    expect(videoEl().getAttribute('src')).toBe('http://example.org/video.mp4');
+  });
+});
