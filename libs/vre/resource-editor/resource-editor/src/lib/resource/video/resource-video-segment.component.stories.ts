@@ -52,6 +52,30 @@ const makeVideoResource = (): ReadResource =>
     },
   }) as unknown as ReadResource;
 
+/**
+ * Parent video whose file value is withheld: the resource itself is viewable but
+ * Constants.HasMovingImageFileValue is absent, so `getFileValue()` returns `null` (DEV-7016).
+ */
+const makeVideoResourceWithoutFile = (): ReadResource =>
+  ({
+    id: VIDEO_IRI,
+    attachedToProject: 'http://rdfh.ch/projects/0869',
+    attachedToUser: 'http://rdfh.ch/users/test',
+    userHasPermission: 'V',
+    properties: {},
+  }) as unknown as ReadResource;
+
+const dspApiStub = (parentResource: ReadResource) => ({
+  v2: {
+    res: { getResource: () => of(parentResource) },
+    search: {
+      doSearchIncomingLinks: () => of({ resources: [], mayHaveMoreResults: false }),
+      doExtendedSearch: () => of({ resources: [], mayHaveMoreResults: false }),
+      doSearchIncomingRegions: () => of({ resources: [], mayHaveMoreResults: false }),
+    },
+  },
+});
+
 const makeResource = (permission = 'CR'): DspResource => {
   const titlePropId = 'http://0.0.0.0:3333/ontology/0001/example/v2#hasTitle';
   const titleDef = makeTextPropDef(titlePropId, 'Title');
@@ -102,19 +126,7 @@ const meta: Meta<ResourceVideoSegmentComponent> = {
           },
         },
         { provide: ResourceFetcherService, useValue: resourceFetcherServiceStub('0869') },
-        {
-          provide: DspApiConnectionToken,
-          useValue: {
-            v2: {
-              res: { getResource: () => of(makeVideoResource()) },
-              search: {
-                doSearchIncomingLinks: () => of({ resources: [], mayHaveMoreResults: false }),
-                doExtendedSearch: () => of({ resources: [], mayHaveMoreResults: false }),
-                doSearchIncomingRegions: () => of({ resources: [], mayHaveMoreResults: false }),
-              },
-            },
-          },
-        },
+        { provide: DspApiConnectionToken, useValue: dspApiStub(makeVideoResource()) },
         {
           provide: RepresentationService,
           useValue: { getFileInfo: () => of({ originalFilename: 'video.mp4' }), downloadProjectFile: () => {} },
@@ -159,6 +171,25 @@ export const ReadOnly: Story = {
   play: async ({ canvasElement, step }) => {
     await step('Restriction banner is rendered', async () => {
       await expect(canvasElement.querySelector('app-resource-restriction')).not.toBeNull();
+    });
+  },
+};
+
+export const WithheldParentFileValue: Story = {
+  name: 'Shows a no-permission message instead of an endless spinner when the parent file value is withheld',
+  args: { resource: makeResource() },
+  decorators: [
+    applicationConfig({
+      providers: [{ provide: DspApiConnectionToken, useValue: dspApiStub(makeVideoResourceWithoutFile()) }],
+    }),
+  ],
+  play: async ({ canvasElement, step }) => {
+    await step('No-permission message is rendered', async () => {
+      await expect(canvasElement.querySelector('app-representation-restricted')).not.toBeNull();
+    });
+    await step('Neither the player nor a spinner is rendered', async () => {
+      await expect(canvasElement.querySelector('app-video')).toBeNull();
+      await expect(canvasElement.querySelector('app-progress-indicator')).toBeNull();
     });
   },
 };
