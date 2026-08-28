@@ -641,6 +641,7 @@
       "text": {
         "title": "Testo (csv, txt, xml)"
       },
+      "noPermission": "Non hai il permesso di visualizzare questo file multimediale.",
       "placeholder": {
         "title": "Segnaposto – file non ancora disponibile",
         "message": "Questa risorsa fa riferimento a un segnaposto. Il file effettivo non è ancora stato fornito."
