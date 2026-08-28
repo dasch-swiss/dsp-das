@@ -11,6 +11,7 @@ import { ResourceDefaultTabsComponent } from '../../properties/resource-default-
 import { getFileValue } from '../../representation/get-file-value';
 import { isPlaceholderFileValue } from '../../representation/is-placeholder-file-value';
 import { RepresentationPlaceholderComponent } from '../../representation/representation-placeholder.component';
+import { RepresentationRestrictedComponent } from '../../representation/representation-restricted.component';
 import { ResourceLegalComponent } from '../../representation/resource-legal.component';
 import { Segment } from '../../representation/segments/segment';
 import { SegmentsService } from '../../representation/segments/segments.service';
@@ -27,15 +28,19 @@ const HAS_SEGMENT_BOUNDS = 'http://api.knora.org/ontology/knora-api/v2#hasSegmen
     }
     <app-resource-header [resource]="resource" />
     @if (parentResource$ | async; as parentResource) {
-      <app-resource-legal [fileValue]="getFileValue(parentResource)" />
-      @if (isPlaceholder(parentResource)) {
-        <app-representation-placeholder />
+      @if (getFileValue(parentResource); as file) {
+        <app-resource-legal [fileValue]="file" />
+        @if (isPlaceholder(parentResource)) {
+          <app-representation-placeholder />
+        } @else {
+          <app-video
+            [src]="file"
+            [parentResource]="parentResource"
+            [start]="start"
+            [overrideSegments]="currentSegments" />
+        }
       } @else {
-        <app-video
-          [src]="getFileValue(parentResource)"
-          [parentResource]="parentResource"
-          [start]="start"
-          [overrideSegments]="currentSegments" />
+        <app-representation-restricted />
       }
     }
     <app-resource-default-tabs [resource]="resource" style="display: block; margin-top: 50px" />
@@ -47,6 +52,7 @@ const HAS_SEGMENT_BOUNDS = 'http://api.knora.org/ontology/knora-api/v2#hasSegmen
     ResourceHeaderComponent,
     ResourceLegalComponent,
     RepresentationPlaceholderComponent,
+    RepresentationRestrictedComponent,
     VideoComponent,
     ResourceDefaultTabsComponent,
   ],
@@ -91,7 +97,7 @@ export class ResourceVideoSegmentComponent implements OnInit {
   }
 
   getFileValue(resource: ReadResource) {
-    return getFileValue(resource)!;
+    return getFileValue(resource);
   }
 
   isPlaceholder(resource: ReadResource) {

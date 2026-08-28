@@ -44,6 +44,24 @@ const makeResource = (permission = 'CR'): DspResource => {
   return generateDspResource(addDescriptionToResource(res, permission));
 };
 
+/**
+ * Resource is viewable but the file value is withheld, i.e. `hasMovingImageFileValue` is absent
+ * while `userHasPermission` is still `V` (DEV-7016).
+ */
+const makeResourceWithWithheldFile = (): DspResource => {
+  const res = new ReadResource();
+  res.id = 'http://rdfh.ch/resource/1';
+  res.type = 'http://api.dasch.swiss/ontology/knora-api/v2#MovingImageRepresentation';
+  res.label = 'My Storybook Video';
+  res.attachedToProject = 'http://rdfh.ch/projects/0869';
+  res.attachedToUser = 'http://rdfh.ch/users/test';
+  res.userHasPermission = 'V';
+  res.hasPermissions = DEFAULT_HAS_PERMISSIONS;
+  res.creationDate = '2024-03-15T10:30:00Z';
+  res.properties = {};
+  return generateDspResource(addDescriptionToResource(res, 'V'));
+};
+
 const segmentsServiceStub: Partial<SegmentsService> = {
   segments: [],
   onInit: () => {},
@@ -115,6 +133,20 @@ export const ReadOnly: Story = {
   play: async ({ canvasElement, step }) => {
     await step('Restriction banner is rendered', async () => {
       await expect(canvasElement.querySelector('app-resource-restriction')).not.toBeNull();
+    });
+  },
+};
+
+export const WithheldFileValue: Story = {
+  name: 'Shows a no-permission message instead of an endless spinner when the file value is withheld',
+  args: { resource: makeResourceWithWithheldFile() },
+  play: async ({ canvasElement, step }) => {
+    await step('No-permission message is rendered', async () => {
+      await expect(canvasElement.querySelector('app-representation-restricted')).not.toBeNull();
+    });
+    await step('Neither the player nor a spinner is rendered', async () => {
+      await expect(canvasElement.querySelector('app-video')).toBeNull();
+      await expect(canvasElement.querySelector('app-progress-indicator')).toBeNull();
     });
   },
 };
