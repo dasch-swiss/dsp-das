@@ -14,7 +14,7 @@ import { ProgressSize, SIZE_TO_PXL } from './progress-indicator.type';
         [attr.height]="widthAndHeight"
         viewBox="5 20 200 170"
         preserveAspectRatio="xMidYMid meet">
-        <g stroke-width="11" fill="none" stroke="#336790">
+        <g stroke-width="11" fill="none" [attr.stroke]="onDark ? LIGHT_STROKE : DEFAULT_STROKE">
           <path
             d="m 107.19141,27.064453 c 19.40811,0.72674 40.31867,-1.456974 57.69737,9.089791 21.86918,11.995467 35.15372,37.302817
             32.81003,62.109081 -1.44162,27.181075 -22.18624,51.396565 -48.36746,58.105135 -15.52706,3.91583 -31.7106,1.96603
@@ -73,7 +73,15 @@ import { ProgressSize, SIZE_TO_PXL } from './progress-indicator.type';
 export class AppProgressIndicatorComponent implements OnInit {
   @Input() size: ProgressSize = 'small';
   @Input() compact = false;
+  /**
+   * Strokes the loader in a light colour for use on dark surfaces. The default stroke only reaches
+   * 2.41:1 against the near-black media container, below the 3:1 WCAG 1.4.11 non-text minimum.
+   */
+  @Input() onDark = false;
   widthAndHeight!: string;
+
+  protected readonly DEFAULT_STROKE = '#336790';
+  protected readonly LIGHT_STROKE = '#e8eef4';
 
   ngOnInit() {
     this.widthAndHeight = `${SIZE_TO_PXL[this.size]}px`;

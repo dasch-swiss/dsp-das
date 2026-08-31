@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/angular';
+import { componentWrapperDecorator, type Meta, type StoryObj } from '@storybook/angular';
 import { expect } from 'storybook/test';
 
 import { AppProgressIndicatorComponent } from './app-progress-indicator.component';
@@ -17,6 +17,12 @@ const meta: Meta<AppProgressIndicatorComponent> = {
         defaultValue: { summary: 'small' },
         category: 'Appearance',
       },
+    },
+    onDark: {
+      description:
+        'Strokes the spinner in a light colour so it stays legible on dark surfaces such as the media representation container. Off by default.',
+      control: 'boolean',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' }, category: 'Appearance' },
     },
   },
 };
@@ -41,4 +47,18 @@ export const MediumSize: Story = {
 export const LargeSize: Story = {
   name: 'Shows large spinner for full-page loading states',
   args: { size: 'large' },
+};
+
+export const OnDarkSurface: Story = {
+  name: 'Shows a light spinner that stays legible on a dark surface',
+  args: { size: 'medium', onDark: true },
+  decorators: [
+    componentWrapperDecorator(story => `<div style="background: rgb(41, 41, 41); padding: 24px">${story}</div>`),
+  ],
+  play: async ({ canvasElement, step }) => {
+    await step('Spinner is stroked in the light colour, not the default blue', async () => {
+      const stroke = canvasElement.querySelector('[data-cy="loader"] svg g')?.getAttribute('stroke');
+      await expect(stroke).toBe('#e8eef4');
+    });
+  },
 };
