@@ -30,7 +30,7 @@ import { PropertyValueService } from './property-value.service';
       [resourceIri]="editModeData.resource.id"
       [propertyIri]="propertyDefinition.id"
       [disabled]="dragDropDisabled"
-      [showHandle]="canReorder && editModeData.values.length > 1"
+      [showHandle]="canReorder"
       (valuesChange)="editModeData.values = $event">
       <ng-template let-value let-index="index">
         <app-property-value [index]="index" style="width: 100%" />
@@ -67,7 +67,11 @@ export class PropertyValuesComponent implements OnChanges {
   }
 
   get canReorder(): boolean {
-    return ResourceUtil.userCanEdit(this.editModeData.resource) && !this._resourceFetcherService.resourceVersion;
+    return (
+      ResourceUtil.userCanEdit(this.editModeData.resource) &&
+      !this._resourceFetcherService.resourceVersion &&
+      this.editModeData.values.length > 1
+    );
   }
 
   get isAnyValueEditing(): boolean {

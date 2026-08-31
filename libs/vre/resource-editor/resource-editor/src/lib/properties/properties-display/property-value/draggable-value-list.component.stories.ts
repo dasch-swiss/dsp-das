@@ -124,3 +124,44 @@ export const Disabled: Story = {
     });
   },
 };
+
+export const SingleValueIsNotDraggable: Story = {
+  name: 'Keeps a single value undraggable so its text stays selectable',
+  args: {
+    values: [makeValues()[0]],
+    resourceIri: 'http://rdfh.ch/resource/1',
+    propertyIri: 'http://example.org/prop',
+    disabled: false,
+    showHandle: false,
+  },
+  render: args => ({
+    props: args,
+    template: `
+      <app-draggable-value-list
+        [values]="values"
+        [resourceIri]="resourceIri"
+        [propertyIri]="propertyIri"
+        [disabled]="disabled"
+        [showHandle]="showHandle">
+        <ng-template let-value let-index="index">
+          <div data-cy="value-item">Value {{ index + 1 }}</div>
+        </ng-template>
+      </app-draggable-value-list>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    await step('The single value is rendered', async () => {
+      const items = canvasElement.querySelectorAll('[data-cy="value-item"]');
+      await expect(items.length).toBe(1);
+    });
+    await step('No drag handle is rendered', async () => {
+      const handles = canvasElement.querySelectorAll('[cdkdraghandle]');
+      await expect(handles.length).toBe(0);
+    });
+    await step('The row is drag-disabled, so mousedown does not swallow text selection', async () => {
+      const rows = canvasElement.querySelectorAll('.value-row');
+      await expect(rows.length).toBe(1);
+      await expect(rows[0].classList.contains('cdk-drag-disabled')).toBe(true);
+    });
+  },
+};
