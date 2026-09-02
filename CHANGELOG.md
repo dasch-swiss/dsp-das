@@ -1,5 +1,32 @@
 # Changelog
 
+## [13.13.1](https://github.com/dasch-swiss/dsp-app/compare/v13.13.0...v13.13.1) (2026-08-31)
+
+
+### Bug Fixes
+
+* **audio:** bind the audio file URL as a plain string (DEV-7010) ([#3368](https://github.com/dasch-swiss/dsp-app/issues/3368)) ([d8eb82d](https://github.com/dasch-swiss/dsp-app/commit/d8eb82d3aa25207d7e1bc94d42b2f4bfd915ea89))
+* **representation:** show a no-access message instead of an endless spinner for restricted media (DEV-7016) ([#3383](https://github.com/dasch-swiss/dsp-app/issues/3383)) ([040fbc3](https://github.com/dasch-swiss/dsp-app/commit/040fbc3989662c09d34afaa6285613411453a94a))
+* **resource-editor:** keep single-value property text selectable (DEV-7034) ([#3388](https://github.com/dasch-swiss/dsp-app/issues/3388)) ([92ae060](https://github.com/dasch-swiss/dsp-app/commit/92ae060fca054411a99cc4f36ff6a033bbcc97ef))
+* **video:** surface initialisation state instead of an empty media box (DEV-7026) ([#3371](https://github.com/dasch-swiss/dsp-app/issues/3371)) ([b274f3c](https://github.com/dasch-swiss/dsp-app/commit/b274f3c3423a39e75d70d512b5c26b541205a447))
+
+
+### Maintenances
+
+* **deps:** Lock file maintenance ([#3387](https://github.com/dasch-swiss/dsp-app/issues/3387)) ([4a3427d](https://github.com/dasch-swiss/dsp-app/commit/4a3427d051764bc07cc227c3a6edc9ed3a74095f))
+* **deps:** Update dependency @openapitools/openapi-generator-cli from 2.40.1 to 2.41.0 ([#3379](https://github.com/dasch-swiss/dsp-app/issues/3379)) ([66d41ce](https://github.com/dasch-swiss/dsp-app/commit/66d41ce1fdbbe4983dc277878b445fdc9c7355e2))
+* **deps:** Update dependency @sentry/angular from 10.70.0 to 10.71.0 ([#3381](https://github.com/dasch-swiss/dsp-app/issues/3381)) ([c91f5a5](https://github.com/dasch-swiss/dsp-app/commit/c91f5a5a39b8c82fb9d7ac1a6f65e3649cb4e487))
+* **deps:** Update dependency cypress from 15.20.1 to 15.21.0 ([#3374](https://github.com/dasch-swiss/dsp-app/issues/3374)) ([de3c655](https://github.com/dasch-swiss/dsp-app/commit/de3c655f84ce517a44253ec9fc7765f433344000))
+* **deps:** Update dependency cypress from 15.21.0 to 15.21.1 ([#3385](https://github.com/dasch-swiss/dsp-app/issues/3385)) ([86a8a39](https://github.com/dasch-swiss/dsp-app/commit/86a8a39c2ee49717f6b82b0150572fb79dac3967))
+* **deps:** Update dependency ng-mocks from 14.17.2 to 14.17.3 ([#3378](https://github.com/dasch-swiss/dsp-app/issues/3378)) ([f436fb5](https://github.com/dasch-swiss/dsp-app/commit/f436fb539dcd1c7d9f9f4ebbec290f9b28e8562d))
+* **deps:** Update dependency postcss-preset-env from 11.4.0 to 11.5.0 ([#3386](https://github.com/dasch-swiss/dsp-app/issues/3386)) ([9c7aead](https://github.com/dasch-swiss/dsp-app/commit/9c7aead6192aafd9b180a932e4c34ce318679a2f))
+* **deps:** Update grafana/grafana Docker tag to v13.2.0 ([#3375](https://github.com/dasch-swiss/dsp-app/issues/3375)) ([94bbc7c](https://github.com/dasch-swiss/dsp-app/commit/94bbc7c02026bb7a25bc095a1862309721665d72))
+* **deps:** Update typescript-eslint monorepo from 8.67.0 to 8.68.0 ([#3382](https://github.com/dasch-swiss/dsp-app/issues/3382)) ([a3ca4fd](https://github.com/dasch-swiss/dsp-app/commit/a3ca4fd2e5af9eefa3b2452ae67fb909e1b1791f))
+* **open-api:** bump dsp-api spec v37.5.2-5-ge8dcdc8 → v37.8.0-5-g06cbc60 ([#3377](https://github.com/dasch-swiss/dsp-app/issues/3377)) ([6da38eb](https://github.com/dasch-swiss/dsp-app/commit/6da38ebfab921931fd9b367d8a86be82023cb319))
+* **open-api:** bump dsp-api spec v37.8.0-5-g06cbc60 → v37.8.0-6-ge1c71e1 ([#3380](https://github.com/dasch-swiss/dsp-app/issues/3380)) ([e0667ca](https://github.com/dasch-swiss/dsp-app/commit/e0667cad5e4357337f1d0e4935d702f04d500ae2))
+* **project:** replace 0103 cover image with high-res version and add caption ([#3376](https://github.com/dasch-swiss/dsp-app/issues/3376)) ([6ae10c3](https://github.com/dasch-swiss/dsp-app/commit/6ae10c35cff92a62e67e9f7b6b31b47191dd13c8))
+* slim CLAUDE.md to non-derivable guidance and repair Claude skill definitions ([#3372](https://github.com/dasch-swiss/dsp-app/issues/3372)) ([2fed762](https://github.com/dasch-swiss/dsp-app/commit/2fed762c18b19d4373e18f8a31e24667231da5cc))
+
 ## [13.13.0](https://github.com/dasch-swiss/dsp-app/compare/v13.12.5...v13.13.0) (2026-08-24)
 
 

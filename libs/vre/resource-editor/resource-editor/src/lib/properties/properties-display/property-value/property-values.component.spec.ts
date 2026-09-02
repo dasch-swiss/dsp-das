@@ -101,6 +101,11 @@ describe('PropertyValuesComponent', () => {
       mockResourceFetcherService.resourceVersion = '20230101T000000Z';
       expect(component.canReorder).toBe(false);
     });
+
+    it('should return false when the property holds a single value', () => {
+      component.editModeData = { resource: mockResource, values: [mockValues[0]] };
+      expect(component.canReorder).toBe(false);
+    });
   });
 
   describe('isAnyValueEditing', () => {
@@ -131,6 +136,11 @@ describe('PropertyValuesComponent', () => {
 
     it('should be true when currently adding a value', () => {
       component.currentlyAdding = true;
+      expect(component.dragDropDisabled).toBe(true);
+    });
+
+    it('should be true when the property holds a single value, so its text stays selectable', () => {
+      component.editModeData = { resource: mockResource, values: [mockValues[0]] };
       expect(component.dragDropDisabled).toBe(true);
     });
   });

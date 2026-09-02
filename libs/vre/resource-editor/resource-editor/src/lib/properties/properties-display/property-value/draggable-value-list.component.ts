@@ -34,7 +34,11 @@ import { ResourceFetcherService } from '../../../representation/resource-fetcher
       [class.has-multiple]="values.length > 1"
       (cdkDropListDropped)="onDrop($event)">
       @for (value of values; track value.id; let index = $index) {
-        <div cdkDrag cdkDragLockAxis="y" [cdkDragDisabled]="disabled || reorderLoading" class="value-row">
+        <div
+          cdkDrag
+          cdkDragLockAxis="y"
+          [cdkDragDisabled]="disabled || reorderLoading || values.length < 2"
+          class="value-row">
           @if (showHandle) {
             <span
               cdkDragHandle
