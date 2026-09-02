@@ -2,11 +2,22 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, of } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ProjectShortnameService } from '../project-shortname.service';
 import { ResourceListItemComponent } from './resource-list-item.component';
+
+const RESOURCE_LABEL_KEY = 'pages.dataBrowser.resourceListItem.resourceLabel';
+
+/** The translation keys of the "Found in:" entries that stand for the resource's own label. */
+const foundInKeys = (component: ResourceListItemComponent) =>
+  component.foundIn.flatMap(entry => ('translationKey' in entry ? [entry.translationKey] : []));
+
+/** The first (single-language) value of each property entry in the "Found in:" list. */
+const foundInLabelValues = (component: ResourceListItemComponent) =>
+  component.foundIn.flatMap(entry => ('labels' in entry ? [entry.labels[0]?.value] : []));
 
 describe('ResourceListItemComponent', () => {
   let component: ResourceListItemComponent;
@@ -116,7 +127,7 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.foundIn).toContain('Label');
+      expect(foundInKeys(component)).toContain(RESOURCE_LABEL_KEY);
     });
 
     it('should search in resource properties when searchKeyword matches', () => {
@@ -124,7 +135,7 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.foundIn).toContain('Test Property');
+      expect(foundInLabelValues(component)).toContain('Test Property');
     });
 
     it('should find matches in both label and properties', () => {
@@ -132,8 +143,8 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.foundIn).toContain('Label');
-      expect(component.foundIn).toContain('Test Property');
+      expect(foundInKeys(component)).toContain(RESOURCE_LABEL_KEY);
+      expect(foundInLabelValues(component)).toContain('Test Property');
     });
 
     it('should be case-insensitive when searching', () => {
@@ -141,7 +152,7 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.foundIn).toContain('Another Property');
+      expect(foundInLabelValues(component)).toContain('Another Property');
     });
 
     it('should not add duplicate property labels to foundIn', () => {
@@ -159,7 +170,7 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      const samePropertyCount = component.foundIn.filter(label => label === 'Same Property').length;
+      const samePropertyCount = foundInLabelValues(component).filter(label => label === 'Same Property').length;
       expect(samePropertyCount).toBe(1);
     });
 
@@ -175,7 +186,70 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.foundIn).not.toContain('Empty Property');
+      expect(foundInLabelValues(component)).not.toContain('Empty Property');
+    });
+
+    // The single-language `propertyLabel` is what dsp-api resolved server-side; the "Found in:"
+    // names must follow the UI language like the resource class does (DEV-5452 follow-up).
+    it('should prefer the multi-language property labels from entityInfo', () => {
+      component.resource = {
+        ...mockResource,
+        properties: {
+          'http://example.org/property-1': [{ strval: 'match text', propertyLabel: 'Realization' } as any],
+        },
+        entityInfo: {
+          classes: {},
+          properties: {
+            'http://example.org/property-1': {
+              labels: [
+                { language: 'en', value: 'Realization' },
+                { language: 'fr', value: 'Réalisation' },
+              ],
+            },
+          },
+        },
+      } as unknown as ReadResource;
+      mockMultipleViewerService.searchKeyword = 'match';
+
+      component.ngOnInit();
+
+      expect(component.foundIn).toEqual([
+        {
+          labels: [
+            { language: 'en', value: 'Realization' },
+            { language: 'fr', value: 'Réalisation' },
+          ],
+        },
+      ]);
+    });
+
+    it('should render the found-in names in the current UI language', done => {
+      component.resource = {
+        ...mockResource,
+        properties: {
+          'http://example.org/property-1': [{ strval: 'match text', propertyLabel: 'Realization' } as any],
+        },
+        entityInfo: {
+          classes: {},
+          properties: {
+            'http://example.org/property-1': {
+              labels: [
+                { language: 'en', value: 'Realization' },
+                { language: 'fr', value: 'Réalisation' },
+              ],
+            },
+          },
+        },
+      } as unknown as ReadResource;
+      mockMultipleViewerService.searchKeyword = 'match';
+
+      component.ngOnInit();
+      TestBed.inject(LocalizationService).currentLanguage = 'fr';
+
+      component.foundInText$.subscribe(text => {
+        expect(text).toBe('Réalisation');
+        done();
+      });
     });
   });
 

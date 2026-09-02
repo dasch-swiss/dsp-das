@@ -500,7 +500,8 @@
         "noData": "Il n'y a pas de données correspondant à votre demande."
       },
       "resourceListItem": {
-        "foundIn": "Trouvé dans : "
+        "foundIn": "Trouvé dans : ",
+        "resourceLabel": "Libellé"
       },
       "downloadDialog": {
         "title": "Télécharger",

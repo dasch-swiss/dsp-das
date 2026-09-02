@@ -500,7 +500,8 @@
         "noData": "Non ci sono dati corrispondenti alla tua richiesta."
       },
       "resourceListItem": {
-        "foundIn": "Trovato in: "
+        "foundIn": "Trovato in: ",
+        "resourceLabel": "Etichetta"
       },
       "downloadDialog": {
         "title": "Scarica",

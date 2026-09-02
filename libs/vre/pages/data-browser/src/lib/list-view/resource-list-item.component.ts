@@ -1,12 +1,27 @@
 import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
-import { ReadResource, StringLiteralV2 } from '@dasch-swiss/dsp-js';
+import {
+  ReadResource,
+  ReadValue,
+  ResourcePropertyDefinitionWithAllLanguages,
+  StringLiteralV2,
+} from '@dasch-swiss/dsp-js';
+import { LocalizationService, pickPreferredLanguageString } from '@dasch-swiss/vre/shared/app-helper-services';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { TranslatePipe } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { combineLatest, map, Observable } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ProjectShortnameService } from '../project-shortname.service';
+
+/**
+ * One entry of the "Found in:" list: either the resource's own label — a UI string translated by
+ * ngx-translate — or a property, named by its multi-language labels so that it follows the UI
+ * language the same way the resource class does.
+ */
+type FoundInEntry = { readonly translationKey: string } | { readonly labels: StringLiteralV2[] };
+
+const RESOURCE_LABEL_KEY = 'pages.dataBrowser.resourceListItem.resourceLabel';
 
 @Component({
   selector: 'app-resource-list-item',
@@ -40,7 +55,7 @@ import { ProjectShortnameService } from '../project-shortname.service';
                     |
                   }
                   {{ 'pages.dataBrowser.resourceListItem.foundIn' | translate
-                  }}<span class="semibold">{{ foundIn.join(', ') }}</span></span
+                  }}<span class="semibold" data-cy="found-in-values">{{ foundInText$ | async }}</span></span
                 >
               }
               @if (showProjectShortname && (projectShortname$ | async); as shortname) {
@@ -108,7 +123,14 @@ export class ResourceListItemComponent implements OnInit {
   @Input() showResourceClass = false;
 
   showCheckbox = false;
-  foundIn: string[] = [];
+  foundIn: FoundInEntry[] = [];
+
+  /**
+   * The rendered "Found in:" list. Resolved as a stream rather than in `ngOnInit` so the property
+   * names re-render on a UI language change, which is the whole point of keeping the label arrays
+   * around instead of the single-language `ReadValue.propertyLabel`.
+   */
+  foundInText$!: Observable<string>;
 
   isHighlighted$ = this.multipleViewerService.selectedResources$.pipe(
     map(resources => {
@@ -146,7 +168,9 @@ export class ResourceListItemComponent implements OnInit {
 
   constructor(
     public readonly multipleViewerService: MultipleViewerService,
-    private readonly _projectShortnameService: ProjectShortnameService
+    private readonly _projectShortnameService: ProjectShortnameService,
+    private readonly _localizationService: LocalizationService,
+    private readonly _translateService: TranslateService
   ) {}
 
   ngOnInit() {
@@ -157,6 +181,7 @@ export class ResourceListItemComponent implements OnInit {
       this._searchInResourceLabel(searchKeyword);
       this._searchInResourceProperty(searchKeyword);
     }
+    this.foundInText$ = this._resolveFoundInText$();
 
     this.projectShortname$ = this._projectShortnameService.getProjectShortname(this.resource.attachedToProject);
   }
@@ -178,27 +203,57 @@ export class ResourceListItemComponent implements OnInit {
     return this.resource.resourceClassLabel ? [{ value: this.resource.resourceClassLabel } as StringLiteralV2] : null;
   }
 
+  private _resolveFoundInText$(): Observable<string> {
+    return combineLatest([
+      this._localizationService.currentLanguage$,
+      this._translateService.stream(RESOURCE_LABEL_KEY),
+    ]).pipe(
+      map(([language, resourceLabel]) =>
+        this.foundIn
+          .map(entry =>
+            'translationKey' in entry ? resourceLabel : pickPreferredLanguageString(entry.labels, language)
+          )
+          .join(', ')
+      )
+    );
+  }
+
   private _searchInResourceLabel(keyword: string) {
     if (this.resource.label.toLowerCase().includes(keyword.toLowerCase())) {
-      this.foundIn.push('Label');
+      this.foundIn.push({ translationKey: RESOURCE_LABEL_KEY });
     }
   }
 
+  /**
+   * Deduplicates on the property IRI rather than on the resolved name: two values of the same
+   * property must produce one entry regardless of the language the name happens to render in.
+   */
   private _searchInResourceProperty(keyword: string) {
-    Object.values(this.resource.properties).forEach(values => {
-      values.forEach(value => {
-        if (!value.propertyLabel) {
-          return;
-        }
+    Object.entries(this.resource.properties).forEach(([propertyIri, values]) => {
+      const matches = values.some(value => value.strval && value.strval.toLowerCase().includes(keyword.toLowerCase()));
+      if (!matches) {
+        return;
+      }
 
-        if (
-          value.strval &&
-          value.strval.toLowerCase().includes(keyword.toLowerCase()) &&
-          !this.foundIn.includes(value.propertyLabel)
-        ) {
-          this.foundIn.push(value.propertyLabel);
-        }
-      });
+      const labels = this._resolvePropertyLabels(propertyIri, values[0]);
+      if (labels) {
+        this.foundIn.push({ labels });
+      }
     });
+  }
+
+  /**
+   * Mirrors `_resolveResourceClassLabels`: prefers the multi-language labels off `entityInfo`, and
+   * falls back to the single-language `ReadValue.propertyLabel` that dsp-js resolves server-side.
+   * `null` when neither has a name, which drops the entry rather than rendering an empty one.
+   */
+  private _resolvePropertyLabels(propertyIri: string, value: ReadValue): StringLiteralV2[] | null {
+    const definition = this.resource.entityInfo?.properties[propertyIri] as
+      ResourcePropertyDefinitionWithAllLanguages | undefined;
+    if (definition?.labels?.length) {
+      return definition.labels;
+    }
+
+    return value.propertyLabel ? [{ value: value.propertyLabel } as StringLiteralV2] : null;
   }
 }
