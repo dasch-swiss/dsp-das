@@ -64,6 +64,28 @@
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
+  font-display: swap;
   src: local('Material Icons'), local('MaterialIcons-Regular'),
     url(../assets/fonts/material-icons/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+/* The `.material-icons` class used to come from the remote Google Fonts stylesheet that was
+   imported in `_config.scss`. That import was removed (DEV-7068): because it was pulled into every
+   component that `@use`s the config partial, the production build inlined it per-component, where
+   view encapsulation made its `font-size: 24px` out-specify Angular Material's 18px sizing and
+   clipped the glyphs. Declaring the class once here keeps it global, so Material's own sizing wins.
+   `font-feature-settings: 'liga'` is what turns the icon name into a glyph. */
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }
