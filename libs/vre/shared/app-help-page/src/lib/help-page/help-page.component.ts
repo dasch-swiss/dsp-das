@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { AppConfigService, DspConfig } from '@dasch-swiss/vre/core/config';
+import { TranslatePipe } from '@ngx-translate/core';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import packageJson from '../../../../../../../package.json';
 import { FooterComponent } from '../footer/footer.component';
@@ -21,7 +22,7 @@ interface VersionResponse {
   selector: 'app-help',
   templateUrl: './help-page.component.html',
   styleUrls: ['./help-page.component.scss'],
-  imports: [FooterComponent, GridComponent, MatIconModule],
+  imports: [FooterComponent, GridComponent, MatIconModule, TranslatePipe],
 })
 export class HelpPageComponent implements OnInit {
   loading = true;
@@ -35,66 +36,68 @@ export class HelpPageComponent implements OnInit {
   docs: GridItem[] = [
     {
       icon: 'assignment',
-      title: 'Project administration',
-      text: 'Read more about project administration and how to manage project members.',
+      title: 'pages.help.docs.projectAdmin.title',
+      text: 'pages.help.docs.projectAdmin.text',
       url: 'https://dasch.swiss/knowledge-hub/dsp-app/project-admin',
-      urlText: 'Open Documentation',
+      urlText: 'pages.help.openDocumentation',
     },
     {
       icon: 'bubble_chart',
-      title: 'Data model creation',
-      text: 'Find everything about data modelling and how to setup the project database.',
+      title: 'pages.help.docs.dataModel.title',
+      text: 'pages.help.docs.dataModel.text',
       url: 'https://dasch.swiss/knowledge-hub/dsp-app/project-admin#data-model',
-      urlText: 'Open Documentation',
+      urlText: 'pages.help.openDocumentation',
     },
     {
       icon: 'image_search',
-      title: 'Research tools',
-      text: 'Get more information about data handling, search methods and how to use the research tools.',
+      title: 'pages.help.docs.researchTools.title',
+      text: 'pages.help.docs.researchTools.text',
       url: 'https://dasch.swiss/knowledge-hub/dsp-app',
-      urlText: 'Open Documentation',
+      urlText: 'pages.help.openDocumentation',
     },
   ];
 
+  // The titles are product names carrying a version number, so they stay verbatim.
   tools: GridItem[] = [
     {
       title: 'DSP-APP ',
-      text: "This is the tool of the user interface you are using right now. DaSCH's generic web application.",
+      text: 'pages.help.software.dspApp',
       url: 'https://github.com/dasch-swiss/dsp-app/releases/tag/v',
-      urlText: 'Release notes',
+      urlText: 'pages.help.software.releaseNotes',
     },
     {
       title: 'DSP-API ',
-      text: 'Framework to store, share, and work with primary resources in the humanities.',
+      text: 'pages.help.software.dspApi',
       url: 'https://github.com/dasch-swiss/dsp-api/releases/tag/',
-      urlText: 'Release notes',
+      urlText: 'pages.help.software.releaseNotes',
     },
     {
       title: 'Sipi ',
-      text: 'High-performance, IIIF compatible media storage server.',
+      text: 'pages.help.software.sipi',
       url: 'https://github.com/dasch-swiss/sipi/releases/tag/',
-      urlText: 'Release notes',
+      urlText: 'pages.help.software.releaseNotes',
     },
   ];
 
   support: GridItem[] = [
     {
-      title: 'Need more help?',
-      text: 'Have you had some issues by using our software? Let us know and get in contact with the developers:',
+      title: 'pages.help.support.needMoreHelp.title',
+      text: 'pages.help.support.needMoreHelp.text',
       url: encodeURI('mailto:support@dasch.swiss?subject=DSP-APP request | '),
-      urlText: 'Contact us',
+      urlText: 'pages.help.support.needMoreHelp.urlText',
     },
     {
-      title: 'DaSCH Infrastructure',
-      text: 'Wondering what the Swiss National Data and Service Center for the Humanities DaSCH exactly is? Get more information on our Website:',
+      title: 'pages.help.support.infrastructure.title',
+      text: 'pages.help.support.infrastructure.text',
       url: 'https://dasch.swiss',
+      // A domain name, not a translatable label.
       urlText: 'dasch.swiss',
     },
     {
-      title: 'Source Code',
-      text: 'Our software is open source and available on Github under Apache 2.0 license. For support or questions:',
+      title: 'pages.help.support.sourceCode.title',
+      text: 'pages.help.support.sourceCode.text',
       url: 'mailto:support@dasch.swiss',
-      urlText: 'Contact Support',
+      urlText: 'pages.help.support.sourceCode.urlText',
     },
   ];
 

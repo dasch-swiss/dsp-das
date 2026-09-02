@@ -45,6 +45,53 @@
       "notUsersProjects": "Andere Forschungsprojekte",
       "filterProjects": "Projekte filtern"
     },
+    "help": {
+      "devVersion": "Dies ist eine Entwicklungsversion von DSP (Release {{release}}) in der Umgebung {{environment}}",
+      "needHelp": "Brauchen Sie Hilfe?",
+      "userGuide": "Benutzerhandbuch lesen: Nach Thema erkunden",
+      "docs": {
+        "projectAdmin": {
+          "title": "Projektverwaltung",
+          "text": "Erfahren Sie mehr über die Projektverwaltung und die Verwaltung von Projektmitgliedern."
+        },
+        "dataModel": {
+          "title": "Datenmodell erstellen",
+          "text": "Finden Sie alles über Datenmodellierung und die Einrichtung der Projektdatenbank."
+        },
+        "researchTools": {
+          "title": "Forschungswerkzeuge",
+          "text": "Erhalten Sie weitere Informationen über Datenverarbeitung, Suchmethoden und die Nutzung der Forschungswerkzeuge."
+        }
+      },
+      "openDocumentation": "Dokumentation öffnen",
+      "software": {
+        "heading": "Entdecken Sie unsere Softwareprodukte",
+        "mainProduct": "Die DaSCH Service Platform (DSP) ist unser Hauptprodukt, aktuelles Release",
+        "releaseNews": "Hier klicken für die neuesten Informationen zu dieser Hauptversion",
+        "moreDetails": "Wenn Sie mehr über die einzelnen Anwendungen von DSP erfahren möchten, werfen Sie einen Blick auf die folgenden Softwareprodukte — alle vom DaSCH-Team in der Schweiz entwickelt.",
+        "dspApp": "Dies ist das Werkzeug der Benutzeroberfläche, die Sie gerade verwenden. Die generische Webanwendung des DaSCH.",
+        "dspApi": "Framework zum Speichern, Teilen und Bearbeiten von Primärquellen in den Geisteswissenschaften.",
+        "sipi": "Leistungsstarker, IIIF-kompatibler Medienserver.",
+        "releaseNotes": "Release Notes"
+      },
+      "support": {
+        "heading": "Weitere Unterstützung erhalten oder zur Verbesserung beitragen",
+        "needMoreHelp": {
+          "title": "Brauchen Sie weitere Hilfe?",
+          "text": "Hatten Sie Probleme bei der Nutzung unserer Software? Teilen Sie es uns mit und nehmen Sie Kontakt mit den Entwickler:innen auf:",
+          "urlText": "Kontaktieren Sie uns"
+        },
+        "infrastructure": {
+          "title": "DaSCH-Infrastruktur",
+          "text": "Sie fragen sich, was das Schweizerische Nationale Daten- und Servicezentrum für die Geisteswissenschaften DaSCH genau ist? Weitere Informationen finden Sie auf unserer Website:"
+        },
+        "sourceCode": {
+          "title": "Quellcode",
+          "text": "Unsere Software ist Open Source und auf GitHub unter der Apache-2.0-Lizenz verfügbar. Für Support oder Fragen:",
+          "urlText": "Support kontaktieren"
+        }
+      }
+    },
     "userSettings": {
       "loginForm": {
         "login": "Anmelden"
@@ -971,6 +1018,19 @@
     },
     "grid": {
       "readMore": "Mehr erfahren"
+    },
+    "footer": {
+      "legalNotice": "Rechtliche Hinweise",
+      "privacyPolicy": "Datenschutzerklärung",
+      "privacyPolicyEnglish": "Datenschutzerklärung (Englisch)",
+      "impressum": "Impressum",
+      "contact": "Kontakt",
+      "downloads": "Downloads",
+      "termsAndConditions": "Allgemeine Geschäftsbedingungen (AGB)",
+      "depositAgreement": "Hinterlegungsvertrag",
+      "statutes": "DaSCH-Statuten 2026",
+      "termsOfService": "Nutzungsbedingungen",
+      "copyright": "© {{year}} DaSCH – Schweizerisches Nationales Daten- und Servicezentrum für die Geisteswissenschaften. Alle Rechte vorbehalten."
     }
   },
   "core": {

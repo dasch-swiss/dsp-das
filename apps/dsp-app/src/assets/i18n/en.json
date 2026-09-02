@@ -45,6 +45,53 @@
       "notUsersProjects": "Other Research Projects",
       "filterProjects": "Filter projects"
     },
+    "help": {
+      "devVersion": "This is a development version of DSP (release {{release}}) running in the environment {{environment}}",
+      "needHelp": "Need help?",
+      "userGuide": "Read the user guide: Explore by topic",
+      "docs": {
+        "projectAdmin": {
+          "title": "Project administration",
+          "text": "Read more about project administration and how to manage project members."
+        },
+        "dataModel": {
+          "title": "Data model creation",
+          "text": "Find everything about data modelling and how to set up the project database."
+        },
+        "researchTools": {
+          "title": "Research tools",
+          "text": "Get more information about data handling, search methods and how to use the research tools."
+        }
+      },
+      "openDocumentation": "Open Documentation",
+      "software": {
+        "heading": "Explore our software products",
+        "mainProduct": "The DaSCH Service Platform (DSP) is our main product with the current release being",
+        "releaseNews": "Click here to get the latest news about this main version",
+        "moreDetails": "If you are interested in more details about the individual applications of DSP, take a look at the following software products — all developed by the DaSCH team in Switzerland.",
+        "dspApp": "This is the tool of the user interface you are using right now. DaSCH's generic web application.",
+        "dspApi": "Framework to store, share, and work with primary resources in the humanities.",
+        "sipi": "High-performance, IIIF compatible media storage server.",
+        "releaseNotes": "Release notes"
+      },
+      "support": {
+        "heading": "Get more support or help to improve",
+        "needMoreHelp": {
+          "title": "Need more help?",
+          "text": "Have you had some issues by using our software? Let us know and get in contact with the developers:",
+          "urlText": "Contact us"
+        },
+        "infrastructure": {
+          "title": "DaSCH Infrastructure",
+          "text": "Wondering what the Swiss National Data and Service Center for the Humanities DaSCH exactly is? Get more information on our website:"
+        },
+        "sourceCode": {
+          "title": "Source Code",
+          "text": "Our software is open source and available on GitHub under Apache 2.0 licence. For support or questions:",
+          "urlText": "Contact Support"
+        }
+      }
+    },
     "userSettings": {
       "loginForm": {
         "login": "Login"
@@ -971,6 +1018,19 @@
     },
     "grid": {
       "readMore": "Read more"
+    },
+    "footer": {
+      "legalNotice": "Legal Notice",
+      "privacyPolicy": "Privacy Policy",
+      "privacyPolicyEnglish": "Privacy Policy (English)",
+      "impressum": "Impressum",
+      "contact": "Contact",
+      "downloads": "Downloads",
+      "termsAndConditions": "Terms and Conditions (AGB)",
+      "depositAgreement": "Deposit Agreement",
+      "statutes": "DaSCH Statutes 2026",
+      "termsOfService": "Terms of Service",
+      "copyright": "© {{year}} DaSCH – Swiss National Data and Service Center for the Humanities. All rights reserved."
     }
   },
   "core": {
