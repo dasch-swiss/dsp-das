@@ -7,19 +7,21 @@ import {
   ResourcePropertyDefinitionWithAllLanguages,
   StringLiteralV2,
 } from '@dasch-swiss/dsp-js';
-import { LocalizationService, pickPreferredLanguageString } from '@dasch-swiss/vre/shared/app-helper-services';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { combineLatest, map, Observable } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
+import { map, Observable } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ProjectShortnameService } from '../project-shortname.service';
 
 /**
- * One entry of the "Found in:" list: either the resource's own label — a UI string translated by
- * ngx-translate — or a property, named by its multi-language labels so that it follows the UI
- * language the same way the resource class does.
+ * One entry of the "Found in:" list. Exactly one field is set: `translationKey` for a hit on the
+ * resource's own label — a UI string — and `labels` for a property, whose multi-language names the
+ * template resolves the same way it resolves the resource class.
  */
-type FoundInEntry = { readonly translationKey: string } | { readonly labels: StringLiteralV2[] };
+interface FoundInEntry {
+  readonly translationKey?: string;
+  readonly labels?: StringLiteralV2[];
+}
 
 const RESOURCE_LABEL_KEY = 'pages.dataBrowser.resourceListItem.resourceLabel';
 
@@ -55,7 +57,18 @@ const RESOURCE_LABEL_KEY = 'pages.dataBrowser.resourceListItem.resourceLabel';
                     |
                   }
                   {{ 'pages.dataBrowser.resourceListItem.foundIn' | translate
-                  }}<span class="semibold" data-cy="found-in-values">{{ foundInText$ | async }}</span></span
+                  }}<span class="semibold" data-cy="found-in-values">
+                    <!-- The separator is part of the interpolation: as its own node it would pick up
+                         the template's own indentation and render as "Réalisation , Titre". -->
+                    @for (entry of foundIn; track $index) {
+                      <span>{{
+                        ($first ? '' : ', ') +
+                          (entry.translationKey
+                            ? (entry.translationKey | translate)
+                            : (entry.labels | appStringifyStringLiteral))
+                      }}</span>
+                    }
+                  </span></span
                 >
               }
               @if (showProjectShortname && (projectShortname$ | async); as shortname) {
@@ -123,14 +136,12 @@ export class ResourceListItemComponent implements OnInit {
   @Input() showResourceClass = false;
 
   showCheckbox = false;
-  foundIn: FoundInEntry[] = [];
-
   /**
-   * The rendered "Found in:" list. Resolved as a stream rather than in `ngOnInit` so the property
-   * names re-render on a UI language change, which is the whole point of keeping the label arrays
-   * around instead of the single-language `ReadValue.propertyLabel`.
+   * Names are kept unresolved so the impure `appStringifyStringLiteral` / `translate` pipes can
+   * re-render them on a UI language change — the point of holding the label arrays rather than the
+   * single-language `ReadValue.propertyLabel`.
    */
-  foundInText$!: Observable<string>;
+  foundIn: FoundInEntry[] = [];
 
   isHighlighted$ = this.multipleViewerService.selectedResources$.pipe(
     map(resources => {
@@ -168,9 +179,7 @@ export class ResourceListItemComponent implements OnInit {
 
   constructor(
     public readonly multipleViewerService: MultipleViewerService,
-    private readonly _projectShortnameService: ProjectShortnameService,
-    private readonly _localizationService: LocalizationService,
-    private readonly _translateService: TranslateService
+    private readonly _projectShortnameService: ProjectShortnameService
   ) {}
 
   ngOnInit() {
@@ -181,7 +190,6 @@ export class ResourceListItemComponent implements OnInit {
       this._searchInResourceLabel(searchKeyword);
       this._searchInResourceProperty(searchKeyword);
     }
-    this.foundInText$ = this._resolveFoundInText$();
 
     this.projectShortname$ = this._projectShortnameService.getProjectShortname(this.resource.attachedToProject);
   }
@@ -201,21 +209,6 @@ export class ResourceListItemComponent implements OnInit {
     }
 
     return this.resource.resourceClassLabel ? [{ value: this.resource.resourceClassLabel } as StringLiteralV2] : null;
-  }
-
-  private _resolveFoundInText$(): Observable<string> {
-    return combineLatest([
-      this._localizationService.currentLanguage$,
-      this._translateService.stream(RESOURCE_LABEL_KEY),
-    ]).pipe(
-      map(([language, resourceLabel]) =>
-        this.foundIn
-          .map(entry =>
-            'translationKey' in entry ? resourceLabel : pickPreferredLanguageString(entry.labels, language)
-          )
-          .join(', ')
-      )
-    );
   }
 
   private _searchInResourceLabel(keyword: string) {
