@@ -547,7 +547,8 @@
         "noData": "Es gibt keine Daten, die Ihrer Anfrage entsprechen."
       },
       "resourceListItem": {
-        "foundIn": "Gefunden in: "
+        "foundIn": "Gefunden in: ",
+        "resourceLabel": "Label"
       },
       "downloadDialog": {
         "title": "Herunterladen",
