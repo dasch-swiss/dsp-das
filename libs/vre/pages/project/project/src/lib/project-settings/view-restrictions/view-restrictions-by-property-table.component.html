@@ -1,0 +1,181 @@
+@if (propertiesState$ | async; as state) {
+  @if (state.loading) {
+    <!-- Step 1 is cache-only on the API side, so this is brief. -->
+    <div class="step-status">
+      <app-progress-indicator />
+      <span>{{ 'pages.project.viewRestrictions.stepFetchingProperties' | translate }}</span>
+    </div>
+  } @else if (state.failed) {
+    <!-- Terminal: with no property list there is no row to attribute anything to, so no step 2 runs. -->
+    <div class="load-error">
+      <mat-icon>error_outline</mat-icon>
+      {{ 'pages.project.viewRestrictions.propertiesLoadFailed' | translate }}
+    </div>
+  } @else if (state.properties; as properties) {
+    @if (!properties.length) {
+      <div class="empty-note">
+        <mat-icon>info</mat-icon>
+        {{ 'pages.project.viewRestrictions.noProperties' | translate }}
+      </div>
+    } @else {
+      @let values = (valuesState$ | async) ?? emptyValues;
+      @let activeItemType = (itemType$ | async) ?? ValueItemType.All;
+
+      <!-- The table below is already fully rendered; only the count cells are still filling in. -->
+      @if (progress$ | async; as progress) {
+        @if (progress.done < progress.total) {
+          <div class="step-status">
+            <app-progress-indicator />
+            <span>
+              {{
+                'pages.project.viewRestrictions.stepGathering'
+                  | translate: { done: progress.done, total: progress.total }
+              }}
+            </span>
+          </div>
+        }
+      }
+
+      @if (anyFailed$ | async) {
+        <div class="totals-incomplete">
+          <mat-icon>warning_amber</mat-icon>
+          {{ 'pages.project.viewRestrictions.totalsIncomplete' | translate }}
+        </div>
+      }
+
+      @if (hasNoRestrictions(properties, values)) {
+        <div class="empty-note">
+          <mat-icon>check_circle</mat-icon>
+          {{ 'pages.project.viewRestrictions.noRestrictions' | translate }}
+        </div>
+      }
+
+      <div class="matrix with-totals">
+        <div class="matrix-head">
+          <div class="col-group">{{ 'pages.project.viewRestrictions.property' | translate }}</div>
+          <div class="col-total">{{ 'pages.project.viewRestrictions.values' | translate }}</div>
+          <div class="col-aud"><mat-icon>public</mat-icon>{{ 'pages.project.viewRestrictions.audience.anonymous' | translate }}</div>
+          <div class="col-aud"><mat-icon>person</mat-icon>{{ 'pages.project.viewRestrictions.audience.authenticated' | translate }}</div>
+          <div class="col-aud"><mat-icon>group</mat-icon>{{ 'pages.project.viewRestrictions.audience.projectMember' | translate }}</div>
+        </div>
+
+        @for (property of properties; track property.id) {
+          @let rowValues = values.get(property.id);
+          @let expandable = isExpandable(rowValues);
+          <button
+            type="button"
+            class="matrix-row"
+            [class.is-inert]="!expandable"
+            [class.is-failed]="rowValues?.failed"
+            [disabled]="!expandable"
+            (click)="toggleProperty(property.id, rowValues)">
+            <span class="col-group">
+              @if (expandable) {
+                <mat-icon class="chevron">{{ isExpanded(property.id) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+              } @else {
+                <span class="chevron-spacer" aria-hidden="true"></span>
+              }
+              <span class="group-label">
+                <span class="group-name">{{ property.label }}</span>
+                @if (property.ontology) {
+                  <span class="group-sub">{{ property.ontology }}</span>
+                }
+              </span>
+              <!-- Per-property failure, confined to its own row; retrying refetches only this one. -->
+              @if (rowValues?.failed) {
+                <span class="row-error">
+                  <mat-icon>error_outline</mat-icon>
+                  {{ 'pages.project.viewRestrictions.rowFailed' | translate }}
+                  <button type="button" class="row-retry" (click)="onRetryProperty(property.id, $event)">
+                    {{ 'pages.project.viewRestrictions.rowRetry' | translate }}
+                  </button>
+                </span>
+              }
+            </span>
+            <!--
+              totalValues, not totalResources: a property has no resource population of its own. The counts
+              beside it are values too, so this is a true denominator.
+            -->
+            <span class="col-total">{{ rowValues?.counts?.totalValues ?? '–' }}</span>
+            <app-count-cell
+              [resourceCounts]="undefined"
+              [valueCounts]="rowValues?.counts?.counts?.anonymous"
+              [valuesLoading]="!!rowValues?.loading"
+              [valuesFailed]="!!rowValues?.failed"
+              [itemType]="activeItemType" />
+            <app-count-cell
+              [resourceCounts]="undefined"
+              [valueCounts]="rowValues?.counts?.counts?.authenticated"
+              [valuesLoading]="!!rowValues?.loading"
+              [valuesFailed]="!!rowValues?.failed"
+              [itemType]="activeItemType" />
+            <app-count-cell
+              [resourceCounts]="undefined"
+              [valueCounts]="rowValues?.counts?.counts?.projectMember"
+              [valuesLoading]="!!rowValues?.loading"
+              [valuesFailed]="!!rowValues?.failed"
+              [itemType]="activeItemType" />
+          </button>
+
+          @if (isExpanded(property.id)) {
+            @if (isLoading(property.id)) {
+              <app-progress-indicator />
+            } @else if (isFailed(property.id)) {
+              <div class="load-error">
+                <mat-icon>error_outline</mat-icon>
+                {{ 'pages.project.viewRestrictions.itemsLoadFailed' | translate }}
+              </div>
+            } @else if (expandedProperty(property.id); as ep) {
+              @if (ep.page.pagination.totalPages > 1) {
+                <!-- Kept mounted while paging: app-pager holds its index privately. -->
+                <div class="pager" [class.is-paging]="isPageLoading(property.id)">
+                  <app-pager
+                    [numberOfAllResults]="ep.page.pagination.totalItems"
+                    [pageSize]="pageSize"
+                    (pageIndexChanged)="onPageIndexChanged(property.id, $event)" />
+                </div>
+              }
+              @for (res of ep.page.data; track res.resourceIri) {
+                <div class="drill-res">
+                  <span class="col-group indent-1">
+                    <mat-icon class="kind-icon">description</mat-icon>
+                    <a class="link-label res-name" [href]="resourceLink(res.resourceIri)" target="_blank" rel="noopener" [title]="res.label">{{ res.label }}</a>
+                    <!--
+                      The resource's own class, shown per row. A property spans classes, so two rows here can
+                      legitimately differ — and that difference is often the finding.
+                    -->
+                    <span class="group-sub res-class">{{ res.resourceClassIri.split('#').slice(-1)[0] }}</span>
+                  </span>
+                </div>
+                @for (value of res.values; track value.valueIri) {
+                  <div class="drill-item">
+                    <span class="col-group indent-2">
+                      <mat-icon class="kind-icon">{{ valueIcon(value.isFile, value.hasComment) }}</mat-icon>
+                      <a class="link-label" [href]="valueLink(res.resourceIri, value.valueIri)" target="_blank" rel="noopener">
+                        {{ property.label }}
+                      </a>
+                    </span>
+                  </div>
+                }
+              }
+            }
+          }
+        }
+
+        <!--
+          Footer totals, summed client-side: the API answers one property per request, so no single
+          response can carry them. A lower bound whenever a property failed, which the banner states.
+        -->
+        <div class="matrix-foot">
+          <div class="col-group">{{ 'pages.project.viewRestrictions.total' | translate }}</div>
+          <div class="col-total">{{ totalValues(values) }}</div>
+          <app-count-cell [resourceCounts]="undefined" [valueCounts]="totalCounts(values, 'anonymous')" [itemType]="activeItemType" />
+          <app-count-cell [resourceCounts]="undefined" [valueCounts]="totalCounts(values, 'authenticated')" [itemType]="activeItemType" />
+          <app-count-cell [resourceCounts]="undefined" [valueCounts]="totalCounts(values, 'projectMember')" [itemType]="activeItemType" />
+        </div>
+      </div>
+    }
+  }
+} @else {
+  <app-progress-indicator />
+}

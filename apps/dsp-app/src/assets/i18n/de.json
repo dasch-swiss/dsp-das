@@ -196,12 +196,8 @@
         "tab": "Sichtbarkeitseinschränkungen",
         "title": "Sichtbarkeitseinschränkungen",
         "intro": "Jede Ressourcenklasse des Projekts mit der Anzahl ihrer Ressourcen und, für jede Zielgruppe, wie viele Elemente verborgen oder in eingeschränkter Ansicht ausgeliefert werden. Öffnen Sie eine Zeile, um die betroffenen Ressourcen und ihre Sichtbarkeit pro Zielgruppe zu sehen.",
-        "groupBy": "Gruppieren nach",
-        "byClass": "Ressourcenklasse",
-        "byProperty": "Eigenschaft",
         "filters": "Filter",
         "resourceClass": "Ressourcenklasse",
-        "property": "Eigenschaft",
         "resources": "Ressourcen",
         "total": "Total",
         "itemsInside": "eingeschränkte Elemente enthalten",
@@ -213,12 +209,10 @@
         },
         "itemType": {
           "all": "Alle Elemente",
-          "resource": "Ressourcen",
           "file": "Dateiwerte",
           "value": "Werte",
           "comment": "Kommentare"
         },
-        "groupByAria": "Gruppieren nach",
         "filtersAria": "Nach Elementtyp filtern",
         "visibility": {
           "hidden": "Verborgen",
@@ -232,7 +226,24 @@
         "countAria": "{{resourcesHidden}} Ressourcen verborgen, {{resourcesRestricted}} in eingeschränkter Ansicht; {{itemsHidden}} Werte verborgen, {{itemsRestricted}} in eingeschränkter Ansicht",
         "countNone": "Keine Einschränkungen",
         "resourceUnit": "Ganze Ressourcen",
-        "itemUnit": "Werte innerhalb von Ressourcen"
+        "itemUnit": "Werte innerhalb von Ressourcen",
+        "stepFetchingClasses": "Ressourcenklassen werden geladen…",
+        "stepGathering": "Einschränkungen werden ermittelt {{done}} / {{total}}",
+        "rowFailed": "Konnte nicht berechnet werden",
+        "rowRetry": "Erneut versuchen",
+        "totalsIncomplete": "Einige Klassen konnten nicht berechnet werden; die Summen unten sind daher ein Mindestwert.",
+        "noClasses": "Dieses Projekt hat noch keine Ressourcenklassen.",
+        "classesLoadFailed": "Die Ressourcenklassen konnten nicht geladen werden; der Bericht kann nicht angezeigt werden.",
+        "reload": "Neu laden",
+        "byClass": "Ressourcenklasse",
+        "byProperty": "Eigenschaft",
+        "groupingAria": "Gruppieren nach",
+        "property": "Eigenschaft",
+        "values": "Werte",
+        "stepFetchingProperties": "Eigenschaften werden geladen…",
+        "propertiesLoadFailed": "Die Eigenschaften konnten nicht geladen werden; der Bericht kann nicht angezeigt werden.",
+        "noProperties": "Dieses Projekt hat noch keine Werteigenschaften.",
+        "groupBy": "Gruppieren nach"
       }
     },
     "system": {

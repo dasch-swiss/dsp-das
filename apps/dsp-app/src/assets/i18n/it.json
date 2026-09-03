@@ -196,12 +196,8 @@
         "tab": "Restrizioni di Visualizzazione",
         "title": "Restrizioni di Visualizzazione",
         "intro": "Ogni classe di risorsa del progetto con il numero di risorse che contiene e, per ogni pubblico, quanti elementi sono nascosti o serviti in vista limitata. Apri una riga per vedere le risorse interessate e la loro visibilità per ogni pubblico.",
-        "groupBy": "Raggruppa per",
-        "byClass": "Classe di risorsa",
-        "byProperty": "Proprietà",
         "filters": "Filtri",
         "resourceClass": "Classe di risorsa",
-        "property": "Proprietà",
         "resources": "Risorse",
         "total": "Totale",
         "itemsInside": "elementi con restrizioni all'interno",
@@ -213,12 +209,10 @@
         },
         "itemType": {
           "all": "Tutti gli elementi",
-          "resource": "Risorse",
           "file": "Valori di file",
           "value": "Valori",
           "comment": "Commenti"
         },
-        "groupByAria": "Raggruppa per",
         "filtersAria": "Filtra per tipo di elemento",
         "visibility": {
           "hidden": "Nascosto",
@@ -232,7 +226,24 @@
         "countAria": "{{resourcesHidden}} risorse nascoste, {{resourcesRestricted}} in vista limitata; {{itemsHidden}} valori nascosti, {{itemsRestricted}} in vista limitata",
         "countNone": "Nessuna restrizione",
         "resourceUnit": "Risorse intere",
-        "itemUnit": "Valori dentro le risorse"
+        "itemUnit": "Valori dentro le risorse",
+        "stepFetchingClasses": "Caricamento delle classi di risorse…",
+        "stepGathering": "Raccolta delle restrizioni {{done}} / {{total}}",
+        "rowFailed": "Non è stato possibile calcolare",
+        "rowRetry": "Riprova",
+        "totalsIncomplete": "Alcune classi non è stato possibile calcolarle, quindi i totali sotto sono un valore minimo.",
+        "noClasses": "Questo progetto non ha ancora classi di risorse.",
+        "classesLoadFailed": "Non è stato possibile caricare le classi di risorse; il rapporto non può essere mostrato.",
+        "reload": "Ricarica",
+        "byClass": "Classe di risorsa",
+        "byProperty": "Proprietà",
+        "groupingAria": "Raggruppa per",
+        "property": "Proprietà",
+        "values": "Valori",
+        "stepFetchingProperties": "Caricamento delle proprietà…",
+        "propertiesLoadFailed": "Non è stato possibile caricare le proprietà; il rapporto non può essere mostrato.",
+        "noProperties": "Questo progetto non ha ancora proprietà di valore.",
+        "groupBy": "Raggruppa per"
       }
     },
     "system": {

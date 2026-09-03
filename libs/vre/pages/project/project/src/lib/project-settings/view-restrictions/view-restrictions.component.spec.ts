@@ -3,50 +3,66 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import {
   AdminAPIApiService,
-  GroupBy,
-  ItemType,
   PagedResponseRestrictedResource,
-  ViewRestrictionsSummary,
+  RestrictedClass,
+  RestrictionCounts,
+  ValueItemType,
+  ViewRestrictionsClasses,
+  ViewRestrictionsProperties,
+  ViewRestrictionsValues,
   Visibility,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
-import { SummaryState } from './view-restrictions-page.service';
+import { ClassesState, ValuesState } from './view-restrictions-page.service';
 import { ViewRestrictionsComponent } from './view-restrictions.component';
 
-const summary: ViewRestrictionsSummary = {
+const THING = 'http://www.knora.org/ontology/0001/anything#Thing';
+const OPEN_THING = 'http://www.knora.org/ontology/0001/anything#OpenThing';
+
+const zero: RestrictionCounts = { hidden: 0, restrictedView: 0 };
+const noCounts = { anonymous: zero, authenticated: zero, projectMember: zero };
+
+/** Step 1: the class list with its resource-level counts and the class population. */
+const classes: ViewRestrictionsClasses = {
   projectIri: 'http://rdfh.ch/projects/0001',
-  groupBy: GroupBy.ResourceClass,
-  itemType: ItemType.All,
-  groups: [
+  classes: [
     {
-      id: 'http://www.knora.org/ontology/0001/anything#Thing',
+      id: THING,
       label: 'Thing',
       ontology: 'anything',
       counts: {
-        anonymous: { resources: { hidden: 15, restrictedView: 4 }, items: { hidden: 0, restrictedView: 0 } },
-        authenticated: { resources: { hidden: 14, restrictedView: 2 }, items: { hidden: 0, restrictedView: 0 } },
-        projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+        anonymous: { hidden: 15, restrictedView: 4 },
+        authenticated: { hidden: 14, restrictedView: 2 },
+        projectMember: { hidden: 5, restrictedView: 0 },
       },
-      // the class population, of which the counts above are a part
       totalResources: 120,
     },
   ],
-  totals: {
-    anonymous: { resources: { hidden: 15, restrictedView: 4 }, items: { hidden: 0, restrictedView: 0 } },
-    authenticated: { resources: { hidden: 14, restrictedView: 2 }, items: { hidden: 0, restrictedView: 0 } },
-    projectMember: { resources: { hidden: 5, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
+};
+
+/** Step 2: one class's value-level counts, in a unit never added to the resource one. */
+const values: ViewRestrictionsValues = {
+  projectIri: 'http://rdfh.ch/projects/0001',
+  resourceClass: THING,
+  itemType: ValueItemType.All,
+  counts: {
+    anonymous: { hidden: 22, restrictedView: 0 },
+    authenticated: { hidden: 3, restrictedView: 0 },
+    projectMember: { hidden: 0, restrictedView: 0 },
   },
 };
+
+const properties: ViewRestrictionsProperties = { projectIri: 'http://rdfh.ch/projects/0001', properties: [] };
 
 const itemsPage: PagedResponseRestrictedResource = {
   data: [
     {
       resourceIri: 'http://rdfh.ch/0001/a-thing',
       label: 'A thing',
-      resourceClassIri: 'http://www.knora.org/ontology/0001/anything#Thing',
+      resourceClassIri: THING,
       resourceVisibility: {
         anonymous: Visibility.Hidden,
         authenticated: Visibility.Visible,
@@ -63,26 +79,42 @@ describe('ViewRestrictionsComponent', () => {
   let component: ViewRestrictionsComponent;
 
   const adminApiMock = {
-    getAdminProjectsIriProjectiriViewRestrictionsSummary: jest.fn().mockReturnValue(of(summary)),
+    getAdminProjectsIriProjectiriViewRestrictionsClasses: jest.fn().mockReturnValue(of(classes)),
+    getAdminProjectsIriProjectiriViewRestrictionsValues: jest.fn().mockReturnValue(of(values)),
     getAdminProjectsIriProjectiriViewRestrictionsItems: jest.fn().mockReturnValue(of(itemsPage)),
+    getAdminProjectsIriProjectiriViewRestrictionsProperties: jest.fn().mockReturnValue(of(properties)),
+    getAdminProjectsIriProjectiriViewRestrictionsPropertyValues: jest.fn().mockReturnValue(of({})),
+    getAdminProjectsIriProjectiriViewRestrictionsPropertyItems: jest.fn().mockReturnValue(of(itemsPage)),
   };
 
   const projectPageServiceMock = {
     currentProject$: of({ id: 'http://rdfh.ch/projects/0001', shortname: 'anything', shortcode: '0001' }),
   };
 
+  const providers = [
+    { provide: AdminAPIApiService, useValue: adminApiMock },
+    { provide: ProjectPageService, useValue: projectPageServiceMock },
+    // getResourcePath strips the iriBase (http://rdfh.ch) leaving /{shortcode}/{uuid}
+    { provide: ResourceService, useValue: { getResourcePath: (iri: string) => iri.replace('http://rdfh.ch', '') } },
+    provideTranslateService(),
+    TranslateService,
+  ];
+
+  /** The step-2 state for one class, as the template hands it to the methods under test. */
+  const loaded = (counts: ViewRestrictionsValues = values): ValuesState => ({ loading: false, counts });
+  const clazz = (over: Partial<RestrictedClass> = {}): RestrictedClass => ({
+    id: 'g',
+    label: 'G',
+    counts: noCounts,
+    totalResources: 0,
+    ...over,
+  });
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ViewRestrictionsComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [
-        { provide: AdminAPIApiService, useValue: adminApiMock },
-        { provide: ProjectPageService, useValue: projectPageServiceMock },
-        // getResourcePath strips the iriBase (http://rdfh.ch) leaving /{shortcode}/{uuid}
-        { provide: ResourceService, useValue: { getResourcePath: (iri: string) => iri.replace('http://rdfh.ch', '') } },
-        provideTranslateService(),
-        TranslateService,
-      ],
+      providers,
     })
       .overrideComponent(ViewRestrictionsComponent, { set: { template: '<div>Mock Template</div>' } })
       .compileComponents();
@@ -98,106 +130,217 @@ describe('ViewRestrictionsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('loads the summary for the current project (final state not loading)', done => {
-    // startWith emits { loading: true } first, then the loaded state; assert the loaded one.
-    const states: unknown[] = [];
-    component.summaryState$.subscribe(state => {
+  it('sets the browser title for the current project', () => {
+    expect(TestBed.inject(Title).getTitle()).toBe('Project anything | View restrictions');
+  });
+
+  // ----- the stepped fetch (DEV-6778) -----
+
+  // Step 1 renders the whole table skeleton. It must resolve to a non-loading state carrying the class
+  // list, having emitted the loading sentinel first — the single-request form showed nothing until
+  // every class had been counted, which is what timed out.
+  it('loads the class list first, after a loading sentinel', done => {
+    const states: ClassesState[] = [];
+    component.classesState$.subscribe(state => {
       states.push(state);
       if (!state.loading) {
-        expect(state.summary?.groups?.length).toBe(1);
-        expect(state.summary?.totals.anonymous.resources.hidden).toBe(15);
-        expect(state.summary?.totals.anonymous.resources.restrictedView).toBe(4);
-        // the first emission must have been the loading sentinel
-        expect((states[0] as { loading: boolean }).loading).toBe(true);
+        expect(state.classes?.length).toBe(1);
+        expect(state.classes?.[0].totalResources).toBe(120);
+        expect(states[0].loading).toBe(true);
         done();
       }
     });
   });
 
-  it('sets the browser title for the current project', () => {
-    expect(TestBed.inject(Title).getTitle()).toBe('Project anything | View restrictions');
+  // Step 2 is one request per class, so the table must be able to render before any of them answer.
+  it('requests value counts per class, keyed by class IRI', done => {
+    component.valuesState$.subscribe(map => {
+      if (map.get(THING)?.loading === false) {
+        expect(adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsValues).toHaveBeenCalledWith(
+          'http://rdfh.ch/projects/0001',
+          THING,
+          ValueItemType.All
+        );
+        expect(map.get(THING)?.counts?.counts.anonymous.hidden).toBe(22);
+        done();
+      }
+    });
   });
 
-  it('expands a group and stores the fetched items (resolves the loading state)', () => {
-    const group = summary.groups![0];
-    component.toggleGroup(group);
+  // Partial data beats no data on a permissions report, provided the gaps are visible: one class failing
+  // marks that row and leaves every other row intact.
+  it('confines a step-2 failure to its own row', done => {
+    adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsValues.mockReturnValueOnce(
+      throwError(() => new Error('boom'))
+    );
+    component.onItemType(ValueItemType.Value);
+    component.valuesState$.subscribe(map => {
+      const state = map.get(THING);
+      if (state && !state.loading) {
+        expect(state.failed).toBe(true);
+        expect(state.counts).toBeUndefined();
+        done();
+      }
+    });
+  });
+
+  it('reports the gap so value totals can be marked a lower bound', done => {
+    adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsValues.mockReturnValueOnce(
+      throwError(() => new Error('boom'))
+    );
+    component.onItemType(ValueItemType.File);
+    component.anyFailed$.subscribe(failed => {
+      if (failed) {
+        expect(failed).toBe(true);
+        done();
+      }
+    });
+  });
+
+  // Step 1 failing is terminal for the page: without the class list there is no row to attribute
+  // anything to, so it must resolve to a failed state rather than spin.
+  it('resolves a failed class list instead of spinning forever', done => {
+    adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsClasses.mockReturnValueOnce(
+      throwError(() => new Error('boom'))
+    );
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [ViewRestrictionsComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers,
+    })
+      .overrideComponent(ViewRestrictionsComponent, { set: { template: '<div>Mock</div>' } })
+      .compileComponents()
+      .then(() => {
+        const f = TestBed.createComponent(ViewRestrictionsComponent);
+        f.detectChanges();
+        f.componentInstance.classesState$.subscribe(state => {
+          if (!state.loading) {
+            expect(state.failed).toBe(true);
+            expect(state.classes).toBeUndefined();
+            done();
+          }
+        });
+      });
+  });
+
+  it('reports progress as k of N for the gathering indicator', done => {
+    component.progress$.subscribe(p => {
+      if (p.total > 0 && p.done === p.total) {
+        expect(p.total).toBe(1);
+        done();
+      }
+    });
+  });
+
+  // ----- grouping toggle -----
+
+  it('starts grouped by class and switches to property on request', () => {
+    expect(component.grouping()).toBe('class');
+    component.onGrouping('property');
+    expect(component.grouping()).toBe('property');
+  });
+
+  it('collapses any expanded row when the grouping changes, so no stale panel survives', () => {
+    component.toggleGroup(classes.classes[0], loaded());
+    expect(component.isExpanded(THING)).toBe(true);
+    component.onGrouping('property');
+    expect(component.isExpanded(THING)).toBe(false);
+  });
+
+  // ----- drill-down -----
+
+  it('expands a class and stores the fetched page', () => {
+    component.toggleGroup(classes.classes[0], loaded());
     expect(adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems).toHaveBeenCalledWith(
       'http://rdfh.ch/projects/0001',
-      group.id,
-      GroupBy.ResourceClass,
-      ItemType.All,
+      THING,
+      undefined,
       1,
       25
     );
     // 'of(...)' resolves synchronously, so loading must have advanced to the loaded state
-    expect(component.isLoading(group.id)).toBe(false);
-    expect(component.isExpanded(group.id)).toBe(true);
-    expect(component.expandedGroup(group.id)?.page.data.length).toBe(1);
+    expect(component.isLoading(THING)).toBe(false);
+    expect(component.isExpanded(THING)).toBe(true);
+    expect(component.expandedGroup(THING)?.page.data.length).toBe(1);
   });
 
-  it('collapses an expanded group on second toggle', () => {
-    const group = summary.groups![0];
-    component.toggleGroup(group);
-    component.toggleGroup(group);
-    expect(component.isExpanded(group.id)).toBe(false);
+  it('collapses an expanded class on second toggle', () => {
+    component.toggleGroup(classes.classes[0], loaded());
+    component.toggleGroup(classes.classes[0], loaded());
+    expect(component.isExpanded(THING)).toBe(false);
   });
 
   it('resets expansion and updates the filter when the item type changes', () => {
-    const group = summary.groups![0];
-    component.toggleGroup(group);
-    component.onItemType(ItemType.Value);
-    expect(component.isExpanded(group.id)).toBe(false);
-    expect(component.vr.itemType$.value).toBe(ItemType.Value);
+    component.toggleGroup(classes.classes[0], loaded());
+    component.onItemType(ValueItemType.Value);
+    expect(component.isExpanded(THING)).toBe(false);
+    expect(component.itemType$.value).toBe(ValueItemType.Value);
   });
 
-  it('disables the Resource chip in property mode', () => {
-    component.onGroupBy(GroupBy.Property);
-    expect(component.isChipDisabled(ItemType.Resource)).toBe(true);
-    expect(component.isChipDisabled(ItemType.Value)).toBe(false);
+  it('marks a drill-down class as failed instead of leaving it on loading', () => {
+    adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems.mockReturnValueOnce(
+      throwError(() => new Error('boom'))
+    );
+    component.toggleGroup(classes.classes[0], loaded());
+    expect(component.isLoading(THING)).toBe(false);
+    expect(component.isFailed(THING)).toBe(true);
+    expect(component.expandedGroup(THING)).toBeNull();
   });
 
   it('builds item-type translation keys from lowercase slugs, not the raw enum casing', () => {
-    expect(component.itemTypeKey(ItemType.All)).toBe('pages.project.viewRestrictions.itemType.all');
-    expect(component.itemTypeKey(ItemType.File)).toBe('pages.project.viewRestrictions.itemType.file');
-    expect(component.itemTypeKey(ItemType.Comment)).toBe('pages.project.viewRestrictions.itemType.comment');
-  });
-
-  it('falls back to the translated item type when an item has no property label', () => {
-    // propertyLabel is optional in the API; without this the template would render the raw enum
-    expect(component.hasPropertyLabel({ type: ItemType.File, visibility: {} } as never)).toBe(false);
-    expect(
-      component.hasPropertyLabel({ type: ItemType.File, propertyLabel: 'Has image', visibility: {} } as never)
-    ).toBe(true);
+    expect(component.itemTypeKey(ValueItemType.All)).toBe('pages.project.viewRestrictions.itemType.all');
+    expect(component.itemTypeKey(ValueItemType.File)).toBe('pages.project.viewRestrictions.itemType.file');
+    expect(component.itemTypeKey(ValueItemType.Comment)).toBe('pages.project.viewRestrictions.itemType.comment');
   });
 
   describe('pager adapter (app-pager is 0-based, the API is 1-based)', () => {
     it('translates a 0-based page index into the 1-based API page', () => {
-      const group = summary.groups![0];
-      component.toggleGroup(group); // loads page 1
+      component.toggleGroup(classes.classes[0], loaded()); // loads page 1
       adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems.mockClear();
 
-      component.onPageIndexChanged(group.id, 2);
+      component.onPageIndexChanged(THING, 2);
 
       expect(adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems).toHaveBeenCalledWith(
         'http://rdfh.ch/projects/0001',
-        group.id,
-        GroupBy.ResourceClass,
-        ItemType.All,
+        THING,
+        undefined,
         3,
         25
       );
     });
 
     it('ignores an event naming the page already shown, so expanding does not refetch page 1', () => {
-      const group = summary.groups![0];
-      component.toggleGroup(group); // loads page 1 => currentPage 1
+      component.toggleGroup(classes.classes[0], loaded()); // loads page 1 => currentPage 1
       adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems.mockClear();
 
       // app-pager resets its index to 0 when numberOfAllResults changes and emits it
-      component.onPageIndexChanged(group.id, 0);
+      component.onPageIndexChanged(THING, 0);
 
       expect(adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems).not.toHaveBeenCalled();
-      expect(component.expandedGroup(group.id)?.currentPage).toBe(1);
+      expect(component.expandedGroup(THING)?.currentPage).toBe(1);
+    });
+
+    // The pager holds its page index internally with no input for it, so unmounting it resets the view
+    // to page 1 while the data is page 2. Paging therefore keeps the current page rendered and only
+    // flags it loading — a regression here is invisible except through the mounted/unmounted pager.
+    it('keeps the current page mounted while the next one loads', () => {
+      component.toggleGroup(classes.classes[0], loaded());
+      let resolve: ((v: PagedResponseRestrictedResource) => void) | undefined;
+      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems.mockReturnValueOnce(
+        new (require('rxjs').Observable)((sub: { next: (v: unknown) => void }) => {
+          resolve = v => sub.next(v);
+        })
+      );
+
+      component.onPageIndexChanged(THING, 1);
+
+      // still page 1's data on screen, flagged as loading rather than replaced by a spinner state
+      expect(component.expandedGroup(THING)).not.toBeNull();
+      expect(component.expandedGroup(THING)?.currentPage).toBe(1);
+      expect(component.isPageLoading(THING)).toBe(true);
+      expect(component.isLoading(THING)).toBe(false);
+      expect(resolve).toBeDefined();
     });
   });
 
@@ -217,54 +360,117 @@ describe('ViewRestrictionsComponent', () => {
     });
   });
 
-  describe('error handling', () => {
-    it('resolves the summary to a failed state instead of spinning forever', () => {
-      const states: SummaryState[] = [];
-      const sub = component.summaryState$.subscribe(state => states.push(state));
-
-      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsSummary.mockReturnValueOnce(
-        throwError(() => new Error('boom'))
-      );
-      // re-trigger the stream so the failing mock is the one that gets used
-      component.onItemType(ItemType.Value);
-
-      expect(states.at(-1)?.loading).toBe(false);
-      expect(states.at(-1)?.failed).toBe(true);
-      expect(states.at(-1)?.summary).toBeUndefined();
-
-      sub.unsubscribe();
+  describe('footer totals (the two units are summed separately)', () => {
+    it('sums an audience resource counts over the classes on screen', () => {
+      expect(component.totalCounts(classes.classes, 'anonymous')).toEqual({ hidden: 15, restrictedView: 4 });
     });
 
-    it('keeps working after a failed summary: the next filter change retries', () => {
-      const states: SummaryState[] = [];
-      // subscribe first, so this sees the failure and the recovery in order rather than a replay
-      const sub = component.summaryState$.subscribe(state => states.push(state));
-
-      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsSummary.mockReturnValueOnce(
-        throwError(() => new Error('boom'))
-      );
-      component.onItemType(ItemType.Value);
-      expect(states.at(-1)?.failed).toBe(true);
-
-      // catchError sits on the inner request, so the outer stream survives and refetches
-      component.onItemType(ItemType.File);
-      expect(states.at(-1)?.failed).toBeUndefined();
-      expect(states.at(-1)?.summary?.groups?.length).toBe(1);
-
-      sub.unsubscribe();
+    // A lower bound whenever a class failed: classes without counts contribute nothing rather than
+    // being guessed at, which is why the banner above the table has to say so.
+    it('sums only the value counts that arrived, treating a failed class as absent not zero-known', () => {
+      const map = new Map<string, ValuesState>([
+        [THING, loaded()],
+        [OPEN_THING, { loading: false, failed: true }],
+      ]);
+      expect(component.totalValueCounts(map, 'anonymous')).toEqual({ hidden: 22, restrictedView: 0 });
     });
 
-    it('marks a drill-down group as failed instead of leaving it on loading', () => {
-      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems.mockReturnValueOnce(
-        throwError(() => new Error('boom'))
-      );
-      const group = summary.groups![0];
+    it('sums the class population from totalResources alone, never from the counts', () => {
+      expect(component.totalResources(classes.classes)).toBe(120);
+      expect(component.totalResources(undefined)).toBe(0);
+    });
 
-      component.toggleGroup(group);
+    // The population is independent of the restrictions: an unrestricted class still counts.
+    it('counts an unrestricted class towards the population total', () => {
+      expect(component.totalResources([...classes.classes, clazz({ id: OPEN_THING, totalResources: 500 })])).toBe(620);
+    });
+  });
 
-      expect(component.isLoading(group.id)).toBe(false);
-      expect(component.isFailed(group.id)).toBe(true);
-      expect(component.expandedGroup(group.id)).toBeNull();
+  describe('isEmptyCount', () => {
+    it('is empty only when both states are zero', () => {
+      expect(component.isEmptyCount(zero)).toBe(true);
+      expect(component.isEmptyCount(undefined)).toBe(true);
+    });
+
+    // Restricted-view-only must still count as a finding — folding it into "no restrictions" is exactly
+    // the conflation screen 1i exists to undo.
+    it('is not empty when only restricted view is non-zero', () => {
+      expect(component.isEmptyCount({ hidden: 0, restrictedView: 3 })).toBe(false);
+    });
+
+    it('is not empty when only hidden is non-zero', () => {
+      expect(component.isEmptyCount({ hidden: 2, restrictedView: 0 })).toBe(false);
+    });
+  });
+
+  // In class mode the API lists every class, so most rows on a healthy project have nothing beneath
+  // them. Those used to expand onto an empty list, which read as a panel opening and shutting by itself.
+  describe('isExpandable (rows with nothing to drill into do not open)', () => {
+    it('is false when neither unit has anything to report', () => {
+      expect(component.isExpandable(clazz(), loaded({ ...values, counts: noCounts }))).toBe(false);
+    });
+
+    it('is true when any single audience has a resource finding', () => {
+      expect(
+        component.isExpandable(
+          clazz({ counts: { ...noCounts, projectMember: { hidden: 1, restrictedView: 0 } } }),
+          loaded({ ...values, counts: noCounts })
+        )
+      ).toBe(true);
+    });
+
+    // Restricted-view-only is still a finding — folding it in would make a row with real content inert.
+    it('is true when an audience has only restricted-view counts', () => {
+      expect(
+        component.isExpandable(
+          clazz({ counts: { ...noCounts, anonymous: { hidden: 0, restrictedView: 2 } } }),
+          loaded({ ...values, counts: noCounts })
+        )
+      ).toBe(true);
+    });
+
+    // The drill-down reports value-level findings too, so a row whose only content is inside its
+    // resources must still open — judging by the resource unit alone would hide it.
+    it('is true when the findings are value-level only', () => {
+      expect(component.isExpandable(clazz(), loaded())).toBe(true);
+    });
+
+    // Judging a row inert on incomplete data would make rows stop being clickable as their counts
+    // arrive, which reads as the UI fighting the user.
+    it('is true while step 2 is still in flight, whatever the resource counts say', () => {
+      expect(component.isExpandable(clazz(), { loading: true })).toBe(true);
+    });
+
+    // The template disables the row, but a click already in flight when the filter changed must not
+    // open a row that is now empty — hence the guard on the handler itself.
+    it('refuses to expand an empty row even when toggled directly', () => {
+      component.toggleGroup(clazz(), loaded({ ...values, counts: noCounts }));
+      expect(component.isExpanded('g')).toBe(false);
+      expect(adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('hasNoRestrictions', () => {
+    const answered = (counts: ViewRestrictionsValues['counts']) =>
+      new Map<string, ValuesState>([[THING, loaded({ ...values, counts })]]);
+
+    it('is true when every class is clean in both units', () => {
+      expect(component.hasNoRestrictions([clazz()], answered(noCounts))).toBe(true);
+    });
+
+    it('is false when a resource count is non-zero', () => {
+      expect(component.hasNoRestrictions(classes.classes, answered(noCounts))).toBe(false);
+    });
+
+    it('is false when only the value unit has findings', () => {
+      expect(component.hasNoRestrictions([clazz()], answered(values.counts))).toBe(false);
+    });
+
+    // Saying "nothing restricted" while step 2 is still running would be a statement the data does not
+    // yet support — the report would announce a clean project and then contradict itself.
+    it('is false while any class is still being counted', () => {
+      const pending = new Map<string, ValuesState>([[THING, { loading: true }]]);
+      expect(component.hasNoRestrictions([clazz()], pending)).toBe(false);
     });
   });
 
@@ -275,208 +481,35 @@ describe('ViewRestrictionsComponent', () => {
       projectMember: Visibility.Visible,
     };
     const item = {
-      type: ItemType.Value,
+      type: ValueItemType.Value,
       visibility: { anonymous: Visibility.Hidden, authenticated: Visibility.Hidden, projectMember: Visibility.Visible },
     };
+    const res = (over: Record<string, unknown>) =>
+      ({
+        resourceIri: 'r',
+        label: 'R',
+        resourceClassIri: 'c',
+        resourceVisibility: visible,
+        items: [],
+        ...over,
+      }) as never;
 
     it('is a combo when the resource is fully visible and has exactly one item', () => {
-      expect(
-        component.isCombo({
-          resourceIri: 'r',
-          label: 'R',
-          resourceClassIri: 'c',
-          resourceVisibility: visible,
-          items: [item],
-        })
-      ).toBe(true);
+      expect(component.isCombo(res({ items: [item] }))).toBe(true);
     });
 
     it('is NOT a combo when the resource has more than one item', () => {
-      expect(
-        component.isCombo({
-          resourceIri: 'r',
-          label: 'R',
-          resourceClassIri: 'c',
-          resourceVisibility: visible,
-          items: [item, item],
-        })
-      ).toBe(false);
+      expect(component.isCombo(res({ items: [item, item] }))).toBe(false);
     });
 
     it('is NOT a combo when the resource itself is restricted', () => {
-      const restricted = { ...visible, anonymous: Visibility.Hidden };
       expect(
-        component.isCombo({
-          resourceIri: 'r',
-          label: 'R',
-          resourceClassIri: 'c',
-          resourceVisibility: restricted,
-          items: [item],
-        })
+        component.isCombo(res({ items: [item], resourceVisibility: { ...visible, anonymous: Visibility.Hidden } }))
       ).toBe(false);
     });
 
     it('is NOT a combo when the resource has no items (whole-resource restriction)', () => {
-      expect(
-        component.isCombo({
-          resourceIri: 'r',
-          label: 'R',
-          resourceClassIri: 'c',
-          resourceVisibility: visible,
-          items: [],
-        })
-      ).toBe(false);
-    });
-  });
-
-  describe('resources column (design 1i)', () => {
-    it('is shown when grouping by resource class', () => {
-      expect(component.showTotals(GroupBy.ResourceClass)).toBe(true);
-    });
-
-    // A property groups values across classes, so it has no resource population of its own and the
-    // API omits totalResources — the column has to disappear with it or the grid would misalign.
-    it('is hidden when grouping by property', () => {
-      expect(component.showTotals(GroupBy.Property)).toBe(false);
-    });
-
-    it('is hidden before the grouping is known', () => {
-      expect(component.showTotals(null)).toBe(false);
-    });
-
-    it('sums the per-class populations for the footer', () => {
-      expect(
-        component.totalResources([
-          { id: 'a', label: 'A', counts: summary.totals, totalResources: 120 },
-          { id: 'b', label: 'B', counts: summary.totals, totalResources: 30 },
-        ])
-      ).toBe(150);
-    });
-
-    // In property mode every group lacks the field; the footer must read 0 rather than NaN.
-    it('treats a missing population as zero rather than NaN', () => {
-      expect(component.totalResources([{ id: 'a', label: 'A', counts: summary.totals }])).toBe(0);
-      expect(component.totalResources(undefined)).toBe(0);
-    });
-
-    // The population is independent of the restrictions: an unrestricted class is still reported with its
-    // resource count, and it still counts towards the footer total.
-    it('counts an unrestricted class towards the total', () => {
-      const zero = {
-        anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-        authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-        projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-      };
-      expect(
-        component.totalResources([
-          { id: 'a', label: 'A', counts: summary.totals, totalResources: 120 },
-          { id: 'b', label: 'B', counts: zero, totalResources: 500 },
-        ])
-      ).toBe(620);
-    });
-  });
-
-  describe('hasNoRestrictions', () => {
-    const zero = {
-      anonymous: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-      authenticated: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-      projectMember: { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-    };
-
-    // Class mode lists every class, so rows exist even with nothing restricted — the component has to
-    // recognise that state explicitly or the page renders a table of dashes with no explanation.
-    it('is true when every audience total is zero', () => {
-      expect(component.hasNoRestrictions({ ...summary, groups: [], totals: zero })).toBe(true);
-    });
-
-    it('is false when anything is hidden', () => {
-      expect(component.hasNoRestrictions(summary)).toBe(false);
-    });
-
-    // Restricted-view-only must not read as "no restrictions" — that is the conflation 1i undoes.
-    it('is false when only restricted view is non-zero', () => {
-      expect(
-        component.hasNoRestrictions({
-          ...summary,
-          totals: {
-            ...zero,
-            anonymous: { resources: { hidden: 0, restrictedView: 2 }, items: { hidden: 0, restrictedView: 0 } },
-          },
-        })
-      ).toBe(false);
-    });
-  });
-
-  describe('isEmptyCount', () => {
-    const noCounts = { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } };
-
-    it('is empty only when every unit and state is zero', () => {
-      expect(component.isEmptyCount(noCounts)).toBe(true);
-      expect(component.isEmptyCount(undefined)).toBe(true);
-    });
-
-    // Restricted-view-only must still count as a finding — folding it into "no restrictions" is exactly
-    // the conflation screen 1i exists to undo.
-    it('is not empty when only restricted view is non-zero', () => {
-      expect(component.isEmptyCount({ ...noCounts, resources: { hidden: 0, restrictedView: 3 } })).toBe(false);
-    });
-
-    it('is not empty when only hidden is non-zero', () => {
-      expect(component.isEmptyCount({ ...noCounts, resources: { hidden: 2, restrictedView: 0 } })).toBe(false);
-    });
-
-    // Wider than what a cell renders on purpose: the matrix shows the resources unit only, but a project
-    // whose sole restrictions are item-level still has restrictions and must not be reported as clean.
-    it('is not empty when only the items unit is non-zero', () => {
-      expect(component.isEmptyCount({ ...noCounts, items: { hidden: 4, restrictedView: 0 } })).toBe(false);
-    });
-  });
-
-  // In class mode the API lists every class, so most rows on a healthy project have nothing beneath
-  // them. Those used to expand onto an empty list, which read as a panel opening and shutting by
-  // itself; they are inert instead.
-  describe('isExpandable (rows with nothing to drill into do not open)', () => {
-    const zero = { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } };
-    const emptyCounts = { anonymous: zero, authenticated: zero, projectMember: zero };
-    const group = (counts: typeof emptyCounts) => ({ id: 'g', label: 'G', counts });
-
-    it('is false when no audience has anything to report', () => {
-      expect(component.isExpandable(group(emptyCounts))).toBe(false);
-    });
-
-    it('is true when any single audience has a finding', () => {
-      expect(
-        component.isExpandable(
-          group({ ...emptyCounts, projectMember: { ...zero, resources: { hidden: 1, restrictedView: 0 } } })
-        )
-      ).toBe(true);
-    });
-
-    // Restricted-view-only is still a finding — folding it in would make a row with real content inert.
-    it('is true when an audience has only restricted-view counts', () => {
-      expect(
-        component.isExpandable(
-          group({ ...emptyCounts, anonymous: { ...zero, resources: { hidden: 0, restrictedView: 2 } } })
-        )
-      ).toBe(true);
-    });
-
-    // The drill-down reports item-level findings too, so a row whose only content is inside resources
-    // must still open — judging by the resources unit alone would hide it.
-    it('is true when the findings are item-level only', () => {
-      expect(
-        component.isExpandable(
-          group({ ...emptyCounts, anonymous: { ...zero, items: { hidden: 4, restrictedView: 0 } } })
-        )
-      ).toBe(true);
-    });
-
-    // The template disables the row, but a click already in flight when the filter changed must not
-    // open a row that is now empty — hence the guard on the handler itself.
-    it('refuses to expand an empty row even when toggled directly', () => {
-      component.toggleGroup(group(emptyCounts));
-      expect(component.isExpanded('g')).toBe(false);
-      expect(adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsItems).not.toHaveBeenCalled();
+      expect(component.isCombo(res({ items: [] }))).toBe(false);
     });
   });
 
@@ -491,16 +524,7 @@ describe('ViewRestrictionsComponent', () => {
       await TestBed.configureTestingModule({
         imports: [ViewRestrictionsComponent],
         schemas: [CUSTOM_ELEMENTS_SCHEMA],
-        providers: [
-          { provide: AdminAPIApiService, useValue: adminApiMock },
-          { provide: ProjectPageService, useValue: projectPageServiceMock },
-          {
-            provide: ResourceService,
-            useValue: { getResourcePath: (iri: string) => iri.replace('http://rdfh.ch', '') },
-          },
-          provideTranslateService(),
-          TranslateService,
-        ],
+        providers,
       }).compileComponents();
 
       const f = TestBed.createComponent(ViewRestrictionsComponent);
@@ -520,95 +544,6 @@ describe('ViewRestrictionsComponent', () => {
     it('keys on the glyphs the cells actually use', () => {
       expect(el.querySelector('.legend .legend-hidden')?.textContent?.trim()).toBe('visibility_off');
       expect(el.querySelector('.legend .legend-restricted')?.textContent?.trim()).toBe('blur_on');
-    });
-  });
-
-  // The rendered counterpart of `isExpandable`: a row with nothing beneath it must not present itself
-  // as openable in the first place, which is a template concern the predicate's own tests cannot see.
-  describe('inert rows (rendered)', () => {
-    let rows: HTMLButtonElement[];
-
-    beforeEach(async () => {
-      const zero = { resources: { hidden: 0, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } };
-      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsSummary.mockReturnValue(
-        of({
-          ...summary,
-          groups: [
-            ...summary.groups!,
-            // listed with its population intact, but nothing restricted — the common case in class mode
-            {
-              id: 'http://www.knora.org/ontology/0001/anything#OpenThing',
-              label: 'Open thing',
-              ontology: 'anything',
-              counts: { anonymous: zero, authenticated: zero, projectMember: zero },
-              totalResources: 500,
-            },
-          ],
-        })
-      );
-
-      TestBed.resetTestingModule();
-      await TestBed.configureTestingModule({
-        imports: [ViewRestrictionsComponent],
-        schemas: [CUSTOM_ELEMENTS_SCHEMA],
-        providers: [
-          { provide: AdminAPIApiService, useValue: adminApiMock },
-          { provide: ProjectPageService, useValue: projectPageServiceMock },
-          {
-            provide: ResourceService,
-            useValue: { getResourcePath: (iri: string) => iri.replace('http://rdfh.ch', '') },
-          },
-          provideTranslateService(),
-          TranslateService,
-        ],
-      }).compileComponents();
-
-      const f = TestBed.createComponent(ViewRestrictionsComponent);
-      f.detectChanges();
-      rows = Array.from((f.nativeElement as HTMLElement).querySelectorAll('.matrix-row'));
-    });
-
-    afterEach(() => {
-      adminApiMock.getAdminProjectsIriProjectiriViewRestrictionsSummary.mockReturnValue(of(summary));
-    });
-
-    it('disables the row that has nothing to drill into, and only that row', () => {
-      expect(rows.length).toBe(2);
-      expect(rows[0].disabled).toBe(false);
-      expect(rows[1].disabled).toBe(true);
-      expect(rows[1].textContent).toContain('Open thing');
-    });
-
-    // The chevron is the affordance; leaving it on a row that cannot open is the thing being fixed.
-    // A spacer keeps every group label starting at the same x.
-    it('drops the chevron but holds its place', () => {
-      expect(rows[0].querySelector('.chevron')).not.toBeNull();
-      expect(rows[1].querySelector('.chevron')).toBeNull();
-      expect(rows[1].querySelector('.chevron-spacer')).not.toBeNull();
-    });
-
-    it('still reports the row and its population — inert is not hidden', () => {
-      expect(rows[1].textContent).toContain('500');
-    });
-  });
-
-  // The population column and the audience cells answer different questions: the restriction counts must
-  // never feed the population total, or a heavily restricted class would inflate its own denominator.
-  describe('count units', () => {
-    it('sums the class population from totalResources alone, never from the counts', () => {
-      expect(
-        component.totalResources([
-          {
-            id: 'c',
-            label: 'C',
-            counts: {
-              ...summary.totals,
-              anonymous: { resources: { hidden: 3, restrictedView: 0 }, items: { hidden: 0, restrictedView: 0 } },
-            },
-            totalResources: 1,
-          },
-        ])
-      ).toBe(1);
     });
   });
 });
