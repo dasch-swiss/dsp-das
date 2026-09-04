@@ -15,8 +15,9 @@ export class UserService {
   user$ = this._user$.asObservable();
   isLoggedIn$ = this._user$.pipe(map(user => user !== null));
   isSysAdmin$ = this._user$.pipe(map(user => (user ? UserPermissions.hasSysAdminRights(user) : false)));
-  userActiveProjects$ = this._user$.pipe(map(user => (user ? user.projects.filter(project => project.status) : [])));
-  userInactiveProjects$ = this._user$.pipe(map(user => (user ? user.projects.filter(project => !project.status) : [])));
+  userProjects$ = this._user$.pipe(
+    map(user => (user ? [...user.projects].sort((a, b) => (a.longname || '').localeCompare(b.longname || '')) : []))
+  );
 
   constructor(private readonly _userApiService: UserApiService) {}
 

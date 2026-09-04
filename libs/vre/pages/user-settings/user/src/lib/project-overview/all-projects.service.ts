@@ -10,28 +10,18 @@ import { Observable, combineLatest, map } from 'rxjs';
 export class AllProjectsService {
   allProjects$!: Observable<StoredProject[]>;
   otherProjects$!: Observable<StoredProject[]>;
-  allActiveProjects$!: Observable<StoredProject[]>;
-  allInactiveProjects$!: Observable<StoredProject[]>;
 
   constructor(
     private readonly _projectApiService: ProjectApiService,
     private readonly _userService: UserService
   ) {
-    this.allProjects$ = this._projectApiService.list().pipe(map(response => response.projects));
-    this.otherProjects$ = combineLatest([this._userService.userActiveProjects$, this.allProjects$]).pipe(
-      map(([userActiveProjects, projects]) => {
-        return projects.filter(project => userActiveProjects.findIndex(userProj => userProj.id === project.id) === -1);
+    this.allProjects$ = this._projectApiService
+      .list()
+      .pipe(map(response => [...response.projects].sort((a, b) => (a.longname || '').localeCompare(b.longname || ''))));
+    this.otherProjects$ = combineLatest([this._userService.userProjects$, this.allProjects$]).pipe(
+      map(([userProjects, projects]) => {
+        return projects.filter(project => userProjects.findIndex(userProj => userProj.id === project.id) === -1);
       })
-    );
-    this.allActiveProjects$ = this.allProjects$.pipe(
-      map(projects =>
-        projects.filter(project => project.status).sort((a, b) => (a.longname || '').localeCompare(b.longname || ''))
-      )
-    );
-    this.allInactiveProjects$ = this.allProjects$.pipe(
-      map(projects =>
-        projects.filter(project => !project.status).sort((a, b) => (a.longname || '').localeCompare(b.longname || ''))
-      )
     );
   }
 }

@@ -33,13 +33,13 @@ export class ProjectOverviewComponent implements AfterViewInit {
     private readonly _userService: UserService,
     private readonly _allProjectsService: AllProjectsService
   ) {
-    this.activeProjects$ = combineLatest([this._allProjectsService.allActiveProjects$, this._filter$]).pipe(
+    this.activeProjects$ = combineLatest([this._allProjectsService.allProjects$, this._filter$]).pipe(
       map(([projects, searchTerm]) => projects.filter(p => this.matchesSearchTerm(p, searchTerm))),
       tap(() => {
         this.loading = false;
       })
     );
-    this.usersActiveProjects$ = combineLatest([this._userService.userActiveProjects$, this._filter$]).pipe(
+    this.usersActiveProjects$ = combineLatest([this._userService.userProjects$, this._filter$]).pipe(
       map(([projects, searchTerm]) => projects.filter(p => this.matchesSearchTerm(p, searchTerm)))
     );
     this.notUsersActiveProjects$ = combineLatest([this._allProjectsService.otherProjects$, this._filter$]).pipe(
