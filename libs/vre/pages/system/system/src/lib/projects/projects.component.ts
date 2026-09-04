@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@a
 import { Title } from '@angular/platform-browser';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
-import { BehaviorSubject, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, Subject, switchMap, takeUntil } from 'rxjs';
 import { ProjectsListComponent } from './projects-list/projects-list.component';
 
 /**
@@ -30,17 +30,12 @@ import { ProjectsListComponent } from './projects-list/projects-list.component';
 export class ProjectsComponent implements OnInit, OnDestroy {
   @Input() isUsersProjects = false;
 
-  loading = true;
-
   private _ngUnsubscribe = new Subject<void>();
   private _reloadProjectsSubject = new BehaviorSubject<null>(null);
 
   projects$ = this._reloadProjectsSubject.pipe(
     switchMap(() => (this.isUsersProjects ? this._userService.userProjects$ : this._allProjectsService.allProjects$)),
-    takeUntil(this._ngUnsubscribe),
-    tap(() => {
-      this.loading = false;
-    })
+    takeUntil(this._ngUnsubscribe)
   );
 
   constructor(

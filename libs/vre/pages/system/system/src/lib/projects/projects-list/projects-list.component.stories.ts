@@ -53,7 +53,7 @@ const meta: Meta<ProjectsListComponent> = {
 export default meta;
 type Story = StoryObj<ProjectsListComponent>;
 
-export const ActiveProjects: Story = {
+export const MultipleProjects: Story = {
   name: 'Shows list of projects with project count',
   decorators: [applicationConfig({ providers: sharedProviders })],
   args: {
