@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DSP-API
-  version: v38.0.0-6-gf814ae1
+  version: v38.0.0-8-gdf2abf9
   summary: DSP-API is part of the DaSCH Service Platform, a repository for the long-term
     preservation and reuse of data in the humanities.
   contact:
@@ -5448,7 +5448,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       responses:
         '200':
           description: ''
@@ -5512,7 +5512,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       responses:
         '200':
           description: ''
@@ -5576,7 +5576,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       responses:
         '200':
           description: ''
@@ -5765,7 +5765,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       responses:
         '200':
           description: ''
@@ -5831,7 +5831,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       responses:
         '200':
           description: ''
@@ -6035,7 +6035,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6108,7 +6108,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6182,7 +6182,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6255,7 +6255,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6329,7 +6329,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6402,7 +6402,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6476,7 +6476,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       requestBody:
         content:
           application/json:
@@ -6549,7 +6549,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       requestBody:
         content:
           application/json:
@@ -6622,7 +6622,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       requestBody:
         content:
           application/json:
@@ -6695,7 +6695,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/UyXVFN90SIizN_RCE6w-4Q
+        example: http://rdfh.ch/users/DC7wQS-LRgK4j6Sgq2dNfQ
       requestBody:
         content:
           application/json:
@@ -7595,7 +7595,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/kqzRwGYkRO6hWvs6jxntPA
+        example: http://rdfh.ch/lists/0001/RPysa-O2TiWIGHmxzWSqoQ
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -7723,7 +7723,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/kqzRwGYkRO6hWvs6jxntPA
+        example: http://rdfh.ch/lists/0001/RPysa-O2TiWIGHmxzWSqoQ
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -16747,9 +16747,12 @@ paths:
         JSON-LD payload. The import will be performed asynchronously, and the response
         will contain an import ID that can be used to check the status of the import.
         Every imported resource and value is attributed to the `onBehalfOfUser`, not
-        the triggering admin. The import is create-only: it fails if the project already
-        has a data graph. An import can only be triggered when no other data-graph
-        import exists.'
+        the triggering admin. The import is create-only: it fails with 409 `data_graph_exists`
+        if the project data graph already holds data other than list nodes. A graph
+        containing only list nodes is permitted. The project must have at least one
+        ontology: an ontology-less project is rejected with 409 `project_ontologies_missing`,
+        evaluated before the create-only check. An import can only be triggered when
+        no other data-graph import exists.'
       operationId: postV3ProjectsProjectiriData-imports
       parameters:
       - name: projectIri
@@ -16893,6 +16896,20 @@ paths:
                     errors:
                     - code: data_graph_exists
                       message: The data graph for project '{projectIri}' already exists.
+                      details:
+                        projectIri: example_projectIri
+                project_ontologies_missing:
+                  description: |-
+                    Example template string for code `project_ontologies_missing`:
+                    ```
+                    The project '{projectIri}' has no ontologies in the triplestore.
+                    ```
+                  value:
+                    message: The project '{projectIri}' has no ontologies in the triplestore.
+                    errors:
+                    - code: project_ontologies_missing
+                      message: The project '{projectIri}' has no ontologies in the
+                        triplestore.
                       details:
                         projectIri: example_projectIri
       security:
@@ -17096,8 +17113,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/VersionResponse'
               example:
-                webapi: v38.0.0-6-gf814ae1
-                buildCommit: f814ae100
+                webapi: v38.0.0-8-gdf2abf9
+                buildCommit: df2abf98f
                 buildTime: dev
                 fuseki: 6.1.0
                 scala: 3.8.4
@@ -19483,6 +19500,7 @@ components:
       - on_behalf_of_user_not_found
       - ontology_not_found
       - project_not_found
+      - project_ontologies_missing
       - property_not_found
       - resourceClass_not_found
       - resource_not_found
