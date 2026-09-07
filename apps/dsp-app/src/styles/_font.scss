@@ -59,16 +59,7 @@
     U+FEFF, U+FFFD;
 }
 
-/* material-icons - loaded locally, not via the Google Fonts stylesheet `_config.scss` used to
-   `@import`: that import reached every component `@use`ing the config partial, so a production
-   build inlined its `.material-icons { font-size: 24px }` into each one, where view encapsulation
-   let it out-specify Material's sizing and clip glyphs inside `mat-button` (DEV-7011).
-   No global `.material-icons` class belongs here: `mat-icon` already supplies the family, box
-   size and `liga` setting, and a global rule would compete with component styles on source
-   order.
-   No `font-display` either: the default `auto` keeps the glyph area blank until the font
-   loads, which is what Google's stylesheet did. `swap` would paint the ligature's source
-   text instead, flashing "filter_list" in the UI before the glyph arrives. */
+/* material-icons */
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
