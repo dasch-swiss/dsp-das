@@ -59,37 +59,20 @@
     U+FEFF, U+FFFD;
 }
 
-/* material-icons */
+/* material-icons - loaded locally, not via the Google Fonts stylesheet `_config.scss` used to
+   `@import`: that import reached every component `@use`ing the config partial, so a production
+   build inlined its `.material-icons { font-size: 24px }` into each one, where view encapsulation
+   let it out-specify Material's sizing and clip glyphs inside `mat-button` (DEV-7011).
+   No global `.material-icons` class belongs here: `mat-icon` already supplies the family, box
+   size and `liga` setting, and a global rule would compete with component styles on source
+   order.
+   No `font-display` either: the default `auto` keeps the glyph area blank until the font
+   loads, which is what Google's stylesheet did. `swap` would paint the ligature's source
+   text instead, flashing "filter_list" in the UI before the glyph arrives. */
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
   src: local('Material Icons'), local('MaterialIcons-Regular'),
     url(../assets/fonts/material-icons/MaterialIcons-Regular.ttf) format('truetype');
-}
-
-/* The `.material-icons` class used to come from the remote Google Fonts stylesheet that was
-   imported in `_config.scss`. That import was removed (DEV-7068): because it was pulled into every
-   component that `@use`s the config partial, the production build inlined it per-component, where
-   view encapsulation made its `font-size: 24px` out-specify Angular Material's 18px sizing and
-   clipped the glyphs. Declaring the class once here keeps it global, so Material's contextual
-   sizing rules (e.g. `.mat-mdc-button > .mat-icon`) still out-specify it.
-   `font-size` must stay: Material's base `.mat-icon` rule sets only a 24px box, no font-size, so a
-   standalone `<mat-icon>` would otherwise inherit the body font-size and render undersized.
-   `font-feature-settings: 'liga'` is what turns the icon name into a glyph. */
-.material-icons {
-  font-family: 'Material Icons';
-  font-size: 24px;
-  font-weight: normal;
-  font-style: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
 }
