@@ -73,10 +73,14 @@
    imported in `_config.scss`. That import was removed (DEV-7068): because it was pulled into every
    component that `@use`s the config partial, the production build inlined it per-component, where
    view encapsulation made its `font-size: 24px` out-specify Angular Material's 18px sizing and
-   clipped the glyphs. Declaring the class once here keeps it global, so Material's own sizing wins.
+   clipped the glyphs. Declaring the class once here keeps it global, so Material's contextual
+   sizing rules (e.g. `.mat-mdc-button > .mat-icon`) still out-specify it.
+   `font-size` must stay: Material's base `.mat-icon` rule sets only a 24px box, no font-size, so a
+   standalone `<mat-icon>` would otherwise inherit the body font-size and render undersized.
    `font-feature-settings: 'liga'` is what turns the icon name into a glyph. */
 .material-icons {
   font-family: 'Material Icons';
+  font-size: 24px;
   font-weight: normal;
   font-style: normal;
   line-height: 1;
