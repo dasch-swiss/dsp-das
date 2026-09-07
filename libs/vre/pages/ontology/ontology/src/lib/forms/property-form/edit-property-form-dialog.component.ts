@@ -8,7 +8,6 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -70,8 +69,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
   constructor(
     private readonly _dialogRef: MatDialogRef<EditPropertyFormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CreatePropertyDialogData | EditPropertyDialogData,
-    private _oes: OntologyEditService,
-    private _projectPageService: ProjectPageService
+    private _oes: OntologyEditService
   ) {}
 
   ngOnInit() {
@@ -108,7 +106,6 @@ export class EditPropertyFormDialogComponent implements OnInit {
         .createProperty$(propertyData, this.data.assignToClass)
         .pipe(take(1))
         .subscribe(_ => {
-          this._projectPageService.reloadProject();
           this._dialogRef.close();
         });
     }

@@ -11,6 +11,7 @@ import { ResourceDefaultTabsComponent } from '../../properties/resource-default-
 import { getFileValue } from '../../representation/get-file-value';
 import { isPlaceholderFileValue } from '../../representation/is-placeholder-file-value';
 import { RepresentationPlaceholderComponent } from '../../representation/representation-placeholder.component';
+import { RepresentationRestrictedComponent } from '../../representation/representation-restricted.component';
 import { ResourceLegalComponent } from '../../representation/resource-legal.component';
 import { ResourceRepresentationContainerComponent } from '../../representation/resource-representation-container.component';
 import { Segment } from '../../representation/segments/segment';
@@ -28,17 +29,21 @@ const HAS_SEGMENT_BOUNDS = 'http://api.knora.org/ontology/knora-api/v2#hasSegmen
     }
     <app-resource-header [resource]="resource" />
     @if (parentResource$ | async; as parentResource) {
-      <app-resource-legal [fileValue]="getFileValue(parentResource)" />
-      @if (isPlaceholder(parentResource)) {
-        <app-representation-placeholder />
+      @if (getFileValue(parentResource); as file) {
+        <app-resource-legal [fileValue]="file" />
+        @if (isPlaceholder(parentResource)) {
+          <app-representation-placeholder />
+        } @else {
+          <app-resource-representation-container height="small">
+            <app-audio
+              [src]="file"
+              [parentResource]="parentResource"
+              [start]="start"
+              [overrideSegments]="currentSegments" />
+          </app-resource-representation-container>
+        }
       } @else {
-        <app-resource-representation-container height="small">
-          <app-audio
-            [src]="getFileValue(parentResource)"
-            [parentResource]="parentResource"
-            [start]="start"
-            [overrideSegments]="currentSegments" />
-        </app-resource-representation-container>
+        <app-representation-restricted />
       }
     }
     <app-resource-default-tabs [resource]="resource" style="display: block; margin-top: 50px" />
@@ -50,6 +55,7 @@ const HAS_SEGMENT_BOUNDS = 'http://api.knora.org/ontology/knora-api/v2#hasSegmen
     ResourceHeaderComponent,
     ResourceLegalComponent,
     RepresentationPlaceholderComponent,
+    RepresentationRestrictedComponent,
     AudioComponent,
     ResourceRepresentationContainerComponent,
     ResourceDefaultTabsComponent,
@@ -95,7 +101,7 @@ export class ResourceAudioSegmentComponent implements OnInit {
   }
 
   getFileValue(resource: ReadResource) {
-    return getFileValue(resource)!;
+    return getFileValue(resource);
   }
 
   isPlaceholder(resource: ReadResource) {

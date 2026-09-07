@@ -2,11 +2,22 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, of } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ProjectShortnameService } from '../project-shortname.service';
 import { ResourceListItemComponent } from './resource-list-item.component';
+
+const RESOURCE_LABEL_KEY = 'pages.dataBrowser.resourceListItem.resourceLabel';
+
+/** The translation keys of the "Found in:" entries that stand for the resource's own label. */
+const foundInKeys = (component: ResourceListItemComponent) =>
+  component.foundIn.flatMap(entry => (entry.translationKey ? [entry.translationKey] : []));
+
+/** The first (single-language) value of each property entry in the "Found in:" list. */
+const foundInLabelValues = (component: ResourceListItemComponent) =>
+  component.foundIn.flatMap(entry => (entry.labels ? [entry.labels[0]?.value] : []));
 
 describe('ResourceListItemComponent', () => {
   let component: ResourceListItemComponent;
@@ -116,7 +127,7 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.foundIn).toContain('Label');
+      expect(foundInKeys(component)).toContain(RESOURCE_LABEL_KEY);
     });
 
     it('should search in resource properties when searchKeyword matches', () => {
@@ -124,7 +135,7 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.foundIn).toContain('Test Property');
+      expect(foundInLabelValues(component)).toContain('Test Property');
     });
 
     it('should find matches in both label and properties', () => {
@@ -132,8 +143,8 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.foundIn).toContain('Label');
-      expect(component.foundIn).toContain('Test Property');
+      expect(foundInKeys(component)).toContain(RESOURCE_LABEL_KEY);
+      expect(foundInLabelValues(component)).toContain('Test Property');
     });
 
     it('should be case-insensitive when searching', () => {
@@ -141,7 +152,7 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.foundIn).toContain('Another Property');
+      expect(foundInLabelValues(component)).toContain('Another Property');
     });
 
     it('should not add duplicate property labels to foundIn', () => {
@@ -159,7 +170,7 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      const samePropertyCount = component.foundIn.filter(label => label === 'Same Property').length;
+      const samePropertyCount = foundInLabelValues(component).filter(label => label === 'Same Property').length;
       expect(samePropertyCount).toBe(1);
     });
 
@@ -175,7 +186,41 @@ describe('ResourceListItemComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.foundIn).not.toContain('Empty Property');
+      expect(foundInLabelValues(component)).not.toContain('Empty Property');
+    });
+
+    // The single-language `propertyLabel` is what dsp-api resolved server-side; the "Found in:"
+    // names must follow the UI language like the resource class does (DEV-5452 follow-up).
+    it('should prefer the multi-language property labels from entityInfo', () => {
+      component.resource = {
+        ...mockResource,
+        properties: {
+          'http://example.org/property-1': [{ strval: 'match text', propertyLabel: 'Realization' } as any],
+        },
+        entityInfo: {
+          classes: {},
+          properties: {
+            'http://example.org/property-1': {
+              labels: [
+                { language: 'en', value: 'Realization' },
+                { language: 'fr', value: 'Réalisation' },
+              ],
+            },
+          },
+        },
+      } as unknown as ReadResource;
+      mockMultipleViewerService.searchKeyword = 'match';
+
+      component.ngOnInit();
+
+      expect(component.foundIn).toEqual([
+        {
+          labels: [
+            { language: 'en', value: 'Realization' },
+            { language: 'fr', value: 'Réalisation' },
+          ],
+        },
+      ]);
     });
   });
 
@@ -416,5 +461,109 @@ describe('ResourceListItemComponent', () => {
       selectedResourcesSubject.next([mockResource]); // Should emit true
       selectedResourcesSubject.next([mockResource2]); // Should emit false
     });
+  });
+});
+
+/**
+ * Rendered against the real template — the suite above overrides it away. The "Found in:" names are
+ * resolved by the impure `appStringifyStringLiteral` / `translate` pipes, so nothing but the DOM
+ * proves that they follow the UI language, and nothing but the DOM catches a stray space around the
+ * separator that the template's control-flow blocks can introduce.
+ */
+describe('ResourceListItemComponent rendering', () => {
+  const propertyLabels = (language: string, value: string) => [{ language, value }];
+
+  const renderWithFoundIn = async (searchKeyword: string, resource: ReadResource, language = 'en') => {
+    await TestBed.configureTestingModule({
+      imports: [ResourceListItemComponent, TranslateModule.forRoot()],
+      providers: [
+        {
+          provide: MultipleViewerService,
+          useValue: {
+            selectedResources$: of([]),
+            selectMode: false,
+            searchKeyword,
+            selectOneResource: jest.fn(),
+          },
+        },
+        { provide: ProjectShortnameService, useValue: { getProjectShortname: () => of('testproj') } },
+      ],
+    }).compileComponents();
+
+    TestBed.inject(LocalizationService).currentLanguage = language as never;
+
+    const fixture = TestBed.createComponent(ResourceListItemComponent);
+    fixture.componentInstance.resource = resource;
+    fixture.detectChanges();
+    return fixture;
+  };
+
+  const foundInText = (fixture: ComponentFixture<ResourceListItemComponent>) =>
+    fixture.nativeElement.querySelector('[data-cy="found-in-values"]').textContent.trim();
+
+  const twoMatchingProperties = {
+    id: 'http://example.org/resource-1',
+    label: 'Untouched',
+    attachedToProject: 'http://example.org/project-1',
+    properties: {
+      'http://example.org/property-1': [{ strval: 'match one', propertyLabel: 'Realization' } as any],
+      'http://example.org/property-2': [{ strval: 'match two', propertyLabel: 'Title' } as any],
+    },
+    entityInfo: {
+      classes: {},
+      properties: {
+        'http://example.org/property-1': { labels: propertyLabels('fr', 'Réalisation') },
+        'http://example.org/property-2': { labels: propertyLabels('fr', 'Titre') },
+      },
+    },
+  } as unknown as ReadResource;
+
+  it('should join the names with ", " and no stray space before the separator', async () => {
+    const fixture = await renderWithFoundIn('match', twoMatchingProperties, 'fr');
+
+    expect(foundInText(fixture)).toBe('Réalisation, Titre');
+  });
+
+  it('should re-render the names when the UI language changes', async () => {
+    const resource = {
+      ...twoMatchingProperties,
+      properties: {
+        'http://example.org/property-1': [{ strval: 'match one', propertyLabel: 'Realization' } as any],
+      },
+      entityInfo: {
+        classes: {},
+        properties: {
+          'http://example.org/property-1': {
+            labels: [
+              { language: 'en', value: 'Realization' },
+              { language: 'fr', value: 'Réalisation' },
+            ],
+          },
+        },
+      },
+    } as unknown as ReadResource;
+
+    const fixture = await renderWithFoundIn('match', resource);
+    const localization = TestBed.inject(LocalizationService);
+
+    localization.currentLanguage = 'en';
+    fixture.detectChanges();
+    expect(foundInText(fixture)).toBe('Realization');
+
+    localization.currentLanguage = 'fr';
+    fixture.detectChanges();
+    expect(foundInText(fixture)).toBe('Réalisation');
+  });
+
+  it('should render the resource-label entry through a translation key, not a hardcoded string', async () => {
+    const fixture = await renderWithFoundIn('untouched', {
+      ...twoMatchingProperties,
+      properties: {},
+      entityInfo: { classes: {}, properties: {} },
+    } as unknown as ReadResource);
+
+    // No translations are loaded, so ngx-translate echoes the key — which is exactly what proves the
+    // entry goes through it instead of the previous hardcoded 'Label'.
+    expect(foundInText(fixture)).toBe(RESOURCE_LABEL_KEY);
   });
 });

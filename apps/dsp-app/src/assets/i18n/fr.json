@@ -45,6 +45,53 @@
       "notUsersProjects": "Autres projets de recherche",
       "filterProjects": "Filtrer les projets"
     },
+    "help": {
+      "devVersion": "Il s'agit d'une version de développement de DSP (version {{release}}) exécutée dans l'environnement {{environment}}",
+      "needHelp": "Besoin d'aide ?",
+      "userGuide": "Consulter le guide d'utilisation : explorer par thème",
+      "docs": {
+        "projectAdmin": {
+          "title": "Administration de projet",
+          "text": "En savoir plus sur l'administration de projet et la gestion des membres du projet."
+        },
+        "dataModel": {
+          "title": "Création du modèle de données",
+          "text": "Trouvez tout sur la modélisation des données et la configuration de la base de données du projet."
+        },
+        "researchTools": {
+          "title": "Outils de recherche",
+          "text": "Obtenez plus d'informations sur le traitement des données, les méthodes de recherche et l'utilisation des outils de recherche."
+        }
+      },
+      "openDocumentation": "Ouvrir la documentation",
+      "software": {
+        "heading": "Découvrez nos produits logiciels",
+        "mainProduct": "La DaSCH Service Platform (DSP) est notre produit principal, dont la version actuelle est",
+        "releaseNews": "Cliquez ici pour obtenir les dernières actualités sur cette version principale",
+        "moreDetails": "Si vous souhaitez en savoir plus sur les différentes applications de DSP, consultez les produits logiciels suivants — tous développés par l'équipe DaSCH en Suisse.",
+        "dspApp": "Il s'agit de l'outil de l'interface que vous utilisez actuellement. L'application web générique du DaSCH.",
+        "dspApi": "Cadre logiciel pour stocker, partager et exploiter des sources primaires en sciences humaines.",
+        "sipi": "Serveur de médias haute performance, compatible IIIF.",
+        "releaseNotes": "Notes de version"
+      },
+      "support": {
+        "heading": "Obtenir plus d'aide ou contribuer aux améliorations",
+        "needMoreHelp": {
+          "title": "Besoin d'aide supplémentaire ?",
+          "text": "Vous avez rencontré des problèmes en utilisant nos logiciels ? Faites-le nous savoir et contactez l'équipe de développement :",
+          "urlText": "Nous contacter"
+        },
+        "infrastructure": {
+          "title": "Infrastructure DaSCH",
+          "text": "Vous vous demandez ce qu'est exactement le Centre national suisse de données et de services pour les sciences humaines DaSCH ? Plus d'informations sur notre site web :"
+        },
+        "sourceCode": {
+          "title": "Code source",
+          "text": "Nos logiciels sont open source et disponibles sur GitHub sous licence Apache 2.0. Pour toute question ou assistance :",
+          "urlText": "Contacter le support"
+        }
+      }
+    },
     "userSettings": {
       "loginForm": {
         "login": "Connexion"
@@ -553,7 +600,8 @@
         "noData": "Il n'y a pas de données correspondant à votre demande."
       },
       "resourceListItem": {
-        "foundIn": "Trouvé dans : "
+        "foundIn": "Trouvé dans : ",
+        "resourceLabel": "Libellé"
       },
       "downloadDialog": {
         "title": "Télécharger",
@@ -694,6 +742,7 @@
       "text": {
         "title": "Texte (csv, txt, xml)"
       },
+      "noPermission": "Vous n’avez pas la permission de consulter ce fichier multimédia.",
       "placeholder": {
         "title": "Espace réservé – fichier pas encore disponible",
         "message": "Cette ressource référence un espace réservé. Le fichier réel n’a pas encore été livré."
@@ -1022,6 +1071,19 @@
     },
     "grid": {
       "readMore": "En savoir plus"
+    },
+    "footer": {
+      "legalNotice": "Mentions légales",
+      "privacyPolicy": "Politique de confidentialité",
+      "privacyPolicyEnglish": "Politique de confidentialité (anglais)",
+      "impressum": "Impressum",
+      "contact": "Contact",
+      "downloads": "Téléchargements",
+      "termsAndConditions": "Conditions générales (CG)",
+      "depositAgreement": "Convention de dépôt",
+      "statutes": "Statuts DaSCH 2026",
+      "termsOfService": "Conditions d'utilisation",
+      "copyright": "© {{year}} DaSCH – Centre national suisse de données et de services pour les sciences humaines. Tous droits réservés."
     }
   },
   "core": {

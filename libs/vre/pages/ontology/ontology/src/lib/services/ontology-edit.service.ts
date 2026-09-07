@@ -43,6 +43,7 @@ import {
   map,
   Observable,
   of,
+  ReplaySubject,
   skip,
   switchMap,
   take,
@@ -62,6 +63,15 @@ export class OntologyEditService {
   private _currentOntology = new BehaviorSubject<ReadOntology | null>(null);
   currentOntology$ = this._currentOntology.asObservable();
 
+  // All ontologies of the current project, owned and managed by this service alone:
+  // loaded once per service instance (see constructor) and nexted on every update or
+  // delete, so the many internal subscribers (one per class card) share one request
+  // and reliably receive changes (DEV-7130).
+  private _projectOntologiesSubject = new BehaviorSubject<ReadOntology[] | null>(null);
+  private _projectOntologies$: Observable<ReadOntology[]> = this._projectOntologiesSubject.pipe(
+    filter((ontologies): ontologies is ReadOntology[] => ontologies !== null)
+  );
+
   latestChangedItem = new BehaviorSubject<string | undefined>(undefined);
 
   currentOntologyEntityNames$ = this.currentOntology$.pipe(
@@ -73,15 +83,15 @@ export class OntologyEditService {
     })
   );
 
-  private _getListsInProject$ = this._projectPageService.currentProject$.pipe(
-    switchMap(project => this._listApiService.listInProject(project.id)),
-    map(response => response.lists)
-  );
+  // Loaded once per service instance (see constructor) so the many subscribers of the
+  // property streams below share one request instead of each firing their own (DEV-7130).
+  private _listsInProjectSubject = new ReplaySubject<ListNodeInfo[]>(1);
+  private _listsInProject$ = this._listsInProjectSubject.asObservable();
 
   currentOntologyProperties$: Observable<PropertyInfo[]> = combineLatest([
     this.currentOntology$,
-    this._projectPageService.ontologies$,
-    this._getListsInProject$,
+    this._projectOntologies$,
+    this._listsInProject$,
   ]).pipe(
     map(([currentOntology, allOntologies, allLists]) => {
       if (!currentOntology) return [];
@@ -91,8 +101,8 @@ export class OntologyEditService {
   );
 
   currentProjectsProperties$: Observable<PropertyInfo[]> = combineLatest([
-    this._projectPageService.ontologies$,
-    this._getListsInProject$,
+    this._projectOntologies$,
+    this._listsInProject$,
   ]).pipe(
     map(([ontologies, allLists]) => {
       const allProps = ontologies.flatMap(o =>
@@ -191,6 +201,18 @@ export class OntologyEditService {
     private _listApiService: ListApiService,
     private _localizationService: LocalizationService
   ) {
+    this._projectPageService.currentProject$
+      .pipe(
+        take(1),
+        switchMap(project => this._listApiService.listInProject(project.id)),
+        takeUntilDestroyed()
+      )
+      .subscribe(response => this._listsInProjectSubject.next(response.lists));
+
+    this._projectPageService.ontologies$
+      .pipe(take(1), takeUntilDestroyed())
+      .subscribe(ontologies => this._projectOntologiesSubject.next(ontologies));
+
     // skip(1): currentLanguage$ is a BehaviorSubject, we ignore the initial value
     // emitted at subscription time.
     this._localizationService.currentLanguage$.pipe(skip(1), takeUntilDestroyed()).subscribe(() => {
@@ -205,12 +227,12 @@ export class OntologyEditService {
     this._isTransacting.next(true);
     this._canDeletePropertyMap.clear();
 
-    this._projectPageService.ontologies$.pipe(take(1)).subscribe(ontologies => {
-      const ontologyFromStore = ontologies.find(onto => OntologyService.getOntologyNameFromIri(onto.id) == label);
+    this._projectOntologies$.pipe(take(1)).subscribe(ontologies => {
+      const ontologyToInit = ontologies.find(onto => OntologyService.getOntologyNameFromIri(onto.id) == label);
 
-      if (ontologyFromStore) {
-        this._currentOntology.next(ontologyFromStore);
-        this._currentOntologyInfo.next(ontologyFromStore);
+      if (ontologyToInit) {
+        this._currentOntology.next(ontologyToInit);
+        this._currentOntologyInfo.next(ontologyToInit);
         this._isTransacting.next(false);
       } else {
         this._loadOntologyByLabel(label);
@@ -238,6 +260,7 @@ export class OntologyEditService {
       .pipe(
         tap(() => {
           this._currentOntology.next(null);
+          this._removeProjectOntology(id);
         })
       );
   }
@@ -504,9 +527,31 @@ export class OntologyEditService {
       });
   }
 
+  private _upsertProjectOntology(ontology: ReadOntology) {
+    const ontologies = this._projectOntologiesSubject.value;
+    if (!ontologies) {
+      return;
+    }
+    const exists = ontologies.some(onto => onto.id === ontology.id);
+    this._projectOntologiesSubject.next(
+      exists ? ontologies.map(onto => (onto.id === ontology.id ? ontology : onto)) : [...ontologies, ontology]
+    );
+  }
+
+  private _removeProjectOntology(ontologyId: string) {
+    const ontologies = this._projectOntologiesSubject.value;
+    if (!ontologies) {
+      return;
+    }
+    this._projectOntologiesSubject.next(ontologies.filter(onto => onto.id !== ontologyId));
+  }
+
   private _afterUpdateOntology(onto: ReadOntology, highLightItem?: string) {
     this._currentOntologyInfo.next(onto);
     this._currentOntology.next(onto);
+    // Push the fresh ontology into the project-wide state so every subscriber
+    // (class cards, property menus, page streams) receives the update.
+    this._upsertProjectOntology(onto);
     this._canDeletePropertyMap.clear();
     this._isTransacting.next(false);
     this.latestChangedItem.next(highLightItem);

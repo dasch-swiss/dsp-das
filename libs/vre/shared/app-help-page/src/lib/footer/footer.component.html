@@ -2,18 +2,18 @@
   <div class="footer-inner">
     <!-- Navigation links -->
     <nav class="footer-nav">
-      <a href="https://dasch.swiss/legal-notice" target="_blank" rel="noopener noreferrer">Legal Notice</a>
-      <a href="https://dasch.swiss/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+      <a href="https://dasch.swiss/legal-notice" target="_blank" rel="noopener noreferrer">{{ 'shared.footer.legalNotice' | translate }}</a>
+      <a href="https://dasch.swiss/privacy-policy" target="_blank" rel="noopener noreferrer">{{ 'shared.footer.privacyPolicy' | translate }}</a>
       <a href="https://dasch.swiss/privacy-policy-en" target="_blank" rel="noopener noreferrer"
-        >Privacy Policy (English)</a
+        >{{ 'shared.footer.privacyPolicyEnglish' | translate }}</a
       >
-      <a href="https://dasch.swiss/impressum" target="_blank" rel="noopener noreferrer">Impressum</a>
-      <a href="https://dasch.swiss/contact" target="_blank" rel="noopener noreferrer">Contact</a>
+      <a href="https://dasch.swiss/impressum" target="_blank" rel="noopener noreferrer">{{ 'shared.footer.impressum' | translate }}</a>
+      <a href="https://dasch.swiss/contact" target="_blank" rel="noopener noreferrer">{{ 'shared.footer.contact' | translate }}</a>
     </nav>
 
     <!-- Downloads -->
     <div class="footer-downloads">
-      <span class="downloads-label">Downloads</span>
+      <span class="downloads-label">{{ 'shared.footer.downloads' | translate }}</span>
       <nav class="downloads-list">
         <a href="https://dasch.swiss/downloads/AGB_DaSCH_4.0.pdf" target="_blank" rel="noopener noreferrer">
           <svg
@@ -30,7 +30,7 @@
             <polyline points="7 10 12 15 17 10" />
             <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
-          <span>Terms and Conditions (AGB)</span>
+          <span>{{ 'shared.footer.termsAndConditions' | translate }}</span>
         </a>
         <a href="https://dasch.swiss/downloads/DaSCH_Deposit_Agreement.pdf" target="_blank" rel="noopener noreferrer">
           <svg
@@ -47,7 +47,7 @@
             <polyline points="7 10 12 15 17 10" />
             <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
-          <span>Deposit Agreement</span>
+          <span>{{ 'shared.footer.depositAgreement' | translate }}</span>
         </a>
         <a
           href="https://dasch.swiss/downloads/DaSCH_Statuten_2026_signed.pdf"
@@ -67,7 +67,7 @@
             <polyline points="7 10 12 15 17 10" />
             <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
-          <span>DaSCH Statutes 2026</span>
+          <span>{{ 'shared.footer.statutes' | translate }}</span>
         </a>
         <a href="https://dasch.swiss/downloads/ToS_NB_V07.pdf" target="_blank" rel="noopener noreferrer">
           <svg
@@ -84,7 +84,7 @@
             <polyline points="7 10 12 15 17 10" />
             <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
-          <span>Terms of Service</span>
+          <span>{{ 'shared.footer.termsOfService' | translate }}</span>
         </a>
       </nav>
     </div>
@@ -118,10 +118,7 @@
     <!-- Copyright -->
     <div class="footer-copyright">
       <img src="/assets/icons/dasch-fingerprint.svg" alt="" width="21" height="17" />
-      <span
-        >&copy; {{ currentYear.getFullYear() }} DaSCH &ndash; Swiss National Data and Service Center for the Humanities.
-        All rights reserved.</span
-      >
+      <span>{{ 'shared.footer.copyright' | translate: { year: currentYear.getFullYear() } }}</span>
     </div>
   </div>
 </footer>
