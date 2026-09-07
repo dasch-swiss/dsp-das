@@ -1,0 +1,292 @@
+<h2>{{ 'pages.project.viewRestrictions.title' | translate }}</h2>
+<p class="subtitle">{{ 'pages.project.viewRestrictions.intro' | translate }}</p>
+
+<!--
+  The two control rows share one grid so their labels form a column and both sets of controls start at
+  the same x. The label column is sized by content rather than by a fixed width, so it follows whichever
+  label is widest in the active language ("Gruppieren nach" is far wider than "Group by") instead of
+  being tuned for English and misaligning everywhere else.
+-->
+<div class="controls">
+  <!-- Grouping: resource class <-> property. Two independent reports sharing one screen. -->
+  <span class="control-label">{{ 'pages.project.viewRestrictions.groupBy' | translate }}</span>
+  <mat-button-toggle-group
+    [value]="grouping()"
+    (change)="onGrouping($event.value)"
+    [attr.aria-label]="'pages.project.viewRestrictions.groupingAria' | translate">
+    <mat-button-toggle value="class">{{ 'pages.project.viewRestrictions.byClass' | translate }}</mat-button-toggle>
+    <mat-button-toggle value="property">{{ 'pages.project.viewRestrictions.byProperty' | translate }}</mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <!--
+    Item-type filter chips. Shared by both groupings: the four value types mean the same thing either
+    way, and `onItemType` keeps the two page services in step so toggling grouping does not silently
+    reset the filter.
+  -->
+  <span class="control-label">
+    <mat-icon>filter_list</mat-icon>
+    {{ 'pages.project.viewRestrictions.filters' | translate }}
+  </span>
+  <mat-chip-listbox
+    [value]="(itemType$ | async)"
+    (change)="onItemType($event.value)"
+    [attr.aria-label]="'pages.project.viewRestrictions.filtersAria' | translate">
+    @for (chip of itemTypeChips; track chip) {
+      <mat-chip-option [value]="chip">
+        {{ itemTypeKey(chip) | translate }}
+      </mat-chip-option>
+    }
+  </mat-chip-listbox>
+</div>
+
+@if (grouping() === 'property') {
+  <app-view-restrictions-by-property-table />
+} @else {
+
+@if (classesState$ | async; as state) {
+  @if (state.loading) {
+    <!-- Step 1: without the class list there is no table at all, so this is a page-level wait. -->
+    <div class="step-status">
+      <app-progress-indicator />
+      <span>{{ 'pages.project.viewRestrictions.stepFetchingClasses' | translate }}</span>
+    </div>
+  } @else if (state.failed) {
+    <!--
+      Step 1 failing is terminal: no class list means no row to attribute anything to, so no step-2
+      request is issued and no partial table is rendered.
+    -->
+    <div class="load-error">
+      <mat-icon>error_outline</mat-icon>
+      {{ 'pages.project.viewRestrictions.classesLoadFailed' | translate }}
+    </div>
+  } @else if (state.classes; as classes) {
+    @if (!classes.length) {
+      <div class="empty-note">
+        <mat-icon>info</mat-icon>
+        {{ 'pages.project.viewRestrictions.noClasses' | translate }}
+      </div>
+    } @else {
+    @let values = (valuesState$ | async) ?? emptyValues;
+    @let activeItemType = (itemType$ | async) ?? ValueItemType.All;
+
+    <!-- Step 2 progress. The table below is already fully rendered; only value cells are still filling in. -->
+    @if (progress$ | async; as progress) {
+      @if (progress.done < progress.total) {
+        <div class="step-status">
+          <app-progress-indicator />
+          <span>
+            {{
+              'pages.project.viewRestrictions.stepGathering'
+                | translate: { done: progress.done, total: progress.total }
+            }}
+          </span>
+        </div>
+      }
+    }
+
+    <!-- Value totals are a lower bound when any class failed. Resource totals never are. -->
+    @if (anyFailed$ | async) {
+      <div class="totals-incomplete">
+        <mat-icon>warning_amber</mat-icon>
+        {{ 'pages.project.viewRestrictions.totalsIncomplete' | translate }}
+      </div>
+    }
+
+    @if (hasNoRestrictions(classes, values)) {
+      <div class="empty-note">
+        <mat-icon>check_circle</mat-icon>
+        {{ 'pages.project.viewRestrictions.noRestrictions' | translate }}
+      </div>
+    }
+
+  <div class="matrix with-totals">
+    <!-- header row -->
+    <div class="matrix-head">
+      <div class="col-group">{{ 'pages.project.viewRestrictions.resourceClass' | translate }}</div>
+      <div class="col-total">{{ 'pages.project.viewRestrictions.resources' | translate }}</div>
+      <div class="col-aud"><mat-icon>public</mat-icon>{{ 'pages.project.viewRestrictions.audience.anonymous' | translate }}</div>
+      <div class="col-aud"><mat-icon>person</mat-icon>{{ 'pages.project.viewRestrictions.audience.authenticated' | translate }}</div>
+      <div class="col-aud"><mat-icon>group</mat-icon>{{ 'pages.project.viewRestrictions.audience.projectMember' | translate }}</div>
+    </div>
+
+    @for (group of classes; track group.id) {
+      @let rowValues = values.get(group.id);
+      <!--
+        In class mode every class is listed, restricted or not, so most rows on a healthy project have
+        nothing beneath them. Such a row is inert rather than a button that expands onto an empty list:
+        `disabled` takes it out of the tab order and off the pointer, and the chevron gives way to a
+        spacer that preserves the label's alignment. See `isExpandable`.
+      -->
+      @let expandable = isExpandable(group, rowValues);
+      <button type="button" class="matrix-row" [class.is-inert]="!expandable" [class.is-failed]="rowValues?.failed" [disabled]="!expandable" (click)="toggleGroup(group, rowValues)">
+        <span class="col-group">
+          @if (expandable) {
+            <mat-icon class="chevron">{{ isExpanded(group.id) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+          } @else {
+            <span class="chevron-spacer" aria-hidden="true"></span>
+          }
+          <span class="group-label">
+            <span class="group-name">{{ group.label }}</span>
+            @if (group.ontology) {
+              <span class="group-sub">{{ group.ontology }}</span>
+            }
+          </span>
+          <!--
+            Per-class failure, confined to its own row: the other classes keep their data, and retrying
+            refetches only this one (the rest come from the cache).
+          -->
+          @if (rowValues?.failed) {
+            <span class="row-error">
+              <mat-icon>error_outline</mat-icon>
+              {{ 'pages.project.viewRestrictions.rowFailed' | translate }}
+              <button type="button" class="row-retry" (click)="onRetryClass(group.id, $event)">
+                {{ 'pages.project.viewRestrictions.rowRetry' | translate }}
+              </button>
+            </span>
+          }
+        </span>
+        <span class="col-total">{{ group.totalResources }}</span>
+        <app-count-cell
+          [resourceCounts]="group.counts.anonymous"
+          [valueCounts]="rowValues?.counts?.counts?.anonymous"
+          [valuesLoading]="!!rowValues?.loading"
+          [valuesFailed]="!!rowValues?.failed"
+          [itemType]="activeItemType" />
+        <app-count-cell
+          [resourceCounts]="group.counts.authenticated"
+          [valueCounts]="rowValues?.counts?.counts?.authenticated"
+          [valuesLoading]="!!rowValues?.loading"
+          [valuesFailed]="!!rowValues?.failed"
+          [itemType]="activeItemType" />
+        <app-count-cell
+          [resourceCounts]="group.counts.projectMember"
+          [valueCounts]="rowValues?.counts?.counts?.projectMember"
+          [valuesLoading]="!!rowValues?.loading"
+          [valuesFailed]="!!rowValues?.failed"
+          [itemType]="activeItemType" />
+      </button>
+
+      @if (isExpanded(group.id)) {
+        @if (isLoading(group.id)) {
+          <app-progress-indicator />
+        } @else if (isFailed(group.id)) {
+          <div class="load-error">
+            <mat-icon>error_outline</mat-icon>
+            {{ 'pages.project.viewRestrictions.itemsLoadFailed' | translate }}
+          </div>
+        } @else if (expandedGroup(group.id); as eg) {
+          @if (eg.page.pagination.totalPages > 1) {
+            <!--
+              app-pager keeps its page index in a private field with no input to set it, so it must stay
+              mounted across a page change: unmounting it resets the index to 0 and the view snaps back to
+              page 1. Hence the current page stays rendered and is only dimmed while the next one loads.
+            -->
+            <div class="pager" [class.is-paging]="isPageLoading(group.id)">
+              <app-pager
+                [numberOfAllResults]="eg.page.pagination.totalItems"
+                [pageSize]="pageSize"
+                (pageIndexChanged)="onPageIndexChanged(group.id, $event)" />
+            </div>
+          }
+          @for (res of eg.page.data; track res.resourceIri) {
+            @if (isCombo(res)) {
+              <!-- combo row: fully-visible resource with a single restricted item, on one line (design 1g/1h) -->
+              @let comboItem = res.items[0];
+              <div class="drill-res">
+                <span class="col-group indent-1 combo">
+                  <mat-icon class="kind-icon">description</mat-icon>
+                  <a class="link-label res-name" [href]="resourceLink(res.resourceIri)" target="_blank" rel="noopener" [title]="res.label">{{ res.label }}</a>
+                  <mat-icon class="combo-sep">chevron_right</mat-icon>
+                  <mat-icon class="kind-icon">{{ itemIcon(comboItem) }}</mat-icon>
+                  @let comboLabel = hasPropertyLabel(comboItem) ? comboItem.propertyLabel : (drillItemTypeKey(comboItem.type) | translate);
+                  <a class="link-label" [href]="itemLink(res.resourceIri, comboItem.valueIri)" target="_blank" rel="noopener" [title]="comboLabel">{{ comboLabel }}</a>
+                  <span class="tag">{{ drillItemTypeKey(comboItem.type) | translate }}</span>
+                </span>
+                <app-visibility-cell [visibility]="comboItem.visibility.anonymous" />
+                <app-visibility-cell [visibility]="comboItem.visibility.authenticated" />
+                <app-visibility-cell [visibility]="comboItem.visibility.projectMember" />
+              </div>
+            } @else {
+              <div class="drill-res">
+                <span class="col-group indent-1">
+                  <mat-icon class="kind-icon">description</mat-icon>
+                  <a class="link-label" [href]="resourceLink(res.resourceIri)" target="_blank" rel="noopener" [title]="res.label">{{ res.label }}</a>
+                  @if (res.items?.length) {
+                    <span class="child-info">
+                      {{ res.items.length }} {{ 'pages.project.viewRestrictions.itemsInside' | translate }}
+                    </span>
+                  }
+                </span>
+                <app-visibility-cell [visibility]="res.resourceVisibility.anonymous" />
+                <app-visibility-cell [visibility]="res.resourceVisibility.authenticated" />
+                <app-visibility-cell [visibility]="res.resourceVisibility.projectMember" />
+              </div>
+
+              @for (item of res.items; track item.valueIri || $index) {
+                <div class="drill-item">
+                  <span class="col-group indent-2">
+                    <mat-icon class="kind-icon">{{ itemIcon(item) }}</mat-icon>
+                    @let itemLabel = hasPropertyLabel(item) ? item.propertyLabel : (drillItemTypeKey(item.type) | translate);
+                    <a class="link-label" [href]="itemLink(res.resourceIri, item.valueIri)" target="_blank" rel="noopener" [title]="itemLabel">{{ itemLabel }}</a>
+                    <span class="tag">{{ drillItemTypeKey(item.type) | translate }}</span>
+                  </span>
+                  <app-visibility-cell [visibility]="item.visibility.anonymous" />
+                  <app-visibility-cell [visibility]="item.visibility.authenticated" />
+                  <app-visibility-cell [visibility]="item.visibility.projectMember" />
+                </div>
+              }
+            }
+          }
+
+        }
+      }
+    } @empty {
+      <div class="empty">{{ 'pages.project.viewRestrictions.noRestrictions' | translate }}</div>
+    }
+
+    <!--
+      Footer totals, summed client-side. The API no longer computes them: the two steps answer in
+      different units and step 2 arrives per class, so there is no single response to put a total in.
+      Resource totals are always complete; value totals are a lower bound whenever a class failed, which
+      the banner above says outright.
+    -->
+    <div class="matrix-foot">
+      <div class="col-group">{{ 'pages.project.viewRestrictions.total' | translate }}</div>
+      <div class="col-total">{{ totalResources(classes) }}</div>
+      <app-count-cell
+        [resourceCounts]="totalCounts(classes, 'anonymous')"
+        [valueCounts]="totalValueCounts(values, 'anonymous')"
+        [itemType]="activeItemType" />
+      <app-count-cell
+        [resourceCounts]="totalCounts(classes, 'authenticated')"
+        [valueCounts]="totalValueCounts(values, 'authenticated')"
+        [itemType]="activeItemType" />
+      <app-count-cell
+        [resourceCounts]="totalCounts(classes, 'projectMember')"
+        [valueCounts]="totalValueCounts(values, 'projectMember')"
+        [itemType]="activeItemType" />
+    </div>
+    </div>
+
+    <!--
+      Red and amber are otherwise the only thing telling the two states apart. Explained once here
+      rather than per figure: a matrix carries dozens of them, and the same two glyphs also mark the
+      drill-down cells, so one legend covers the whole page. The glyphs and colours are the cells' own
+      (see count-cell / visibility-cell), so the legend reads as a key to what is on screen.
+    -->
+    <div class="legend">
+      <span class="legend-entry">
+        <mat-icon class="legend-hidden">visibility_off</mat-icon>
+        {{ 'pages.project.viewRestrictions.hiddenCount' | translate }}
+      </span>
+      <span class="legend-entry">
+        <mat-icon class="legend-restricted">blur_on</mat-icon>
+        {{ 'pages.project.viewRestrictions.restrictedViewCount' | translate }}
+      </span>
+    </div>
+    }
+  }
+} @else {
+  <app-progress-indicator />
+}
+}

@@ -238,6 +238,59 @@
       },
       "projectShortDescription": {
         "readMore": "Mehr lesen"
+      },
+      "viewRestrictions": {
+        "tab": "Sichtbarkeitseinschränkungen",
+        "title": "Sichtbarkeitseinschränkungen",
+        "intro": "Jede Ressourcenklasse des Projekts mit der Anzahl ihrer Ressourcen und, für jede Zielgruppe, wie viele Elemente verborgen oder in eingeschränkter Ansicht ausgeliefert werden. Öffnen Sie eine Zeile, um die betroffenen Ressourcen und ihre Sichtbarkeit pro Zielgruppe zu sehen.",
+        "filters": "Filter",
+        "resourceClass": "Ressourcenklasse",
+        "resources": "Ressourcen",
+        "total": "Total",
+        "itemsInside": "eingeschränkte Elemente enthalten",
+        "noRestrictions": "Keine Einschränkungen für diesen Filter gefunden.",
+        "audience": {
+          "anonymous": "Abgemeldet",
+          "authenticated": "Angemeldet",
+          "projectMember": "Projektmitglied"
+        },
+        "itemType": {
+          "all": "Alle Elemente",
+          "file": "Dateiwerte",
+          "value": "Werte",
+          "comment": "Kommentare"
+        },
+        "filtersAria": "Nach Elementtyp filtern",
+        "visibility": {
+          "hidden": "Verborgen",
+          "restrictedView": "Eingeschränkte Ansicht",
+          "visible": "Sichtbar"
+        },
+        "summaryLoadFailed": "Die Einschränkungen konnten nicht geladen werden. Bitte versuchen Sie es später erneut.",
+        "itemsLoadFailed": "Die betroffenen Ressourcen konnten nicht geladen werden. Schliessen und öffnen Sie die Zeile erneut.",
+        "hiddenCount": "Verborgen – es wird nichts ausgeliefert",
+        "restrictedViewCount": "Eingeschränkte Ansicht – es wird eine reduzierte Version ausgeliefert",
+        "countAria": "{{resourcesHidden}} Ressourcen verborgen, {{resourcesRestricted}} in eingeschränkter Ansicht; {{itemsHidden}} Werte verborgen, {{itemsRestricted}} in eingeschränkter Ansicht",
+        "countNone": "Keine Einschränkungen",
+        "resourceUnit": "Ganze Ressourcen",
+        "itemUnit": "Werte innerhalb von Ressourcen",
+        "stepFetchingClasses": "Ressourcenklassen werden geladen…",
+        "stepGathering": "Einschränkungen werden ermittelt {{done}} / {{total}}",
+        "rowFailed": "Konnte nicht berechnet werden",
+        "rowRetry": "Erneut versuchen",
+        "totalsIncomplete": "Einige Klassen konnten nicht berechnet werden; die Summen unten sind daher ein Mindestwert.",
+        "noClasses": "Dieses Projekt hat noch keine Ressourcenklassen.",
+        "classesLoadFailed": "Die Ressourcenklassen konnten nicht geladen werden; der Bericht kann nicht angezeigt werden.",
+        "reload": "Neu laden",
+        "byClass": "Ressourcenklasse",
+        "byProperty": "Eigenschaft",
+        "groupingAria": "Gruppieren nach",
+        "property": "Eigenschaft",
+        "values": "Werte",
+        "stepFetchingProperties": "Eigenschaften werden geladen…",
+        "propertiesLoadFailed": "Die Eigenschaften konnten nicht geladen werden; der Bericht kann nicht angezeigt werden.",
+        "noProperties": "Dieses Projekt hat noch keine Werteigenschaften.",
+        "groupBy": "Gruppieren nach"
       }
     },
     "system": {
