@@ -1,5 +1,12 @@
 # Changelog
 
+## [13.14.1](https://github.com/dasch-swiss/dsp-app/compare/v13.14.0...v13.14.1) (2026-09-07)
+
+
+### Bug Fixes
+
+* **styles:** restore the Google Fonts icon stylesheet (DEV-7011) ([#3408](https://github.com/dasch-swiss/dsp-app/issues/3408)) ([7a43844](https://github.com/dasch-swiss/dsp-app/commit/7a438445f912e3cb5e283a1b5f3f0ffcdfaa7947))
+
 ## [13.14.0](https://github.com/dasch-swiss/dsp-app/compare/v13.13.1...v13.14.0) (2026-09-07)
 
 
