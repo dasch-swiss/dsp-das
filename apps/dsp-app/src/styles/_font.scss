@@ -59,11 +59,41 @@
     U+FEFF, U+FFFD;
 }
 
-/* material-icons */
+/* Material Icons.
+
+   This lives here, and only here, because `styles.scss` is the single place that `@use`s this
+   partial. It must never move into `_config.scss`: that is a variables partial which 33
+   component stylesheets `@use`, and a CSS `@import` is inlined into each of them rather than
+   scoped like a Sass variable. Each copy then carries `.material-icons[_ngcontent-*]`, which at
+   (0,2,0) ties Angular Material's `.mat-mdc-button > .mat-icon` and wins on source order,
+   leaving a 24px glyph in the 18px box Material clips button icons to (DEV-7011, issue #3411).
+
+   `.material-icons` is load-bearing: `MatIconRegistry` adds `class="material-icons
+   mat-ligature-font"` to every `<mat-icon>` at runtime, and Angular Material never sets the icon
+   `font-family` itself. Deleting this class is what left the app with no icons at all in #3407
+   (reverted in #3408). `font-feature-settings: 'liga'` is what turns an icon name into a glyph.
+
+   Sizing is deliberately omitted: with no `font-size` here, Material's own contextual rules win
+   uncontested, so button icons get their intended 18px box and standalone icons the 24px one. */
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: local('Material Icons'), local('MaterialIcons-Regular'),
-    url(../assets/fonts/material-icons/MaterialIcons-Regular.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/materialicons/v145/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2)
+    format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }
