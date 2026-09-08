@@ -73,8 +73,12 @@
    `font-family` itself. Deleting this class is what left the app with no icons at all in #3407
    (reverted in #3408). `font-feature-settings: 'liga'` is what turns an icon name into a glyph.
 
-   Sizing is deliberately omitted: with no `font-size` here, Material's own contextual rules win
-   uncontested, so button icons get their intended 18px box and standalone icons the 24px one. */
+   `font-size: 24px` must stay. Material's `.mat-icon` sets a 24px *box* but no font-size, so
+   without it a standalone `<mat-icon>` inherits its container's font-size and renders undersized
+   in a 24px box - the regression in #3384, which #3406 then fixed by restoring this line.
+   Declared once here it is only (0,1,0), so Material's contextual rules such as
+   `.mat-mdc-button > .mat-icon` (0,2,0) out-specify it and button icons still get 18px. That
+   holds regardless of stylesheet order, which is what the per-component copies broke. */
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
@@ -85,6 +89,7 @@
 
 .material-icons {
   font-family: 'Material Icons';
+  font-size: 24px;
   font-weight: normal;
   font-style: normal;
   line-height: 1;
