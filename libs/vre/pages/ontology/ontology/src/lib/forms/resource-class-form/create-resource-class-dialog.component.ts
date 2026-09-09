@@ -8,7 +8,6 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DefaultClass } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
@@ -66,7 +65,6 @@ export class CreateResourceClassDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DefaultClass,
     public dialogRef: MatDialogRef<CreateResourceClassDialogComponent>,
-    private _projectPageService: ProjectPageService,
     private _oes: OntologyEditService
   ) {}
 
@@ -88,7 +86,6 @@ export class CreateResourceClassDialogComponent {
       )
       .subscribe(() => {
         this.loading = false;
-        this._projectPageService.reloadProject();
         this.dialogRef.close();
       });
   }

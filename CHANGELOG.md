@@ -1,5 +1,46 @@
 # Changelog
 
+## [13.14.1](https://github.com/dasch-swiss/dsp-app/compare/v13.14.0...v13.14.1) (2026-09-07)
+
+
+### Bug Fixes
+
+* **styles:** restore the Google Fonts icon stylesheet (DEV-7011) ([#3408](https://github.com/dasch-swiss/dsp-app/issues/3408)) ([7a43844](https://github.com/dasch-swiss/dsp-app/commit/7a438445f912e3cb5e283a1b5f3f0ffcdfaa7947))
+
+## [13.14.0](https://github.com/dasch-swiss/dsp-app/compare/v13.13.1...v13.14.0) (2026-09-07)
+
+
+### Enhancements
+
+* **project-settings:** add the View restrictions page (DEV-6868) ([#3321](https://github.com/dasch-swiss/dsp-app/issues/3321)) ([0c417ea](https://github.com/dasch-swiss/dsp-app/commit/0c417ea5da7cd8b6af7594d03a0330b3b9a9bc41))
+
+
+### Bug Fixes
+
+* **ontology:** load project ontologies and lists once per editor visit (DEV-7130) ([#3396](https://github.com/dasch-swiss/dsp-app/issues/3396)) ([48705ac](https://github.com/dasch-swiss/dsp-app/commit/48705ac88686c2627f59799bf1a9d6b019ef2e03))
+* **resource-editor:** drop horizontal padding on property values (DEV-6869) ([#3398](https://github.com/dasch-swiss/dsp-app/issues/3398)) ([e6b3942](https://github.com/dasch-swiss/dsp-app/commit/e6b394208f7e5022c2b1c045aaf975e7ada07ace))
+* **styles:** load Material Icons locally so glyphs are not clipped (DEV-7068, DEV-7069) ([#3384](https://github.com/dasch-swiss/dsp-app/issues/3384)) ([e12138a](https://github.com/dasch-swiss/dsp-app/commit/e12138a371fcfa587171a0254f6c168f0ca19262))
+* **styles:** restore default font-size on .material-icons (DEV-7068) ([#3406](https://github.com/dasch-swiss/dsp-app/issues/3406)) ([f786014](https://github.com/dasch-swiss/dsp-app/commit/f786014504d1e684279d02d76b31f089b7ea7398))
+* **styles:** undo the .material-icons regressions from [#3384](https://github.com/dasch-swiss/dsp-app/issues/3384) / [#3406](https://github.com/dasch-swiss/dsp-app/issues/3406) (DEV-7011) ([#3407](https://github.com/dasch-swiss/dsp-app/issues/3407)) ([f073bff](https://github.com/dasch-swiss/dsp-app/commit/f073bffde3b649a0f05265f9d3f487a5f0c639b9))
+* translate the "Found in" property names on search results (DEV-5452) ([#3391](https://github.com/dasch-swiss/dsp-app/issues/3391)) ([f7fb298](https://github.com/dasch-swiss/dsp-app/commit/f7fb29894e1b18c09bc3eeeac9039a7bdf958a9c))
+* translate the help page and footer (DEV-7006) ([#3367](https://github.com/dasch-swiss/dsp-app/issues/3367)) ([374f4ee](https://github.com/dasch-swiss/dsp-app/commit/374f4ee61e5b4f8f63898a7d860d0f9b174d82cb))
+
+
+### Maintenances
+
+* **deps:** Lock file maintenance ([#3405](https://github.com/dasch-swiss/dsp-app/issues/3405)) ([bba9903](https://github.com/dasch-swiss/dsp-app/commit/bba99030102e20a371b4018bb4fa40cf27d63359))
+* **deps:** Update dependency @sentry/angular from 10.72.0 to 10.73.0 ([#3394](https://github.com/dasch-swiss/dsp-app/issues/3394)) ([8013a14](https://github.com/dasch-swiss/dsp-app/commit/8013a1424894acc64bdeedb247221c28160f7f20))
+* **deps:** Update dependency postcss from 8.5.26 to 8.5.28 ([#3399](https://github.com/dasch-swiss/dsp-app/issues/3399)) ([47fe084](https://github.com/dasch-swiss/dsp-app/commit/47fe084ceaeedf3e06d6b4e061cc60e0475f1c82))
+* **deps:** Update dependency postcss-preset-env from 11.5.0 to 11.5.1 ([#3393](https://github.com/dasch-swiss/dsp-app/issues/3393)) ([7c9f47b](https://github.com/dasch-swiss/dsp-app/commit/7c9f47b1fbe9aa90db76f0823f9dba9b1e01a6db))
+* **deps:** Update dependency zone.js from 0.16.2 to 0.16.3 ([#3400](https://github.com/dasch-swiss/dsp-app/issues/3400)) ([8c6a387](https://github.com/dasch-swiss/dsp-app/commit/8c6a38763236d9a6169c8609e321fcc735780051))
+* **deps:** Update grafana/grafana Docker tag to v13.2.1 ([#3401](https://github.com/dasch-swiss/dsp-app/issues/3401)) ([6d41aa2](https://github.com/dasch-swiss/dsp-app/commit/6d41aa2499e89a1724e394440eac01dc7a01f7df))
+* **deps:** Update jest-deps from 30.4.2 to 30.5.0 ([#3389](https://github.com/dasch-swiss/dsp-app/issues/3389)) ([4aa33c9](https://github.com/dasch-swiss/dsp-app/commit/4aa33c948b315ec9504080d6e43a330783005a87))
+* **deps:** Update jest-deps from 30.5.0 to 30.5.1 ([#3402](https://github.com/dasch-swiss/dsp-app/issues/3402)) ([5e33d2f](https://github.com/dasch-swiss/dsp-app/commit/5e33d2fe8b60dc2ce1bd0ffc55dc65dc144fed52))
+* **deps:** Update storybook monorepo from 10.5.10 to 10.6.0 ([#3403](https://github.com/dasch-swiss/dsp-app/issues/3403)) ([25db6d6](https://github.com/dasch-swiss/dsp-app/commit/25db6d6e33a8f9ca64d1fef3232326db809339ab))
+* **deps:** Update typescript-eslint monorepo from 8.68.0 to 8.69.0 ([#3404](https://github.com/dasch-swiss/dsp-app/issues/3404)) ([065fa26](https://github.com/dasch-swiss/dsp-app/commit/065fa2602d8ed976e26f3c02905d9176b02f1974))
+* **open-api:** bump dsp-api spec v37.8.0-6-ge1c71e1 → v38.0.0-6-gf814ae1 ([#3392](https://github.com/dasch-swiss/dsp-app/issues/3392)) ([116ae9f](https://github.com/dasch-swiss/dsp-app/commit/116ae9f1acde92f2b37deb89e1ca4ad96eb416da))
+* **open-api:** bump dsp-api spec v38.0.0-6-gf814ae1 → v38.0.0-8-gdf2abf9 ([#3395](https://github.com/dasch-swiss/dsp-app/issues/3395)) ([d13158e](https://github.com/dasch-swiss/dsp-app/commit/d13158ea5d353c49755f41bcddbe127eaa58d263))
+
 ## [13.13.1](https://github.com/dasch-swiss/dsp-app/compare/v13.13.0...v13.13.1) (2026-08-31)
 
 
