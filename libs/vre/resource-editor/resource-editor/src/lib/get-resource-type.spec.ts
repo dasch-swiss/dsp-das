@@ -1,28 +1,63 @@
-import { Constants, ReadResource } from '@dasch-swiss/dsp-js';
+import { Cardinality, Constants, ReadResource } from '@dasch-swiss/dsp-js';
 import { getResourceType } from './get-resource-type';
 import { ResourceType } from './resource-type';
 
 const KNORA_API_V2 = 'http://api.knora.org/ontology/knora-api/v2#';
 
-// Minimal ReadResource factory: sets properties and type
-const makeResource = (propertyKey: string, filename = 'file.jpg', type = '', valueType = ''): ReadResource =>
+const DEFAULT_CLASS = 'http://example.org/ontology#Representation';
+
+/**
+ * Builds the `entityInfo` a real `ReadResource` always carries.
+ *
+ * `ResourcesConversionUtil.createReadResource()` assigns `resource.entityInfo` unconditionally
+ * from the ontology cache for every resource it deserializes, so a resource that holds a file
+ * value in `properties` always also declares that property's cardinality on its class. The two
+ * are not independent: `properties` can only be populated for a property the class declares.
+ *
+ * Fixtures that set `properties` without `entityInfo` describe a resource the API cannot return.
+ */
+const makeEntityInfo = (resourceType: string, propertyIris: string[]) =>
+  ({
+    classes: {
+      [resourceType]: {
+        propertiesList: propertyIris.map(propertyIndex => ({
+          propertyIndex,
+          cardinality: Cardinality._0_1,
+          isInherited: false,
+        })),
+      },
+    },
+    properties: {},
+  }) as unknown as ReadResource['entityInfo'];
+
+// Minimal ReadResource factory: sets properties and type, plus the class definition
+// declaring the file property's cardinality — as dsp-api always does.
+const makeResource = (propertyKey: string, filename = 'file.jpg', type = DEFAULT_CLASS, valueType = ''): ReadResource =>
   ({
     type,
     properties: {
       [propertyKey]: [{ filename, type: valueType }],
     },
+    entityInfo: makeEntityInfo(type, [propertyKey]),
   }) as unknown as ReadResource;
 
-const makeResourceNoFile = (type = ''): ReadResource =>
+// A resource with no file value: its class declares no file-value cardinality either.
+const makeResourceNoFile = (type = DEFAULT_CLASS): ReadResource =>
   ({
     type,
     properties: {},
+    entityInfo: makeEntityInfo(type, []),
   }) as unknown as ReadResource;
 
 describe('getResourceType', () => {
   describe('when the resource has a still image file value', () => {
     it('returns Image', () => {
-      const resource = makeResource(Constants.HasStillImageFileValue, 'image.jp2', '', Constants.StillImageFileValue);
+      const resource = makeResource(
+        Constants.HasStillImageFileValue,
+        'image.jp2',
+        DEFAULT_CLASS,
+        Constants.StillImageFileValue
+      );
       expect(getResourceType(resource)).toBe(ResourceType.Image);
     });
   });
