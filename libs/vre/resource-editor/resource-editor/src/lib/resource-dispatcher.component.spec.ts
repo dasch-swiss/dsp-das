@@ -93,6 +93,14 @@ const makeSegmentResource = (): DspResource =>
 
 const makePlainResource = (): DspResource => makeResource({ type: DEFAULT_CLASS, properties: {} });
 
+/**
+ * A representation whose file value is withheld (DEV-7072): `properties` is empty because
+ * dsp-api drops unreadable values and removes the property key, while the class still declares
+ * the cardinality — which is what identifies it as a representation.
+ */
+const makeWithheldRepresentation = (filePropertyIri: string): DspResource =>
+  makeResource({ type: DEFAULT_CLASS, properties: {}, userHasPermission: 'V' }, [filePropertyIri]);
+
 describe('ResourceDispatcherComponent', () => {
   let component: ResourceDispatcherComponent;
   let fixture: ComponentFixture<ResourceDispatcherComponent>;
@@ -264,6 +272,24 @@ describe('ResourceDispatcherComponent', () => {
     it('completes without error', () => {
       triggerNgOnChanges(makeImageResource());
       expect(() => component.ngOnDestroy()).not.toThrow();
+    });
+  });
+  describe('when the resource is a representation whose file value is withheld (DEV-7072)', () => {
+    it('sets resourceType synchronously, so the media wrapper can show the restricted notice', () => {
+      triggerNgOnChanges(makeWithheldRepresentation(Constants.HasMovingImageFileValue));
+      expect(component.resourceType).toBe(ResourceType.Video);
+    });
+
+    it('does not fall through to the compound count API call', () => {
+      triggerNgOnChanges(makeWithheldRepresentation(Constants.HasStillImageFileValue));
+      expect(component.resourceType).toBe(ResourceType.Image);
+      expect(dspApiMock.v2.search.doSearchStillImageRepresentationsCount).not.toHaveBeenCalled();
+    });
+
+    it('never renders the plain view for a withheld representation', () => {
+      triggerNgOnChanges(makeWithheldRepresentation(Constants.HasTextFileValue));
+      expect(component.resourceType).not.toBe(ResourceType.Plain);
+      expect(component.resourceType).toBe(ResourceType.Text);
     });
   });
 });
