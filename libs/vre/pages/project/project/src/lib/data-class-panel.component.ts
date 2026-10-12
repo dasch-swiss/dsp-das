@@ -34,7 +34,7 @@ interface CreateResourceDialogProps {
           {{ 'pages.dataBrowser.downloadDialog.title' | translate }}
         </button>
         @if (hasProjectMemberRights$ | async) {
-          <button mat-stroked-button (click)="goToAddClassInstance()" data-cy="create-resource-btn">
+          <button mat-raised-button color="primary" (click)="goToAddClassInstance()" data-cy="create-resource-btn">
             {{ 'pages.dataBrowser.dataClassPanel.createResource' | translate }}
           </button>
         }
