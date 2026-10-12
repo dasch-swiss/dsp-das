@@ -901,7 +901,7 @@
         "delete": "Delete",
         "cannotDeleteRequired": "Cannot delete required property",
         "addValue": "Add {{property}}",
-        "undo": "Undo",
+        "cancel": "Cancel",
         "addComment": "Add comment",
         "removeComment": "Remove comment",
         "save": "Save",

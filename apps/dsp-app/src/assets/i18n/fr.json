@@ -901,7 +901,7 @@
         "delete": "Supprimer",
         "cannotDeleteRequired": "Impossible de supprimer la propriété requise",
         "addValue": "Ajouter : {{property}}",
-        "undo": "Annuler",
+        "cancel": "Annuler",
         "addComment": "Ajouter un commentaire",
         "removeComment": "Supprimer le commentaire",
         "save": "Enregistrer",

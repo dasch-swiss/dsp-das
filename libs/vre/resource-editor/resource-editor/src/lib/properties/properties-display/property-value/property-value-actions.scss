@@ -1,5 +1,5 @@
 // A value's actions, the same in both states of a value: Edit and Delete on a value being shown,
-// Undo, Comment and Save on a value being edited. One look and one place — compact grey icon
+// Cancel and Save on a value being edited. One look and one place — compact grey icon
 // buttons at the end of the value's line — so switching to editing does not move the controls
 // out from under the pointer or restyle them (DEV-7494).
 //
@@ -38,5 +38,16 @@
     width: 18px;
     height: 18px;
     line-height: 18px;
+  }
+}
+
+// The one action that commits: filled, so it reads as the way out of editing.
+.value-action-primary {
+  background: var(--mat-sys-primary, #336790);
+  color: #fff;
+
+  &:disabled {
+    background: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.38);
   }
 }

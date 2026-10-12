@@ -11,7 +11,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
@@ -31,6 +31,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   imports: [
     AsyncPipe,
     NgTemplateOutlet,
+    MatButton,
     MatIconButton,
     MatIcon,
     MatTooltip,
@@ -49,8 +50,9 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       (templateFound)="foundTemplate($event)" />
 
     @if (!loading) {
-      <!-- The editor, then its actions at the end of the same line — the same look and place as
-           the Edit and Delete buttons of the value being shown (DEV-7494). -->
+      <!-- The editor, then its actions at the end of the same line — the same place and size as the
+           Edit and Delete buttons of the value being shown: Cancel, and Save as the one filled
+           button. The comment is a text link under the editor (DEV-7494). -->
       <div class="edit-line">
         <div class="edit-content">
           @if (template) {
@@ -59,6 +61,21 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           @if (group.controls.comment.value !== null) {
             <app-property-value-basic-comment [control]="group.controls.comment" />
           }
+          <button
+            mat-button
+            color="primary"
+            type="button"
+            class="comment-toggle"
+            data-cy="toggle-comment-button"
+            (click)="toggleCommentValue()">
+            <mat-icon>{{ commentIsNotNull ? 'remove' : 'add' }}</mat-icon>
+            {{
+              (commentIsNotNull
+                ? 'resourceEditor.resourceProperties.actions.removeComment'
+                : 'resourceEditor.resourceProperties.actions.addComment'
+              ) | translate
+            }}
+          </button>
         </div>
         <div class="value-actions edit-actions">
           <button
@@ -67,38 +84,20 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             class="value-action"
             data-cy="undo-button"
             (click)="afterUndo.emit()"
-            [attr.aria-label]="'resourceEditor.resourceProperties.actions.undo' | translate"
-            [matTooltip]="'resourceEditor.resourceProperties.actions.undo' | translate">
-            <mat-icon>undo</mat-icon>
+            [attr.aria-label]="'resourceEditor.resourceProperties.actions.cancel' | translate"
+            [matTooltip]="'resourceEditor.resourceProperties.actions.cancel' | translate">
+            <mat-icon>close</mat-icon>
           </button>
           <button
             mat-icon-button
             type="button"
-            class="value-action"
-            (click)="toggleCommentValue()"
-            data-cy="toggle-comment-button"
-            [attr.aria-label]="
-              commentIsNotNull
-                ? ('resourceEditor.resourceProperties.actions.removeComment' | translate)
-                : ('resourceEditor.resourceProperties.actions.addComment' | translate)
-            "
-            [matTooltip]="
-              commentIsNotNull
-                ? ('resourceEditor.resourceProperties.actions.removeComment' | translate)
-                : ('resourceEditor.resourceProperties.actions.addComment' | translate)
-            ">
-            <mat-icon>{{ commentIsNotNull ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            type="button"
-            class="value-action"
+            class="value-action value-action-primary"
             data-cy="save-button"
             [disabled]="(hasValidValue$ | async) !== true"
             (click)="onSave()"
             [attr.aria-label]="'resourceEditor.resourceProperties.actions.save' | translate"
             [matTooltip]="'resourceEditor.resourceProperties.actions.save' | translate">
-            <mat-icon>save</mat-icon>
+            <mat-icon>check</mat-icon>
           </button>
         </div>
       </div>
@@ -123,6 +122,16 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
          its first line. */
       .edit-actions {
         padding-top: 14px;
+      }
+      .comment-toggle {
+        --mat-button-text-container-height: 26px;
+        --mat-button-text-horizontal-padding: 4px;
+        font-size: 12px;
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
       }
     `,
   ],

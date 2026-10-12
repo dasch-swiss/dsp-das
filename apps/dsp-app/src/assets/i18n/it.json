@@ -901,7 +901,7 @@
         "delete": "Elimina",
         "cannotDeleteRequired": "Impossibile eliminare la proprietà richiesta",
         "addValue": "Aggiungi: {{property}}",
-        "undo": "Annulla",
+        "cancel": "Annulla",
         "addComment": "Aggiungi commento",
         "removeComment": "Rimuovi commento",
         "save": "Salva",
