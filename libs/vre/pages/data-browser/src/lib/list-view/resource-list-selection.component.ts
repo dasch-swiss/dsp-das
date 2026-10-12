@@ -15,7 +15,7 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
 @Component({
   selector: 'app-resource-list-selection',
   template: `
-    <div style="background: #336790; color: white; padding: 0 16px; display: flex; gap: 8px; align-items: center">
+    <div style="background: purple; color: white; padding: 0 16px; display: flex; gap: 8px; align-items: center">
       <div style="flex: 1; display: flex; align-items: center; gap: 16px;">
         <div>
           {{ 'pages.dataBrowser.resourceListSelection.resourcesSelected' | translate: { count: count$ | async } }}
