@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
 import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -17,11 +16,10 @@ import { PropertyValueService } from './property-value.service';
   selector: 'app-property-values',
   imports: [
     DraggableValueListComponent,
-    MatIconButton,
+    MatButton,
     MatIcon,
     PropertyValueComponent,
     PropertyValueAddComponent,
-    MatTooltip,
     TranslatePipe,
   ],
   template: `
@@ -38,12 +36,15 @@ import { PropertyValueService } from './property-value.service';
     </app-draggable-value-list>
 
     @if (userCanAdd && !currentlyAdding && (editModeData.values.length === 0 || matchesCardinality)) {
+      <!-- Says what it adds: a bare icon under a list of values read as decoration (DEV-7494). -->
       <button
-        mat-icon-button
+        mat-button
+        type="button"
+        class="add-value"
         (click)="currentlyAdding = true"
-        data-cy="add-property-value-button"
-        [matTooltip]="'ui.common.actions.create' | translate">
-        <mat-icon class="add-icon">add_box</mat-icon>
+        data-cy="add-property-value-button">
+        <mat-icon>add</mat-icon>
+        {{ 'resourceEditor.resourceProperties.actions.addValue' | translate: { property: propertyLabel } }}
       </button>
     }
 
@@ -51,6 +52,18 @@ import { PropertyValueService } from './property-value.service';
       <app-property-value-add (stopAdding)="currentlyAdding = false" />
     }
   `,
+  styles: [
+    `
+      /* A quiet text button under the values: as tall as a line, not a toolbar. */
+      .add-value {
+        --mat-button-text-container-height: 30px;
+        --mat-button-text-horizontal-padding: 6px;
+
+        margin-top: 2px;
+        font-size: 13px;
+      }
+    `,
+  ],
   providers: [PropertyValueService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -88,6 +101,11 @@ export class PropertyValuesComponent implements OnChanges {
 
   get propertyDefinition() {
     return JsLibPotentialError.setAs(this.myProperty.propDef);
+  }
+
+  /** The property's own name, for the add button: "Add Organiser" rather than a bare icon. */
+  get propertyLabel(): string {
+    return this.myProperty.propDef.label ?? '';
   }
 
   ngOnChanges() {

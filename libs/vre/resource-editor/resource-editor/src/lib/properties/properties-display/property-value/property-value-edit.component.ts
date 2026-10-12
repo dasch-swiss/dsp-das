@@ -49,8 +49,10 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       (templateFound)="foundTemplate($event)" />
 
     @if (!loading) {
-      <div style="display: flex; padding: 16px 0">
-        <div style="flex: 1">
+      <!-- The editor, then its actions at the end of the same line — the same look and place as
+           the Edit and Delete buttons of the value being shown (DEV-7494). -->
+      <div class="edit-line">
+        <div class="edit-content">
           @if (template) {
             <ng-container *ngTemplateOutlet="template; context: { item: group.controls.item }"></ng-container>
           }
@@ -58,20 +60,28 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             <app-property-value-basic-comment [control]="group.controls.comment" />
           }
         </div>
-        <div style="display: flex; width: 144px">
+        <div class="value-actions edit-actions">
           <button
-            (click)="afterUndo.emit()"
             mat-icon-button
-            color="primary"
+            type="button"
+            class="value-action"
+            data-cy="undo-button"
+            (click)="afterUndo.emit()"
+            [attr.aria-label]="'resourceEditor.resourceProperties.actions.undo' | translate"
             [matTooltip]="'resourceEditor.resourceProperties.actions.undo' | translate">
             <mat-icon>undo</mat-icon>
           </button>
           <button
             mat-icon-button
             type="button"
-            color="primary"
+            class="value-action"
             (click)="toggleCommentValue()"
             data-cy="toggle-comment-button"
+            [attr.aria-label]="
+              commentIsNotNull
+                ? ('resourceEditor.resourceProperties.actions.removeComment' | translate)
+                : ('resourceEditor.resourceProperties.actions.addComment' | translate)
+            "
             [matTooltip]="
               commentIsNotNull
                 ? ('resourceEditor.resourceProperties.actions.removeComment' | translate)
@@ -80,12 +90,14 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             <mat-icon>{{ commentIsNotNull ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
           </button>
           <button
+            mat-icon-button
+            type="button"
+            class="value-action"
+            data-cy="save-button"
             [disabled]="(hasValidValue$ | async) !== true"
             (click)="onSave()"
-            [matTooltip]="'resourceEditor.resourceProperties.actions.save' | translate"
-            mat-icon-button
-            data-cy="save-button"
-            color="primary">
+            [attr.aria-label]="'resourceEditor.resourceProperties.actions.save' | translate"
+            [matTooltip]="'resourceEditor.resourceProperties.actions.save' | translate">
             <mat-icon>save</mat-icon>
           </button>
         </div>
@@ -94,6 +106,26 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <app-progress-indicator [size]="'xsmall'" />
     }
   `,
+  styleUrls: ['./property-value-actions.scss'],
+  styles: [
+    `
+      .edit-line {
+        display: flex;
+        align-items: flex-start;
+        gap: 4px;
+        padding: var(--property-value-padding-block, 16px) 0;
+      }
+      .edit-content {
+        flex: 1;
+        min-width: 0;
+      }
+      /* Level with the middle of the editor's first field, as the shown value's actions are with
+         its first line. */
+      .edit-actions {
+        padding-top: 14px;
+      }
+    `,
+  ],
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
   @Input({ required: true }) readValue!: ReadValue | undefined;

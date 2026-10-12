@@ -8,6 +8,25 @@
   position: relative;
 }
 
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  border-radius: 4px;
+
+  // The line being acted on, marked without covering any of it.
+  &.is-hovered {
+    background: rgba(51, 103, 144, 0.06);
+  }
+}
+
+.value-content {
+  flex: 1;
+  min-width: 0;
+  // A word longer than the line breaks rather than pushing the actions past the edge.
+  overflow-wrap: anywhere;
+}
+
 .value {
   flex: 1;
   // 16px is the viewer's own rhythm, where a property is a row of its own on a wide panel. A host

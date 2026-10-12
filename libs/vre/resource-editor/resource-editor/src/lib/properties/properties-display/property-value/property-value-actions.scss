@@ -1,0 +1,42 @@
+// A value's actions, the same in both states of a value: Edit and Delete on a value being shown,
+// Undo, Comment and Save on a value being edited. One look and one place — compact grey icon
+// buttons at the end of the value's line — so switching to editing does not move the controls
+// out from under the pointer or restyle them (DEV-7494).
+//
+// Shared by the components that draw them rather than repeated in each, so the two cannot drift.
+
+// Not `.action-bubble`: a global rule of that name floats the other editors' bubbles absolutely.
+.value-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  // Never squeezed by a long value: the value wraps to make room, the buttons keep their size.
+  flex: none;
+  min-width: max-content;
+  // Clear of the line's right edge: flush against it, the last button was clipped by whatever the
+  // line sits in — the viewer's panel, a table cell.
+  padding-right: 4px;
+
+  // A button may sit in a tooltip wrapper; neither may give way.
+  > * {
+    flex: none;
+  }
+}
+
+.value-action {
+  --mat-icon-button-state-layer-size: 28px;
+
+  flex: none;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.6);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+  }
+}
