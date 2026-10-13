@@ -97,7 +97,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             (click)="onSave()"
             [attr.aria-label]="'resourceEditor.resourceProperties.actions.save' | translate"
             [matTooltip]="'resourceEditor.resourceProperties.actions.save' | translate">
-            <mat-icon>check</mat-icon>
+            <mat-icon>check_circle</mat-icon>
           </button>
         </div>
       </div>

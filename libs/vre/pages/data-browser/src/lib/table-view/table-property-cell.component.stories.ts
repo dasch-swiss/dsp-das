@@ -1,7 +1,14 @@
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { generateDspResource } from '@dasch-swiss/vre/shared/app-common';
 import { applicationConfig, Meta, StoryObj } from '@storybook/angular';
-import { expect, userEvent, within } from 'storybook/test';
-import { EDITABLE_PROPERTY_IRI, makeEditableReadResource, STORY_PROVIDERS } from '../stories.helpers';
+import { of } from 'rxjs';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
+import {
+  EDITABLE_PROPERTY_IRI,
+  makeEditableReadResource,
+  makeUserServiceStub,
+  STORY_PROVIDERS,
+} from '../stories.helpers';
 import { TablePropertyCellComponent } from './table-property-cell.component';
 
 const DSP_RESOURCE = generateDspResource(makeEditableReadResource({ label: 'BRAUT001a', values: ['42'] }));
@@ -65,5 +72,51 @@ export const OpensTheResourceEditorsOwnValueEditorFromTheBubble: Story = {
     await userEvent.click(canvasElement.querySelector('[data-cy="edit-button"]') as HTMLElement);
 
     await expect(canvasElement.querySelector('app-property-value-edit')).not.toBeNull();
+  },
+};
+
+const READ_ONLY_RESOURCE = generateDspResource(
+  makeEditableReadResource({ label: 'BRAUT001a', values: ['42'], userHasPermission: 'RV' })
+);
+const readOnlyStory = (loggedIn: boolean): Story => ({
+  decorators: [
+    applicationConfig({
+      providers: [{ provide: UserService, useValue: makeUserServiceStub({ isLoggedIn$: of(loggedIn) }) }],
+    }),
+  ],
+  args: {
+    dspResource: READ_ONLY_RESOURCE,
+    myProperty: READ_ONLY_RESOURCE.resProps.find(prop => prop.propDef.id === EDITABLE_PROPERTY_IRI)!,
+  },
+});
+
+/** A signed-in user who may only read still gets the creation info, as in the viewer. */
+export const ShowsTheInfoButtonToASignedInReader: Story = {
+  ...readOnlyStory(true),
+  play: async ({ canvasElement }) => {
+    await userEvent.hover(canvasElement.querySelector('[data-cy="property-value"]') as HTMLElement);
+    await expect(canvasElement.querySelector('[data-cy="info-button"]')).not.toBeNull();
+  },
+};
+
+/** Logged out, a hovered cell offers nothing, so it shows nothing — no info button, no highlight. */
+export const OffersNoInfoButtonWhenLoggedOut: Story = {
+  ...readOnlyStory(false),
+  play: async ({ canvasElement }) => {
+    const value = canvasElement.querySelector('[data-cy="property-value"]') as HTMLElement;
+    await userEvent.hover(value);
+
+    await expect(canvasElement.querySelector('[data-cy="info-button"]')).toBeNull();
+    await expect(getComputedStyle(value).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  },
+};
+
+/** In a cell the Edit tooltip is just "Edit"; the viewer adds who created the value and when. */
+export const ShowsAPlainEditTooltip: Story = {
+  play: async ({ canvasElement }) => {
+    await userEvent.hover(canvasElement.querySelector('[data-cy="property-value"]') as HTMLElement);
+    await userEvent.hover(canvasElement.querySelector('[data-cy="edit-button"]') as HTMLElement);
+
+    await waitFor(() => expect(document.querySelector('.mat-mdc-tooltip')?.textContent?.trim()).toBe('Edit'));
   },
 };

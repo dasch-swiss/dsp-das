@@ -50,13 +50,8 @@
   color: rgba(0, 0, 0, 0.6);
 }
 
-// The one action that commits: filled, so it reads as the way out of editing.
+// The one action that commits: a filled circle glyph, at the same 18px as Edit and Delete rather
+// than a filled 28px disc that read as a bigger button.
 .value-action-primary {
-  background: var(--mat-sys-primary, #336790);
-  color: #fff;
-
-  &:disabled {
-    background: rgba(0, 0, 0, 0.12);
-    color: rgba(0, 0, 0, 0.38);
-  }
+  color: var(--mat-sys-primary, #336790);
 }

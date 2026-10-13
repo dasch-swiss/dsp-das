@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnChanges, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { PropertyValuesComponent, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/resource-editor';
+import { UserService } from '@dasch-swiss/vre/core/session';
+import {
+  PropertyValuesComponent,
+  ResourceFetcherService,
+  VALUE_ACTIONS_OPTIONS,
+} from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { DspResource, filterUndefined, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 
 /**
@@ -39,7 +44,16 @@ import { DspResource, filterUndefined, PropertyInfoValues } from '@dasch-swiss/v
   // Per cell, not per table. `ResourceFetcherService` is bound to one resource — the subtree reads
   // the resource off it to build the action bubble's tooltip, and the editor calls `reload()` on
   // it after a save, which must re-read this row and no other.
-  providers: [ResourceFetcherService],
+  //
+  // The value actions are leaner than the viewer's: the creation info is for signed-in users only,
+  // and not repeated in the Edit tooltip.
+  providers: [
+    ResourceFetcherService,
+    {
+      provide: VALUE_ACTIONS_OPTIONS,
+      useFactory: () => ({ showInfo$: inject(UserService).isLoggedIn$, creationInfoInEditTooltip: false }),
+    },
+  ],
 })
 export class TablePropertyCellComponent implements OnChanges {
   /** The row's resource as the resource editor models it, built once per row by `buildRows`. */

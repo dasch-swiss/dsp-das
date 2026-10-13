@@ -1,5 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -9,6 +10,7 @@ import { EMPTY, map, Observable, of } from 'rxjs';
 import { ResourceFetcherService } from '../../../representation/resource-fetcher.service';
 import { ResourceUtil } from '../../../representation/resource.util';
 import { PropertyValueService } from './property-value.service';
+import { VALUE_ACTIONS_OPTIONS, ValueActionsOptions } from './value-actions-options.token';
 
 /**
  * A value's actions, at the end of the value's own line.
@@ -33,7 +35,7 @@ import { PropertyValueService } from './property-value.service';
           (click)="$event.stopPropagation(); editAction.emit()">
           <mat-icon>edit</mat-icon>
         </button>
-      } @else if (date) {
+      } @else if (date && showInfo()) {
         @if (infoTooltip$ | async; as infoTooltip) {
           <button
             mat-icon-button
@@ -70,11 +72,16 @@ import { PropertyValueService } from './property-value.service';
     </div>
   `,
   styleUrls: ['./property-value-actions.scss', './property-value-action-bubble.component.scss'],
+  host: { '[class.is-empty]': 'isEmpty' },
 })
 export class PropertyValueActionBubbleComponent implements OnInit {
   @Input({ required: true }) date!: string;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();
+
+  private readonly _options = inject(VALUE_ACTIONS_OPTIONS);
+  /** See {@link ValueActionsOptions.showInfo$}. */
+  protected readonly showInfo = toSignal(this._options.showInfo$, { initialValue: true });
 
   infoTooltip$!: Observable<string>;
   /** "Edit", followed by who created the value and when, once that is known. */
@@ -92,10 +99,18 @@ export class PropertyValueActionBubbleComponent implements OnInit {
     return isRequired && isOnlyValue;
   }
 
+  /** Nothing to offer: the value's line is then not marked on hover either. */
+  get isEmpty(): boolean {
+    return !this.userHasPermission('edit') && !this.userHasPermission('delete') && !(this.date && this.showInfo());
+  }
+
   ngOnInit() {
     this.infoTooltip$ = this._getInfoToolTip();
     const edit = this._translateService.instant('resourceEditor.resourceProperties.actions.edit');
-    this.editTooltip$ = this.date ? this.infoTooltip$.pipe(map(info => `${edit} · ${info}`)) : of(edit);
+    this.editTooltip$ =
+      this.date && this._options.creationInfoInEditTooltip
+        ? this.infoTooltip$.pipe(map(info => `${edit} · ${info}`))
+        : of(edit);
   }
 
   userHasPermission(permissionType: 'edit' | 'delete'): boolean {

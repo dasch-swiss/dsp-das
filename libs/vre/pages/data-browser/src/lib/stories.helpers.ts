@@ -57,6 +57,8 @@ export const makeMultipleViewerServiceStub = (
 
 export const makeUserServiceStub = (partial: Partial<UserService> = {}): Partial<UserService> => ({
   isSysAdmin$: of(false),
+  // Signed in by default: the table's cells read it to decide whether to offer the info button.
+  isLoggedIn$: of(true),
   user$: of(null),
   currentUser: null,
   ...partial,
@@ -101,7 +103,8 @@ export const makeEditableReadResource = (partial: Partial<ReadResource> & { valu
     int: Number(strval),
     valueCreationDate: '2024-06-15T10:00:00Z',
     valueHasComment: null,
-    userHasPermission: 'CR',
+    // Follows the resource's, so `'RV'` makes the values read-only too, as the doc above says.
+    userHasPermission: rest.userHasPermission ?? 'CR',
   }));
 
   return makeReadResource({

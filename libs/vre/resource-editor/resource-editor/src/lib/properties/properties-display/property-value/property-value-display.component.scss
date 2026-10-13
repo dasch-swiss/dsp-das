@@ -18,6 +18,10 @@
   &.is-hovered {
     background: rgba(51, 103, 144, 0.06);
   }
+
+  &.is-hovered:has(> app-property-value-action-bubble.is-empty) {
+    background: none;
+  }
 }
 
 .value-content {
