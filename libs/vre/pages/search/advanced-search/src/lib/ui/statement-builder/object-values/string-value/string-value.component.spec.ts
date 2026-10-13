@@ -28,8 +28,14 @@ describe('StringValueComponent "is like" pattern (DEV-7441)', () => {
     fixture.detectChanges();
   };
 
+  // Runs what is emitted at once (on a microtask), but not the 300 ms debounce.
+  const settle = () => jest.advanceTimersByTimeAsync(0);
+
+  // Read from the form field's subscript, where Material renders an error it has registered.
   const errorText = (): string | null =>
-    (fixture.nativeElement as HTMLElement).querySelector('mat-error')?.textContent?.trim() ?? null;
+    (fixture.nativeElement as HTMLElement)
+      .querySelector('.mat-mdc-form-field-subscript-wrapper mat-error')
+      ?.textContent?.trim() ?? null;
 
   beforeEach(() => {
     jest.useFakeTimers();
@@ -70,16 +76,58 @@ describe('StringValueComponent "is like" pattern (DEV-7441)', () => {
     expect(emitted.at(-1)).toBe('*MAL*');
   });
 
-  it('re-validates the typed value when the operator switches to "is like"', () => {
+  it('re-validates the typed value at once when the operator switches to "is like"', async () => {
     render(ResourceLabel, Operator.Equals);
     type('*MAL*');
     expect(emitted.at(-1)).toBe('*MAL*');
 
     component.operator = Operator.IsLike;
     component.ngOnChanges({ operator: new SimpleChange(Operator.Equals, Operator.IsLike, false) });
-    jest.advanceTimersByTime(400);
+    await settle();
 
     expect(emitted.at(-1)).toBeUndefined();
+  });
+
+  it('passes a withheld value on at once when the operator switches away from "is like"', async () => {
+    render(ResourceLabel, Operator.IsLike);
+    type('*MAL*');
+    expect(emitted.at(-1)).toBeUndefined();
+
+    component.operator = Operator.Equals;
+    component.ngOnChanges({ operator: new SimpleChange(Operator.IsLike, Operator.Equals, false) });
+    await settle();
+
+    expect(emitted.at(-1)).toBe('*MAL*');
+  });
+
+  // Otherwise clicking Add within the debounce would confirm the filter with the value from before the edit.
+  it('withholds a value at once when an edit makes it invalid', async () => {
+    render(ResourceLabel, Operator.IsLike);
+    type('.*MAL.*');
+
+    component.inputControl.setValue('*MAL*');
+    await settle();
+
+    expect(emitted.at(-1)).toBeUndefined();
+  });
+
+  it('clears a withheld value when another property is picked', async () => {
+    render(Constants.TextValue, Operator.IsLike);
+    type('*MAL*');
+    expect(emitted.at(-1)).toBeUndefined();
+
+    // Picking a property resets the statement's operator to "equals" and drops its value. The `value` input
+    // was undefined already, so only the property and the operator change.
+    component.predicateIri = 'http://example.org/other';
+    component.operator = Operator.Equals;
+    component.ngOnChanges({
+      predicateIri: new SimpleChange('http://example.org/one', 'http://example.org/other', false),
+      operator: new SimpleChange(Operator.IsLike, Operator.Equals, false),
+    });
+    await jest.advanceTimersByTimeAsync(400);
+
+    expect(component.inputControl.value).toBeNull();
+    expect(emitted).not.toContain('*MAL*');
   });
 
   it('keeps the typed text when the statement hands back the undefined it was given', () => {

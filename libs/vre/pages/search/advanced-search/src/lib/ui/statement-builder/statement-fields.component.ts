@@ -56,6 +56,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
             [valueType]="statement.selectedPredicate!.objectValueType"
             [value]="asString(statement.selectedObjectValue)"
             [operator]="statement.selectedOperator"
+            [predicateIri]="statement.selectedPredicate!.iri"
             [showError]="showErrors"
             (emitValueChanged)="draftStore.setObjectValue(statement, $event)" />
         }

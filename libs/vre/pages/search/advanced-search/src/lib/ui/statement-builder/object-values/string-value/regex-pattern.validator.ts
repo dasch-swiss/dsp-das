@@ -1,26 +1,31 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
- * Java-only syntax that JavaScript's `RegExp` rejects although dsp-api accepts it: inline flags and
- * atomic groups (`(?i)`, `(?-i)`, `(?>…)`) and possessive quantifiers (`a*+`, `a++`, `a?+`, `a{2}+`).
- * A pattern using them is left to dsp-api, which answers an invalid one with a 400 the failure panel
- * shows, rather than refused here for a pattern the API would have run.
- */
-const JAVA_ONLY_SYNTAX = /\(\?[a-zA-Z>-]|[*+?}]\+/;
-
-/**
- * Whether the "is like" value is a pattern the regex engine can compile. dsp-api validates it with
+ * Whether the "is like" value is a pattern dsp-api can compile. dsp-api validates it with
  * `java.util.regex` (dsp-api#4368) and the value reaches it as typed, so a glob-style `*MAL*` is
  * rejected with "Dangling meta character '*'" — but only after the filter is confirmed and searched
- * (DEV-7441). Checked with JavaScript's `RegExp`, which agrees with Java on everything outside
- * {@link JAVA_ONLY_SYNTAX}.
+ * (DEV-7441).
+ *
+ * JavaScript's `RegExp` alone is the wrong judge in both directions: it rejects Java syntax dsp-api
+ * runs (`(?i)`, `a*+`, `\Q…\E`, `\h`) and accepts patterns Java refuses (`{MAL}`, `a{`, `\y`). So the
+ * pattern is first walked with Java's rules ({@link toJavaScriptPattern}): escapes, quantifiers, braces
+ * and group openers are checked there, and Java-only constructs are swapped for JavaScript equivalents.
+ * `RegExp` then checks what both engines share — balanced groups and character-class ranges.
+ *
+ * The check errs towards accepting: a pattern it lets through that Java refuses (e.g. an unknown
+ * `\p{…}` name) still gets dsp-api's 400 in the failure panel, but a pattern it refused could not be
+ * searched at all.
  */
 export function isCompilableRegex(pattern: string): boolean {
-  if (JAVA_ONLY_SYNTAX.test(pattern)) {
+  const translated = toJavaScriptPattern(pattern);
+  if (translated === UNCHECKED) {
     return true;
   }
+  if (translated === INVALID) {
+    return false;
+  }
   try {
-    new RegExp(pattern);
+    new RegExp(translated);
     return true;
   } catch {
     return false;
@@ -40,4 +45,206 @@ export function regexPatternValidator(): ValidatorFn {
     }
     return isCompilableRegex(value) ? null : { invalidRegex: true };
   };
+}
+
+const INVALID = Symbol('invalid');
+/** Comments mode (`(?x)`) changes how the rest is read; such a pattern is left to dsp-api. */
+const UNCHECKED = Symbol('unchecked');
+
+type Scanned = { js: string; end: number };
+
+/** What a quantifier at the current position would apply to. */
+type Previous = 'nothing' | 'atom' | 'quantifier' | 'modifiedQuantifier';
+
+/**
+ * Walks `pattern` with `java.util.regex`'s rules and returns a JavaScript pattern that compiles exactly
+ * when the remaining structure (groups, character-class ranges) is valid. Quantifiers are checked here
+ * and left out of the result, since the engines disagree on where they may stand (Java takes `^*` and
+ * `a{2}{3}`).
+ */
+function toJavaScriptPattern(pattern: string): string | typeof INVALID | typeof UNCHECKED {
+  const groupNames = new Set<string>();
+  let js = '';
+  let previous: Previous = 'nothing';
+  let i = 0;
+
+  while (i < pattern.length) {
+    const c = pattern[i];
+
+    if (c === '\\') {
+      const escape = scanEscape(pattern, i, false, groupNames);
+      if (escape === INVALID) return INVALID;
+      js += escape.js;
+      i = escape.end;
+      previous = 'atom';
+    } else if (c === '[') {
+      const characterClass = scanClass(pattern, i, groupNames);
+      if (characterClass === INVALID) return INVALID;
+      js += characterClass.js;
+      i = characterClass.end;
+      previous = 'atom';
+    } else if (c === '(') {
+      const group = scanGroupOpening(pattern, i, groupNames);
+      if (group === INVALID || group === UNCHECKED) return group;
+      js += group.js;
+      i = group.end;
+      previous = 'nothing';
+    } else if (c === '*' || c === '+' || c === '?') {
+      if (previous === 'nothing' || previous === 'modifiedQuantifier') return INVALID;
+      if (previous === 'quantifier') {
+        // `a*?` is lazy and `a*+` possessive; any further quantifier is dangling.
+        if (c === '*') return INVALID;
+        previous = 'modifiedQuantifier';
+      } else {
+        previous = 'quantifier';
+      }
+      i++;
+    } else if (c === '{') {
+      const bounds = /^\{(\d+)(?:,(\d*))?\}/.exec(pattern.slice(i));
+      if (!bounds || previous === 'modifiedQuantifier' || !areValidBounds(bounds[1], bounds[2])) return INVALID;
+      i += bounds[0].length;
+      previous = 'quantifier';
+    } else {
+      // `)`, `|`, anchors and literals. A literal `]` or `}` is fine in Java; escape it for JavaScript.
+      js += c === ']' || c === '}' ? `\\${c}` : c;
+      previous = c === '|' ? 'nothing' : 'atom';
+      i++;
+    }
+  }
+  return js;
+}
+
+function areValidBounds(min: string, max: string | undefined): boolean {
+  const limit = 2 ** 31 - 1;
+  const lower = Number(min);
+  const upper = max === undefined || max === '' ? lower : Number(max);
+  return lower <= limit && upper <= limit && lower <= upper;
+}
+
+/** Escapes Java accepts by letter; the rest of the alphabet is "Illegal/unsupported escape sequence". */
+const SHARED_ESCAPES = new Set('dDsSwWnrtfv');
+const JAVA_ONLY_CHARACTER_ESCAPES = new Set('hHRXVea');
+const JAVA_ANCHOR_ESCAPES = new Set('bBAGZz');
+
+function scanEscape(pattern: string, i: number, inClass: boolean, groupNames: Set<string>): Scanned | typeof INVALID {
+  const next = pattern[i + 1];
+  const rest = pattern.slice(i + 2);
+  // A neutral single character, standing in for an escape JavaScript does not know.
+  const character = { js: 'a', end: i + 2 };
+
+  if (next === undefined || next === 'E') return INVALID;
+  if (next === 'Q') {
+    const close = pattern.indexOf('\\E', i + 2);
+    const quoted = close < 0 ? pattern.slice(i + 2) : pattern.slice(i + 2, close);
+    const literal = quoted.replace(/[\\^$.*+?()[\]{}|/-]/g, '\\$&');
+    return { js: inClass ? literal : `(?:${literal})`, end: close < 0 ? pattern.length : close + 2 };
+  }
+  if (SHARED_ESCAPES.has(next)) return { js: `\\${next}`, end: i + 2 };
+  // Anchors, back references and the multi-character `\R` and `\X` match no single character, so Java
+  // refuses them inside a character class.
+  if (inClass && (JAVA_ANCHOR_ESCAPES.has(next) || /[1-9kRX]/.test(next))) return INVALID;
+  if (JAVA_ONLY_CHARACTER_ESCAPES.has(next)) return character;
+  if (JAVA_ANCHOR_ESCAPES.has(next)) {
+    return { js: '(?:)', end: next === 'b' && rest.startsWith('{g}') ? i + 5 : i + 2 };
+  }
+  if (next === 'c') return rest === '' ? INVALID : { js: 'a', end: i + 3 };
+  if (next === 'x') {
+    const hex = /^(?:[0-9a-fA-F]{2}|\{([0-9a-fA-F]+)\})/.exec(rest);
+    if (!hex || (hex[1] !== undefined && parseInt(hex[1], 16) > 0x10ffff)) return INVALID;
+    return { js: 'a', end: i + 2 + hex[0].length };
+  }
+  if (next === 'u') return /^[0-9a-fA-F]{4}/.test(rest) ? { js: 'a', end: i + 6 } : INVALID;
+  if (next === 'p' || next === 'P') {
+    // A one-letter `\pL` must be a general category; a braced name is not checked and left to dsp-api.
+    const property = /^(?:\{[^}]*\}|[LMNPSZC])/.exec(rest);
+    return property ? { js: 'a', end: i + 2 + property[0].length } : INVALID;
+  }
+  if (next === 'N') {
+    const name = /^\{[^}]*\}/.exec(rest);
+    return name ? { js: 'a', end: i + 2 + name[0].length } : INVALID;
+  }
+  if (next === 'k') {
+    const name = /^<([a-zA-Z][a-zA-Z0-9]*)>/.exec(rest);
+    return name && groupNames.has(name[1]) ? { js: '(?:)', end: i + 2 + name[0].length } : INVALID;
+  }
+  if (next === '0') {
+    const octal = /^(?:[0-3][0-7]{2}|[0-7]{1,2})/.exec(rest);
+    return octal ? { js: 'a', end: i + 2 + octal[0].length } : INVALID;
+  }
+  if (/[1-9]/.test(next)) {
+    // A back reference; Java accepts one to a group that does not exist.
+    return { js: '(?:)', end: i + 2 };
+  }
+  if (/[a-zA-Z]/.test(next)) return INVALID;
+  // Any other character escaped stands for itself.
+  return { js: `\\${next}`, end: i + 2 };
+}
+
+/**
+ * A Java character class, which may nest (`[a[bc]]`) and intersect (`[a-z&&[^aeiou]]`). A plain class is
+ * handed to JavaScript as is, so it can check the ranges; one using Java-only syntax becomes `[a]`.
+ */
+function scanClass(pattern: string, i: number, groupNames: Set<string>): Scanned | typeof INVALID {
+  let j = i + 1;
+  const negation = pattern[j] === '^' ? '^' : '';
+  j += negation.length;
+  let body = '';
+  let plain = true;
+  if (pattern[j] === ']') {
+    // A `]` right after the opening bracket is a literal.
+    body += '\\]';
+    j++;
+  }
+  for (;;) {
+    if (j >= pattern.length) return INVALID;
+    const c = pattern[j];
+    if (c === ']') {
+      return { js: plain ? `[${negation}${body}]` : '[a]', end: j + 1 };
+    }
+    if (c === '[') {
+      const nested = scanClass(pattern, j, groupNames);
+      if (nested === INVALID) return INVALID;
+      plain = false;
+      j = nested.end;
+    } else if (c === '&' && pattern[j + 1] === '&') {
+      plain = false;
+      j += 2;
+    } else if (c === '\\') {
+      const escape = scanEscape(pattern, j, true, groupNames);
+      if (escape === INVALID) return INVALID;
+      body += escape.js;
+      j = escape.end;
+    } else {
+      body += c;
+      j++;
+    }
+  }
+}
+
+function scanGroupOpening(
+  pattern: string,
+  i: number,
+  groupNames: Set<string>
+): Scanned | typeof INVALID | typeof UNCHECKED {
+  if (pattern[i + 1] !== '?') return { js: '(', end: i + 1 };
+  const rest = pattern.slice(i + 2);
+
+  // Non-capturing, lookahead and atomic groups; lookbehind. All open a group JavaScript understands.
+  const special = /^(?:[:=!>]|<[=!])/.exec(rest);
+  if (special) return { js: '(?:', end: i + 2 + special[0].length };
+
+  const named = /^<([a-zA-Z][a-zA-Z0-9]*)>/.exec(rest);
+  if (named) {
+    if (groupNames.has(named[1])) return INVALID;
+    groupNames.add(named[1]);
+    return { js: '(', end: i + 2 + named[0].length };
+  }
+
+  // Inline flags, `(?i)` or `(?i-s:…)`. Comments mode makes whitespace and `#…` insignificant.
+  const flags = /^([idmsuxUc]*)(?:-([idmsuxUc]*))?([:)])/.exec(rest);
+  if (flags) {
+    if (flags[1].includes('x')) return UNCHECKED;
+    return { js: flags[3] === ':' ? '(?:' : '', end: i + 2 + flags[0].length };
+  }
+  return INVALID;
 }

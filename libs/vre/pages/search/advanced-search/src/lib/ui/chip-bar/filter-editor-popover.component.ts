@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  Output,
-  signal,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { TranslateModule } from '@ngx-translate/core';
@@ -45,7 +36,6 @@ import { StatementFieldsComponent } from '../statement-builder/statement-fields.
       }
     `,
   ],
-  encapsulation: ViewEncapsulation.None,
   // Collapse the reserved hint/error space under the inputs, but only inside this popover: a dynamic
   // subscript takes no room until a field has something to say. Hiding the subscript wrapper instead
   // also hid every validation error here, so an invalid value could not be added and nothing said why
