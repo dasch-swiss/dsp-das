@@ -909,7 +909,7 @@
         "edit": "Edit",
         "delete": "Delete",
         "cannotDeleteRequired": "Cannot delete required property",
-        "addValue": "Add {{property}}",
+        "addValue": "Add value",
         "cancel": "Cancel",
         "addComment": "Add comment",
         "removeComment": "Remove comment",

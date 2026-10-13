@@ -43,7 +43,7 @@ import { PropertyValueService } from './property-value.service';
         (click)="currentlyAdding = true"
         data-cy="add-property-value-button">
         <mat-icon>add</mat-icon>
-        {{ 'resourceEditor.resourceProperties.actions.addValue' | translate: { property: propertyLabel } }}
+        {{ 'resourceEditor.resourceProperties.actions.addValue' | translate }}
       </button>
     }
 
@@ -100,11 +100,6 @@ export class PropertyValuesComponent implements OnChanges {
 
   get propertyDefinition() {
     return JsLibPotentialError.setAs(this.myProperty.propDef);
-  }
-
-  /** The property's own name, for the add button: "Add Organiser" rather than a bare icon. */
-  get propertyLabel(): string {
-    return this.myProperty.propDef.label ?? '';
   }
 
   ngOnChanges() {

@@ -864,7 +864,7 @@
         "edit": "Bearbeiten",
         "delete": "Löschen",
         "cannotDeleteRequired": "Erforderliche Eigenschaft kann nicht gelöscht werden",
-        "addValue": "{{property}} hinzufügen",
+        "addValue": "Wert hinzufügen",
         "cancel": "Abbrechen",
         "addComment": "Kommentar hinzufügen",
         "removeComment": "Kommentar entfernen",

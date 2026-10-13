@@ -909,7 +909,7 @@
         "edit": "Modifica",
         "delete": "Elimina",
         "cannotDeleteRequired": "Impossibile eliminare la proprietà richiesta",
-        "addValue": "Aggiungi: {{property}}",
+        "addValue": "Aggiungi valore",
         "cancel": "Annulla",
         "addComment": "Aggiungi commento",
         "removeComment": "Rimuovi commento",
