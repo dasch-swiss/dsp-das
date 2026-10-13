@@ -138,7 +138,7 @@ const STORY_TRANSLATIONS = {
     dataBrowser: {
       dataClassHeader: {
         searchLabel: 'Search',
-        searchPlaceholder: 'Search in this class',
+        searchPlaceholder: 'Search',
       },
       sortHeader: {
         sortBy: 'Sort by',

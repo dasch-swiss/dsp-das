@@ -629,7 +629,7 @@
       },
       "dataClassHeader": {
         "searchLabel": "Search",
-        "searchPlaceholder": "Search in this class"
+        "searchPlaceholder": "Search"
       },
       "resultMeta": {
         "range": "{{start}} – {{end}} of {{total}}",
