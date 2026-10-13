@@ -22,6 +22,13 @@
   .is-label-header {
     padding-left: 104px;
   }
+
+  // Without a checkbox only the open arrow is left: 4px offset + its 48px host, plus the same
+  // clear air.
+  &.no-selection .is-label-cell,
+  &.no-selection .is-label-header {
+    padding-left: 64px;
+  }
 }
 
 .table-scroll {

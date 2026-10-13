@@ -10,6 +10,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ErrorReportingService, userFacingReason } from '@dasch-swiss/vre/core/error-handler';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import {
   buildColumnModel,
   DataTableComponent,
@@ -72,6 +73,7 @@ import { ProjectPageService } from '../../project-page.service';
             [rowHeight]="layout().rowHeight"
             [checkedResourceIds]="checkedResourceIds()"
             [selectionActive]="selectionActive()"
+            [selectable]="isLoggedIn()"
             [sortedColumnKey]="sortedColumnKey()"
             [sortDescending]="sortDescending()"
             [filteredColumnKeys]="filteredColumnKeys()"
@@ -138,6 +140,9 @@ export class DataTableFetcherComponent implements OnChanges {
 
   /** Whether the rows on screen are about to be replaced. See `ResourceResultService.isRefreshing`. */
   readonly isRefreshing = computed(() => this._resourceResult.isRefreshing());
+
+  /** Selecting rows for comparison is for signed-in users only. */
+  readonly isLoggedIn = toSignal(inject(UserService).isLoggedIn$, { initialValue: false });
 
   /**
    * The project's legal info, for the rights-statement columns — the same cached lookup the

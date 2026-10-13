@@ -662,6 +662,12 @@
         "imageColumn": "Bild",
         "previewImage": "Bild von {{label}} anzeigen",
         "editColumnFilter": "Filter für {{column}} bearbeiten",
+        "sortAscending": "Aufsteigend sortieren",
+        "sortDescending": "Absteigend sortieren",
+        "filter": "Filtern",
+        "editFilter": "Filter bearbeiten",
+        "pin": "Fixieren",
+        "unpin": "Lösen",
         "selectRow": "{{label}} zum Vergleich hinzufügen",
         "openRow": "{{label}} öffnen",
         "resizeRow": "Zeilenhöhe für {{label}} ändern"

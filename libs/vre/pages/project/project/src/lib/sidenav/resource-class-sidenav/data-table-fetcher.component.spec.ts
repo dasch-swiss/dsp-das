@@ -11,6 +11,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ErrorReportingService } from '@dasch-swiss/vre/core/error-handler';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import {
   IMAGE_COLUMN_KEY,
   LABEL_COLUMN_KEY,
@@ -165,6 +166,7 @@ describe('DataTableFetcherComponent', () => {
           useValue: { currentProject$: of({ id: 'http://rdfh.ch/projects/0001', shortcode: '0001' } as ReadProject) },
         },
         { provide: ProjectDataRightsService, useValue: dataRights },
+        { provide: UserService, useValue: { isLoggedIn$: of(true) } },
       ],
     })
       .overrideComponent(DataTableFetcherComponent, { set: { template: '<div>Mock</div>' } })

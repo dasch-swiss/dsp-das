@@ -13,6 +13,7 @@ import {
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
 import { MatTable, MatTableModule } from '@angular/material/table';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import {
   FootnoteService,
@@ -46,8 +47,11 @@ interface RenderColumn extends TableColumn {
   /** What the sort button would do next, which is also what its accessible name must say. */
   readonly nextSortDescending: boolean;
   readonly sortLabelKey: string;
+  /** The same as the label, without the column's name: the tooltip sits on the column already. */
+  readonly sortTooltipKey: string;
   readonly isFiltered: boolean;
   readonly filterLabelKey: string;
+  readonly filterTooltipKey: string;
   /** Pinned after the label by the user, and so sticky like it. Never true on the label itself. */
   readonly isPinned: boolean;
 }
@@ -75,7 +79,7 @@ const FILLER_COLUMN_KEY = '__filler';
   selector: 'app-data-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="table-scroll" [class.selection-active]="selectionActive()">
+    <div class="table-scroll" [class.selection-active]="selectionActive()" [class.no-selection]="!selectable()">
       <!-- The drop list is the table rather than the header row, and that is not a style choice:
            cdkDrag resolves its drop list through the injector of the view it was declared in, and
            the header cells are declared inside the column definitions below, which are children of
@@ -139,6 +143,7 @@ const FILLER_COLUMN_KEY = '__filler';
                     [class.is-active]="column.isSorted"
                     data-cy="column-sort"
                     [attr.aria-label]="column.sortLabelKey | translate: { column: column.label }"
+                    [matTooltip]="column.sortTooltipKey | translate"
                     (click)="sortToggled.emit({ key: column.key, descending: column.nextSortDescending })">
                     <mat-icon>{{ column.sortIcon }}</mat-icon>
                   </button>
@@ -151,6 +156,7 @@ const FILLER_COLUMN_KEY = '__filler';
                     [class.is-active]="column.isFiltered"
                     data-cy="column-filter"
                     [attr.aria-label]="column.filterLabelKey | translate: { column: column.label }"
+                    [matTooltip]="column.filterTooltipKey | translate"
                     (click)="filterRequested.emit(column.key)">
                     <mat-icon>filter_list</mat-icon>
                   </button>
@@ -168,6 +174,9 @@ const FILLER_COLUMN_KEY = '__filler';
                     [attr.aria-label]="
                       (column.isPinned ? 'pages.dataBrowser.table.unpinColumn' : 'pages.dataBrowser.table.pinColumn')
                         | translate: { column: column.label }
+                    "
+                    [matTooltip]="
+                      (column.isPinned ? 'pages.dataBrowser.table.unpin' : 'pages.dataBrowser.table.pin') | translate
                     "
                     (click)="columnPinToggled.emit(column.key)">
                     <mat-icon>push_pin</mat-icon>
@@ -210,11 +219,13 @@ const FILLER_COLUMN_KEY = '__filler';
                   (heightReset)="onRowHeightReset(row.id)"
                   [attr.aria-label]="'pages.dataBrowser.table.resizeRow' | translate: { label: row.label }"></span>
                 <div class="row-controls">
-                  <mat-checkbox
-                    data-cy="row-check"
-                    [checked]="checkedResourceIds().has(row.id)"
-                    [attr.aria-label]="'pages.dataBrowser.table.selectRow' | translate: { label: row.label }"
-                    (change)="onRowCheckChanged(row.resource, $event)" />
+                  @if (selectable()) {
+                    <mat-checkbox
+                      data-cy="row-check"
+                      [checked]="checkedResourceIds().has(row.id)"
+                      [attr.aria-label]="'pages.dataBrowser.table.selectRow' | translate: { label: row.label }"
+                      (change)="onRowCheckChanged(row.resource, $event)" />
+                  }
                   <!-- The app's own drawer-dialog control, not a bespoke one. Opening a resource
                        from a table row should land the user in the same place as opening it from
                        a property or a link elsewhere; a second presentation of the same resource
@@ -324,6 +335,7 @@ const FILLER_COLUMN_KEY = '__filler';
     MatIcon,
     TranslatePipe,
     MatCheckbox,
+    MatTooltip,
     CdkDropList,
     CdkDrag,
     ColumnResizeDirective,
@@ -391,6 +403,11 @@ export class DataTableComponent {
    * row at a time, and the next row you want is always the one you cannot see.
    */
   readonly selectionActive = input(false);
+  /**
+   * Whether rows can be selected for comparison at all. Off for anonymous visitors: the table then
+   * draws no checkboxes and narrows the label gutter to the open arrow alone.
+   */
+  readonly selectable = input(true);
 
   /**
    * A row's checkbox, as a change rather than as "add" and "remove" outputs.
@@ -497,10 +514,14 @@ export class DataTableComponent {
         sortLabelKey: nextSortDescending
           ? 'pages.dataBrowser.table.sortColumnDescending'
           : 'pages.dataBrowser.table.sortColumnAscending',
+        sortTooltipKey: nextSortDescending
+          ? 'pages.dataBrowser.table.sortDescending'
+          : 'pages.dataBrowser.table.sortAscending',
         isFiltered,
         filterLabelKey: isFiltered
           ? 'pages.dataBrowser.table.editColumnFilter'
           : 'pages.dataBrowser.table.filterByColumn',
+        filterTooltipKey: isFiltered ? 'pages.dataBrowser.table.editFilter' : 'pages.dataBrowser.table.filter',
         isPinned: pinned.includes(column.key),
       };
     });

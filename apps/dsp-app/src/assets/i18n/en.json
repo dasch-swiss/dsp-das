@@ -662,6 +662,12 @@
         "imageColumn": "Image",
         "previewImage": "Preview the image of {{label}}",
         "editColumnFilter": "Edit the filter on {{column}}",
+        "sortAscending": "Sort ascending",
+        "sortDescending": "Sort descending",
+        "filter": "Filter",
+        "editFilter": "Edit filter",
+        "pin": "Pin",
+        "unpin": "Unpin",
         "selectRow": "Add {{label}} to the comparison",
         "openRow": "Open {{label}}",
         "resizeRow": "Resize the row for {{label}}"

@@ -216,6 +216,7 @@ const meta: Meta<DataTableComponent> = {
     columnWidths: { description: 'Pixel widths the user has set; a column absent here uses its default.' },
     rowHeight: { description: 'Height every row is drawn at from View options; undefined for Auto.' },
     selectionActive: { description: 'Whether a comparison set is being built; every row then shows its checkbox.' },
+    selectable: { description: 'Whether rows can be selected for comparison; off for anonymous visitors.' },
     sortedColumnKey: { description: 'Column the query is sorted by, so its header announces aria-sort.' },
     sortDescending: { description: 'Direction of that sort.' },
     filteredColumnKeys: { description: 'Keys of the columns a filter chip currently exists on.' },
@@ -428,6 +429,21 @@ export const HidesTheControlsOnIdleRowsWhenNoSetIsBeingBuilt: Story = {
   },
 };
 
+/**
+ * Anonymous visitors cannot build a comparison set, so the rows offer no checkbox — only the open
+ * arrow — and the label moves in to sit next to it.
+ */
+export const HidesRowCheckboxesForAnonymousVisitors: Story = {
+  args: { selectable: false },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('[data-cy="row-check"]')).toBeNull();
+    await expect(canvasElement.querySelector('[data-cy="row-open"]')).not.toBeNull();
+
+    const labelCell = canvasElement.querySelector('td.is-label-cell') as HTMLElement;
+    await expect(getComputedStyle(labelCell).paddingLeft).toBe('64px');
+  },
+};
+
 export const CollapsesAReadOnlyCellWithMoreThanThreeValues: Story = {
   args: {
     columns: COLLAPSING_COLUMNS,
@@ -568,6 +584,27 @@ export const OffersNoSortControlWhereTheQueryCannotOrderBy: Story = {
 
     await expect(place?.querySelector('[data-cy="column-sort"]')).toBeNull();
     await expect(place?.querySelector('[data-cy="column-filter"]')).not.toBeNull();
+  },
+};
+
+/**
+ * Icon-only controls: each one says what it does on hover. Without the column's name — the tooltip
+ * already sits on the column; the accessible name keeps it for screen readers.
+ */
+export const NamesEachHeaderActionInATooltip: Story = {
+  ...headerControlsStory({}),
+  play: async ({ canvasElement }) => {
+    const header = within(canvasElement).getByRole('columnheader', { name: 'Title' });
+    const tooltip = () => document.querySelector('.mat-mdc-tooltip');
+
+    const expected = { 'column-sort': 'Sort ascending', 'column-filter': 'Filter', 'column-pin': 'Pin' };
+    for (const [action, text] of Object.entries(expected)) {
+      const button = header.querySelector(`[data-cy="${action}"]`) as HTMLElement;
+      await userEvent.hover(button);
+      await waitFor(() => expect(tooltip()?.textContent?.trim()).toBe(text));
+      await userEvent.unhover(button);
+      await waitFor(() => expect(tooltip()).toBeNull());
+    }
   },
 };
 
