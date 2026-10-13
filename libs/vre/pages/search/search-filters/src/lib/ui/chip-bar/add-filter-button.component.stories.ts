@@ -35,9 +35,9 @@ export const ShowsAddFilterButton: Story = {
     await step('Button with "Add filter" label is rendered', async () => {
       await expect(canvas.getByText('Add filter', { exact: false })).toBeTruthy();
     });
-    await step('Add icon is present', async () => {
+    await step('Filter icon is present', async () => {
       const icons = Array.from(canvasElement.querySelectorAll('mat-icon'));
-      await expect(icons.some(i => i.textContent?.trim() === 'add')).toBe(true);
+      await expect(icons.some(i => i.textContent?.trim() === 'filter_list')).toBe(true);
     });
   },
 };

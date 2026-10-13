@@ -22,7 +22,7 @@ import { FilterEditorPopoverComponent } from './filter-editor-popover.component'
   ],
   template: `
     <button mat-stroked-button cdkOverlayOrigin #trigger="cdkOverlayOrigin" (click)="onAdd()">
-      <mat-icon>add</mat-icon>
+      <mat-icon>filter_list</mat-icon>
       {{ 'pages.search.advancedSearch.addFilter' | translate }}
     </button>
 
