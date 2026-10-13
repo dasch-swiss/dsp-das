@@ -1027,8 +1027,8 @@ export const KeepsAPinnedColumnInViewWhileTheTableScrolls: Story = {
   },
 };
 
-/** The frozen zone's edge casts a shadow before any scroll, and keeps it along the edge as it scrolls. */
-export const ShadesTheFrozenEdgeWhetherScrolledOrNot: Story = {
+/** The frozen zone's edge casts a shadow only once something has scrolled under it. */
+export const ShadesTheFrozenEdgeOnceTheTableScrolls: Story = {
   ...pinnedStory(),
   play: async ({ canvasElement }) => {
     const scroller = canvasElement.querySelector('.table-scroll') as HTMLElement;
@@ -1037,18 +1037,20 @@ export const ShadesTheFrozenEdgeWhetherScrolledOrNot: Story = {
     const alongTheEdge = () =>
       expect(Math.round(shadow()!.getBoundingClientRect().left)).toBe(Math.round(edge.getBoundingClientRect().right));
 
-    await waitFor(() => expect(shadow()).not.toBeNull());
-    await alongTheEdge();
-
-    // The shadow is the body's edge; only the header keeps a line there.
     const bodyEdge = canvasElement.querySelector('td.mat-mdc-table-sticky-border-elem-left') as HTMLElement;
-    await expect(getComputedStyle(bodyEdge).borderRightColor).toBe('rgba(0, 0, 0, 0)');
-    await expect(getComputedStyle(edge).borderRightColor).not.toBe('rgba(0, 0, 0, 0)');
+
+    // At rest: no shadow, and the body keeps its edge line.
+    await expect(shadow()).toBeNull();
+    await expect(getComputedStyle(bodyEdge).borderRightColor).not.toBe('rgba(0, 0, 0, 0)');
 
     scroller.scrollLeft = 200;
     scroller.dispatchEvent(new Event('scroll'));
 
-    await waitFor(alongTheEdge);
+    await waitFor(() => expect(shadow()).not.toBeNull());
+    await alongTheEdge();
+    // The shadow is now the body's edge; only the header keeps a line there.
+    await expect(getComputedStyle(bodyEdge).borderRightColor).toBe('rgba(0, 0, 0, 0)');
+    await expect(getComputedStyle(edge).borderRightColor).not.toBe('rgba(0, 0, 0, 0)');
   },
 };
 

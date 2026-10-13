@@ -86,6 +86,7 @@ const FILLER_COLUMN_KEY = '__filler';
       class="table-scroll"
       [class.selection-active]="selectionActive()"
       [class.no-selection]="!selectable()"
+      [class.is-scrolled-x]="scrolledUnder().shadowed"
       (scroll)="measureScroll()">
       <!-- The drop list is the table rather than the header row, and that is not a style choice:
            cdkDrag resolves its drop list through the injector of the view it was declared in, and
@@ -349,8 +350,7 @@ const FILLER_COLUMN_KEY = '__filler';
           [class.is-checked]="checkedResourceIds().has(row.id)"></tr>
       </table>
     </div>
-    <!-- The frozen columns' shadow, scrolled or not, so the edge reads as one that columns pass under.
-         Drawn over the table rather than on the edge cells: a collapsed-border table does not paint
+    <!-- The frozen columns' shadow, once something has scrolled under them. Drawn over the table rather than on the edge cells: a collapsed-border table does not paint
          its cells' box-shadow. -->
     @if (scrolledUnder().shadowed) {
       <span
@@ -704,7 +704,7 @@ export class DataTableComponent {
     const scroller = this._scroller().nativeElement;
     const headers = Array.from(scroller.querySelectorAll<HTMLElement>('thead th'));
     const frozenEdge = headers.filter(th => th.classList.contains('mat-mdc-table-sticky-border-elem-left')).pop();
-    if (!frozenEdge) {
+    if (!frozenEdge || scroller.scrollLeft <= 0) {
       this.scrolledUnder.set({ shadowed: false, count: 0, edge: 0, top: 0, height: 0 });
       return;
     }
