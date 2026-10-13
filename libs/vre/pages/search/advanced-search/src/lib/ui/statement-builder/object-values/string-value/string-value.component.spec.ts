@@ -1,6 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Constants, KnoraDate } from '@dasch-swiss/dsp-js';
+import { CalendarDateService } from '@dasch-swiss/vre/ui/ui';
 import { provideTranslateService } from '@ngx-translate/core';
 
 import { StringValueComponent } from './string-value.component';
@@ -162,8 +163,10 @@ describe('StringValueComponent date operand', () => {
   });
 
   describe('reading a stored term back into the picker', () => {
+    const parse = (literal: string) => TestBed.inject(CalendarDateService).parseGravsearchDate(literal);
+
     it('restores the calendar the term was written in', () => {
-      const date = component._transformDateStringToKnoraDateObject('JULIAN:2024-06-02 CE');
+      const date = parse('JULIAN:2024-06-02 CE');
 
       expect(date.calendar).toBe('JULIAN');
       expect(date.year).toBe(2024);
@@ -172,7 +175,7 @@ describe('StringValueComponent date operand', () => {
     });
 
     it('restores an Islamic term, which has no era', () => {
-      const date = component._transformDateStringToKnoraDateObject('ISLAMIC:1445-12-08');
+      const date = parse('ISLAMIC:1445-12-08');
 
       expect(date.calendar).toBe('ISLAMIC');
       expect(date.year).toBe(1445);
@@ -200,20 +203,22 @@ describe('StringValueComponent date operand', () => {
     });
 
     it('restores a BCE term with its era', () => {
-      const date = component._transformDateStringToKnoraDateObject('JULIAN:44-03-15 BCE');
+      const date = parse('JULIAN:44-03-15 BCE');
 
       expect(date.era).toBe('BCE');
       expect(date.year).toBe(44);
     });
 
-    it('round-trips a term through the picker and back to the same string', () => {
-      // The picker owns the gravsearch formatting, so this pins the pair rather than one half:
-      // a term read in and written out again must name the same day in the same calendar.
-      const original = 'JULIAN:2024-06-02 BCE';
-      const date = component._transformDateStringToKnoraDateObject(original);
+    // The service both writes and reads the literal, so this pins the pair rather than one half:
+    // a term read in and written out again must name the same day in the same calendar.
+    it.each(['JULIAN:2024-06-02 BCE', 'GREGORIAN:1850-03', 'ISLAMIC:1445-12-08', 'GREGORIAN:1612'])(
+      'round-trips %s through the service and back to the same string',
+      original => {
+        const date = parse(original);
 
-      expect(date).toBeInstanceOf(KnoraDate);
-      expect(`${date.calendar}:${date.year}-${date.month}-${date.day} ${date.era}`).toBe('JULIAN:2024-6-2 BCE');
-    });
+        expect(date).toBeInstanceOf(KnoraDate);
+        expect(TestBed.inject(CalendarDateService).format(date, 'YYYY-MM-dd', 'gravsearch')).toBe(original);
+      }
+    );
   });
 });

@@ -11,10 +11,12 @@ describe('DateViewerComponent', () => {
   let fixture: ComponentFixture<DateViewerComponent>;
   let component: DateViewerComponent;
 
-  const mount = (value: ReadDateValue) => {
+  /** Mounts the viewer with its marker opened, which is when the readings and facts are computed. */
+  const mount = (value: ReadDateValue, { opened } = { opened: true }) => {
     fixture = TestBed.createComponent(DateViewerComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('value', value);
+    (component as any).hasBeenOpened.set(opened);
     fixture.detectChanges();
     return fixture;
   };
@@ -32,6 +34,15 @@ describe('DateViewerComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [provideTranslateService()],
     }).compileComponents();
+  });
+
+  // A property list can hold hundreds of dates; the readings and facts are only shown in the panel.
+  it('computes no readings or facts until the marker is opened', () => {
+    mount(asValue(new KnoraDate('GREGORIAN', 'CE', 2024, 6, 15)), { opened: false });
+
+    expect(asAny().readings()).toEqual([]);
+    expect(asAny().facts()).toEqual({});
+    expect(asAny().storedText()).toBe('15.06.2024');
   });
 
   it('renders the date in the calendar it is stored in', () => {

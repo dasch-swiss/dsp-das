@@ -1,3 +1,4 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition } from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
@@ -95,13 +96,25 @@ let nextPickerId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   // Only the trigger's icon is Material now: the panel is native controls styled to the design,
   // which is a row of equal-height bordered boxes Material's form fields cannot express.
-  imports: [CalendarSelectorComponent, CdkConnectedOverlay, CdkOverlayOrigin, MatIconModule, TranslatePipe],
+  imports: [
+    CalendarSelectorComponent,
+    CdkConnectedOverlay,
+    CdkOverlayOrigin,
+    CdkTrapFocus,
+    MatIconModule,
+    TranslatePipe,
+  ],
   templateUrl: './date-picker.component.html',
   styleUrls: ['./date-picker.component.scss'],
 })
 export class DatePickerComponent {
-  /** The date to show. Replacing it replaces what is displayed; the component never writes it back. */
-  readonly date = input<KnoraDate | null>(null);
+  /**
+   * The date to show. Replacing it replaces what is displayed; the component never writes it back.
+   *
+   * `undefined` is read as no date: an untouched `FormControl` holds it, and advanced search binds
+   * one straight to this input.
+   */
+  readonly date = input<KnoraDate | null, KnoraDate | null | undefined>(null, { transform: date => date ?? null });
 
   /**
    * The calendar to show it in.
@@ -378,8 +391,9 @@ export class DatePickerComponent {
   // -----------------------------------------------------------------------------------------
 
   protected onYearChange(value: string): void {
+    // A fractional year is no year: the calendar library rejects it, so it never reaches the draft.
     const year = value === '' ? null : Number(value);
-    this._edit({ year: Number.isFinite(year as number) ? year : null });
+    this._edit({ year: Number.isInteger(year) ? year : null });
   }
 
   /** Chooses a month; on an untouched picker it builds on the suggested year. */

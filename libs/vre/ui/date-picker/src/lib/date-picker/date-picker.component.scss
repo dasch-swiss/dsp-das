@@ -5,12 +5,15 @@ $primary-700: #2a5577;
 $primary-100: #dbe6ef;
 $neutral-50: #f9fafb;
 $neutral-100: #f3f4f6;
-$neutral-300: #d1d5db;
+// Input outlines need 3:1 against white (WCAG 1.4.11); the former #d1d5db was 1.5:1.
+$border-input: #868c96;
 $border-default: #e5e7eb;
 $fg-strong: #111827;
 $fg-default: #374151;
 $fg-muted: #4b5563;
 $fg-subtle: #9ca3af;
+// For text that has to be read, which needs 4.5:1; fg-subtle (2.5:1) stays for disabled controls.
+$fg-secondary: #6b7280;
 
 // Two of these sit side by side as the ends of a period, so the field has to be able to shrink:
 // `min-width: 0` is what stops a long date forcing the pair onto two lines.
@@ -28,7 +31,7 @@ $fg-subtle: #9ca3af;
   padding: 6px 12px;
   box-sizing: border-box;
   background: #fff;
-  border: 1px solid $neutral-300;
+  border: 1px solid $border-input;
   border-radius: 6px;
   font: inherit;
   text-align: left;
@@ -83,9 +86,9 @@ $fg-subtle: #9ca3af;
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  // Placeholder grey is below 4.5:1, so it is only ever used for text that says nothing.
+  // The only visible prompt on an empty field, so it is held to text contrast.
   &.is-placeholder {
-    color: $fg-subtle;
+    color: $fg-secondary;
   }
 }
 
@@ -177,7 +180,7 @@ $fg-subtle: #9ca3af;
   width: 100%;
   min-width: 0;
   padding: 0 8px;
-  border: 1px solid $neutral-300;
+  border: 1px solid $border-input;
   border-radius: 6px;
   background: #fff;
   font-family: inherit;
@@ -201,7 +204,7 @@ $fg-subtle: #9ca3af;
 .segmented {
   display: flex;
   height: 34px;
-  border: 1px solid $neutral-300;
+  border: 1px solid $border-input;
   border-radius: 6px;
   overflow: hidden;
 }
@@ -274,7 +277,7 @@ $fg-subtle: #9ca3af;
   margin-bottom: 4px;
   text-align: center;
   font-size: 12px;
-  color: $fg-subtle;
+  color: $fg-secondary;
 }
 
 .weekday {

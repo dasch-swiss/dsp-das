@@ -187,7 +187,8 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
       return true;
     }
 
-    if (this.group.controls.comment.value !== originalComment) {
+    // An added and then emptied comment is still no comment.
+    if ((this.group.controls.comment.value || null) !== (originalComment || null)) {
       return true;
     }
 

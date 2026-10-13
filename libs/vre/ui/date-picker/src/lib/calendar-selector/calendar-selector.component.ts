@@ -69,7 +69,8 @@ import { TranslatePipe } from '@ngx-translate/core';
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         width: 100%;
-        border: 1px solid #d1d5db;
+        /* 3:1 against white, as an input outline needs (WCAG 1.4.11). */
+        border: 1px solid #868c96;
         border-radius: 6px;
         overflow: hidden;
       }

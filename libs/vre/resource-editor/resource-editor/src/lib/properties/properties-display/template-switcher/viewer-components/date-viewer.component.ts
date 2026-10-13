@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { input } from '@angular/core';
 import { KnoraDate, KnoraPeriod, ReadDateValue } from '@dasch-swiss/dsp-js';
 import { CALENDAR_SYSTEMS, CalendarSystem } from '@dasch-swiss/vre/shared/calendar';
@@ -24,20 +24,25 @@ import { CalendarFacts, CalendarMarkerComponent, CalendarReading, KnoraDatePipe 
   template: `
     <span data-cy="date-text">{{ storedText() }}</span>
     <span data-cy="date-switch" style="display: inline-block; margin-left: 8px">
-      <app-calendar-marker [storedCalendar]="storedCalendar()" [readings]="readings()" [facts]="facts()" />
+      <app-calendar-marker
+        [storedCalendar]="storedCalendar()"
+        [readings]="readings()"
+        [facts]="facts()"
+        (opened)="hasBeenOpened.set(true)" />
     </span>
   `,
 })
 export class DateViewerComponent {
-  /**
-   * A signal input rather than a plain `@Input`, because the computeds below read it: `computed()`
-   * tracks signal reads only, so a plain input would be captured once and then silently go stale
-   * if this instance were reused with a different value instead of being recreated.
-   */
   readonly value = input.required<ReadDateValue>();
 
   private readonly _calendarDates = inject(CalendarDateService);
   private readonly _datePipe = new KnoraDatePipe();
+
+  /**
+   * Whether the marker has been opened. A property list can hold hundreds of dates, and the
+   * readings and facts are shown only in the marker's panel, so they wait for it.
+   */
+  protected readonly hasBeenOpened = signal(false);
 
   /** The calendar the value is stored in — its start, for a period, which governs both ends. */
   protected readonly storedCalendar = computed<CalendarSystem>(() => {
@@ -59,6 +64,9 @@ export class DateViewerComponent {
    * has a duration.
    */
   protected readonly facts = computed<CalendarFacts>(() => {
+    if (!this.hasBeenOpened()) {
+      return {};
+    }
     const date = this.value().date;
     const { first: jdn, last: endJdn } = this._calendarDates.julianDayRangeOf(date);
 
@@ -82,14 +90,9 @@ export class DateViewerComponent {
     };
   });
 
-  /**
-   * This value read in each calendar, for the marker to list.
-   *
-   * `availableCalendarsFor` already converts into all three to decide representability, so the
-   * conversions here cost nothing that was not already being paid and discarded.
-   */
+  /** This value read in each calendar, for the marker to list. */
   protected readonly readings = computed<CalendarReading[]>(() =>
-    CALENDAR_SYSTEMS.map(calendar => ({ calendar, date: this._readIn(calendar) }))
+    this.hasBeenOpened() ? CALENDAR_SYSTEMS.map(calendar => ({ calendar, date: this._readIn(calendar) })) : []
   );
 
   /**
@@ -104,7 +107,6 @@ export class DateViewerComponent {
     if (date instanceof KnoraPeriod) {
       const start = this._renderDate(date.start, target);
       const end = this._renderDate(date.end, target);
-      // En dash, not a hyphen: this is a range between two dates, not a compound word.
       return start && end ? `${start} – ${end}` : undefined;
     }
     return this._renderDate(date, target);

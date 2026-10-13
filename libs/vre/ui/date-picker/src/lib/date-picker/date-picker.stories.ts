@@ -1,6 +1,6 @@
 import { KnoraDate } from '@dasch-swiss/dsp-js';
 import { type Meta, type StoryObj } from '@storybook/angular';
-import { expect, userEvent } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 
 import { DatePickerComponent } from './date-picker.component';
 
@@ -195,6 +195,23 @@ export const NamesItselfWhenItIsOneEndOfAPeriod: Story = {
     await step('The open panel repeats it as a title', async () => {
       const opened = await open(canvasElement);
       await expect(opened.querySelector('[data-cy="panel-title"]')?.textContent?.trim()).toBe('End date');
+    });
+  },
+};
+
+export const MovesFocusIntoThePanelAndBack: Story = {
+  name: 'Moves focus into the panel when it opens, and back to the field when it closes',
+  args: { date: new KnoraDate('GREGORIAN', 'CE', 2024, 6, 15), calendar: 'GREGORIAN' },
+  play: async ({ canvasElement, step }) => {
+    // The panel is attached at the end of the page, so Tab from the field never reached it.
+    await step('Opening puts focus inside the panel', async () => {
+      const opened = await open(canvasElement);
+      await waitFor(() => expect(opened.contains(document.activeElement)).toBe(true));
+    });
+    await step('Escape closes it and returns focus to the field', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(panel()).toBeNull());
+      await waitFor(() => expect(document.activeElement).toBe(field(canvasElement)));
     });
   },
 };

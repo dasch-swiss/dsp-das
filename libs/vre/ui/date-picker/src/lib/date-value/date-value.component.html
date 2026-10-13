@@ -46,6 +46,7 @@
       data-cy="toggle-period"
       [disabled]="disabled() || !state().start"
       [matTooltip]="(state().isPeriod ? 'ui.datePicker.removeEndDate' : 'ui.datePicker.addEndDate') | translate"
+      [attr.aria-label]="(state().isPeriod ? 'ui.datePicker.removeEndDate' : 'ui.datePicker.addEndDate') | translate"
       matTooltipPosition="above"
       (click)="onTogglePeriod($event)">
       <mat-icon>{{ state().isPeriod ? 'close' : 'keyboard_tab' }}</mat-icon>

@@ -1,7 +1,7 @@
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
 import { Observable, of } from 'rxjs';
-import { expect, userEvent } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 
 import { CalendarMarkerComponent } from './calendar-marker.component';
 
@@ -57,6 +57,16 @@ const meta: Meta<CalendarMarkerComponent> = {
         'This date read in every calendar. A reading with no `date` is one the calendar cannot express, and is listed as such rather than dropped.',
       control: 'object',
       table: { type: { summary: 'readonly CalendarReading[]' }, category: 'State' },
+    },
+    facts: {
+      description:
+        'What holds for the value whatever calendar names it: weekday, Julian Day Number (a range for a month, year or period), duration, ISO 8601 · EDTF.',
+      control: 'object',
+      table: { type: { summary: 'CalendarFacts' }, category: 'State' },
+    },
+    opened: {
+      description: 'Emitted when the panel opens, so an owner can leave the readings and facts uncomputed until then.',
+      table: { type: { summary: 'void' }, category: 'Events' },
     },
   },
 };
@@ -185,6 +195,26 @@ export const NamesItsPurposeToAssistiveTechnology: Story = {
     await step('The panel is announced as a dialog carrying the same name', async () => {
       await expect(popover()?.getAttribute('role')).toBe('dialog');
       await expect(popover()?.getAttribute('aria-label')).toContain('Islamic');
+    });
+  },
+};
+
+export const MovesFocusIntoThePanelAndBack: Story = {
+  name: 'Moves focus into the panel when it opens, and back to the marker when it closes',
+  args: {
+    storedCalendar: 'JULIAN',
+    readings: JULIAN_READINGS,
+  },
+  play: async ({ canvasElement, step }) => {
+    // The panel is attached at the end of the page, so Tab from the marker never reached it.
+    await step('Opening puts focus on the panel, so its label is read first', async () => {
+      await userEvent.click(marker(canvasElement));
+      await waitFor(() => expect(document.activeElement).toBe(popover()));
+    });
+    await step('Escape closes it and returns focus to the marker', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(popover()).toBeNull());
+      await waitFor(() => expect(document.activeElement).toBe(marker(canvasElement)));
     });
   },
 };

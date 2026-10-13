@@ -35,7 +35,7 @@ function firstRepresentableJDN(calendar: CalendarSystem): number | undefined {
  * It is also what dsp-api stores: a period's start JDN is the first day of its start and its end
  * JDN the last day of its end, whatever precision each end has.
  */
-function jdnRange(date: CalendarDate): { first: number; last: number } {
+export function jdnRange(date: CalendarDate): { first: number; last: number } {
   const calendar = getCalendar(date.calendar);
 
   if (date.precision === 'DAY') {

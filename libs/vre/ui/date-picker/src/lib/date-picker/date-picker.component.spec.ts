@@ -665,4 +665,30 @@ describe('DatePickerComponent', () => {
       expect(given.day).toBe(15);
     });
   });
+  describe('input it does not take as a date', () => {
+    const typeYear = (text: string) => {
+      const year = overlay().querySelector<HTMLInputElement>('[data-cy="year-input"]')!;
+      year.value = text;
+      year.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+    };
+
+    // Advanced search binds an untouched FormControl, which holds undefined; the first edit threw.
+    it('reads an undefined date as none, and takes an edit', () => {
+      show(undefined as unknown as null);
+
+      typeYear('1850');
+
+      expect(emitted.at(-1)?.year).toBe(1850);
+    });
+
+    // The calendar library throws on a fractional year, inside a computed.
+    it('does not take a fractional year', () => {
+      show(null);
+
+      typeYear('1850.5');
+
+      expect(emitted.at(-1)).toBeNull();
+    });
+  });
 });

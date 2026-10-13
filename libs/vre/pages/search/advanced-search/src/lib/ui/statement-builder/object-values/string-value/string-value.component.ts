@@ -106,7 +106,7 @@ export class StringValueComponent implements OnInit, OnChanges, AfterViewInit {
     if (this.valueType !== Constants.DateValue) {
       this.inputControl.setValue(this.value);
     } else {
-      const knoraDate = this.value ? this._transformDateStringToKnoraDateObject(this.value as string) : undefined;
+      const knoraDate = this.value ? this._calendarDates.parseGravsearchDate(this.value as string) : undefined;
       this.dateControl.setValue(knoraDate);
       // A stored term is in its own calendar; telling the picker otherwise relabelled it on the
       // next edit.
@@ -162,28 +162,6 @@ export class StringValueComponent implements OnInit, OnChanges, AfterViewInit {
     if (restated !== undefined) {
       this.searchCalendar.set(calendar);
       this.onDateSelected(restated);
-    }
-  }
-
-  // we need to provide the date-picker with a KnoraDate but we store the value as a string
-  // so we need to convert it back to a KnoraDate
-  // the date string format is specific to gravsearch so we can't put this logic in the date-picker itself
-  _transformDateStringToKnoraDateObject(dateString: string): KnoraDate {
-    let era = '';
-    const [calendar, dateAndEra] = dateString.split(':');
-    const [datePart, eraPart] = dateAndEra.split(' ');
-    const [year, month, day] = datePart.split('-').map(part => parseInt(part));
-
-    // The gravsearch literal names no era for Islamic, which has none; any other calendar defaults
-    // to CE. Reading an Islamic term as CE made the calendar library refuse it.
-    era = calendar.toUpperCase() === 'ISLAMIC' ? 'noEra' : eraPart || 'CE';
-
-    if (day) {
-      return new KnoraDate(calendar, era, year, month, day);
-    } else if (month) {
-      return new KnoraDate(calendar, era, year, month);
-    } else {
-      return new KnoraDate(calendar, era, year);
     }
   }
 

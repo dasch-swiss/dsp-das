@@ -26,13 +26,13 @@ interface DateValueState {
  * change anything. The picker below it knows none of that; it is handed a date and a calendar and
  * reports what the user clicked.
  *
- * **The rules this component is held to**, because it owns every ingredient of the defect the
- * rewrite exists to remove — conversion, a stored value, and a form:
+ * **The rules this component is held to**, because it owns conversion, a stored value and a form,
+ * and writers competing over those relabel dates:
  *
  * 1. One authoritative store: {@link _state}. Nothing else is read as the value.
  * 2. No `valueChanges` subscription feeding back into its own state. There are no subscriptions.
- * 3. No imperative guard flags sequencing reads against writes. The previous implementation needed
- *    six of them; if this one needs any, the design is wrong.
+ * 3. No imperative guard flags sequencing reads against writes; needing one means the design is
+ *    wrong.
  * 4. `writeValue` and `setDisabledState` write `signal()`s — never `input()`, which is read-only
  *    and would fail silently.
  * 5. Emission happens in event handlers only, never in an `effect()`, or the parent writing back
@@ -77,14 +77,9 @@ export class DateValueComponent implements ControlValueAccessor, Validator {
   /**
    * The value as it was stored, when editing an existing one.
    *
-   * Captured from the first write that carries a value, not the first write at all: the editor
-   * renders this through a `formControl` that is empty until the resource loads, so the first
-   * `writeValue` is a null. Treating that as "nothing is stored" left the conversion base unset for
-   * the component's life, and a period switched away and back came home a year short.
-   *
-   * It is also never captured from a write this component caused — the user's own entry travelling
-   * back through `writeValue` is not a stored value, and mistaking it for one put a stored-value
-   * line on a form where nothing was stored.
+   * Captured from the first write that carries a value — the editor's `formControl` is empty until
+   * the resource loads, so the first `writeValue` is a null — and never from a write this component
+   * caused, which is the user's own entry travelling back.
    */
   private readonly _stored = signal<KnoraDate | KnoraPeriod | null>(null);
 
@@ -97,8 +92,7 @@ export class DateValueComponent implements ControlValueAccessor, Validator {
    *
    * Every switch converts from here, never from the previous switch's result, so returning to the
    * calendar a date was stored or entered in gives it back exactly. Converting a conversion drifts:
-   * an Islamic year restated by its first day comes back one Gregorian year earlier, so a user
-   * switching back and forth watched the year count down.
+   * an Islamic year restated by its first day comes back one Gregorian year earlier.
    */
   private readonly _base = signal<{ readonly start: KnoraDate | null; readonly end: KnoraDate | null }>({
     start: null,

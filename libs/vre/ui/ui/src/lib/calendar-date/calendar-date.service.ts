@@ -9,6 +9,7 @@ import {
   getCalendar,
   isEqual,
   isPeriodOutOfOrder,
+  jdnRange,
 } from '@dasch-swiss/vre/shared/calendar';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -38,15 +39,10 @@ export interface MonthGrid {
 }
 
 /**
- * Every calendar question the date picker asks, in one place.
+ * Every calendar rule applied to a `KnoraDate`, in one place.
  *
- * This exists because the arithmetic used to live inside a 988-line component that also rendered a
- * popover, implemented `ControlValueAccessor`, and knew what a period was. Conversions written
- * against component fields could disagree with the same component's form state, and three
- * successive fixes for one relabelling bug each passed their tests and each failed in a browser.
- *
- * Nothing here holds state or touches a component. Given the same arguments it returns the same
- * answer, which is what makes it testable at the level the defect actually lived at.
+ * Nothing here holds state or touches a component: given the same arguments it returns the same
+ * answer.
  *
  * The arithmetic itself belongs to `@dasch-swiss/vre/shared/calendar`; this service adapts it to
  * `KnoraDate` — precision, era, and the astronomical-year convention — and formats the result.
@@ -56,21 +52,15 @@ export class CalendarDateService {
   /**
    * The translate service, when there is an injector to ask for one.
    *
-   * `{ optional: true }` is not enough on its own: it covers a missing *provider*, but `inject()`
-   * still throws NG0203 when called outside an injection context at all — which is exactly the case
-   * this has to survive, because the date viewer constructs this service's consumers with `new`.
-   * Hence the try/catch. Without a service the calendar name falls back to title case, as it
-   * rendered before translation existed.
+   * `KnoraDatePipe` is constructed with `new`, outside any injection context, where `inject()`
+   * throws NG0203 even with `{ optional: true }` — hence the try/catch. Without it, names fall back
+   * to title case.
    */
   private readonly _translate = CalendarDateService._injectTranslateIfPossible();
 
   /**
-   * Bumped whenever the language or its translations change, and read by {@link calendarName}.
-   *
-   * Calendar names are read inside components' `computed`s, which cache: one first computed before
-   * the translations had loaded kept the English fallback for good — the stored-value line said
-   * "Gregorian" in a German UI while the hint beside it, computed later, said "Julianisch". Reading
-   * this signal makes every such `computed` recompute when the language does.
+   * Bumped whenever the language or its translations change. Translated names read it, so a
+   * `computed` showing one recomputes when the language changes or its translations finish loading.
    */
   private readonly _language = signal(0);
 
@@ -116,20 +106,6 @@ export class CalendarDateService {
       start: this.createKnoraDateFromCalendarDate(result.start),
       end: this.createKnoraDateFromCalendarDate(result.end),
     };
-  }
-
-  /**
-   * which calendars a date value can be shown in.
-   *
-   * The stored calendar is always among them. A period is representable only where both of its ends
-   * are, because a period carries one calendar for the whole value.
-   */
-  availableCalendarsFor(value: KnoraDate | KnoraPeriod): CalendarSystem[] {
-    const dates = value instanceof KnoraPeriod ? [value.start, value.end] : [value];
-
-    return CALENDAR_SYSTEMS.filter(calendar =>
-      dates.every(date => this.convertKnoraDateTo(date, calendar) !== undefined)
-    );
   }
 
   /**
@@ -247,16 +223,11 @@ export class CalendarDateService {
    * rule. No uncertainty markers: DSP stores none. Years are astronomical (`0000` is 1 BCE).
    * The mapping and its decisions: dasch-specs `10-machine-readable-dates.md`.
    */
-  machineReadableOf(value: KnoraDate | KnoraPeriod): string | undefined {
+  machineReadableOf(value: KnoraDate | KnoraPeriod): string {
     if (value instanceof KnoraPeriod) {
-      const start = this._isoEnds(value.start);
-      const end = this._isoEnds(value.end);
-      return start && end ? `${start.first}/${end.last}` : undefined;
+      return `${this._isoEnds(value.start).first}/${this._isoEnds(value.end).last}`;
     }
     const ends = this._isoEnds(value);
-    if (ends === undefined) {
-      return undefined;
-    }
     return ends.first === ends.last ? ends.first : `${ends.first}/${ends.last}`;
   }
 
@@ -264,7 +235,7 @@ export class CalendarDateService {
    * One date's ISO 8601 ends: the same string twice where ISO 8601 can state it as it is (a day, or
    * a Gregorian month or year), else the Gregorian first and last day it covers.
    */
-  private _isoEnds(date: KnoraDate): { first: string; last: string } | undefined {
+  private _isoEnds(date: KnoraDate): { first: string; last: string } {
     const calendar = date.calendar.toUpperCase() as CalendarSystem;
     if (calendar === 'GREGORIAN') {
       const year = this.convertHistoricalYearToAstronomicalYear(date.year, date.era);
@@ -274,41 +245,10 @@ export class CalendarDateService {
         .join('-');
       return { first: text, last: text };
     }
-    if (date.precision === Precision.dayPrecision) {
-      const day = this.convertKnoraDateTo(date, 'GREGORIAN')?.start;
-      return day && this._isoEnds(day);
-    }
-    const { firstDay, lastDay } = this._dayBounds(date);
-    const first = this.convertKnoraDateTo(firstDay, 'GREGORIAN')?.start;
-    const last = this.convertKnoraDateTo(lastDay, 'GREGORIAN')?.start;
-    if (first === undefined || last === undefined) {
-      return undefined;
-    }
-    return { first: this._isoEnds(first)!.first, last: this._isoEnds(last)!.first };
-  }
-
-  /**
-   * The first and last day a date covers, in its own calendar: itself for a day, the 1st and the
-   * last of the month for a month, 1 January and 31 December (or their Islamic equivalents) for a
-   * year — the days dsp-api stores for it.
-   */
-  private _dayBounds(date: KnoraDate): { firstDay: KnoraDate; lastDay: KnoraDate } {
-    if (date.precision === Precision.dayPrecision) {
-      return { firstDay: date, lastDay: date };
-    }
-    const calendar = date.calendar.toUpperCase() as CalendarSystem;
-    const astronomical = this.convertHistoricalYearToAstronomicalYear(date.year, date.era);
-    const lastMonth = date.month ?? 12;
-    return {
-      firstDay: new KnoraDate(date.calendar, date.era, date.year, date.month ?? 1, 1),
-      lastDay: new KnoraDate(
-        date.calendar,
-        date.era,
-        date.year,
-        lastMonth,
-        this.daysInMonth(calendar, astronomical, lastMonth)
-      ),
-    };
+    const { first, last } = this.julianDayRangeOf(date);
+    const gregorian = getCalendar('GREGORIAN');
+    const isoDay = (jdn: number) => this._isoEnds(this.createKnoraDateFromCalendarDate(gregorian.fromJDN(jdn))).first;
+    return { first: isoDay(first), last: isoDay(last) };
   }
 
   /** a year as ISO 8601 writes it: four digits, signed when negative (`-0043` is 44 BCE). */
@@ -321,10 +261,8 @@ export class CalendarDateService {
    * today, in the calendar asked for.
    *
    * Today is a Gregorian fact — that is what the system clock reports — and every other calendar is
-   * reached by the same conversion as everything else. That matters more than it looks: a previous
-   * implementation derived Islamic today from `Intl.DateTimeFormat`'s observational calendar while
-   * the rest of the app used the tabular civil one, and on roughly 0.9% of days produced a date
-   * with no cell in the picker's own grid.
+   * reached by the same conversion as everything else. Not `Intl.DateTimeFormat`: its Islamic
+   * calendar is the observational one, which on some days names a date the tabular grid lacks.
    */
   today(calendar: CalendarSystem): KnoraDate | undefined {
     const now = new Date();
@@ -394,9 +332,8 @@ export class CalendarDateService {
    * `0` pads the first row so the 1st lands under its weekday, in every calendar and every era.
    *
    * Every day of every month, October 1582 included: the Gregorian calendar is proleptic, as in
-   * dsp-api, so 5–14 October 1582 are valid dates. Deleting them drew 15–31 under the wrong weekdays
-   * and left days a conversion could produce with no cell to show them; they are marked instead —
-   * see {@link isSkippedByGregorianReform}.
+   * dsp-api, so 5–14 October 1582 are valid dates and keep their cells, or 15–31 would sit under the
+   * wrong weekdays. They are marked instead — see {@link isSkippedByGregorianReform}.
    */
   monthGrid(calendar: string, era: string, year: number, month: number): MonthGrid {
     const yearAstro = this.convertHistoricalYearToAstronomicalYear(year, era);
@@ -428,11 +365,6 @@ export class CalendarDateService {
    * supports already converts to JDN — it is how conversion and comparison work — so this needs no
    * rule per calendar, no branch at the Gregorian reform, and no special case for BCE or for a
    * calendar without an era.
-   *
-   * It replaces hand-written Zeller-style arithmetic that was fed the *historical* year while the
-   * day count beside it used the astronomical one, and whose caller skipped padding entirely
-   * unless the era was CE. A BCE month therefore started every row on Monday, and 20.09.100 BCE
-   * Julian — a Wednesday — was drawn as a Saturday (DEV-7372).
    *
    * `year` is astronomical here, as the library expects: 100 BCE is -99.
    */
@@ -479,14 +411,9 @@ export class CalendarDateService {
     const start = value instanceof KnoraPeriod ? value.start : value;
     const end = value instanceof KnoraPeriod ? value.end : value;
     return {
-      first: this._toJDN(this._dayBounds(start).firstDay),
-      last: this._toJDN(this._dayBounds(end).lastDay),
+      first: jdnRange(this.createJDNCalendarDateFromKnoraDate(start)).first,
+      last: jdnRange(this.createJDNCalendarDateFromKnoraDate(end)).last,
     };
-  }
-
-  private _toJDN(day: KnoraDate): number {
-    const calendar = day.calendar.toUpperCase() as CalendarSystem;
-    return getCalendar(calendar).toJDN(this.createJDNCalendarDateFromKnoraDate(day));
   }
 
   /**
@@ -501,8 +428,12 @@ export class CalendarDateService {
     if (jdn === undefined) {
       return undefined;
     }
+    // Read so a computed showing the weekday follows a language switch, as calendar names do.
+    this._language();
     const key = WEEKDAY_KEYS[((jdn % 7) + 7) % 7];
-    return this._translate?.instant(`ui.weekdays.${key}.long`) ?? key;
+    const translationKey = `ui.weekdays.${key}.long`;
+    const translated = this._translate?.instant(translationKey);
+    return translated && translated !== translationKey ? translated : key;
   }
 
   /**
@@ -527,8 +458,7 @@ export class CalendarDateService {
   /**
    * the astronomical year for a historical one.
    *
-   * Historical reckoning has no year zero, so 1 BCE is astronomical 0 and 44 BCE is −43. Getting
-   * this inverse backwards took down the adapter removed in #3441.
+   * Historical reckoning has no year zero, so 1 BCE is astronomical 0 and 44 BCE is −43.
    */
   convertHistoricalYearToAstronomicalYear(year: number, era: string): number {
     return era === 'BCE' ? year * -1 + 1 : year;
@@ -644,11 +574,30 @@ export class CalendarDateService {
   }
 
   /**
+   * the inverse of `format(date, 'YYYY-MM-dd', 'gravsearch')`: a stored search term as a date.
+   *
+   * The literal names no era for Islamic, which has none; any other calendar defaults to CE.
+   */
+  parseGravsearchDate(literal: string): KnoraDate {
+    const [calendar, dateAndEra] = literal.split(':');
+    const [datePart, eraPart] = dateAndEra.split(' ');
+    const [year, month, day] = datePart.split('-').map(part => parseInt(part, 10));
+    const era = calendar.toUpperCase() === 'ISLAMIC' ? 'noEra' : eraPart || 'CE';
+
+    if (day) {
+      return new KnoraDate(calendar, era, year, month, day);
+    }
+    if (month) {
+      return new KnoraDate(calendar, era, year, month);
+    }
+    return new KnoraDate(calendar, era, year);
+  }
+
+  /**
    * the calendar's name as a reader should see it.
    *
-   * Translated rather than title-cased: the name was English in every language before, and the
-   * Islamic entry states *which* Islamic calendar this is — there are several and they disagree by
-   * a day or two, so a bare "Islamic" claims more than the app can back (DEV-7429).
+   * Translated, and the Islamic entry states *which* Islamic calendar this is: there are several and
+   * they disagree by a day or two, so a bare "Islamic" claims more than the app can back (DEV-7429).
    */
   calendarName(calendar: string): string {
     this._language();

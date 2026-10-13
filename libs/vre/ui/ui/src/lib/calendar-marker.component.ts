@@ -1,6 +1,7 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition } from '@angular/cdk/overlay';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CalendarSystem } from '@dasch-swiss/vre/shared/calendar';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -67,7 +68,7 @@ export interface CalendarFacts {
 @Component({
   selector: 'app-calendar-marker',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CdkConnectedOverlay, CdkOverlayOrigin, MatIconModule, TranslatePipe],
+  imports: [CdkConnectedOverlay, CdkOverlayOrigin, CdkTrapFocus, MatIconModule, TranslatePipe],
   template: `
     <button
       type="button"
@@ -92,84 +93,92 @@ export interface CalendarFacts {
       (backdropClick)="close()"
       (detach)="close()"
       (overlayKeydown)="onOverlayKeydown($event)">
-      <div
-        class="calendar-marker-popover"
-        role="dialog"
-        data-cy="calendar-marker-popover"
-        [attr.aria-label]="'ui.calendarMarker.inEachCalendar' | translate: { calendar: storedLabel() | translate }">
-        <!-- Three columns: value, what it is, and a third for the one thing beside it. -->
-        @for (reading of ordered(); track reading.calendar) {
-          <span class="calendar-marker-date" [class.is-stored]="reading.calendar === storedCalendar()">
-            @if (reading.date) {
-              {{ reading.date }}
-            } @else {
-              <span class="calendar-marker-absent">{{ 'ui.calendarMarker.beforeHijra' | translate }}</span>
-            }
-          </span>
-          <span
-            class="calendar-marker-name"
-            [class.is-stored]="reading.calendar === storedCalendar()"
-            [attr.data-cy]="'calendar-reading-' + reading.calendar">
-            {{ 'ui.calendarMarker.calendars.' + reading.calendar | translate }}
-          </span>
-          <!-- A weekday belongs to the day, not to a calendar — true on any row — so it is stated
+      <!-- Focus moves to the panel on open, so its label is read first, and back to the trigger on
+      close: the overlay sits at the end of the page, where Tab would not reach it. The trap wraps
+      the panel because it looks for its initial focus target inside itself. -->
+      <div cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+        <div
+          class="calendar-marker-popover"
+          role="dialog"
+          aria-modal="true"
+          tabindex="-1"
+          cdkFocusInitial
+          data-cy="calendar-marker-popover"
+          [attr.aria-label]="'ui.calendarMarker.inEachCalendar' | translate: { calendar: storedLabel() | translate }">
+          <!-- Three columns: value, what it is, and a third for the one thing beside it. -->
+          @for (reading of ordered(); track reading.calendar) {
+            <span class="calendar-marker-date" [class.is-stored]="reading.calendar === storedCalendar()">
+              @if (reading.date) {
+                {{ reading.date }}
+              } @else {
+                <span class="calendar-marker-absent">{{ 'ui.calendarMarker.beforeHijra' | translate }}</span>
+              }
+            </span>
+            <span
+              class="calendar-marker-name"
+              [class.is-stored]="reading.calendar === storedCalendar()"
+              [attr.data-cy]="'calendar-reading-' + reading.calendar">
+              {{ 'ui.calendarMarker.calendars.' + reading.calendar | translate }}
+            </span>
+            <!-- A weekday belongs to the day, not to a calendar — true on any row — so it is stated
           once, beside the stored value where reading starts, rather than repeated on every row. -->
-          @if (reading.calendar === storedCalendar() && weekdayText()) {
-            <span class="calendar-marker-weekdays" data-cy="calendar-marker-weekday">{{ weekdayText() }}</span>
-          } @else {
-            <span></span>
-          }
-        }
-
-        <!-- What the value is in the formats other software reads: value, what it is, copy. -->
-        @if (hasFacts()) {
-          <span class="calendar-marker-rule" data-cy="calendar-marker-facts"></span>
-
-          @if (jdnText(); as jdn) {
-            <code class="calendar-marker-code" data-cy="calendar-marker-jdn">{{ jdn }}</code>
-            <span class="calendar-marker-name">{{ 'ui.calendarMarker.jdn' | translate }}</span>
-            <button
-              type="button"
-              class="calendar-marker-copy"
-              data-cy="calendar-marker-copy-jdn"
-              [attr.aria-label]="('ui.calendarMarker.copy' | translate) + ' ' + ('ui.calendarMarker.jdn' | translate)"
-              (click)="copy(jdn)">
-              <mat-icon>{{ copied() === jdn ? 'check' : 'content_copy' }}</mat-icon>
-            </button>
+            @if (reading.calendar === storedCalendar() && weekdayText()) {
+              <span class="calendar-marker-weekdays" data-cy="calendar-marker-weekday">{{ weekdayText() }}</span>
+            } @else {
+              <span></span>
+            }
           }
 
-          @if (facts().machineReadable; as iso) {
-            <code class="calendar-marker-code" data-cy="calendar-marker-iso">{{ iso }}</code>
-            <span class="calendar-marker-name">
-              {{ 'ui.calendarMarker.machineReadable' | translate }}
-              <span class="calendar-marker-caption" data-cy="calendar-marker-iso-note">{{
-                'ui.calendarMarker.prolepticGregorian' | translate
-              }}</span>
-            </span>
-            <button
-              type="button"
-              class="calendar-marker-copy"
-              data-cy="calendar-marker-copy"
-              [attr.aria-label]="
-                ('ui.calendarMarker.copy' | translate) + ' ' + ('ui.calendarMarker.machineReadable' | translate)
-              "
-              (click)="copy(iso)">
-              <mat-icon>{{ copied() === iso ? 'check' : 'content_copy' }}</mat-icon>
-            </button>
-          }
+          <!-- What the value is in the formats other software reads: value, what it is, copy. -->
+          @if (hasFacts()) {
+            <span class="calendar-marker-rule" data-cy="calendar-marker-facts"></span>
 
-          @if (facts().durationDays !== undefined) {
-            <span class="calendar-marker-duration" data-cy="calendar-marker-duration">
-              {{ 'ui.calendarMarker.periodOfDays' | translate: { count: facts().durationDays } }}
-            </span>
-          }
+            @if (jdnText(); as jdn) {
+              <code class="calendar-marker-code" data-cy="calendar-marker-jdn">{{ jdn }}</code>
+              <span class="calendar-marker-name">{{ 'ui.calendarMarker.jdn' | translate }}</span>
+              <button
+                type="button"
+                class="calendar-marker-copy"
+                data-cy="calendar-marker-copy-jdn"
+                [attr.aria-label]="('ui.calendarMarker.copy' | translate) + ' ' + ('ui.calendarMarker.jdn' | translate)"
+                (click)="copy(jdn)">
+                <mat-icon>{{ copied() === jdn ? 'check' : 'content_copy' }}</mat-icon>
+              </button>
+            }
 
-          @if (facts().reformGap; as gap) {
-            <span class="calendar-marker-reform-gap" data-cy="calendar-marker-reform-gap">
-              {{ 'ui.calendarMarker.reformGapNote' | translate: gap }}
-            </span>
+            @if (facts().machineReadable; as iso) {
+              <code class="calendar-marker-code" data-cy="calendar-marker-iso">{{ iso }}</code>
+              <span class="calendar-marker-name">
+                {{ 'ui.calendarMarker.machineReadable' | translate }}
+                <span class="calendar-marker-caption" data-cy="calendar-marker-iso-note">{{
+                  'ui.calendarMarker.prolepticGregorian' | translate
+                }}</span>
+              </span>
+              <button
+                type="button"
+                class="calendar-marker-copy"
+                data-cy="calendar-marker-copy"
+                [attr.aria-label]="
+                  ('ui.calendarMarker.copy' | translate) + ' ' + ('ui.calendarMarker.machineReadable' | translate)
+                "
+                (click)="copy(iso)">
+                <mat-icon>{{ copied() === iso ? 'check' : 'content_copy' }}</mat-icon>
+              </button>
+            }
+
+            @if (facts().durationDays !== undefined) {
+              <span class="calendar-marker-duration" data-cy="calendar-marker-duration">
+                {{ 'ui.calendarMarker.periodOfDays' | translate: { count: facts().durationDays } }}
+              </span>
+            }
+
+            @if (facts().reformGap; as gap) {
+              <span class="calendar-marker-reform-gap" data-cy="calendar-marker-reform-gap">
+                {{ 'ui.calendarMarker.reformGapNote' | translate: gap }}
+              </span>
+            }
           }
-        }
+        </div>
       </div>
     </ng-template>
   `,
@@ -206,6 +215,11 @@ export interface CalendarFacts {
         font-size: 12px;
         width: 12px;
         height: 12px;
+      }
+
+      /* Focused as a container on open so its label is announced; it is not a control. */
+      .calendar-marker-popover:focus {
+        outline: none;
       }
 
       .calendar-marker-popover {
@@ -322,6 +336,9 @@ export class CalendarMarkerComponent {
    */
   readonly facts = input<CalendarFacts>({});
 
+  /** Emits when the panel opens, so an owner can leave the readings and facts uncomputed until then. */
+  readonly opened = output<void>();
+
   protected readonly POPOVER_POSITIONS = POPOVER_POSITIONS;
 
   private readonly _clipboard = inject(Clipboard);
@@ -376,6 +393,9 @@ export class CalendarMarkerComponent {
 
   protected toggle(): void {
     this._open.update(open => !open);
+    if (this._open()) {
+      this.opened.emit();
+    }
   }
 
   protected close(): void {

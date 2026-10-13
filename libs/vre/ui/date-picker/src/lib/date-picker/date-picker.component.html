@@ -32,7 +32,16 @@ deliberate act, so two of these side by side stay one line tall. -->
   (backdropClick)="close()"
   (detach)="close()"
   (overlayKeydown)="onOverlayKeydown($event)">
-  <div class="date-picker-panel" role="dialog" data-cy="date-picker-panel" [attr.aria-label]="fieldLabel() | translate">
+  <!-- The overlay is attached to the end of the page, so focus is moved in on open and returned to
+  the trigger on close; without it, Tab from the trigger skipped the panel. -->
+  <div
+    class="date-picker-panel"
+    role="dialog"
+    aria-modal="true"
+    data-cy="date-picker-panel"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
+    [attr.aria-label]="fieldLabel() | translate">
     <!-- which field this panel belongs to, and which calendar it is picking in -->
     <div class="panel-header">
       @if (label()) {

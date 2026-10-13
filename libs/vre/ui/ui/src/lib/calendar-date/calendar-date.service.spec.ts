@@ -265,7 +265,7 @@ describe('CalendarDateService', () => {
         new KnoraDate('GREGORIAN', 'CE', 700, 1, 1)
       );
 
-      expect(service.availableCalendarsFor(period)).not.toContain('ISLAMIC');
+      expect(service.restatableCalendarsFor(period)).not.toContain('ISLAMIC');
     });
 
     it('gives today in the calendar asked for, through the same conversion as everything else', () => {
