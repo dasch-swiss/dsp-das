@@ -73,11 +73,16 @@ describe('regexPatternValidator (DEV-7441)', () => {
     expect(validate(pattern)).toBeNull();
   });
 
-  it.each([')(?x)', 'a)(?x) b'])('rejects %p, an unbalanced ) before comments mode', pattern => {
+  it.each([')(?x)', 'a)(?x) b', '(?i)a)', '(?i:a))'])('rejects %p, an unmatched )', pattern => {
     expect(validate(pattern)).toEqual({ invalidRegex: true });
   });
 
-  it('does not throw on a deeply nested pattern', () => {
-    expect(() => validate('['.repeat(10000))).not.toThrow();
+  it.each(['(a)(?x) b', '(?i:a)b', '(?<n>a)\\k<n>', '(?i)(a)'])('accepts %p, every ) matched', pattern => {
+    expect(validate(pattern)).toBeNull();
+  });
+
+  // Unclosed, it would be rejected; accepted means the scanner overflowed and the check erred towards accepting.
+  it('accepts instead of throwing when a nested pattern overflows the scanner', () => {
+    expect(validate('['.repeat(100000))).toBeNull();
   });
 });

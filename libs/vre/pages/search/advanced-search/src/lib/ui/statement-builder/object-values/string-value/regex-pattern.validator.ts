@@ -10,7 +10,8 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
  * runs (`(?i)`, `a*+`, `\Q…\E`, `\h`) and accepts patterns Java refuses (`{MAL}`, `a{`, `\y`). So the
  * pattern is first walked with Java's rules ({@link toJavaScriptPattern}): escapes, quantifiers, braces
  * and group openers are checked there, and Java-only constructs are swapped for JavaScript equivalents.
- * `RegExp` then checks what both engines share — balanced groups and character-class ranges.
+ * An unmatched `)` is caught in the walk; `RegExp` then checks what both engines share — unclosed groups
+ * and character-class ranges.
  *
  * The check errs towards accepting: a pattern it lets through that Java refuses (e.g. an unknown
  * `\p{…}` name) still gets dsp-api's 400 in the failure panel, but a pattern it refused could not be
@@ -50,7 +51,7 @@ export function regexPatternValidator(): ValidatorFn {
       return null;
     }
     // The component emits the trimmed value, so that is what dsp-api receives and what is judged.
-    return isCompilableRegex(String(value).trim()) ? null : { invalidRegex: true };
+    return isCompilableRegex(value.trim()) ? null : { invalidRegex: true };
   };
 }
 
@@ -58,14 +59,15 @@ const INVALID = Symbol('invalid');
 /** Comments mode (`(?x)`) changes how the rest is read; such a pattern is left to dsp-api. */
 const UNCHECKED = Symbol('unchecked');
 
-type Scanned = { js: string; end: number };
+/** `substituted`: `js` is a stand-in for a character JavaScript cannot express, not that character. */
+type Scanned = { js: string; end: number; substituted?: true };
 
 /** What a quantifier at the current position would apply to. */
 type Previous = 'nothing' | 'atom' | 'quantifier' | 'modifiedQuantifier';
 
 /**
  * Walks `pattern` with `java.util.regex`'s rules and returns a JavaScript pattern that compiles exactly
- * when the remaining structure (groups, character-class ranges) is valid. Quantifiers are checked here
+ * when the remaining structure (unclosed groups, character-class ranges) is valid. Quantifiers are checked here
  * and left out of the result, since the engines disagree on where they may stand (Java takes `^*` and
  * `a{2}{3}`).
  */
@@ -94,7 +96,7 @@ function toJavaScriptPattern(pattern: string): string | typeof INVALID | typeof 
     } else if (c === '(') {
       const group = scanGroupOpening(pattern, i, groupNames);
       if (group === INVALID || group === UNCHECKED) return group;
-      if (group.js.startsWith('(')) depth++;
+      if (group.opensGroup) depth++;
       js += group.js;
       i = group.end;
       previous = 'nothing';
@@ -117,7 +119,7 @@ function toJavaScriptPattern(pattern: string): string | typeof INVALID | typeof 
       // Checked here so that a later `(?x)`, which ends the walk, cannot hide it.
       return INVALID;
     } else {
-      // `)`, `|`, anchors and literals. A literal `]` or `}` is fine in Java; escape it for JavaScript.
+      // A matched `)`, `|`, anchors and literals. A literal `]` or `}` is fine in Java; escape it for JavaScript.
       js += c === ']' || c === '}' ? `\\${c}` : c;
       previous = c === '|' ? 'nothing' : 'atom';
       i++;
@@ -142,7 +144,7 @@ function scanEscape(pattern: string, i: number, inClass: boolean, groupNames: Se
   const next = pattern[i + 1];
   const rest = pattern.slice(i + 2);
   // A neutral single character, standing in for an escape JavaScript does not know.
-  const character = { js: 'a', end: i + 2 };
+  const substitute = (end: number): Scanned => ({ js: 'a', end, substituted: true });
 
   if (next === undefined || next === 'E') return INVALID;
   if (next === 'Q') {
@@ -155,25 +157,25 @@ function scanEscape(pattern: string, i: number, inClass: boolean, groupNames: Se
   // Anchors, back references and the multi-character `\R` and `\X` match no single character, so Java
   // refuses them inside a character class.
   if (inClass && (JAVA_ANCHOR_ESCAPES.has(next) || /[1-9kRX]/.test(next))) return INVALID;
-  if (JAVA_ONLY_CHARACTER_ESCAPES.has(next)) return character;
+  if (JAVA_ONLY_CHARACTER_ESCAPES.has(next)) return substitute(i + 2);
   if (JAVA_ANCHOR_ESCAPES.has(next)) {
     return { js: '(?:)', end: next === 'b' && rest.startsWith('{g}') ? i + 5 : i + 2 };
   }
-  if (next === 'c') return rest === '' ? INVALID : { js: 'a', end: i + 3 };
+  if (next === 'c') return rest === '' ? INVALID : substitute(i + 3);
   if (next === 'x') {
     const hex = /^(?:[0-9a-fA-F]{2}|\{([0-9a-fA-F]+)\})/.exec(rest);
     if (!hex || (hex[1] !== undefined && parseInt(hex[1], 16) > 0x10ffff)) return INVALID;
-    return { js: 'a', end: i + 2 + hex[0].length };
+    return substitute(i + 2 + hex[0].length);
   }
-  if (next === 'u') return /^[0-9a-fA-F]{4}/.test(rest) ? { js: 'a', end: i + 6 } : INVALID;
+  if (next === 'u') return /^[0-9a-fA-F]{4}/.test(rest) ? substitute(i + 6) : INVALID;
   if (next === 'p' || next === 'P') {
     // A one-letter `\pL` must be a general category; a braced name is not checked and left to dsp-api.
     const property = /^(?:\{[^}]*\}|[LMNPSZC])/.exec(rest);
-    return property ? { js: 'a', end: i + 2 + property[0].length } : INVALID;
+    return property ? substitute(i + 2 + property[0].length) : INVALID;
   }
   if (next === 'N') {
     const name = /^\{[^}]*\}/.exec(rest);
-    return name ? { js: 'a', end: i + 2 + name[0].length } : INVALID;
+    return name ? substitute(i + 2 + name[0].length) : INVALID;
   }
   if (next === 'k') {
     const name = /^<([a-zA-Z][a-zA-Z0-9]*)>/.exec(rest);
@@ -181,7 +183,7 @@ function scanEscape(pattern: string, i: number, inClass: boolean, groupNames: Se
   }
   if (next === '0') {
     const octal = /^(?:[0-3][0-7]{2}|[0-7]{1,2})/.exec(rest);
-    return octal ? { js: 'a', end: i + 2 + octal[0].length } : INVALID;
+    return octal ? substitute(i + 2 + octal[0].length) : INVALID;
   }
   if (/[1-9]/.test(next)) {
     // A back reference; Java accepts one to a group that does not exist.
@@ -194,7 +196,8 @@ function scanEscape(pattern: string, i: number, inClass: boolean, groupNames: Se
 
 /**
  * A Java character class, which may nest (`[a[bc]]`) and intersect (`[a-z&&[^aeiou]]`). A plain class is
- * handed to JavaScript as is, so it can check the ranges; one using Java-only syntax becomes `[a]`.
+ * handed to JavaScript as is, so it can check the ranges; one using Java-only syntax or a substituted
+ * escape becomes `[a]`, leaving its ranges unchecked.
  */
 function scanClass(pattern: string, i: number, groupNames: Set<string>): Scanned | typeof INVALID {
   let j = i + 1;
@@ -224,8 +227,7 @@ function scanClass(pattern: string, i: number, groupNames: Set<string>): Scanned
     } else if (c === '\\') {
       const escape = scanEscape(pattern, j, true, groupNames);
       if (escape === INVALID) return INVALID;
-      // A substituted escape (`\x41`) is not the character JavaScript would see, so range order is not checked.
-      if (escape.js === 'a') plain = false;
+      if (escape.substituted) plain = false;
       body += escape.js;
       j = escape.end;
     } else {
@@ -239,26 +241,28 @@ function scanGroupOpening(
   pattern: string,
   i: number,
   groupNames: Set<string>
-): Scanned | typeof INVALID | typeof UNCHECKED {
-  if (pattern[i + 1] !== '?') return { js: '(', end: i + 1 };
+): (Scanned & { opensGroup: boolean }) | typeof INVALID | typeof UNCHECKED {
+  if (pattern[i + 1] !== '?') return { js: '(', end: i + 1, opensGroup: true };
   const rest = pattern.slice(i + 2);
 
   // Non-capturing, lookahead and atomic groups; lookbehind. All open a group JavaScript understands.
   const special = /^(?:[:=!>]|<[=!])/.exec(rest);
-  if (special) return { js: '(?:', end: i + 2 + special[0].length };
+  if (special) return { js: '(?:', end: i + 2 + special[0].length, opensGroup: true };
 
   const named = /^<([a-zA-Z][a-zA-Z0-9]*)>/.exec(rest);
   if (named) {
     if (groupNames.has(named[1])) return INVALID;
     groupNames.add(named[1]);
-    return { js: '(', end: i + 2 + named[0].length };
+    return { js: '(', end: i + 2 + named[0].length, opensGroup: true };
   }
 
   // Inline flags, `(?i)` or `(?i-s:…)`. Comments mode makes whitespace and `#…` insignificant.
   const flags = /^([idmsuxUc]*)(?:-([idmsuxUc]*))?([:)])/.exec(rest);
   if (flags) {
     if (flags[1].includes('x')) return UNCHECKED;
-    return { js: flags[3] === ':' ? '(?:' : '', end: i + 2 + flags[0].length };
+    // `(?i)` sets flags and closes itself; `(?i:` opens a group.
+    const opensGroup = flags[3] === ':';
+    return { js: opensGroup ? '(?:' : '', end: i + 2 + flags[0].length, opensGroup };
   }
   return INVALID;
 }
