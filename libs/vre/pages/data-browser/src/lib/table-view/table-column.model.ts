@@ -26,23 +26,30 @@ export const RIGHTS_COLUMN_KEYS: Readonly<Record<RightsField, string>> = {
   authorship: '__authorship',
 };
 
-/** Widths in pixels. Picked per value type so a date column does not open as wide as a text column. */
+/**
+ * Widths in pixels. Picked per value type so a date column does not open as wide as a text column.
+ *
+ * Each leaves room for the value's actions as well as the value: a hovered value carries Edit, Move
+ * and Delete (3 × 28px) and one being edited Cancel and Save, on top of the cell's 20px of padding.
+ * Sized for the value alone, an integer column left its editor some 30px and a date editor did not
+ * fit at all (DEV-7494).
+ */
 const WIDTH_BY_VALUE_TYPE: ReadonlyMap<string, number> = new Map([
-  [Constants.BooleanValue, 110],
-  [Constants.ColorValue, 110],
-  [Constants.DateValue, 150],
-  [Constants.DecimalValue, 120],
-  [Constants.GeonameValue, 180],
-  [Constants.IntValue, 110],
-  [Constants.IntervalValue, 150],
-  [Constants.LinkValue, 200],
-  [Constants.ListValue, 180],
-  [Constants.TimeValue, 150],
-  [Constants.UriValue, 220],
+  [Constants.BooleanValue, 140],
+  [Constants.ColorValue, 140],
+  [Constants.DateValue, 200],
+  [Constants.DecimalValue, 150],
+  [Constants.GeonameValue, 220],
+  [Constants.IntValue, 140],
+  [Constants.IntervalValue, 200],
+  [Constants.LinkValue, 240],
+  [Constants.ListValue, 220],
+  [Constants.TimeValue, 200],
+  [Constants.UriValue, 260],
 ]);
 
 /** Everything not in the table above — text, and any value type dsp-api grows later. */
-export const DEFAULT_WIDTH = 200;
+export const DEFAULT_WIDTH = 240;
 
 /** The label carries the resource's identity, so it opens wider than a generic text column. */
 export const LABEL_COLUMN_WIDTH = 280;
