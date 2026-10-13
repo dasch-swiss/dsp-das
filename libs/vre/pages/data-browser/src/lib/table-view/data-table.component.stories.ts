@@ -1085,7 +1085,7 @@ export const ShadesTheFrozenEdgeOnceTheTableScrolls: Story = {
   },
 };
 
-/** A pinned column's pin is read before its name, as the label column's lock is. */
+/** A pinned column's pin is read before its name. */
 export const ShowsThePinBeforeAPinnedColumnsName: Story = {
   ...pinnedStory(),
   play: async ({ canvasElement }) => {
@@ -1095,7 +1095,6 @@ export const ShowsThePinBeforeAPinnedColumnsName: Story = {
     const name = place.querySelector('.header-label') as HTMLElement;
 
     await expect(pin.getBoundingClientRect().right).toBeLessThanOrEqual(name.getBoundingClientRect().left);
-    await expect(canvas.getByRole('img', { name: 'Always in view' })).toBeInTheDocument();
   },
 };
 

@@ -212,8 +212,8 @@ table {
   }
 }
 
-// A pinned column's pin sits before its name, as the label's lock does — the sign of why the column
-// does not scroll is read before the name rather than among the controls.
+// A pinned column's pin sits before its name — the sign of why the column does not scroll is read
+// before the name rather than among the controls.
 .header-pin.is-active {
   order: -1;
   margin-left: 0;
@@ -222,15 +222,6 @@ table {
 
 .mat-mdc-header-cell.is-pinned .header-label {
   color: #234a69;
-}
-
-.header-lock {
-  flex: none;
-  margin-right: 4px;
-  font-size: 14px;
-  width: 14px;
-  height: 14px;
-  color: rgba(0, 0, 0, 0.45);
 }
 
 .header-filter.is-active {

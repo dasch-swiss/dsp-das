@@ -141,19 +141,7 @@ const FILLER_COLUMN_KEY = '__filler';
               [attr.aria-keyshortcuts]="column.isSticky ? null : 'ArrowLeft ArrowRight'"
               (keydown)="onHeaderKeydown(column.key, $event)">
               <div class="header-content">
-                <!-- The label column cannot be unpinned; the lock says why it never scrolls. A pinned
-                     column's pin moves before its name the same way (see the stylesheet). -->
-                @if (column.isSticky) {
-                  <mat-icon
-                    class="header-lock"
-                    data-cy="column-lock"
-                    role="img"
-                    aria-hidden="false"
-                    [attr.aria-label]="'pages.dataBrowser.table.alwaysInView' | translate"
-                    [matTooltip]="'pages.dataBrowser.table.alwaysInView' | translate"
-                    >lock</mat-icon
-                  >
-                }
+                <!-- A pinned column's pin moves before its name (see the stylesheet). -->
                 <span class="header-label" [appTruncatedTooltip]="column.label">{{ column.label }}</span>
 
                 <!-- Only where the Data tab's own sort rule allows it (REQ-3.2). A control the

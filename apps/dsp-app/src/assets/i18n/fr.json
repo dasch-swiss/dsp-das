@@ -668,7 +668,6 @@
         "editFilter": "Modifier le filtre",
         "pin": "Épingler",
         "unpin": "Désépingler",
-        "alwaysInView": "Toujours visible",
         "oneColumnScrolledUnder": "1 colonne masquée dessous",
         "columnsScrolledUnder": "{{count}} colonnes masquées dessous",
         "selectRow": "Ajouter {{label}} à la comparaison",
