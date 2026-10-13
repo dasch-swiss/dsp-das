@@ -113,6 +113,9 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         align-items: flex-start;
         gap: 4px;
         padding: var(--property-value-padding-block, 16px) 0;
+        border-radius: 4px;
+        /* None in the viewer; a denser host such as the Data tab's table sets one. */
+        background: var(--property-value-edit-background, none);
       }
       .edit-content {
         flex: 1;

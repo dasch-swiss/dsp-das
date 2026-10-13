@@ -751,6 +751,22 @@ export const ShowsTheViewersActionBubbleWhenAValueIsHovered: Story = {
   },
 };
 
+/** The value being edited is tinted — that value only, not its row. */
+export const TintsTheValueBeingEdited: Story = {
+  ...editingStory({}),
+  play: async ({ canvasElement }) => {
+    const row = canvasElement.querySelector('tr.mat-mdc-row') as HTMLElement;
+
+    await userEvent.hover(canvasElement.querySelector('[data-cy="property-value"]') as HTMLElement);
+    await userEvent.click(canvasElement.querySelector('[data-cy="edit-button"]') as HTMLElement);
+
+    await waitFor(() => expect(canvasElement.querySelector('.edit-line')).not.toBeNull());
+    const editLine = canvasElement.querySelector('.edit-line') as HTMLElement;
+    await expect(getComputedStyle(editLine).backgroundColor).toBe('rgb(245, 247, 249)');
+    await expect(getComputedStyle(row).backgroundColor).not.toBe('rgb(245, 247, 249)');
+  },
+};
+
 /** REQ-4.1 again, from the other end: the control opens the editor the resource viewer opens. */
 export const OpensTheViewersOwnEditorFromTheBubble: Story = {
   ...editingStory({}),
