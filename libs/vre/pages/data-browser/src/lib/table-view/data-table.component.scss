@@ -547,6 +547,8 @@ tr.is-checked .row-controls [data-cy='row-check'] {
   --property-value-padding-block: 4px;
   // The value being edited is tinted, so it stays easy to find among the cells around it.
   --property-value-edit-background: #f5f7f9;
+  // Authorship lines up flush with the values, like the rest of the cells.
+  --authorship-line-padding-inline-start: 0;
 
   .mat-mdc-cell,
   .mat-mdc-header-cell {

@@ -21,6 +21,7 @@ import {
   FootnoteService,
   PropertiesDisplayService,
   ResourceExplorerButtonComponent,
+  EditableResourceAuthorshipComponent,
   EditableResourceLabelComponent,
 } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { ProjectDataRights } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -267,6 +268,15 @@ const FILLER_COLUMN_KEY = '__filler';
                     [dspResource]="dspResource"
                     (resourceUpdated)="onResourceReloaded($event)" />
                 </div>
+              } @else if (column.rightsField === 'authorship' && row.dspResource; as dspResource) {
+                <!-- Authorship as the viewer's rights statement shows and edits it: the same text,
+                     the same fallback, the same hover, Edit and inline editor (DEV-7494). -->
+                <div class="cell-values" [appScrollWhenTaller]="rowCap(row.id)">
+                  <app-editable-resource-authorship
+                    [dspResource]="dspResource"
+                    [defaultAuthorship]="projectRights()?.defaultDataAuthorship ?? []"
+                    (resourceUpdated)="onResourceReloaded($event)" />
+                </div>
               } @else if (cell.text !== undefined) {
                 <!-- The rights-statement columns, and the label of a resource the editor cannot
                      model. Kept inside the same wrapper as a
@@ -391,6 +401,7 @@ const FILLER_COLUMN_KEY = '__filler';
     RowResizeDirective,
     ResourceExplorerButtonComponent,
     EditableResourceLabelComponent,
+    EditableResourceAuthorshipComponent,
     TableImageCellComponent,
     TablePropertyCellComponent,
     TruncatedTooltipDirective,

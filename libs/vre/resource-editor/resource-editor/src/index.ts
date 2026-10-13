@@ -15,6 +15,7 @@ export * from './lib/properties/properties-display/template-switcher/create-reso
 // per resource (see its `prime`), the other two may be shared by the whole host.
 export { PropertyValuesComponent } from './lib/properties/properties-display/property-value/property-values.component';
 export { EditableResourceLabelComponent } from './lib/header/editable-resource-label.component';
+export { EditableResourceAuthorshipComponent } from './lib/properties/editable-resource-authorship.component';
 export { VALUE_ACTIONS_OPTIONS } from './lib/properties/properties-display/property-value/value-actions-options.token';
 export { PropertiesDisplayService } from './lib/properties/properties-display/property-value/properties-display.service';
 export { ResourceFetcherService } from './lib/representation/resource-fetcher.service';

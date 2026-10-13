@@ -1285,13 +1285,15 @@ const rightsStory = (): Story => ({
   render: storyArgs => ({
     props: {
       ...storyArgs,
-      rows: RIGHTS_ROWS,
+      // Not `rows`: Storybook also sets these props on the table component, whose own `rows` it
+      // would overwrite — the next re-render (after any click) then fails.
+      rightsRows: RIGHTS_ROWS,
       columns: RIGHTS_COLUMNS,
       visible: RIGHTS_COLUMNS.map(rightsColumn => rightsColumn.key),
       rights: PROJECT_RIGHTS,
     },
     template: `<app-data-table
-      [resources]="rows"
+      [resources]="rightsRows"
       [columns]="columns"
       [visibleColumns]="visible"
       [projectRights]="rights" />`,
@@ -1327,19 +1329,36 @@ export const ShowsTheProjectsCopyrightHolderOnEveryRow: Story = {
 };
 
 /**
- * A resource's own authorship reads as plain text; the project default standing in for a missing
- * one is marked as such, never asserted as the resource's.
+ * Authorship reads as the viewer's rights statement reads it: a resource's own as plain text; the
+ * project default standing in for a missing one labelled as such, never asserted as the resource's.
  */
 export const MarksTheProjectDefaultAuthorshipAsAFallback: Story = {
   ...rightsStory(),
   play: async ({ canvasElement }) => {
     const own = cellOf(canvasElement, 'With authorship', 'Authorship');
     await expect(own).toHaveTextContent('Ada Lovelace');
-    await expect(own.querySelector('.cell-fallback')).toBeNull();
+    await expect(own.querySelector('em')).toBeNull();
 
-    const fallback = cellOf(canvasElement, 'Without authorship', 'Authorship').querySelector('.cell-fallback');
-    await expect(fallback).toHaveTextContent('Project Team');
-    await expect(fallback?.getAttribute('title')).toContain('Project Team');
+    const fallback = cellOf(canvasElement, 'Without authorship', 'Authorship').querySelector('em');
+    await expect(fallback).toHaveTextContent('No authorship recorded for this resource. Project default: Project Team');
+  },
+};
+
+/** Authorship edits in the table as it does in the viewer: Edit at the end of the line, then the chip editor. */
+export const EditsAuthorshipLikeTheViewer: Story = {
+  ...rightsStory(),
+  play: async ({ canvasElement }) => {
+    const cell = cellOf(canvasElement, 'Without authorship', 'Authorship');
+    const edit = cell.querySelector('[data-cy="authorship-edit"]') as HTMLElement;
+
+    edit.focus();
+    await expect(getComputedStyle(edit.closest('.value-actions') as HTMLElement).opacity).toBe('1');
+
+    await userEvent.click(edit);
+    await waitFor(() => expect(cell.querySelector('mat-chip-grid')).not.toBeNull());
+    await expect(cell.querySelector('[data-cy="authorship-save"]')).not.toBeNull();
+    await userEvent.click(cell.querySelector('[data-cy="authorship-cancel"]') as HTMLElement);
+    await expect(cell.querySelector('mat-chip-grid')).toBeNull();
   },
 };
 

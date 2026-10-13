@@ -166,7 +166,7 @@ export const ShowsFallbackWhenResourceHasNoOwnAuthorship: Story = {
       // Pre-refactor regression: when perResource was falsy (attribute-form binding bug),
       // the else arm rendered `authorship.join(', ')` plainly. Assert the value cell contains
       // the italic fallback, not the raw defaults as a bare text node.
-      const valueCell = canvasElement.querySelector('.row:last-of-type .value');
+      const valueCell = canvasElement.querySelector('.row:last-of-type .value-text');
       await expect(valueCell).not.toBeNull();
       await expect(valueCell!.querySelector('em')).not.toBeNull();
     });

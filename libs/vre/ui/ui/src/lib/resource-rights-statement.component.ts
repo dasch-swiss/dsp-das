@@ -1,11 +1,8 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { joinPlaceholderLegalValues } from '@dasch-swiss/vre/shared/app-common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ResourceAuthorshipComponent } from './resource-authorship.component';
 
 /**
  * Canonical display of a resource's data-side legal information
@@ -73,100 +70,12 @@ import { TranslatePipe } from '@ngx-translate/core';
         @if (showAuthorship) {
           <div class="row">
             <span class="label mat-subtitle-2">{{ 'legal.dataSide.authorship' | translate }}</span>
-            @if (editing) {
-              <!-- In place, like a property value being edited: the editor, then Cancel and Save at
-                   the end of the same line, where Edit was (DEV-7494). -->
-              <div class="value value-line edit-line">
-                <mat-form-field class="authorship-edit-field" subscriptSizing="dynamic">
-                  <mat-chip-grid #chipGrid [attr.aria-label]="'legal.dataSide.authorship' | translate">
-                    @for (author of editAuthorshipList; track $index) {
-                      <mat-chip-row (removed)="removeEditAuthor($index)">
-                        {{ author }}
-                        <button
-                          type="button"
-                          matChipRemove
-                          [attr.aria-label]="'legal.dataSide.removeAuthor' | translate: { name: author }">
-                          <mat-icon>cancel</mat-icon>
-                        </button>
-                      </mat-chip-row>
-                    }
-                    <input
-                      #chipInput
-                      autocomplete="off"
-                      [matChipInputFor]="chipGrid"
-                      [matChipInputAddOnBlur]="true"
-                      (matChipInputTokenEnd)="addEditAuthor($event)" />
-                  </mat-chip-grid>
-                  <mat-hint>{{ 'legal.dataSide.authorshipHint' | translate }}</mat-hint>
-                </mat-form-field>
-                <div class="value-actions edit-actions">
-                  <button
-                    mat-icon-button
-                    type="button"
-                    class="value-action muted"
-                    data-cy="authorship-cancel"
-                    [matTooltip]="'legal.dataSide.settings.cancel' | translate"
-                    [attr.aria-label]="'legal.dataSide.settings.cancel' | translate"
-                    (click)="cancelEdit()">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                  <button
-                    mat-icon-button
-                    type="button"
-                    class="value-action"
-                    data-cy="authorship-save"
-                    [matTooltip]="'legal.dataSide.settings.save' | translate"
-                    [attr.aria-label]="'legal.dataSide.settings.save' | translate"
-                    (click)="saveEdit()">
-                    <mat-icon>check_circle</mat-icon>
-                  </button>
-                </div>
-              </div>
-            } @else {
-              <!-- Like a property value: marked on hover, with Edit at the end of its line. Shown on
-                   keyboard focus too, so the button stays reachable without a pointer (DEV-7494). -->
-              <div class="value value-line" [class.editable]="canEditAuthorship" data-cy="authorship-value">
-                <span class="value-text">
-                  @if (resourceAuthorship && !resourceAuthorship.length) {
-                    @if (defaultResourceAuthorship.length) {
-                      <em>{{
-                        'legal.dataSide.noAuthorshipFallback'
-                          | translate
-                            : {
-                                default: authorshipWith(
-                                  defaultResourceAuthorship,
-                                  'legal.dataSide.placeholder' | translate
-                                ),
-                              }
-                      }}</em>
-                    } @else {
-                      <em>{{ 'legal.dataSide.noAuthorshipFallbackNoDefault' | translate }}</em>
-                    }
-                  } @else if (resourceAuthorship) {
-                    {{ authorshipWith(resourceAuthorship, 'legal.dataSide.placeholder' | translate) }}
-                  } @else if (defaultResourceAuthorship.length) {
-                    {{ authorshipWith(defaultResourceAuthorship, 'legal.dataSide.placeholder' | translate) }}
-                  } @else {
-                    <em>{{ 'legal.dataSide.noAuthorshipFallbackNoDefault' | translate }}</em>
-                  }
-                </span>
-                @if (canEditAuthorship) {
-                  <div class="value-actions">
-                    <button
-                      #editButton
-                      mat-icon-button
-                      type="button"
-                      class="value-action edit-authorship"
-                      data-cy="authorship-edit"
-                      [matTooltip]="'legal.dataSide.edit' | translate"
-                      [attr.aria-label]="'legal.dataSide.edit' | translate"
-                      (click)="startEdit()">
-                      <mat-icon>edit</mat-icon>
-                    </button>
-                  </div>
-                }
-              </div>
-            }
+            <app-resource-authorship
+              class="authorship"
+              [defaultResourceAuthorship]="defaultResourceAuthorship"
+              [resourceAuthorship]="resourceAuthorship"
+              [canEditAuthorship]="canEditAuthorship"
+              (saveAuthorship)="saveAuthorship.emit($event)" />
           </div>
         }
       </section>
@@ -206,9 +115,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         flex: 1;
         padding: 6px 8px;
       }
-      .value.value-line {
-        padding: 0 0 0 8px;
-      }
       /* Project-level (card) variant: left-align the labels, drop the left padding so they line up
          flush with the heading, and use a tighter label column. */
       .label-start .label {
@@ -216,69 +122,9 @@ import { TranslatePipe } from '@ngx-translate/core';
         padding-left: 0;
         width: 8.125rem;
       }
-      /* The authorship line, styled as a property value's (property-value-display and
-         property-value-actions in the resource editor, which this library cannot import):
-         marked on hover, with its actions at the end of the line (DEV-7494). */
-      .value-line {
-        display: flex;
-        align-items: flex-start;
-        gap: 4px;
-        border-radius: 4px;
-        padding: 0 0 0 8px;
-      }
-      .value-line.editable:hover,
-      .value-line.editable:focus-within {
-        background: rgba(51, 103, 144, 0.06);
-      }
-      .value-text {
+      .authorship {
         flex: 1;
         min-width: 0;
-        padding: 6px 0;
-        overflow-wrap: anywhere;
-      }
-      .value-actions {
-        display: flex;
-        align-items: center;
-        gap: 2px;
-        flex: none;
-        padding-right: 4px;
-      }
-      /* Hidden, not removed, until the line is hovered or focused: a removed button could not be
-         reached from the keyboard, nor take focus back after the editor closes (WCAG 2.4.3). */
-      .value-line:not(.edit-line) .value-actions {
-        opacity: 0;
-      }
-      .value-line:hover .value-actions,
-      .value-line:focus-within .value-actions {
-        opacity: 1;
-      }
-      .value-action {
-        --mat-icon-button-state-layer-size: 28px;
-        flex: none;
-        width: 28px;
-        height: 28px;
-        padding: 0;
-        color: var(--primary, #336790);
-      }
-      .value-action.muted {
-        color: rgba(0, 0, 0, 0.6);
-      }
-      .value-action mat-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-        line-height: 18px;
-      }
-      .value.value-line.edit-line {
-        padding: 4px 0 4px 8px;
-        background: var(--property-value-edit-background, none);
-      }
-      .authorship-edit-field {
-        flex: 1;
-        min-width: 0;
-      }
-      .edit-actions {
-        padding-top: 14px;
       }
       .uncategorized {
         display: flex;
@@ -290,7 +136,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       }
     `,
   ],
-  imports: [MatButtonModule, MatChipsModule, MatFormFieldModule, MatIconModule, MatTooltipModule, TranslatePipe],
+  imports: [MatButtonModule, MatIconModule, ResourceAuthorshipComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceRightsStatementComponent {
@@ -322,25 +168,8 @@ export class ResourceRightsStatementComponent {
   /** Emitted with the new authorship list when a Modify user saves the inline editor. */
   @Output() saveAuthorship = new EventEmitter<string[]>();
 
-  /** Whether the inline authorship editor is open. */
-  editing = false;
-  /** Working copy of the authorship list while editing (committed only on save). */
-  editAuthorshipList: string[] = [];
-
-  @ViewChild('chipInput') private _chipInput?: ElementRef<HTMLInputElement>;
-  @ViewChild('editButton') private _editButton?: ElementRef<HTMLButtonElement>;
-
   get configured(): boolean {
     return !!this.licenseLabel || this.isPlaceholderLicense || !!this.copyrightHolder || this._hasDisplayableAuthorship;
-  }
-
-  /**
-   * Joins authorship entries, substituting `placeholderLabel` for any placeholder sentinel. The label
-   * arrives already translated from the `| translate` pipe in the template, so this component needs no
-   * `TranslateService`. See DEV-6994.
-   */
-  authorshipWith(values: string[], placeholderLabel: string): string {
-    return joinPlaceholderLegalValues(values, placeholderLabel);
   }
 
   /** Per-resource authorship worth showing: only in an authorship context (`showAuthorship`), and
@@ -350,44 +179,5 @@ export class ResourceRightsStatementComponent {
     return (
       this.showAuthorship && ((this.resourceAuthorship?.length ?? 0) > 0 || this.defaultResourceAuthorship.length > 0)
     );
-  }
-
-  /** Open the inline editor, seeded with the currently displayed authorship. */
-  startEdit(): void {
-    const valueToEdit = this.resourceAuthorship?.length ? this.resourceAuthorship : this.defaultResourceAuthorship;
-    this.editAuthorshipList = [...valueToEdit];
-    this.editing = true;
-    // Move focus into the chip input once Angular has rendered the editor branch (WCAG 2.4.3).
-    queueMicrotask(() => this._chipInput?.nativeElement.focus());
-  }
-
-  addEditAuthor(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-    if (value) {
-      this.editAuthorshipList = [...this.editAuthorshipList, value];
-    }
-    event.chipInput?.clear();
-  }
-
-  removeEditAuthor(index: number): void {
-    this.editAuthorshipList = this.editAuthorshipList.filter((_, i) => i !== index);
-  }
-
-  /** Discard edits and close the editor. */
-  cancelEdit(): void {
-    this.editing = false;
-    this._restoreFocusToEditButton();
-  }
-
-  /** Commit the edited list to the parent and close the editor. */
-  saveEdit(): void {
-    this.saveAuthorship.emit([...this.editAuthorshipList]);
-    this.editing = false;
-    this._restoreFocusToEditButton();
-  }
-
-  private _restoreFocusToEditButton(): void {
-    // Restore focus once Angular has rendered the read-only branch (WCAG 2.4.3).
-    queueMicrotask(() => this._editButton?.nativeElement.focus());
   }
 }

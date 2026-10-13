@@ -1,6 +1,6 @@
 import { provideRouter } from '@angular/router';
 import { Cardinality, Constants, ReadResource } from '@dasch-swiss/dsp-js';
-import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { ResourceLegalV2ApiService, UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminAPIApiService, APIV2ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
@@ -167,6 +167,8 @@ export const STORY_PROVIDERS = [
   // provides, whether or not anything subscribes.
   { provide: DspApiConnectionToken, useValue: makeDspApiConnectionStub() },
   { provide: NotificationService, useValue: { openSnackBar: () => {} } },
+  // The table's authorship cells save through it; the real one needs an HttpClient stories lack.
+  { provide: ResourceLegalV2ApiService, useValue: { updateResourceAuthorship: () => of({}) } },
   { provide: AdminAPIApiService, useValue: { getAdminProjectsIriProjectiri: () => EMPTY } },
   { provide: UserApiService, useValue: { get: () => EMPTY } },
   { provide: APIV2ApiService, useValue: { putV2ValuesOrder: () => EMPTY } },
