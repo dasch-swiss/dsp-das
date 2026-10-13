@@ -45,6 +45,24 @@
   }
 }
 
+// The value's move grip, between Edit and Delete. Not a button: it is pressed and dragged, never
+// clicked.
+.drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: grab;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
 // Backing out of an edit: grey, so it does not compete with Save.
 .value-action-muted {
   color: rgba(0, 0, 0, 0.6);

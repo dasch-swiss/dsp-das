@@ -120,3 +120,29 @@ export const ShowsAPlainEditTooltip: Story = {
     await waitFor(() => expect(document.querySelector('.mat-mdc-tooltip')?.textContent?.trim()).toBe('Edit'));
   },
 };
+
+const TWO_VALUES = generateDspResource(makeEditableReadResource({ label: 'BRAUT001a', values: ['42', '43'] }));
+
+/** The move grip is one of the value's actions, between Edit and Delete, and it moves the value. */
+export const PutsTheMoveHandleBetweenEditAndDelete: Story = {
+  args: {
+    dspResource: TWO_VALUES,
+    myProperty: TWO_VALUES.resProps.find(prop => prop.propDef.id === EDITABLE_PROPERTY_IRI)!,
+  },
+  play: async ({ canvasElement }) => {
+    await userEvent.hover(canvasElement.querySelector('[data-cy="property-value"]') as HTMLElement);
+
+    const bubble = canvasElement.querySelector('[data-cy="action-bubble"]') as HTMLElement;
+    const order = Array.from(bubble.querySelectorAll('[data-cy]')).map(element => element.getAttribute('data-cy'));
+    await expect(order).toEqual(['edit-button', 'drag-handle', 'delete-button']);
+
+    const handle = bubble.querySelector('[data-cy="drag-handle"]') as HTMLElement;
+    const box = handle.getBoundingClientRect();
+    const at = (y: number) => ({ bubbles: true, clientX: box.left + 4, clientY: y, buttons: 1, detail: 1 });
+    handle.dispatchEvent(new MouseEvent('mousedown', at(box.top + 4)));
+    document.dispatchEvent(new MouseEvent('mousemove', at(box.top + 12)));
+    document.dispatchEvent(new MouseEvent('mousemove', at(box.top + 24)));
+    await waitFor(() => expect(document.querySelector('.cdk-drag-preview')).not.toBeNull());
+    document.dispatchEvent(new MouseEvent('mouseup', at(box.top + 4)));
+  },
+};

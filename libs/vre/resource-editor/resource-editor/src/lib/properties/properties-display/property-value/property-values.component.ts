@@ -28,7 +28,6 @@ import { PropertyValueService } from './property-value.service';
       [resourceIri]="editModeData.resource.id"
       [propertyIri]="propertyDefinition.id"
       [disabled]="dragDropDisabled"
-      [showHandle]="canReorder"
       (valuesChange)="editModeData.values = $event">
       <ng-template let-value let-index="index">
         <app-property-value [index]="index" style="width: 100%" />

@@ -1,3 +1,4 @@
+import { CDK_DRAG_PARENT, CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -21,7 +22,7 @@ import { VALUE_ACTIONS_OPTIONS, ValueActionsOptions } from './value-actions-opti
  */
 @Component({
   selector: 'app-property-value-action-bubble',
-  imports: [AsyncPipe, MatIconButton, MatIcon, MatTooltip, TranslatePipe],
+  imports: [AsyncPipe, MatIconButton, MatIcon, MatTooltip, TranslatePipe, CdkDragHandle],
   template: `
     <div class="value-actions" data-cy="action-bubble">
       @if (userHasPermission('edit')) {
@@ -48,6 +49,18 @@ import { VALUE_ACTIONS_OPTIONS, ValueActionsOptions } from './value-actions-opti
             <mat-icon>info_outline</mat-icon>
           </button>
         }
+      }
+
+      @if (canDrag) {
+        <span
+          cdkDragHandle
+          class="value-action drag-handle"
+          data-cy="drag-handle"
+          role="img"
+          [attr.aria-label]="'resourceEditor.resourceProperties.actions.dragToReorder' | translate"
+          [matTooltip]="'resourceEditor.resourceProperties.actions.dragToReorder' | translate">
+          <mat-icon>drag_indicator</mat-icon>
+        </span>
       }
 
       @if (userHasPermission('delete')) {
@@ -99,9 +112,22 @@ export class PropertyValueActionBubbleComponent implements OnInit {
     return isRequired && isOnlyValue;
   }
 
+  /** The row this value sits in, when it sits in a reorderable list. */
+  private readonly _drag = inject<CdkDrag>(CDK_DRAG_PARENT, { optional: true });
+
+  /** Whether the value can be moved now: never while another is edited or a reorder is saving. */
+  get canDrag(): boolean {
+    return !!this._drag && !this._drag.disabled;
+  }
+
   /** Nothing to offer: the value's line is then not marked on hover either. */
   get isEmpty(): boolean {
-    return !this.userHasPermission('edit') && !this.userHasPermission('delete') && !(this.date && this.showInfo());
+    return (
+      !this.userHasPermission('edit') &&
+      !this.userHasPermission('delete') &&
+      !this.canDrag &&
+      !(this.date && this.showInfo())
+    );
   }
 
   ngOnInit() {
