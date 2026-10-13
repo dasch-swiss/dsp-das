@@ -36,12 +36,13 @@ export interface CalendarReading {
  * readings, instead of repeating them on every row.
  *
  * Every field is optional because none of them always applies: a date stored at year or month
- * precision spans many days, so it has no single weekday and no single JDN, and the marker says
- * nothing rather than picking one. `durationDays` exists only for a period.
+ * precision spans many days, so it has no single weekday, and the marker says nothing rather than
+ * picking one. `durationDays` exists only for a period.
  */
 export interface CalendarFacts {
   readonly weekday?: string;
   readonly endWeekday?: string;
+  /** The first day the value covers. With `endJdn`, the range of days a year, month or period spans. */
   readonly jdn?: number;
   readonly endJdn?: number;
   readonly durationDays?: number;
@@ -358,7 +359,7 @@ export class CalendarMarkerComponent {
     return endWeekday === undefined ? weekday : `${weekday}–${endWeekday}`;
   });
 
-  /** A period spans two, so it reads as a range; a single date shows the one. */
+  /** A period, year or month spans many days, so it reads as a range; a single day shows the one. */
   protected readonly jdnText = computed(() => {
     const { jdn, endJdn } = this.facts();
     if (jdn === undefined) {

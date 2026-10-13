@@ -307,23 +307,41 @@ export const StatesHowLongAPeriodRan: Story = {
 };
 
 export const SaysNothingItCannotKnow: Story = {
-  name: 'Omits the weekday and day number for a date that names no single day',
+  name: 'Omits the weekday but gives the day range for a date that names no single day',
   args: { value: asValue(new KnoraDate('JULIAN', 'CE', 1582)) },
   play: async ({ canvasElement, step }) => {
     await userEvent.click(marker(canvasElement));
 
-    // A year covers 365 days, so it has no weekday and no one day number. Showing the first day's
-    // would assert a precision the source never had.
-    await step('No weekday and no day number appear', async () => {
+    // A year covers 365 days, so it has no weekday. Showing the first day's would assert a
+    // precision the source never had.
+    await step('No weekday appears', async () => {
       await expect(factsRow('weekday')).toBeNull();
-      await expect(factsRow('jdn')).toBeNull();
     });
-    // The machine-readable value states the year's exact days instead, as an interval.
+    // The day numbers state the year's exact days instead, as a range: Julian 1582 runs from
+    // Gregorian 11.01.1582 to 10.01.1583.
+    await step('The day numbers read as the range the year covers', async () => {
+      await expect(factsRow('jdn')?.textContent?.trim()).toBe('2298884–2299248');
+    });
     await step('The machine-readable value is still given', async () => {
       await expect(factsRow('iso')).not.toBeNull();
     });
     await step('While the readings are still listed', async () => {
       await expect(document.querySelector('[data-cy="calendar-marker-popover"]')).not.toBeNull();
+    });
+  },
+};
+
+export const ResolvesAPeriodOfYearsAsOneRange: Story = {
+  name: 'Gives a period of years as one range of day numbers',
+  args: {
+    value: asValue(new KnoraPeriod(new KnoraDate('GREGORIAN', 'CE', 1612), new KnoraDate('GREGORIAN', 'CE', 1613))),
+  },
+  play: async ({ canvasElement, step }) => {
+    await userEvent.click(marker(canvasElement));
+
+    // From the first day of its start to the last day of its end: 01.01.1612 to 31.12.1613.
+    await step('The day numbers run from the first day of 1612 to the last of 1613', async () => {
+      await expect(factsRow('jdn')?.textContent?.trim()).toBe('2309831–2310561');
     });
   },
 };

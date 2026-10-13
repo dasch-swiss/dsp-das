@@ -53,19 +53,21 @@ export class DateViewerComponent {
    * What holds for the value itself: its weekday, its position in the day count, its length.
    *
    * Computed from the stored date rather than any conversion, because they describe the instant
-   * and not a reading of it. Each is omitted where it does not apply — a value stored at year or
-   * month precision names no single day, so it has no weekday and no single JDN, and only a period
+   * and not a reading of it. The day numbers are always given, as the range of days the value
+   * covers where that is more than one. The rest is omitted where it does not apply — a value
+   * stored at year or month precision names no single day, so it has no weekday, and only a period
    * has a duration.
    */
   protected readonly facts = computed<CalendarFacts>(() => {
     const date = this.value().date;
+    const { first: jdn, last: endJdn } = this._calendarDates.julianDayRangeOf(date);
 
     if (date instanceof KnoraPeriod) {
       return {
         weekday: this._calendarDates.weekdayOf(date.start),
         endWeekday: this._calendarDates.weekdayOf(date.end),
-        jdn: this._calendarDates.julianDayNumber(date.start),
-        endJdn: this._calendarDates.julianDayNumber(date.end),
+        jdn,
+        endJdn,
         durationDays: this._calendarDates.durationInDays(date),
         reformGap: this._calendarDates.reformGapOf(date),
         machineReadable: this._calendarDates.machineReadableOf(date),
@@ -73,7 +75,8 @@ export class DateViewerComponent {
     }
     return {
       weekday: this._calendarDates.weekdayOf(date),
-      jdn: this._calendarDates.julianDayNumber(date),
+      jdn,
+      endJdn,
       reformGap: this._calendarDates.reformGapOf(date),
       machineReadable: this._calendarDates.machineReadableOf(date),
     };

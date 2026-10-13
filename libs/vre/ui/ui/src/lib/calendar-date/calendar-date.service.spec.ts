@@ -149,6 +149,54 @@ describe('CalendarDateService', () => {
       expect(service.julianDayNumber(new KnoraDate('GREGORIAN', 'CE', 1582))).toBeUndefined();
     });
 
+    // A range states no more than the source did, so every precision has one: the days dsp-api
+    // stores for the value. Gregorian 1612 is a leap year, 366 days.
+    describe('the range of day numbers a value covers', () => {
+      it('gives a day the same number twice', () => {
+        expect(service.julianDayRangeOf(new KnoraDate('JULIAN', 'BCE', 100, 9, 20))).toEqual({
+          first: 1685161,
+          last: 1685161,
+        });
+      });
+
+      it('gives a month its first and last day, leap day included', () => {
+        expect(service.julianDayRangeOf(new KnoraDate('GREGORIAN', 'CE', 1612, 2))).toEqual({
+          first: 2309862,
+          last: 2309890,
+        });
+      });
+
+      it('gives a year its first and last day', () => {
+        expect(service.julianDayRangeOf(new KnoraDate('GREGORIAN', 'CE', 1612))).toEqual({
+          first: 2309831,
+          last: 2310196,
+        });
+      });
+
+      // Julian 1582 runs from Gregorian 11.01.1582 to 10.01.1583.
+      it('counts a year in its own calendar', () => {
+        expect(service.julianDayRangeOf(new KnoraDate('JULIAN', 'CE', 1582))).toEqual({
+          first: 2298884,
+          last: 2299248,
+        });
+      });
+
+      it('resolves a period of years as one range, from the first day of its start to the last of its end', () => {
+        const period = new KnoraPeriod(new KnoraDate('GREGORIAN', 'CE', 1612), new KnoraDate('GREGORIAN', 'CE', 1613));
+
+        expect(service.julianDayRangeOf(period)).toEqual({ first: 2309831, last: 2310561 });
+      });
+
+      it('resolves a period with ends at different precisions', () => {
+        const period = new KnoraPeriod(
+          new KnoraDate('GREGORIAN', 'CE', 1612, 1, 15),
+          new KnoraDate('GREGORIAN', 'CE', 1612, 2)
+        );
+
+        expect(service.julianDayRangeOf(period)).toEqual({ first: 2309845, last: 2309890 });
+      });
+    });
+
     it('gives no weekday for a year', () => {
       expect(service.weekdayOf(new KnoraDate('GREGORIAN', 'CE', 1582))).toBeUndefined();
     });

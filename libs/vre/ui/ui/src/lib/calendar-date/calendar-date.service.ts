@@ -278,22 +278,37 @@ export class CalendarDateService {
       const day = this.convertKnoraDateTo(date, 'GREGORIAN')?.start;
       return day && this._isoEnds(day);
     }
-    const astronomical = this.convertHistoricalYearToAstronomicalYear(date.year, date.era);
-    const lastMonth = date.month ?? 12;
-    const firstDay = new KnoraDate(date.calendar, date.era, date.year, date.month ?? 1, 1);
-    const lastDay = new KnoraDate(
-      date.calendar,
-      date.era,
-      date.year,
-      lastMonth,
-      this.daysInMonth(calendar, astronomical, lastMonth)
-    );
+    const { firstDay, lastDay } = this._dayBounds(date);
     const first = this.convertKnoraDateTo(firstDay, 'GREGORIAN')?.start;
     const last = this.convertKnoraDateTo(lastDay, 'GREGORIAN')?.start;
     if (first === undefined || last === undefined) {
       return undefined;
     }
     return { first: this._isoEnds(first)!.first, last: this._isoEnds(last)!.first };
+  }
+
+  /**
+   * The first and last day a date covers, in its own calendar: itself for a day, the 1st and the
+   * last of the month for a month, 1 January and 31 December (or their Islamic equivalents) for a
+   * year — the days dsp-api stores for it.
+   */
+  private _dayBounds(date: KnoraDate): { firstDay: KnoraDate; lastDay: KnoraDate } {
+    if (date.precision === Precision.dayPrecision) {
+      return { firstDay: date, lastDay: date };
+    }
+    const calendar = date.calendar.toUpperCase() as CalendarSystem;
+    const astronomical = this.convertHistoricalYearToAstronomicalYear(date.year, date.era);
+    const lastMonth = date.month ?? 12;
+    return {
+      firstDay: new KnoraDate(date.calendar, date.era, date.year, date.month ?? 1, 1),
+      lastDay: new KnoraDate(
+        date.calendar,
+        date.era,
+        date.year,
+        lastMonth,
+        this.daysInMonth(calendar, astronomical, lastMonth)
+      ),
+    };
   }
 
   /** a year as ISO 8601 writes it: four digits, signed when negative (`-0043` is 44 BCE). */
@@ -450,6 +465,28 @@ export class CalendarDateService {
     }
     const calendar = date.calendar.toUpperCase() as CalendarSystem;
     return getCalendar(calendar).toJDN(this.createJDNCalendarDateFromKnoraDate(date));
+  }
+
+  /**
+   * the Julian Day Numbers a date value covers: the first day of its start and the last of its end.
+   *
+   * Unlike {@link julianDayNumber}, this answers at any precision, because a range states no more
+   * than the source did: Gregorian 1612 is 2309831–2310196, and the period 1612–1613 is
+   * 2309831–2310561 — exactly the days dsp-api stores for the value. A day gives the same number
+   * twice.
+   */
+  julianDayRangeOf(value: KnoraDate | KnoraPeriod): { first: number; last: number } {
+    const start = value instanceof KnoraPeriod ? value.start : value;
+    const end = value instanceof KnoraPeriod ? value.end : value;
+    return {
+      first: this._toJDN(this._dayBounds(start).firstDay),
+      last: this._toJDN(this._dayBounds(end).lastDay),
+    };
+  }
+
+  private _toJDN(day: KnoraDate): number {
+    const calendar = day.calendar.toUpperCase() as CalendarSystem;
+    return getCalendar(calendar).toJDN(this.createJDNCalendarDateFromKnoraDate(day));
   }
 
   /**
