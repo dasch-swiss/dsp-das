@@ -1027,24 +1027,23 @@ export const KeepsAPinnedColumnInViewWhileTheTableScrolls: Story = {
   },
 };
 
-/** The frozen zone's edge only casts a shadow once something has scrolled under it. */
-export const ShadesTheFrozenEdgeOnceTheTableScrolls: Story = {
+/** The frozen zone's edge casts a shadow before any scroll, and keeps it along the edge as it scrolls. */
+export const ShadesTheFrozenEdgeWhetherScrolledOrNot: Story = {
   ...pinnedStory(),
   play: async ({ canvasElement }) => {
     const scroller = canvasElement.querySelector('.table-scroll') as HTMLElement;
     const edge = canvasElement.querySelector('th.mat-mdc-table-sticky-border-elem-left') as HTMLElement;
     const shadow = () => canvasElement.querySelector('[data-cy="frozen-shadow"]') as HTMLElement | null;
+    const alongTheEdge = () =>
+      expect(Math.round(shadow()!.getBoundingClientRect().left)).toBe(Math.round(edge.getBoundingClientRect().right));
 
-    await expect(shadow()).toBeNull();
+    await waitFor(() => expect(shadow()).not.toBeNull());
+    await alongTheEdge();
 
     scroller.scrollLeft = 200;
     scroller.dispatchEvent(new Event('scroll'));
 
-    await waitFor(() => expect(shadow()).not.toBeNull());
-    // Along the frozen edge, over the scrolling columns.
-    await expect(Math.round(shadow()!.getBoundingClientRect().left)).toBe(
-      Math.round(edge.getBoundingClientRect().right)
-    );
+    await waitFor(alongTheEdge);
   },
 };
 

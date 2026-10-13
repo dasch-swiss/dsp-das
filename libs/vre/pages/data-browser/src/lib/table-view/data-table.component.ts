@@ -349,9 +349,10 @@ const FILLER_COLUMN_KEY = '__filler';
           [class.is-checked]="checkedResourceIds().has(row.id)"></tr>
       </table>
     </div>
-    <!-- The frozen columns' shadow over whatever has scrolled under them. Drawn over the table rather
-         than on the edge cells: a collapsed-border table does not paint its cells' box-shadow. -->
-    @if (scrolledUnder().scrolled) {
+    <!-- The frozen columns' shadow, scrolled or not, so the edge reads as one that columns pass under.
+         Drawn over the table rather than on the edge cells: a collapsed-border table does not paint
+         its cells' box-shadow. -->
+    @if (scrolledUnder().shadowed) {
       <span
         class="frozen-shadow"
         data-cy="frozen-shadow"
@@ -495,15 +496,15 @@ export class DataTableComponent {
   private readonly _scroller = viewChild.required<ElementRef<HTMLElement>>('scroller');
 
   /**
-   * How far the table is scrolled sideways, as the frozen zone sees it: whether anything is under
-   * it at all (the edge shadow), how many scrolling columns are entirely hidden under it, and where
-   * its edge and the header's bottom are, to place the hint.
+   * How far the table is scrolled sideways, as the frozen zone sees it: whether there is a frozen
+   * edge to shade, how many scrolling columns are entirely hidden under it, and where its edge and
+   * the header's bottom are, to place the shadow and the hint.
    */
   protected readonly scrolledUnder = signal(
-    { scrolled: false, count: 0, edge: 0, top: 0, height: 0 },
+    { shadowed: false, count: 0, edge: 0, top: 0, height: 0 },
     {
       equal: (a, b) =>
-        a.scrolled === b.scrolled &&
+        a.shadowed === b.shadowed &&
         a.count === b.count &&
         a.edge === b.edge &&
         a.top === b.top &&
@@ -703,8 +704,8 @@ export class DataTableComponent {
     const scroller = this._scroller().nativeElement;
     const headers = Array.from(scroller.querySelectorAll<HTMLElement>('thead th'));
     const frozenEdge = headers.filter(th => th.classList.contains('mat-mdc-table-sticky-border-elem-left')).pop();
-    if (!frozenEdge || scroller.scrollLeft <= 0) {
-      this.scrolledUnder.set({ scrolled: false, count: 0, edge: 0, top: 0, height: 0 });
+    if (!frozenEdge) {
+      this.scrolledUnder.set({ shadowed: false, count: 0, edge: 0, top: 0, height: 0 });
       return;
     }
     const left = scroller.getBoundingClientRect().left;
@@ -715,7 +716,7 @@ export class DataTableComponent {
         !th.style.left && !th.classList.contains('filler-cell') && th.getBoundingClientRect().right <= edge + 1
     ).length;
     this.scrolledUnder.set({
-      scrolled: true,
+      shadowed: true,
       count,
       edge: Math.round(edge - left),
       top: frozenEdge.offsetHeight,

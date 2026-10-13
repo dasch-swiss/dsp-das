@@ -412,7 +412,7 @@ tr.is-checked .row-controls [data-cy='row-check'] {
   border-right-color: rgba(0, 0, 0, 0.2);
 }
 
-// Once something has scrolled under the frozen columns, their edge casts a shadow over it.
+// The frozen columns' edge casts a shadow over the columns that scroll under it.
 .frozen-shadow {
   position: absolute;
   top: 0;
