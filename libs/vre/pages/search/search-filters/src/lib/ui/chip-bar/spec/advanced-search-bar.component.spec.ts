@@ -367,6 +367,22 @@ describe('AdvancedSearchBarComponent fulltext term rules (DEV-6930)', () => {
     expect(statePort.setFulltextTerm).toHaveBeenCalledWith('\\"rod of asclepious');
   });
 
+  it('does not search a term that ends on a Boolean operator (DEV-7441)', () => {
+    component.fulltextControl.setValue('foo AND');
+    jest.advanceTimersByTime(400);
+    fixture.detectChanges();
+
+    expect(writeState).not.toHaveBeenCalled();
+    expect(errorText()).toBe('pages.search.termValidation.danglingOperator');
+  });
+
+  it('searches once the term after the operator is typed', () => {
+    component.fulltextControl.setValue('foo AND bar');
+    jest.advanceTimersByTime(400);
+
+    expect(writeState).toHaveBeenCalledWith({ q: 'foo AND bar' }, { replaceUrl: false });
+  });
+
   it('searches a three-character term', () => {
     component.fulltextControl.setValue('ide');
     jest.advanceTimersByTime(400);
