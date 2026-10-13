@@ -1,6 +1,7 @@
 import { ReadIntervalValue } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { of, Subject } from 'rxjs';
+import { expect, waitFor } from 'storybook/test';
 
 import { RepresentationService } from './representation/representation.service';
 import { ResourceFetcherService } from './representation/resource-fetcher.service';
@@ -118,3 +119,49 @@ export const STORY_EXTERNAL_IIIF_URL = `${
 
 /** Same-origin SVG for the vector-image stories, served from `apps/dsp-app/src/assets`. */
 export const STORY_VECTOR_IMAGE_URL = '/assets/images/dasch-icon-black.svg';
+
+/**
+ * Single-page Lorem ipsum PDF for the PDF stories, inlined so it needs no network
+ * (same reasoning as the media URLs above).
+ */
+export const STORY_PDF_URL =
+  'data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIg' +
+  'MCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBv' +
+  'YmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCA2MTIgNzkyXSAvQ29u' +
+  'dGVudHMgNCAwIFIgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNSAwIFIgPj4gPj4gPj4KZW5kb2Jq' +
+  'CjQgMCBvYmoKPDwgL0xlbmd0aCAzNTkgPj4Kc3RyZWFtCkJUCi9GMSAxMiBUZgo1MCA3NTAgVGQKMTQg' +
+  'VEwKKExvcmVtIGlwc3VtIGRvbG9yIHNpdCBhbWV0LCBjb25zZWN0ZXR1ciBhZGlwaXNjaW5nIGVsaXQu' +
+  'KSBUaiBUKgooU2VkIGRvIGVpdXNtb2QgdGVtcG9yIGluY2lkaWR1bnQgdXQgbGFib3JlIGV0IGRvbG9y' +
+  'ZSBtYWduYSBhbGlxdWEuKSBUaiBUKgooVXQgZW5pbSBhZCBtaW5pbSB2ZW5pYW0sIHF1aXMgbm9zdHJ1' +
+  'ZCBleGVyY2l0YXRpb24gdWxsYW1jby4pIFRqIFQqCihEdWlzIGF1dGUgaXJ1cmUgZG9sb3IgaW4gcmVw' +
+  'cmVoZW5kZXJpdCBpbiB2b2x1cHRhdGUgdmVsaXQgZXNzZS4pIFRqIFQqCihDaWxsdW0gZG9sb3JlIGV1' +
+  'IGZ1Z2lhdCBudWxsYSBwYXJpYXR1ci4pIFRqIFQqCkVUCmVuZHN0cmVhbQplbmRvYmoKNSAwIG9iago8' +
+  'PCAvVHlwZSAvRm9udCAvU3VidHlwZSAvVHlwZTEgL0Jhc2VGb250IC9IZWx2ZXRpY2EgPj4KZW5kb2Jq' +
+  'CnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDU4' +
+  'IDAwMDAwIG4gCjAwMDAwMDAxMTUgMDAwMDAgbiAKMDAwMDAwMDI0MSAwMDAwMCBuIAowMDAwMDAwNjUx' +
+  'IDAwMDAwIG4gCnRyYWlsZXIKPDwgL1NpemUgNiAvUm9vdCAxIDAgUiA+PgpzdGFydHhyZWYKNzIxCiUl' +
+  'RU9G';
+
+/**
+ * Resolves once pdf.js has finished painting every page.
+ *
+ * pdf.js rasterises pages asynchronously, after Storybook has rendered the story.
+ * Pixeleye snapshots on `storyRendered`, which fires only once `play()` settles, so
+ * a story without this wait is photographed with a blank, half-drawn or fully drawn
+ * page depending on the run. A page is done when pdf.js has started drawing it
+ * (`data-loaded`) and dropped its `loadingIcon` class (rendering state FINISHED).
+ */
+export async function waitForPdfPainted(canvasElement: HTMLElement): Promise<void> {
+  await waitFor(
+    async () => {
+      const pages = Array.from(canvasElement.querySelectorAll('.pdfViewer .page'));
+      await expect(pages.length).toBeGreaterThan(0);
+      for (const page of pages) {
+        await expect(page.getAttribute('data-loaded')).toBe('true');
+        await expect(page.classList.contains('loadingIcon')).toBe(false);
+        await expect(page.querySelector('canvas')).not.toBeNull();
+      }
+    },
+    { timeout: 10000 }
+  );
+}
