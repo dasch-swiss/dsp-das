@@ -1289,7 +1289,7 @@ export const FitsAColumnToItsContentOnDoubleClick: Story = {
     const width = () => Math.round(header.getBoundingClientRect().width);
     const values = () =>
       Array.from(canvasElement.querySelectorAll('tbody td'))
-        .filter(cell => (cell as HTMLTableCellElement).cellIndex === header.cellIndex)
+        .filter(cell => (cell as HTMLTableCellElement).cellIndex === (header as HTMLTableCellElement).cellIndex)
         .flatMap(cell => Array.from(cell.querySelectorAll('.cell-value'))) as HTMLElement[];
 
     dragColumnEdge(header, -1000)();
