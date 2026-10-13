@@ -81,7 +81,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           <button
             mat-icon-button
             type="button"
-            class="value-action"
+            class="value-action value-action-muted"
             data-cy="undo-button"
             (click)="afterUndo.emit()"
             [attr.aria-label]="'resourceEditor.resourceProperties.actions.cancel' | translate"

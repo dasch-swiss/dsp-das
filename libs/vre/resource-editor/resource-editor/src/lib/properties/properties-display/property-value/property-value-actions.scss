@@ -1,5 +1,5 @@
 // A value's actions, the same in both states of a value: Edit and Delete on a value being shown,
-// Cancel and Save on a value being edited. One look and one place — compact grey icon
+// Cancel and Save on a value being edited. One look and one place — compact icon
 // buttons at the end of the value's line — so switching to editing does not move the controls
 // out from under the pointer or restyle them (DEV-7494).
 //
@@ -31,7 +31,11 @@
   min-width: 28px;
   height: 28px;
   padding: 0;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--mat-sys-primary, #336790);
+
+  &:disabled {
+    color: rgba(0, 0, 0, 0.38);
+  }
 
   mat-icon {
     font-size: 18px;
@@ -39,6 +43,11 @@
     height: 18px;
     line-height: 18px;
   }
+}
+
+// Backing out of an edit: grey, so it does not compete with Save.
+.value-action-muted {
+  color: rgba(0, 0, 0, 0.6);
 }
 
 // The one action that commits: filled, so it reads as the way out of editing.
