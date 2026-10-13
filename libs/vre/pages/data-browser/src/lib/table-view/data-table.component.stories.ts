@@ -800,6 +800,39 @@ export const ShowsTheViewersActionBubbleWhenAValueIsHovered: Story = {
   },
 };
 
+/**
+ * A column too narrow for its editor widens while one of its values is edited, and goes back to its
+ * own width once the editor closes — without that width ever being stored as the user's.
+ */
+export const WidensAColumnForItsEditorWhileEditing: Story = {
+  ...editingStory({ columnWidths: { [EDITABLE_PROPERTY_IRI]: 120 } }),
+  render: storyArgs => ({
+    props: { ...storyArgs, onResize },
+    template: `<app-data-table
+      [resources]="resources"
+      [columns]="columns"
+      [visibleColumns]="visibleColumns"
+      [columnWidths]="columnWidths"
+      (columnResized)="onResize($event)" />`,
+  }),
+  beforeEach: () => {
+    onResize.mockClear();
+  },
+  play: async ({ canvasElement }) => {
+    const header = canvasElement.querySelector('th[aria-label="Integer"]') as HTMLElement;
+    const width = () => Math.round(header.getBoundingClientRect().width);
+    await expect(width()).toBe(120);
+
+    await userEvent.hover(canvasElement.querySelector('[data-cy="property-value"]') as HTMLElement);
+    await userEvent.click(canvasElement.querySelector('[data-cy="edit-button"]') as HTMLElement);
+    await waitFor(() => expect(width()).toBe(300));
+
+    await userEvent.click(canvasElement.querySelector('[data-cy="undo-button"]') as HTMLElement);
+    await waitFor(() => expect(width()).toBe(120));
+    await expect(onResize).not.toHaveBeenCalled();
+  },
+};
+
 /** The value being edited is tinted — that value only, not its row. */
 export const TintsTheValueBeingEdited: Story = {
   ...editingStory({}),

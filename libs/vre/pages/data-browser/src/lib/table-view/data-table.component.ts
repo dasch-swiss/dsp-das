@@ -29,7 +29,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ColumnResizeDirective } from './column-resize.directive';
 import { RowResizeDirective } from './row-resize.directive';
 import { ScrollWhenTallerDirective } from './scroll-when-taller.directive';
-import { LABEL_COLUMN_KEY, TableColumn } from './table-column.model';
+import { editWidthForValueType, LABEL_COLUMN_KEY, TableColumn } from './table-column.model';
 import { TableImageCellComponent } from './table-image-cell.component';
 import { TablePropertyCellComponent } from './table-property-cell.component';
 import { buildRows, TableRow } from './table-row.model';
@@ -310,7 +310,8 @@ const FILLER_COLUMN_KEY = '__filler';
                   <app-table-property-cell
                     [dspResource]="row.dspResource!"
                     [myProperty]="propertyInfo"
-                    (resourceReloaded)="onResourceReloaded($event)" />
+                    (resourceReloaded)="onResourceReloaded($event)"
+                    (editingChange)="onCellEditingChange(row.id, column.key, $event)" />
                 </div>
               } @else if (!cell.isEmpty) {
                 <!-- The read-only family: link, file-value, geometry and anything the ontology
@@ -531,6 +532,14 @@ export class DataTableComponent {
         this.measureScroll();
       },
     });
+    // A column widened or narrowed for its editor moves the sticky offsets after it, which MatTable
+    // does not recompute by itself — see `onColumnResized`.
+    afterRenderEffect({
+      write: () => {
+        this._editingColumns();
+        this._table()?.updateStickyColumnStyles();
+      },
+    });
   }
 
   /**
@@ -575,8 +584,23 @@ export class DataTableComponent {
   /** The visible columns plus the trailing filler. Only the template sees the filler. */
   protected readonly displayedColumns = computed(() => [...this.visibleColumns(), FILLER_COLUMN_KEY]);
 
+  /**
+   * The cells with a value open in an editor, as `rowId columnKey`. Cleared with the rows: replacing
+   * them destroys the editors in them.
+   */
+  private readonly _editingCells = linkedSignal<unknown, ReadonlySet<string>>({
+    source: this._dataIdentity,
+    computation: () => new Set(),
+  });
+
+  /** Columns drawn wider while one of their values is being edited. */
+  private readonly _editingColumns = computed(
+    () => new Set(Array.from(this._editingCells(), cell => cell.slice(cell.indexOf(' ') + 1)))
+  );
+
   protected readonly renderColumns = computed<RenderColumn[]>(() => {
     const widths = this.columnWidths();
+    const editing = this._editingColumns();
     const sortedKey = this.sortedColumnKey();
     const descending = this.sortDescending();
     const filtered = this.filteredColumnKeys();
@@ -591,7 +615,10 @@ export class DataTableComponent {
 
       return {
         ...column,
-        width: widths[column.key] ?? column.defaultWidth,
+        // Never narrower than its editor while one is open; back to its own width once it closes.
+        width: editing.has(column.key)
+          ? Math.max(widths[column.key] ?? column.defaultWidth, editWidthForValueType(column.valueType))
+          : (widths[column.key] ?? column.defaultWidth),
         ariaSort: isSorted ? (descending ? 'descending' : 'ascending') : null,
         isSorted,
         // `swap_vert` reads as "this can be sorted"; the arrows as "this is sorted, this way".
@@ -733,6 +760,19 @@ export class DataTableComponent {
       edge: Math.round(edge - left),
       top: frozenEdge.offsetHeight,
       height: scroller.clientHeight,
+    });
+  }
+
+  protected onCellEditingChange(rowId: string, columnKey: string, editing: boolean): void {
+    const cell = `${rowId} ${columnKey}`;
+    this._editingCells.update(current => {
+      const next = new Set(current);
+      if (editing) {
+        next.add(cell);
+      } else {
+        next.delete(cell);
+      }
+      return next;
     });
   }
 

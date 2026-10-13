@@ -143,6 +143,32 @@ export interface TableColumn {
 }
 
 /** The width a column opens at, before the user has resized it. */
+/**
+ * The width a column is drawn at, at least, while one of its values is open in an editor: the
+ * editor's field plus Cancel and Save. Below it the field was squeezed to a sliver and a date
+ * editor overflowed its cell (DEV-7494). Not persisted — the column goes back to its own width once
+ * the editor closes.
+ *
+ * 300 is the floor for any editor in a Material form field: the field's own 180px default width,
+ * its padding, Cancel and Save, and the cell's padding come to just under it.
+ */
+const EDIT_WIDTH_BY_VALUE_TYPE: ReadonlyMap<string, number> = new Map([
+  [Constants.BooleanValue, 180],
+  [Constants.DateValue, 340],
+  [Constants.GeonameValue, 320],
+  [Constants.IntervalValue, 320],
+  [Constants.LinkValue, 320],
+  [Constants.TextValue, 320],
+  [Constants.UriValue, 320],
+]);
+
+/** Every other value type: one form field. */
+export const DEFAULT_EDIT_WIDTH = 300;
+
+export function editWidthForValueType(valueType: string): number {
+  return EDIT_WIDTH_BY_VALUE_TYPE.get(valueType) ?? DEFAULT_EDIT_WIDTH;
+}
+
 export function defaultWidthForValueType(valueType: string): number {
   return WIDTH_BY_VALUE_TYPE.get(valueType) ?? DEFAULT_WIDTH;
 }

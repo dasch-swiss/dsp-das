@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, OnChanges, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  OnChanges,
+  OnDestroy,
+  output,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { UserService } from '@dasch-swiss/vre/core/session';
@@ -30,7 +39,10 @@ import { DspResource, filterUndefined, PropertyInfoValues } from '@dasch-swiss/v
   selector: 'app-table-property-cell',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PropertyValuesComponent],
-  template: ` <app-property-values [myProperty]="myProperty()" [editModeData]="editModeData()" /> `,
+  template: ` <app-property-values
+    [myProperty]="myProperty()"
+    [editModeData]="editModeData()"
+    (editingChange)="onEditingChange($event)" />`,
   styles: [
     `
       :host {
@@ -55,7 +67,7 @@ import { DspResource, filterUndefined, PropertyInfoValues } from '@dasch-swiss/v
     },
   ],
 })
-export class TablePropertyCellComponent implements OnChanges {
+export class TablePropertyCellComponent implements OnChanges, OnDestroy {
   /** The row's resource as the resource editor models it, built once per row by `buildRows`. */
   readonly dspResource = input.required<DspResource>();
   /** This column's property, taken from the same `resProps` the viewer would use. */
@@ -69,6 +81,10 @@ export class TablePropertyCellComponent implements OnChanges {
    * filter (REQ-4.4, REQ-4.5).
    */
   readonly resourceReloaded = output<ReadResource>();
+
+  /** Whether one of this cell's values is open in an editor, so the table can make room for it. */
+  readonly editingChange = output<boolean>();
+  private _editing = false;
 
   /**
    * Memoised, and that is load-bearing: `PropertyValuesComponent` resets
@@ -102,6 +118,18 @@ export class TablePropertyCellComponent implements OnChanges {
    * view is created, and the action bubble dereferences the fetcher's first emission unguarded —
    * so a cell primed one tick late throws on the resource that is still `undefined`.
    */
+  protected onEditingChange(editing: boolean): void {
+    this._editing = editing;
+    this.editingChange.emit(editing);
+  }
+
+  /** A cell that goes away mid-edit — its row replaced — has stopped editing too. */
+  ngOnDestroy() {
+    if (this._editing) {
+      this.editingChange.emit(false);
+    }
+  }
+
   ngOnChanges() {
     const resource = this.dspResource();
     this._primed = resource.res;

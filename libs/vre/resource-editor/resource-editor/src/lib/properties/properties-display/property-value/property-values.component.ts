@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
+import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, map } from 'rxjs';
 import { ResourceFetcherService } from '../../../representation/resource-fetcher.service';
 import { ResourceUtil } from '../../../representation/resource.util';
 import { JsLibPotentialError } from './JsLibPotentialError';
@@ -70,9 +72,28 @@ export class PropertyValuesComponent implements OnChanges {
   @Input({ required: true }) editModeData!: { resource: ReadResource; values: ReadValue[] };
   @Input({ required: true }) myProperty!: PropertyInfoValues;
 
-  currentlyAdding = false;
   private readonly _resourceFetcherService = inject(ResourceFetcherService);
   readonly propertyValueService = inject(PropertyValueService);
+
+  private readonly _adding$ = new BehaviorSubject(false);
+
+  get currentlyAdding(): boolean {
+    return this._adding$.value;
+  }
+  set currentlyAdding(adding: boolean) {
+    this._adding$.next(adding);
+  }
+
+  /**
+   * Whether a value of this property is open in an editor, being edited or added. For hosts that
+   * make room for the editor, such as the Data tab's table, which widens the column (DEV-7494).
+   */
+  readonly editingChange = outputFromObservable(
+    combineLatest([this.propertyValueService.lastOpenedItem$, this._adding$]).pipe(
+      map(([openedIndex, adding]) => openedIndex !== null || adding),
+      distinctUntilChanged()
+    )
+  );
 
   get userCanAdd() {
     return ResourceUtil.userCanEdit(this.editModeData.resource);
