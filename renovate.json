@@ -291,9 +291,9 @@
       "groupName": "angular-ecosystem-deps"
     },
     {
-      "description": "Automerge all dev dependency updates (patch + minor) — 3-day age guard prevents adopting a broken release before it gets yanked; dev deps don't affect production",
+      "description": "Automerge all dev dependency updates (patch + minor) — 3-day age guard prevents adopting a broken release before it gets yanked; dev deps don't affect production. overrides are included because they pin build and test tooling (webpack, pixeleye's playwright-core) and Renovate groups an override with its root package, so leaving them out blocks automerge for the whole group.",
       "matchUpdateTypes": ["patch", "minor"],
-      "matchDepTypes": ["devDependencies"],
+      "matchDepTypes": ["devDependencies", "overrides"],
       "automerge": true,
       "platformAutomerge": true,
       "minimumReleaseAge": "3 days",
