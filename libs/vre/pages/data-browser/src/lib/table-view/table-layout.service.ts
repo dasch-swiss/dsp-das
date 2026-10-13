@@ -24,6 +24,11 @@ export interface TableLayout {
    * with a scrolling one in front of it would have the scrolling one slide under it.
    */
   readonly pinned?: string[];
+  /**
+   * For each pinned column, the scrolling column it followed when it was pinned — `null` when it was
+   * the first — so unpinning puts it back where it came from rather than next to the pins.
+   */
+  readonly pinnedAfter?: Readonly<Record<string, string | null>>;
 }
 
 /**
@@ -56,6 +61,7 @@ interface StoredLayout {
   widths?: unknown;
   rowHeight?: unknown;
   pinned?: unknown;
+  pinnedAfter?: unknown;
   // A `density` field written by an earlier build may still be present. It is not read: the
   // table has one set of row metrics now, and `_reconcile` builds a fresh object from the fields
   // it knows, so the stale one simply falls away on the next save. No schema bump is needed for a
@@ -182,7 +188,23 @@ export class TableLayoutService {
       widths: this._reconcileWidths(stored.widths, known),
       ...this._reconcileRowHeight(stored.rowHeight),
       ...(pinned.length > 0 ? { pinned } : {}),
+      ...this._reconcilePinnedAfter(stored.pinnedAfter, pinned, known),
     };
+  }
+
+  /** Only entries for columns still pinned, pointing at a column the class still has, or `null`. */
+  private _reconcilePinnedAfter(
+    pinnedAfter: unknown,
+    pinned: string[],
+    known: Set<string>
+  ): { pinnedAfter?: Record<string, string | null> } {
+    if (typeof pinnedAfter !== 'object' || pinnedAfter === null || Array.isArray(pinnedAfter)) {
+      return {};
+    }
+    const entries = Object.entries(pinnedAfter).filter(
+      ([key, after]) => pinned.includes(key) && (after === null || (typeof after === 'string' && known.has(after)))
+    );
+    return entries.length > 0 ? { pinnedAfter: Object.fromEntries(entries) as Record<string, string | null> } : {};
   }
 
   /**

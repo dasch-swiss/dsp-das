@@ -124,8 +124,9 @@ export class TableViewStateService {
    * Pin a column after the label, or unpin it.
    *
    * A pinned column joins the end of the pinned group, so pins stack left to right in the order
-   * they were made. An unpinned one goes to the front of the scrolling columns — right where it
-   * was, next to the pins, rather than jumping back to some earlier position it no longer has.
+   * they were made. An unpinned one goes back where it was before it was pinned: after the
+   * scrolling column it followed then (DEV-7494). If that column has since been hidden or pinned
+   * itself, after the nearest column before it in the model that is still scrolling.
    */
   togglePinned(key: string): void {
     if (key === LABEL_COLUMN_KEY) {
@@ -136,16 +137,37 @@ export class TableViewStateService {
       const pinned = layout.pinned ?? [];
       if (pinned.includes(key)) {
         const remaining = pinned.filter(entry => entry !== key);
-        const rest = layout.visible.filter(entry => entry !== key && !remaining.includes(entry));
-        // `rest` starts with the label, so the column lands right after the remaining pins.
-        return this._withPinned({ ...layout, visible: [rest[0], ...remaining, key, ...rest.slice(1)] }, remaining);
+        const scrolling = layout.visible.filter(
+          entry => entry !== LABEL_COLUMN_KEY && entry !== key && !remaining.includes(entry)
+        );
+        scrolling.splice(this._unpinnedIndex(key, layout.pinnedAfter?.[key], scrolling), 0, key);
+        return this._withPinned({ ...layout, visible: [LABEL_COLUMN_KEY, ...remaining, ...scrolling] }, remaining);
       }
 
       if (!layout.visible.includes(key)) {
         return layout;
       }
-      return this._withPinned(layout, [...pinned, key]);
+      const scrolling = layout.visible.filter(entry => entry !== LABEL_COLUMN_KEY && !pinned.includes(entry));
+      const index = scrolling.indexOf(key);
+      const pinnedAfter = { ...layout.pinnedAfter, [key]: index > 0 ? scrolling[index - 1] : null };
+      return this._withPinned({ ...layout, pinnedAfter }, [...pinned, key]);
     });
+  }
+
+  /** Where in `scrolling` an unpinned column goes back to. See {@link togglePinned}. */
+  private _unpinnedIndex(key: string, after: string | null | undefined, scrolling: string[]): number {
+    if (after === null) {
+      return 0;
+    }
+    if (after !== undefined && scrolling.includes(after)) {
+      return scrolling.indexOf(after) + 1;
+    }
+    const order = this.columns().map(column => column.key);
+    const before = order
+      .slice(0, order.indexOf(key))
+      .reverse()
+      .find(previous => scrolling.includes(previous));
+    return before === undefined ? 0 : scrolling.indexOf(before) + 1;
   }
 
   setColumnWidth(key: string, width: number): void {
@@ -198,11 +220,20 @@ export class TableViewStateService {
     });
   }
 
-  /** Set the pins and re-arrange `visible` around them. No pins removes the field. */
+  /**
+   * Set the pins and re-arrange `visible` around them, keeping where-it-came-from only for columns
+   * still pinned. No pins removes both fields.
+   */
   private _withPinned(layout: TableLayout, pinned: string[]): TableLayout {
-    const { pinned: _previous, ...rest } = layout;
+    const { pinned: _previous, pinnedAfter: previousAfter, ...rest } = layout;
     const visible = arrangePinned(layout.visible, pinned);
-    return pinned.length > 0 ? { ...rest, visible, pinned } : { ...rest, visible };
+    const pinnedAfter = Object.fromEntries(Object.entries(previousAfter ?? {}).filter(([key]) => pinned.includes(key)));
+    return {
+      ...rest,
+      visible,
+      ...(pinned.length > 0 ? { pinned } : {}),
+      ...(Object.keys(pinnedAfter).length > 0 ? { pinnedAfter } : {}),
+    };
   }
 
   private _insertInModelOrder(keys: string[], key: string): string[] {

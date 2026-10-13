@@ -151,15 +151,51 @@ describe('TableViewStateService', () => {
       expect(service.layout().pinned).toEqual(['p2', 'p0']);
     });
 
-    /** Next to the pins it just left, not back at some earlier position it no longer has. */
-    it('PutsAnUnpinnedColumnAtTheFrontOfTheScrollingOnes', () => {
+    /** Pinning is not a move: unpinning puts the column back where it was (DEV-7494). */
+    it('PutsAnUnpinnedColumnBackWhereItWas', () => {
+      service.togglePinned('p2');
+
+      service.togglePinned('p2');
+
+      expect(service.layout().visible).toEqual([LABEL_COLUMN_KEY, 'p0', 'p1', 'p2']);
+      expect('pinnedAfter' in service.layout()).toBe(false);
+    });
+
+    it('PutsItBackWhereItWasWithOtherPinsStillInPlace', () => {
       service.togglePinned('p1');
       service.togglePinned('p2');
 
       service.togglePinned('p1');
 
-      expect(service.layout().visible).toEqual([LABEL_COLUMN_KEY, 'p2', 'p1', 'p0']);
+      expect(service.layout().visible).toEqual([LABEL_COLUMN_KEY, 'p2', 'p0', 'p1']);
       expect(service.layout().pinned).toEqual(['p2']);
+    });
+
+    it('PutsAColumnThatWasFirstBackAtTheFront', () => {
+      service.togglePinned('p0');
+
+      service.togglePinned('p0');
+
+      expect(service.layout().visible).toEqual([LABEL_COLUMN_KEY, 'p0', 'p1', 'p2']);
+    });
+
+    /** The column it followed is gone from the scrolling ones: fall back to the model order. */
+    it('FallsBackToTheModelOrderWhenTheColumnItFollowedIsHidden', () => {
+      service.togglePinned('p2');
+      service.setColumnVisible('p1', false);
+
+      service.togglePinned('p2');
+
+      expect(service.layout().visible).toEqual([LABEL_COLUMN_KEY, 'p0', 'p2']);
+    });
+
+    it('RemembersWhereAPinnedColumnCameFromAcrossVisits', () => {
+      service.togglePinned('p2');
+      service.init(CLASS_IRI, COLUMNS);
+
+      service.togglePinned('p2');
+
+      expect(service.layout().visible).toEqual([LABEL_COLUMN_KEY, 'p0', 'p1', 'p2']);
     });
 
     it('RemovesTheFieldWhenTheLastPinGoes', () => {
