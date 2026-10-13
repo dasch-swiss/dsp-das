@@ -760,9 +760,15 @@ export const KeepsScrollingCellsUnderTheFrozenColumns: Story = {
     scroller.scrollLeft = add.getBoundingClientRect().left - label.getBoundingClientRect().left - 20;
     await waitFor(() => expect(add.getBoundingClientRect().right).toBeLessThan(label.getBoundingClientRect().right));
 
+    // The label cell is stacked above the scrolled cell there. Compared within the stack rather than
+    // by the topmost element, which may be something unrelated overlaid on the page.
     const box = add.getBoundingClientRect();
-    const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
-    await expect(label.contains(hit)).toBe(true);
+    const stack = document.elementsFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+    const addCell = add.closest('td') as HTMLElement;
+    const labelAt = stack.findIndex(element => label.contains(element));
+    const addAt = stack.findIndex(element => addCell.contains(element));
+    await expect(labelAt).toBeGreaterThanOrEqual(0);
+    await expect(addAt === -1 || labelAt < addAt).toBe(true);
   },
 };
 
@@ -1274,17 +1280,31 @@ export const StopsAColumnAtItsMinimumWidth: Story = {
   },
 };
 
-export const ReturnsAColumnToItsDefaultWidthOnDoubleClick: Story = {
+/** Double-click fits the column to its content, as a spreadsheet does; Home puts back the default. */
+export const FitsAColumnToItsContentOnDoubleClick: Story = {
   ...keyboardStory(),
   play: async ({ canvasElement }) => {
     const header = titleHeader(canvasElement);
-    dragColumnEdge(header, 120)();
+    const handle = header.querySelector('[data-cy="column-resize"]') as HTMLElement;
+    const width = () => Math.round(header.getBoundingClientRect().width);
+    const values = () =>
+      Array.from(canvasElement.querySelectorAll('tbody td'))
+        .filter(cell => (cell as HTMLTableCellElement).cellIndex === header.cellIndex)
+        .flatMap(cell => Array.from(cell.querySelectorAll('.cell-value'))) as HTMLElement[];
+
+    dragColumnEdge(header, -1000)();
     onResize.mockClear();
 
-    header.querySelector('[data-cy="column-resize"]')!.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    handle.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
 
-    await expect(onResize).toHaveBeenCalledWith({ key: `${ONTO}hasTitle`, width: 200 });
-    await expect(Math.round(header.getBoundingClientRect().width)).toBe(200);
+    // Out of the minimum it was dragged to, to where no value is cut off.
+    await expect(onResize).toHaveBeenCalledTimes(1);
+    await expect(width()).toBeGreaterThan(90);
+    await expect(values().every(value => value.scrollWidth <= value.clientWidth)).toBe(true);
+
+    handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    await expect(onResize).toHaveBeenLastCalledWith({ key: `${ONTO}hasTitle`, width: 200 });
+    await expect(width()).toBe(200);
   },
 };
 

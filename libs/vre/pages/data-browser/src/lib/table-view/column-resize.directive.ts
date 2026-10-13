@@ -21,6 +21,48 @@ import { DestroyRef, Directive, ElementRef, inject, input, NgZone, output } from
 /** How much one arrow-key press moves the edge. Coarse enough to be useful, fine enough to aim. */
 const KEYBOARD_STEP_PX = 16;
 
+/** How wide a column is laid out while its content is measured: wide enough that nothing wraps. */
+const FIT_PROBE_WIDTH_PX = 2000;
+/** A fitted column grows no wider than this: one long value should not take the whole screen. */
+const FIT_MAX_WIDTH_PX = 480;
+/** The header's sort, filter and pin buttons, which come in beside the name on hover. */
+const FIT_HEADER_CONTROLS_PX = 70;
+/** A value's hover actions — Edit, Move, Delete — and the gaps around them. */
+const FIT_VALUE_ACTIONS_PX = 96;
+/** Cells whose values carry those actions. */
+const ACTIONABLE_CELL = 'app-table-property-cell, app-editable-resource-authorship, app-editable-resource-label';
+
+/** How far right the visible content of `element` reaches, in viewport coordinates; 0 if none. */
+function contentRight(element: Element): number {
+  let right = 0;
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
+  const range = document.createRange();
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    if (node instanceof Text) {
+      if (!node.data.trim()) {
+        continue;
+      }
+      range.selectNodeContents(node);
+      for (const rect of Array.from(range.getClientRects())) {
+        right = Math.max(right, rect.right);
+      }
+    } else if (node instanceof HTMLImageElement) {
+      right = Math.max(right, node.getBoundingClientRect().right);
+    }
+  }
+  return right;
+}
+
+/** The width `cell` needs to show its content without wrapping or truncating it. */
+function neededWidth(cell: HTMLTableCellElement, extra: number): number {
+  const right = contentRight(cell);
+  if (right === 0) {
+    return 0;
+  }
+  const paddingRight = parseFloat(getComputedStyle(cell).paddingRight) || 0;
+  return right - cell.getBoundingClientRect().left + paddingRight + extra;
+}
+
 @Directive({
   selector: '[appColumnResize]',
   host: {
@@ -42,7 +84,7 @@ const KEYBOARD_STEP_PX = 16;
 export class ColumnResizeDirective {
   /** The column stops shrinking here, below which its header controls no longer fit. */
   readonly minWidth = input.required<number>();
-  /** Where a double-click puts the column back to. */
+  /** Where Home puts the column back to. */
   readonly defaultWidth = input.required<number>();
   /**
    * The width the host currently renders this column at.
@@ -114,14 +156,45 @@ export class ColumnResizeDirective {
     });
   }
 
-  /** A column the user has fiddled with and wants back; cheaper to offer than an undo. */
+  /**
+   * Fit the column to its content, as a spreadsheet does: as wide as its widest header or value on
+   * this page needs, within the column's minimum and {@link FIT_MAX_WIDTH_PX} (DEV-7494).
+   *
+   * Measured with the column briefly laid out wide, so nothing in it wraps or ellipsises, and put
+   * back before the browser paints.
+   */
   onDoubleClick(): void {
+    const header = this._host.nativeElement.closest('th');
+    const table = header?.closest('table');
+    if (!header || !table) {
+      return;
+    }
+
+    const previous = header.style.width;
+    header.style.width = `${FIT_PROBE_WIDTH_PX}px`;
+
+    let needed = neededWidth(header, FIT_HEADER_CONTROLS_PX);
+    for (const row of Array.from(table.tBodies).flatMap(body => Array.from(body.rows))) {
+      const cell = row.cells[header.cellIndex];
+      if (cell) {
+        needed = Math.max(needed, neededWidth(cell, cell.querySelector(ACTIONABLE_CELL) ? FIT_VALUE_ACTIONS_PX : 0));
+      }
+    }
+
+    header.style.width = previous;
+    const next = Math.round(Math.min(FIT_MAX_WIDTH_PX, Math.max(this.minWidth(), needed)));
+    this._applyWidth(next);
+    this.widthChanged.emit(next);
+  }
+
+  /** A column the user has fiddled with and wants back; cheaper to offer than an undo. */
+  resetToDefault(): void {
     this._applyWidth(this.defaultWidth());
     this.widthChanged.emit(this.defaultWidth());
   }
 
   /**
-   * The keyboard equivalent of the drag: arrows nudge the edge, Home is the double-click.
+   * The keyboard equivalent of the drag: arrows nudge the edge, Home puts back the default width.
    *
    * Each press commits, unlike the drag which commits once on release. A press is already a
    * discrete gesture, and holding the key down repeats it slowly enough that a persisted layout
@@ -130,7 +203,7 @@ export class ColumnResizeDirective {
   onKeydown(event: KeyboardEvent): void {
     if (event.key === 'Home') {
       event.preventDefault();
-      this.onDoubleClick();
+      this.resetToDefault();
       return;
     }
 
