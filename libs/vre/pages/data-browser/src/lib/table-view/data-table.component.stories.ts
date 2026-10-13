@@ -444,6 +444,16 @@ export const HidesRowCheckboxesForAnonymousVisitors: Story = {
   },
 };
 
+/** The table ends on a line: the last row keeps the bottom border every other row has. */
+export const ClosesTheTableWithABottomBorder: Story = {
+  play: async ({ canvasElement }) => {
+    const rows = canvasElement.querySelectorAll('tr.mat-mdc-row');
+    const border = (row: Element) => getComputedStyle(row.querySelector('td') as HTMLElement).borderBottom;
+
+    await expect(border(rows[rows.length - 1])).toBe(border(rows[0]));
+  },
+};
+
 export const CollapsesAReadOnlyCellWithMoreThanThreeValues: Story = {
   args: {
     columns: COLLAPSING_COLUMNS,
@@ -1070,8 +1080,10 @@ export const ShadesTheFrozenEdgeOnceTheTableScrolls: Story = {
 
     const bodyEdge = canvasElement.querySelector('td.mat-mdc-table-sticky-border-elem-left') as HTMLElement;
 
-    // At rest: no shadow, and the body keeps its edge line.
+    // At rest: no shadow, and the body keeps its edge line — thicker than a column line.
     await expect(shadow()).toBeNull();
+    await expect(getComputedStyle(edge).borderRightWidth).toBe('2px');
+    await expect(getComputedStyle(bodyEdge).borderRightWidth).toBe('2px');
     await expect(getComputedStyle(bodyEdge).borderRightColor).not.toBe('rgba(0, 0, 0, 0)');
 
     scroller.scrollLeft = 200;
@@ -1410,7 +1422,9 @@ export const DrawsColumnSeparatorsDownEveryRow: Story = {
       const filler = cells.pop() as Element;
 
       for (const cell of cells) {
-        await expect(separator(cell)).toBe('1px');
+        // The frozen edge's separator is the thicker one.
+        const isFrozenEdge = cell.classList.contains('mat-mdc-table-sticky-border-elem-left');
+        await expect(separator(cell)).toBe(isFrozenEdge ? '2px' : '1px');
       }
       await expect(separator(filler)).toBe('0px');
     }

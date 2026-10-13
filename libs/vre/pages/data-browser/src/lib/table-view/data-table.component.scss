@@ -293,6 +293,11 @@ table {
   background: #eef3f7;
 }
 
+// Material drops the last row's bottom border; the table ends on a line like every row above it.
+.mat-mdc-row:last-child .mat-mdc-cell {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
 // Drags a row's bottom edge. Lives in the sticky label cell so it is reachable however far the
 // table is scrolled sideways, and spans that cell's width so it is easy to aim at.
 .row-resize-handle {
@@ -395,7 +400,9 @@ tr.is-checked .row-controls [data-cy='row-check'] {
 // The edge of the frozen columns — the label and any pinned after it. MatTable marks the last
 // left-sticky cell of each row with this class, so the line follows the pins as they change.
 .mat-mdc-table-sticky-border-elem-left {
-  // The column separator itself, darker: an inset shadow beside it drew a double line.
+  // The column separator itself, darker and twice as thick, so the frozen edge reads apart from
+  // the column lines (DEV-7494). An inset shadow beside it drew a double line.
+  border-right-width: 2px;
   border-right-color: rgba(0, 0, 0, 0.2);
 }
 
