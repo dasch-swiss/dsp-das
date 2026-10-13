@@ -410,6 +410,12 @@ tr.is-checked .row-controls [data-cy='row-check'] {
 .mat-mdc-table-sticky-border-elem-left {
   // The column separator itself, darker: an inset shadow beside it drew a double line.
   border-right-color: rgba(0, 0, 0, 0.2);
+
+  // In the body the shadow is the edge; a line under it as well read as a double edge. Transparent
+  // rather than removed, so body and header columns keep the same widths.
+  &.mat-mdc-cell {
+    border-right-color: transparent;
+  }
 }
 
 // The frozen columns' edge casts a shadow over the columns that scroll under it.

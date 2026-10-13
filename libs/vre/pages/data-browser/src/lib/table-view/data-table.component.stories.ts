@@ -1040,6 +1040,11 @@ export const ShadesTheFrozenEdgeWhetherScrolledOrNot: Story = {
     await waitFor(() => expect(shadow()).not.toBeNull());
     await alongTheEdge();
 
+    // The shadow is the body's edge; only the header keeps a line there.
+    const bodyEdge = canvasElement.querySelector('td.mat-mdc-table-sticky-border-elem-left') as HTMLElement;
+    await expect(getComputedStyle(bodyEdge).borderRightColor).toBe('rgba(0, 0, 0, 0)');
+    await expect(getComputedStyle(edge).borderRightColor).not.toBe('rgba(0, 0, 0, 0)');
+
     scroller.scrollLeft = 200;
     scroller.dispatchEvent(new Event('scroll'));
 
