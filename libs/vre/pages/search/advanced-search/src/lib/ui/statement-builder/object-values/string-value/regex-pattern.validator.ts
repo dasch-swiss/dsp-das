@@ -17,7 +17,13 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
  * searched at all.
  */
 export function isCompilableRegex(pattern: string): boolean {
-  const translated = toJavaScriptPattern(pattern);
+  let translated: string | typeof INVALID | typeof UNCHECKED;
+  try {
+    translated = toJavaScriptPattern(pattern);
+  } catch {
+    // A pathologically nested pattern overflows the scanner's stack; accepting is the safe side.
+    return true;
+  }
   if (translated === UNCHECKED) {
     return true;
   }
@@ -43,7 +49,8 @@ export function regexPatternValidator(): ValidatorFn {
     if (typeof value !== 'string' || value === '') {
       return null;
     }
-    return isCompilableRegex(value) ? null : { invalidRegex: true };
+    // The component emits the trimmed value, so that is what dsp-api receives and what is judged.
+    return isCompilableRegex(String(value).trim()) ? null : { invalidRegex: true };
   };
 }
 
@@ -66,6 +73,7 @@ function toJavaScriptPattern(pattern: string): string | typeof INVALID | typeof 
   const groupNames = new Set<string>();
   let js = '';
   let previous: Previous = 'nothing';
+  let depth = 0;
   let i = 0;
 
   while (i < pattern.length) {
@@ -86,6 +94,7 @@ function toJavaScriptPattern(pattern: string): string | typeof INVALID | typeof 
     } else if (c === '(') {
       const group = scanGroupOpening(pattern, i, groupNames);
       if (group === INVALID || group === UNCHECKED) return group;
+      if (group.js.startsWith('(')) depth++;
       js += group.js;
       i = group.end;
       previous = 'nothing';
@@ -101,9 +110,12 @@ function toJavaScriptPattern(pattern: string): string | typeof INVALID | typeof 
       i++;
     } else if (c === '{') {
       const bounds = /^\{(\d+)(?:,(\d*))?\}/.exec(pattern.slice(i));
-      if (!bounds || previous === 'modifiedQuantifier' || !areValidBounds(bounds[1], bounds[2])) return INVALID;
+      if (!bounds || !areValidBounds(bounds[1], bounds[2])) return INVALID;
       i += bounds[0].length;
       previous = 'quantifier';
+    } else if (c === ')' && depth-- === 0) {
+      // Checked here so that a later `(?x)`, which ends the walk, cannot hide it.
+      return INVALID;
     } else {
       // `)`, `|`, anchors and literals. A literal `]` or `}` is fine in Java; escape it for JavaScript.
       js += c === ']' || c === '}' ? `\\${c}` : c;
@@ -212,6 +224,8 @@ function scanClass(pattern: string, i: number, groupNames: Set<string>): Scanned
     } else if (c === '\\') {
       const escape = scanEscape(pattern, j, true, groupNames);
       if (escape === INVALID) return INVALID;
+      // A substituted escape (`\x41`) is not the character JavaScript would see, so range order is not checked.
+      if (escape.js === 'a') plain = false;
       body += escape.js;
       j = escape.end;
     } else {

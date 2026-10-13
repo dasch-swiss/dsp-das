@@ -56,4 +56,28 @@ describe('regexPatternValidator (DEV-7441)', () => {
   it('leaves a comments-mode pattern to dsp-api', () => {
     expect(validate('(?x) M a l  # a spaced-out name')).toBeNull();
   });
+
+  it.each([' *MAL*', 'foo\\ ', '*MAL* '])('judges the trimmed value, as emitted: rejects %p', pattern => {
+    expect(validate(pattern)).toEqual({ invalidRegex: true });
+  });
+
+  // Escapes in a class are placeholders for JavaScript, so their ranges must not be judged by it.
+  it.each(['[\\x41-Z]', '[\\x30-9]', '[~-\\x7E]', '[z-\\x7A]', '[\\0101-Z]', '[\\x{41}-Z]', '[~-\\x{1F600}]'])(
+    'accepts %p, a class range with an escaped bound',
+    pattern => {
+      expect(validate(pattern)).toBeNull();
+    }
+  );
+
+  it.each(['a*?{2}', 'a*+{2}', 'a{2}?{3}'])('accepts %p, a brace after a modified quantifier', pattern => {
+    expect(validate(pattern)).toBeNull();
+  });
+
+  it.each([')(?x)', 'a)(?x) b'])('rejects %p, an unbalanced ) before comments mode', pattern => {
+    expect(validate(pattern)).toEqual({ invalidRegex: true });
+  });
+
+  it('does not throw on a deeply nested pattern', () => {
+    expect(() => validate('['.repeat(10000))).not.toThrow();
+  });
 });
