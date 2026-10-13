@@ -1,9 +1,6 @@
 .data-class-header {
-  padding: 16px 16px 0;
-  // Closes the header off against the split below it. Without it the result meta line and the
-  // LABEL column header read as one stack, and the boundary between "this is about the whole
-  // result set" and "this is the list" disappears.
-  border-bottom: 1px solid #dcdcdc;
+  // Closes the header off against the split below it.
+  border-bottom: 1px solid #e5e7eb;
   // Anchors the refresh bar to the bottom edge.
   position: relative;
 }
@@ -28,38 +25,82 @@
 
 .identity-row {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 24px 16px;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.title-line {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
 }
 
 .class-label {
-  flex: 1;
   margin: 0;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 28px;
+}
+
+.resource-count {
+  flex: none;
+  font-size: 13px;
+  color: #4b5563;
 }
 
 .class-description {
-  font-style: italic;
-  margin: 8px 0 0;
+  margin: 0;
+  max-width: 720px;
+  font-size: 14px;
+  color: #4b5563;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.meta-row {
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+// A band of its own, set off from the identity above and the results below.
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 24px;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+
+// Takes what the end group leaves, so its filter chips wrap within it before the row wraps.
+.toolbar-search {
+  flex: 1 1 360px;
+  min-width: 0;
+}
+
+.toolbar-end {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  margin-left: auto;
 }
 
-// A spacer rather than `justify-content: space-between`: the result meta is one child today but
-// grows more, and space-between would start distributing gaps between those instead of keeping the
-// toggle pinned right.
-.meta-spacer {
-  flex: 1;
-}
-
-// Separates the two things on the right of the row: what the table looks like, and which view is
-// drawn. Without it the View options button reads as a third tab next to List and Table.
-.meta-divider {
+// Separates the pager from the controls for how the results are drawn.
+.toolbar-divider {
   width: 1px;
-  height: 20px;
-  background: #dcdcdc;
-  margin: 0 4px;
+  height: 24px;
+  background: #d1d5db;
 }

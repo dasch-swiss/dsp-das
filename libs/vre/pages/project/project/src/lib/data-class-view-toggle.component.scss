@@ -1,25 +1,27 @@
+// A segmented control: two halves of one outlined box, the active one filled (DEV-7494, design A1).
 .view-toggle {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  display: inline-flex;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
 }
 
 .view-tab {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 4px;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
   border: none;
-  background: transparent;
+  background: #fff;
   cursor: pointer;
-  font: 500 13px/18px var(--font-sans, inherit);
-  color: rgba(0, 0, 0, 0.6);
+  font: 400 14px/18px var(--font-sans, inherit);
+  color: #4b5563;
 
-  // Sits on the header's own bottom border rather than above it, so the active underline reads as
-  // the tab owning the content below instead of as a second rule floating over the boundary.
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  & + & {
+    border-left: 1px solid #d1d5db;
+  }
 
   mat-icon {
     font-size: 18px;
@@ -28,6 +30,7 @@
   }
 
   &:hover:not(.is-active) {
+    background: #f3f4f6;
     color: rgba(0, 0, 0, 0.87);
   }
 
@@ -35,11 +38,12 @@
   // by colour — so focus gets its own visible ring rather than borrowing the hover treatment.
   &:focus-visible {
     outline: 2px solid var(--primary, #336790);
-    outline-offset: 2px;
+    outline-offset: -2px;
   }
 
   &.is-active {
+    font-weight: 500;
+    background: #e8eef4;
     color: var(--primary, #336790);
-    border-bottom-color: var(--primary, #336790);
   }
 }
