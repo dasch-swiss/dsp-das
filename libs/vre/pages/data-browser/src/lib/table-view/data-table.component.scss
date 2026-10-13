@@ -31,6 +31,14 @@
   }
 }
 
+:host {
+  // Anchors the scrolled-under hint, which sits over the table rather than scrolling with it.
+  display: block;
+  position: relative;
+  height: 100%;
+  min-height: 0;
+}
+
 .table-scroll {
   // The table is allowed to be wider than the viewport at any width — there is no column cap and
   // no responsive fallback, so horizontal scroll is the normal case rather than an edge case.
@@ -202,6 +210,27 @@ table {
   &.is-active mat-icon {
     transform: none;
   }
+}
+
+// A pinned column's pin sits before its name, as the label's lock does — the sign of why the column
+// does not scroll is read before the name rather than among the controls.
+.header-pin.is-active {
+  order: -1;
+  margin-left: 0;
+  margin-right: 4px;
+}
+
+.mat-mdc-header-cell.is-pinned .header-label {
+  color: #234a69;
+}
+
+.header-lock {
+  flex: none;
+  margin-right: 4px;
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .header-filter.is-active {
@@ -381,6 +410,37 @@ tr.is-checked .row-controls [data-cy='row-check'] {
 .mat-mdc-table-sticky-border-elem-left {
   // The column separator itself, darker: an inset shadow beside it drew a double line.
   border-right-color: rgba(0, 0, 0, 0.2);
+}
+
+// Once something has scrolled under the frozen columns, their edge casts a shadow over it.
+.frozen-shadow {
+  position: absolute;
+  top: 0;
+  z-index: 3;
+  width: 10px;
+  background: linear-gradient(to right, rgba(15, 23, 42, 0.18), rgba(15, 23, 42, 0));
+  pointer-events: none;
+}
+
+.scroll-hint {
+  position: absolute;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 8px 2px 4px;
+  border-radius: 10px;
+  background: rgba(31, 35, 40, 0.78);
+  color: #fff;
+  font-size: 11px;
+  line-height: 16px;
+  pointer-events: none;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
 }
 
 .cell-values {

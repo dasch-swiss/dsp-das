@@ -1,8 +1,10 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   inject,
   input,
   linkedSignal,
@@ -79,7 +81,12 @@ const FILLER_COLUMN_KEY = '__filler';
   selector: 'app-data-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="table-scroll" [class.selection-active]="selectionActive()" [class.no-selection]="!selectable()">
+    <div
+      #scroller
+      class="table-scroll"
+      [class.selection-active]="selectionActive()"
+      [class.no-selection]="!selectable()"
+      (scroll)="measureScroll()">
       <!-- The drop list is the table rather than the header row, and that is not a style choice:
            cdkDrag resolves its drop list through the injector of the view it was declared in, and
            the header cells are declared inside the column definitions below, which are children of
@@ -127,10 +134,24 @@ const FILLER_COLUMN_KEY = '__filler';
               [cdkDragData]="column.key"
               [cdkDragDisabled]="column.isSticky"
               [class.is-movable]="!column.isSticky"
+              [class.is-pinned]="column.isPinned"
               [attr.tabindex]="column.isSticky ? null : 0"
               [attr.aria-keyshortcuts]="column.isSticky ? null : 'ArrowLeft ArrowRight'"
               (keydown)="onHeaderKeydown(column.key, $event)">
               <div class="header-content">
+                <!-- The label column cannot be unpinned; the lock says why it never scrolls. A pinned
+                     column's pin moves before its name the same way (see the stylesheet). -->
+                @if (column.isSticky) {
+                  <mat-icon
+                    class="header-lock"
+                    data-cy="column-lock"
+                    role="img"
+                    aria-hidden="false"
+                    [attr.aria-label]="'pages.dataBrowser.table.alwaysInView' | translate"
+                    [matTooltip]="'pages.dataBrowser.table.alwaysInView' | translate"
+                    >lock</mat-icon
+                  >
+                }
                 <span class="header-label" [appTruncatedTooltip]="column.label">{{ column.label }}</span>
 
                 <!-- Only where the Data tab's own sort rule allows it (REQ-3.2). A control the
@@ -328,6 +349,33 @@ const FILLER_COLUMN_KEY = '__filler';
           [class.is-checked]="checkedResourceIds().has(row.id)"></tr>
       </table>
     </div>
+    <!-- The frozen columns' shadow over whatever has scrolled under them. Drawn over the table rather
+         than on the edge cells: a collapsed-border table does not paint its cells' box-shadow. -->
+    @if (scrolledUnder().scrolled) {
+      <span
+        class="frozen-shadow"
+        data-cy="frozen-shadow"
+        aria-hidden="true"
+        [style.left.px]="scrolledUnder().edge"
+        [style.height.px]="scrolledUnder().height"></span>
+    }
+    <!-- Says that the frozen columns are covering others, which the shadow alone only hints at. -->
+    @if (scrolledUnder().count > 0) {
+      <span
+        class="scroll-hint"
+        data-cy="scrolled-under-hint"
+        aria-hidden="true"
+        [style.left.px]="scrolledUnder().edge + 8"
+        [style.top.px]="scrolledUnder().top + 8">
+        <mat-icon>chevron_left</mat-icon>
+        {{
+          (scrolledUnder().count === 1
+            ? 'pages.dataBrowser.table.oneColumnScrolledUnder'
+            : 'pages.dataBrowser.table.columnsScrolledUnder'
+          ) | translate: { count: scrolledUnder().count }
+        }}
+      </span>
+    }
   `,
   styleUrl: './data-table.component.scss',
   imports: [
@@ -444,6 +492,34 @@ export class DataTableComponent {
   readonly resourceReloaded = output<ReadResource>();
 
   private readonly _table = viewChild(MatTable);
+  private readonly _scroller = viewChild.required<ElementRef<HTMLElement>>('scroller');
+
+  /**
+   * How far the table is scrolled sideways, as the frozen zone sees it: whether anything is under
+   * it at all (the edge shadow), how many scrolling columns are entirely hidden under it, and where
+   * its edge and the header's bottom are, to place the hint.
+   */
+  protected readonly scrolledUnder = signal(
+    { scrolled: false, count: 0, edge: 0, top: 0, height: 0 },
+    {
+      equal: (a, b) =>
+        a.scrolled === b.scrolled &&
+        a.count === b.count &&
+        a.edge === b.edge &&
+        a.top === b.top &&
+        a.height === b.height,
+    }
+  );
+
+  constructor() {
+    // Pinning, hiding or resizing a column moves the frozen edge without a scroll event.
+    afterRenderEffect({
+      read: () => {
+        this.renderColumns();
+        this.measureScroll();
+      },
+    });
+  }
 
   /**
    * What the table is currently showing, as one value.
@@ -621,6 +697,30 @@ export class DataTableComponent {
     const order = [...this.visibleColumns()];
     moveItemInArray(order, event.previousIndex, event.currentIndex);
     this.columnsReordered.emit(order);
+  }
+
+  protected measureScroll(): void {
+    const scroller = this._scroller().nativeElement;
+    const headers = Array.from(scroller.querySelectorAll<HTMLElement>('thead th'));
+    const frozenEdge = headers.filter(th => th.classList.contains('mat-mdc-table-sticky-border-elem-left')).pop();
+    if (!frozenEdge || scroller.scrollLeft <= 0) {
+      this.scrolledUnder.set({ scrolled: false, count: 0, edge: 0, top: 0, height: 0 });
+      return;
+    }
+    const left = scroller.getBoundingClientRect().left;
+    const edge = frozenEdge.getBoundingClientRect().right;
+    const count = headers.filter(
+      th =>
+        // Every header cell is sticky (to the top); the frozen ones are those stuck to the left too.
+        !th.style.left && !th.classList.contains('filler-cell') && th.getBoundingClientRect().right <= edge + 1
+    ).length;
+    this.scrolledUnder.set({
+      scrolled: true,
+      count,
+      edge: Math.round(edge - left),
+      top: frozenEdge.offsetHeight,
+      height: scroller.clientHeight,
+    });
   }
 
   protected onColumnResized(key: string, width: number): void {

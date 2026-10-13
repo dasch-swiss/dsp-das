@@ -668,6 +668,9 @@
         "editFilter": "Modifica il filtro",
         "pin": "Blocca",
         "unpin": "Sblocca",
+        "alwaysInView": "Sempre visibile",
+        "oneColumnScrolledUnder": "1 colonna nascosta sotto",
+        "columnsScrolledUnder": "{{count}} colonne nascoste sotto",
         "selectRow": "Aggiungi {{label}} al confronto",
         "openRow": "Apri {{label}}",
         "resizeRow": "Ridimensiona la riga di {{label}}"

@@ -1027,6 +1027,74 @@ export const KeepsAPinnedColumnInViewWhileTheTableScrolls: Story = {
   },
 };
 
+/** The frozen zone's edge only casts a shadow once something has scrolled under it. */
+export const ShadesTheFrozenEdgeOnceTheTableScrolls: Story = {
+  ...pinnedStory(),
+  play: async ({ canvasElement }) => {
+    const scroller = canvasElement.querySelector('.table-scroll') as HTMLElement;
+    const edge = canvasElement.querySelector('th.mat-mdc-table-sticky-border-elem-left') as HTMLElement;
+    const shadow = () => canvasElement.querySelector('[data-cy="frozen-shadow"]') as HTMLElement | null;
+
+    await expect(shadow()).toBeNull();
+
+    scroller.scrollLeft = 200;
+    scroller.dispatchEvent(new Event('scroll'));
+
+    await waitFor(() => expect(shadow()).not.toBeNull());
+    // Along the frozen edge, over the scrolling columns.
+    await expect(Math.round(shadow()!.getBoundingClientRect().left)).toBe(
+      Math.round(edge.getBoundingClientRect().right)
+    );
+  },
+};
+
+/** A pinned column's pin is read before its name, as the label column's lock is. */
+export const ShowsThePinBeforeAPinnedColumnsName: Story = {
+  ...pinnedStory(),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const place = canvas.getByRole('columnheader', { name: 'Place' });
+    const pin = canvas.getByRole('button', { name: 'Unpin Place' });
+    const name = place.querySelector('.header-label') as HTMLElement;
+
+    await expect(pin.getBoundingClientRect().right).toBeLessThanOrEqual(name.getBoundingClientRect().left);
+    await expect(canvas.getByRole('img', { name: 'Always in view' })).toBeInTheDocument();
+  },
+};
+
+/** Says how many columns are hidden under the frozen ones, once whole columns are. */
+export const CountsTheColumnsScrolledUnderTheFrozenOnes: Story = {
+  render: storyArgs => ({
+    props: {
+      ...storyArgs,
+      pinned: [PLACE],
+      order: [LABEL_COLUMN_KEY, PLACE, TITLE, `${ONTO}hasA`, `${ONTO}hasB`, `${ONTO}hasC`],
+      wideColumns: [...COLUMNS, column(`${ONTO}hasA`, 'A'), column(`${ONTO}hasB`, 'B'), column(`${ONTO}hasC`, 'C')],
+      widths: { [TITLE]: 120, [`${ONTO}hasA`]: 120, [`${ONTO}hasB`]: 120, [`${ONTO}hasC`]: 400 },
+    },
+    template: `<div style="width: 520px; height: 300px">
+      <app-data-table
+        [resources]="resources"
+        [columns]="wideColumns"
+        [visibleColumns]="order"
+        [columnWidths]="widths"
+        [pinnedColumns]="pinned" />
+    </div>`,
+  }),
+  play: async ({ canvasElement }) => {
+    const scroller = canvasElement.querySelector('.table-scroll') as HTMLElement;
+    const hint = () => canvasElement.querySelector('[data-cy="scrolled-under-hint"]');
+
+    await expect(hint()).toBeNull();
+
+    // Title and A (120px each) go fully under the frozen zone; B only partly.
+    scroller.scrollLeft = 300;
+    scroller.dispatchEvent(new Event('scroll'));
+
+    await waitFor(() => expect(hint()).toHaveTextContent('2 columns scrolled under'));
+  },
+};
+
 /** A scrolling column moved in front of a pinned one would slide under it. */
 export const RefusesToMoveAScrollingColumnInFrontOfAPin: Story = {
   ...pinnedStory(),

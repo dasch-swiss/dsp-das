@@ -668,6 +668,9 @@
         "editFilter": "Filter bearbeiten",
         "pin": "Fixieren",
         "unpin": "Lösen",
+        "alwaysInView": "Immer sichtbar",
+        "oneColumnScrolledUnder": "1 Spalte darunter verborgen",
+        "columnsScrolledUnder": "{{count}} Spalten darunter verborgen",
         "selectRow": "{{label}} zum Vergleich hinzufügen",
         "openRow": "{{label}} öffnen",
         "resizeRow": "Zeilenhöhe für {{label}} ändern"
