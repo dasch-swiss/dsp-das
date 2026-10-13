@@ -105,13 +105,13 @@ export const StaysOpenSoSeveralColumnsCanBeToggledInOneGo: Story = {
   },
 };
 
-export const RefusesToHideTheStickyLabelColumn: Story = {
+/** The label column cannot be hidden, so it is not offered at all. */
+export const LeavesTheLabelColumnOutOfTheList: Story = {
   play: async () => {
     await openMenu();
-    const labelRow = overlay().getByRole('menuitemcheckbox', { name: /Label/ });
 
-    await expect(labelRow).toBeDisabled();
-    await expect(labelRow).toHaveTextContent('Always');
+    await expect(overlay().queryByRole('menuitemcheckbox', { name: /Label/ })).toBeNull();
+    await expect(overlay().getByRole('menuitemcheckbox', { name: /Title/ })).toBeInTheDocument();
   },
 };
 

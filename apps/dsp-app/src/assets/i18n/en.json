@@ -678,7 +678,6 @@
       "viewOptions": {
         "title": "View options",
         "columns": "Columns",
-        "alwaysShown": "Always",
         "showAll": "Show all columns",
         "hideAll": "Hide all columns",
         "showAllShort": "Show all",

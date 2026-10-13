@@ -678,7 +678,6 @@
       "viewOptions": {
         "title": "Ansichtsoptionen",
         "columns": "Spalten",
-        "alwaysShown": "Immer",
         "showAll": "Alle Spalten anzeigen",
         "hideAll": "Alle Spalten ausblenden",
         "showAllShort": "Alle anzeigen",

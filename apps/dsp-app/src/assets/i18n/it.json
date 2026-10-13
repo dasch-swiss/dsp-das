@@ -678,7 +678,6 @@
       "viewOptions": {
         "title": "Opzioni di visualizzazione",
         "columns": "Colonne",
-        "alwaysShown": "Sempre",
         "showAll": "Mostra tutte le colonne",
         "hideAll": "Nascondi tutte le colonne",
         "showAllShort": "Mostra tutte",

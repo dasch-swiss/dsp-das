@@ -102,13 +102,14 @@ import { ColumnPickerEntry } from './table-view-state.service';
           </button>
         </h4>
 
-        @for (entry of entries(); track entry.column.key) {
+        <!-- Without the label column: it cannot be hidden, so it has no place in a list of columns
+             to show or hide (DEV-7494). -->
+        @for (entry of hideableEntries(); track entry.column.key) {
           <button
             mat-menu-item
             type="button"
             role="menuitemcheckbox"
             class="option-row"
-            [disabled]="entry.column.isSticky"
             [attr.aria-checked]="entry.isVisible"
             (click)="
               $event.stopPropagation();
@@ -116,12 +117,6 @@ import { ColumnPickerEntry } from './table-view-state.service';
             ">
             <mat-icon class="option-mark">{{ entry.isVisible ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
             <span class="option-label">{{ entry.column.label }}</span>
-            @if (entry.column.isSticky) {
-              <!-- The label column is what keeps a row identifiable once the table scrolls sideways,
-                 so it is pinned rather than hideable. Saying so beats a checkbox that silently
-                 refuses to move. -->
-              <span class="option-meta">{{ 'pages.dataBrowser.viewOptions.alwaysShown' | translate }}</span>
-            }
           </button>
         }
       </div>
@@ -163,6 +158,9 @@ export class TableViewOptionsComponent {
    * The sticky column is left out: it is always shown and cannot be hidden, so it says nothing
    * about whether the user has hidden anything.
    */
+  /** The columns the user can show or hide: every one but the sticky label column. */
+  protected readonly hideableEntries = computed(() => this.entries().filter(entry => !entry.column.isSticky));
+
   protected readonly allShown = computed(() => this.entries().every(entry => entry.column.isSticky || entry.isVisible));
 
   protected readonly sliderMin = ROW_HEIGHT_MIN;
