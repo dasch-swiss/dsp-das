@@ -732,6 +732,21 @@ export const MountsTheViewersOwnUnitOnlyWhereTheEditorCanOpen: Story = {
   },
 };
 
+/** The label has a value's hover and Edit button; Edit opens the viewer's own label dialog. */
+export const EditsTheLabelThroughTheViewersDialog: Story = {
+  ...editingStory({}),
+  play: async ({ canvasElement }) => {
+    const label = canvasElement.querySelector('[data-cy="resource-label"]') as HTMLElement;
+    await expect(label.querySelector('[data-cy="edit-label-button"]')).toBeNull();
+
+    await userEvent.hover(label);
+    await userEvent.click(label.querySelector('[data-cy="edit-label-button"]') as HTMLElement);
+
+    await waitFor(() => expect(document.querySelector('app-edit-resource-label-dialog')).not.toBeNull());
+    (document.querySelector('app-edit-resource-label-dialog [mat-dialog-close]') as HTMLElement).click();
+  },
+};
+
 /**
  * The action bubble is the viewer's, not a table control: Info, Edit and Delete, revealed by
  * hovering the value rather than the cell. This is what the user asked for in so many words — a
@@ -1420,7 +1435,7 @@ export const NarrowsTheLabelColumnBelowItsLongestLabel: Story = {
   },
   play: async ({ canvasElement }) => {
     const header = canvasElement.querySelector('th[aria-label="Label"]') as HTMLElement;
-    const label = canvasElement.querySelector('tbody td .cell-value') as HTMLElement;
+    const label = canvasElement.querySelector('tbody td [data-cy="resource-label"] .label-text') as HTMLElement;
 
     await expect(Math.round(header.getBoundingClientRect().width)).toBe(220);
     await expect(label.scrollWidth).toBeGreaterThan(label.clientWidth);

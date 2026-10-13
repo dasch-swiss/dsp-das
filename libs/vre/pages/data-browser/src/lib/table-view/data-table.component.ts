@@ -21,13 +21,14 @@ import {
   FootnoteService,
   PropertiesDisplayService,
   ResourceExplorerButtonComponent,
+  EditableResourceLabelComponent,
 } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { ProjectDataRights } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ColumnResizeDirective } from './column-resize.directive';
 import { RowResizeDirective } from './row-resize.directive';
 import { ScrollWhenTallerDirective } from './scroll-when-taller.directive';
-import { TableColumn } from './table-column.model';
+import { LABEL_COLUMN_KEY, TableColumn } from './table-column.model';
 import { TableImageCellComponent } from './table-image-cell.component';
 import { TablePropertyCellComponent } from './table-property-cell.component';
 import { buildRows, TableRow } from './table-row.model';
@@ -269,8 +270,18 @@ const FILLER_COLUMN_KEY = '__filler';
                 <span class="cell-empty">{{ 'pages.dataBrowser.table.notSet' | translate }}</span>
               }
 
-              @if (cell.text !== undefined) {
-                <!-- The label and the rights-statement columns. Kept inside the same wrapper as a
+              @if (column.key === labelColumnKey && row.dspResource; as dspResource) {
+                <!-- The label, with a value's hover and Edit button; Edit opens the viewer's own
+                     label dialog (DEV-7494). A resource the editor cannot model keeps the plain
+                     text below. -->
+                <div class="cell-values" [appScrollWhenTaller]="rowCap(row.id)">
+                  <app-editable-resource-label
+                    [dspResource]="dspResource"
+                    (resourceUpdated)="onResourceReloaded($event)" />
+                </div>
+              } @else if (cell.text !== undefined) {
+                <!-- The rights-statement columns, and the label of a resource the editor cannot
+                     model. Kept inside the same wrapper as a
                      property cell so they line up: cell-value only truncates as a flex item. -->
                 <div class="cell-values" [appScrollWhenTaller]="rowCap(row.id)">
                   @if (cell.href) {
@@ -391,6 +402,7 @@ const FILLER_COLUMN_KEY = '__filler';
     ScrollWhenTallerDirective,
     RowResizeDirective,
     ResourceExplorerButtonComponent,
+    EditableResourceLabelComponent,
     TableImageCellComponent,
     TablePropertyCellComponent,
     TruncatedTooltipDirective,
@@ -559,6 +571,7 @@ export class DataTableComponent {
   });
 
   protected readonly fillerColumnKey = FILLER_COLUMN_KEY;
+  protected readonly labelColumnKey = LABEL_COLUMN_KEY;
 
   /** The visible columns plus the trailing filler. Only the template sees the filler. */
   protected readonly displayedColumns = computed(() => [...this.visibleColumns(), FILLER_COLUMN_KEY]);
