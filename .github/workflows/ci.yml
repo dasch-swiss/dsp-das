@@ -19,6 +19,7 @@ jobs:
       automation_skip: ${{ steps.detect.outputs.automation_skip }}
       only_workflows: ${{ steps.detect.outputs.only_workflows }}
       only_pkg: ${{ steps.detect.outputs.only_pkg }}
+      bot_push: ${{ steps.detect.outputs.bot_push }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -33,8 +34,24 @@ jobs:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
           COMMIT_AUTHOR: ${{ github.event.head_commit.author.username }}
           GH_REF: ${{ github.ref }}
+          ACTOR: ${{ github.actor }}
         run: |
           set -euo pipefail
+
+          # bot_push: a bot pushed to a feature branch (Renovate, dasch-bot-app
+          # incl. the OpenAPI spec-bump PRs). Used to skip pixeleye capture —
+          # bot updates don't need a visual review. main is never skipped so
+          # the baseline stays complete.
+          bot_push="false"
+          if [ "$GH_REF" != "refs/heads/main" ]; then
+            case "$ACTOR" in
+              renovate\[bot\]|dasch-bot-app\[bot\]) bot_push="true" ;;
+            esac
+            case "$GH_REF" in
+              refs/heads/renovate/*|refs/heads/chore/update-dsp-api-openapi-spec-*) bot_push="true" ;;
+            esac
+          fi
+          echo "bot_push=$bot_push" >> "$GITHUB_OUTPUT"
 
           # Existing daschbot / release-please skip — consolidated.
           # COMMIT_MSG / COMMIT_AUTHOR are empty on PR events (not used by ci.yml
@@ -452,7 +469,8 @@ jobs:
     if: |
       needs.changes.result == 'success' &&
       needs.changes.outputs.automation_skip == 'false' &&
-      needs.changes.outputs.only_workflows == 'false'
+      needs.changes.outputs.only_workflows == 'false' &&
+      needs.changes.outputs.bot_push == 'false'
     runs-on: ubuntu-latest
     # Capture only: this job uploads snapshots and never decides anything. The
     # verdict reaches the PR as the commit status `Pixeleye – dasch-swiss/dsp-app`,
@@ -528,7 +546,7 @@ jobs:
   pixeleye-status-fallback:
     # The pixeleye app only posts its status for a commit it received snapshots
     # for. When none were uploaded — capture skipped (release-please, bot
-    # workflow-only PRs) or pixeleye unreachable — post a green status under the
+    # pushes, bot workflow-only PRs) or pixeleye unreachable — post a green status under the
     # app's context, or a required `Pixeleye – dasch-swiss/dsp-app` check would
     # stay pending forever and block the PR. Failing open on an unreachable
     # instance is deliberate: one VM with a known DB-pool wedge must not block
@@ -562,7 +580,7 @@ jobs:
             exit 0
           fi
           if [ "$CAPTURE_RESULT" = "skipped" ]; then
-            DESC="No UI-relevant changes — no snapshots taken"
+            DESC="Skipped for this commit — no snapshots taken"
           else
             DESC="Pixeleye unreachable — this commit has no visual coverage"
             echo "::warning::${DESC}"
