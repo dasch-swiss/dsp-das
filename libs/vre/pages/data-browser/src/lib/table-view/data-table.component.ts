@@ -138,6 +138,7 @@ const FILLER_COLUMN_KEY = '__filler';
               [cdkDragDisabled]="column.isSticky"
               [class.is-movable]="!column.isSticky"
               [class.is-pinned]="column.isPinned"
+              [class.is-frozen]="column.isSticky || column.isPinned"
               [attr.tabindex]="column.isSticky ? null : 0"
               [attr.aria-keyshortcuts]="column.isSticky ? null : 'ArrowLeft ArrowRight'"
               (keydown)="onHeaderKeydown(column.key, $event)">
@@ -211,7 +212,11 @@ const FILLER_COLUMN_KEY = '__filler';
                 [attr.aria-label]="'pages.dataBrowser.table.resizeColumn' | translate: { column: column.label }"></span>
             </th>
 
-            <td mat-cell *matCellDef="let row" [class.is-label-cell]="column.isSticky">
+            <td
+              mat-cell
+              *matCellDef="let row"
+              [class.is-label-cell]="column.isSticky"
+              [class.is-frozen]="column.isSticky || column.isPinned">
               <!-- The row's own controls ride in the sticky label cell rather than in two columns
                    of their own, as the design draws them. Two extra columns would be two more
                    sticky offsets to recompute on every resize and two more keys to reconcile in

@@ -1160,6 +1160,20 @@ export const ShadesTheFrozenEdgeOnceTheTableScrolls: Story = {
   },
 };
 
+/** The frozen columns — the label and the pins — are tinted apart from the scrolling ones. */
+export const TintsTheFrozenColumns: Story = {
+  ...pinnedStory(),
+  play: async ({ canvasElement }) => {
+    const background = (selector: string) =>
+      getComputedStyle(canvasElement.querySelector(selector) as HTMLElement).backgroundColor;
+
+    await expect(background('th[aria-label="Label"]')).toBe('rgb(230, 237, 243)');
+    await expect(background('th[aria-label="Place"]')).toBe('rgb(230, 237, 243)');
+    await expect(background('th[aria-label="Title"]')).not.toBe('rgb(230, 237, 243)');
+    await expect(background('tbody td.is-label-cell')).toBe('rgb(242, 246, 249)');
+  },
+};
+
 /** A pinned column's pin is read before its name. */
 export const ShowsThePinBeforeAPinnedColumnsName: Story = {
   ...pinnedStory(),
