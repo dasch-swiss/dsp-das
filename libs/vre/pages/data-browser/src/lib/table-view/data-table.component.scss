@@ -214,7 +214,9 @@ table {
 
 // A pinned column's pin sits before its name — the sign of why the column does not scroll is read
 // before the name rather than among the controls.
-.header-pin.is-active {
+// Under the header cell, so it outranks the hover rule that gives every control a left margin —
+// on a pin before the name that margin pushed the name right whenever the header was hovered.
+.mat-mdc-header-cell .header-pin.is-active {
   order: -1;
   margin-left: 0;
   margin-right: 4px;
@@ -395,6 +397,13 @@ tr.is-checked .row-controls [data-cy='row-check'] {
 // Sticky columns inherit the row background so the scrolling columns do not show through them.
 .mat-mdc-table-sticky {
   background: inherit;
+}
+
+// Each body cell keeps its content's stacking to itself. Material raises parts of its controls —
+// a button's label sits at z-index 1 — and without this they compete with the frozen cells, which
+// MatTable puts at z-index 1 too, and paint over them once their column scrolls underneath (DEV-7494).
+.mat-mdc-cell {
+  isolation: isolate;
 }
 
 // The edge of the frozen columns — the label and any pinned after it. MatTable marks the last

@@ -742,6 +742,30 @@ export const MountsTheViewersOwnUnitOnlyWhereTheEditorCanOpen: Story = {
   },
 };
 
+/** A scrolling cell's controls slide under the frozen columns rather than over them. */
+export const KeepsScrollingCellsUnderTheFrozenColumns: Story = {
+  ...editingStory({}),
+  render: storyArgs => ({
+    props: storyArgs,
+    template: `<div style="width: 360px; height: 300px">
+      <app-data-table [resources]="resources" [columns]="columns" [visibleColumns]="visibleColumns" />
+    </div>`,
+  }),
+  play: async ({ canvasElement }) => {
+    const scroller = canvasElement.querySelector('.table-scroll') as HTMLElement;
+    const add = canvasElement.querySelector('[data-cy="add-property-value-button"]') as HTMLElement;
+    const label = canvasElement.querySelector('td.is-label-cell') as HTMLElement;
+
+    // Bring the add button under the label column.
+    scroller.scrollLeft = add.getBoundingClientRect().left - label.getBoundingClientRect().left - 20;
+    await waitFor(() => expect(add.getBoundingClientRect().right).toBeLessThan(label.getBoundingClientRect().right));
+
+    const box = add.getBoundingClientRect();
+    const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+    await expect(label.contains(hit)).toBe(true);
+  },
+};
+
 /** The label has a value's hover and Edit button; Edit opens the viewer's own label dialog. */
 export const EditsTheLabelThroughTheViewersDialog: Story = {
   ...editingStory({}),
@@ -1107,6 +1131,14 @@ export const ShowsThePinBeforeAPinnedColumnsName: Story = {
     const name = place.querySelector('.header-label') as HTMLElement;
 
     await expect(pin.getBoundingClientRect().right).toBeLessThanOrEqual(name.getBoundingClientRect().left);
+
+    // Bringing in the other controls does not push the name along. Focus rather than hover: the
+    // same rule covers both, and a play function cannot put the browser in the CSS hover state.
+    const left = name.getBoundingClientRect().left;
+    place.focus();
+    await waitFor(() => expect(getComputedStyle(place.querySelector('.header-sort') as HTMLElement).opacity).toBe('1'));
+    await expect(getComputedStyle(pin).marginLeft).toBe('0px');
+    await expect(name.getBoundingClientRect().left).toBe(left);
   },
 };
 
