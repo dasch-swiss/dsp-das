@@ -74,4 +74,15 @@ describe('StatementFieldsComponent value round trip', () => {
       'pages.search.advancedSearch.errors.invalidRegex'
     );
   });
+
+  it('withholds an invalid "is like" pattern before the debounce elapses', async () => {
+    type('.*MAL.*');
+    expect(statement.selectedObjectValue).toBe('.*MAL.*');
+
+    input().value = '*MAL*';
+    input().dispatchEvent(new Event('input'));
+    await jest.advanceTimersByTimeAsync(0);
+
+    expect(statement.selectedObjectValue).toBeUndefined();
+  });
 });
