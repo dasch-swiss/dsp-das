@@ -678,10 +678,11 @@
       "viewOptions": {
         "title": "Opzioni di visualizzazione",
         "columns": "Colonne",
-        "columnsShown": "{{count}} di {{total}} visualizzate",
         "alwaysShown": "Sempre",
         "showAll": "Mostra tutte le colonne",
         "hideAll": "Nascondi tutte le colonne",
+        "showAllShort": "Mostra tutte",
+        "hideAllShort": "Nascondi tutte",
         "rowHeight": "Altezza delle righe",
         "rowHeightAuto": "Automatica",
         "rowHeightManual": "Manuale"

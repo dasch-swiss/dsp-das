@@ -678,10 +678,11 @@
       "viewOptions": {
         "title": "Ansichtsoptionen",
         "columns": "Spalten",
-        "columnsShown": "{{count}} von {{total}} angezeigt",
         "alwaysShown": "Immer",
         "showAll": "Alle Spalten anzeigen",
         "hideAll": "Alle Spalten ausblenden",
+        "showAllShort": "Alle anzeigen",
+        "hideAllShort": "Alle ausblenden",
         "rowHeight": "Zeilenhöhe",
         "rowHeightAuto": "Automatisch",
         "rowHeightManual": "Manuell"

@@ -678,10 +678,11 @@
       "viewOptions": {
         "title": "View options",
         "columns": "Columns",
-        "columnsShown": "{{count}} of {{total}} shown",
         "alwaysShown": "Always",
         "showAll": "Show all columns",
         "hideAll": "Hide all columns",
+        "showAllShort": "Show all",
+        "hideAllShort": "Hide all",
         "rowHeight": "Row height",
         "rowHeightAuto": "Auto",
         "rowHeightManual": "Manual"

@@ -79,7 +79,8 @@ export const ListsEveryColumnWithItsCurrentVisibility: Story = {
 
     await expect(menu.getByRole('menuitemcheckbox', { name: /Title/ })).toHaveAttribute('aria-checked', 'true');
     await expect(menu.getByRole('menuitemcheckbox', { name: /Date/ })).toHaveAttribute('aria-checked', 'false');
-    await expect(menu.getByText('3 of 4 shown')).toBeInTheDocument();
+    // No count: the header offers the bulk link instead.
+    await expect(menu.queryByText(/of 4 shown/)).toBeNull();
   },
 };
 
@@ -128,44 +129,43 @@ export const OffersNoDensityChoice: Story = {
 
 // ── Showing or hiding every column at once ──────────────────────────────────
 
-/**
- * With something hidden, the useful next move is to bring it back, so that is what the control
- * offers. Only one of show-all and hide-all is ever worth doing; a pair of buttons would make the
- * user read both to work out which.
- */
-export const OffersShowAllWhileAnyColumnIsHidden: Story = {
-  play: async () => {
-    await openMenu();
-    const toggle = overlay().getByRole('menuitem', { name: /Show all columns/ });
-
-    await userEvent.click(toggle);
-
-    await expect(onAllVisibility).toHaveBeenCalledWith(true);
-  },
-};
-
-export const OffersHideAllOnceEveryColumnIsShown: Story = {
+/** Hide all while every column is shown — which is how a class opens. */
+export const OffersHideAllWhileEveryColumnIsShown: Story = {
   args: { entries: ENTRIES.map(e => ({ ...e, isVisible: true })) },
   play: async () => {
     await openMenu();
-    const toggle = overlay().getByRole('menuitem', { name: /Hide all columns/ });
+    const link = overlay().getByRole('button', { name: 'Hide all columns' });
 
-    await userEvent.click(toggle);
+    await expect(link).toHaveTextContent('Hide all');
+    await userEvent.click(link);
 
     await expect(onAllVisibility).toHaveBeenCalledWith(false);
   },
 };
 
+/** Show all as soon as any column is hidden, to bring them back in one go. */
+export const OffersShowAllOnceAnyColumnIsHidden: Story = {
+  play: async () => {
+    await openMenu();
+    const link = overlay().getByRole('button', { name: 'Show all columns' });
+
+    await expect(link).toHaveTextContent('Show all');
+    await userEvent.click(link);
+
+    await expect(onAllVisibility).toHaveBeenCalledWith(true);
+  },
+};
+
 /**
- * The sticky column cannot be hidden, so it must not count towards "everything is shown" — if it
- * did, a class whose every hideable column was already hidden would still offer to hide them.
+ * The sticky column cannot be hidden, so it does not count towards "everything is shown" — with
+ * every other column hidden, the link still offers to show them.
  */
 export const IgnoresTheStickyColumnWhenDecidingWhichActionToOffer: Story = {
   args: { entries: ENTRIES.map(e => ({ ...e, isVisible: e.column.isSticky })) },
   play: async () => {
     await openMenu();
 
-    await expect(overlay().getByRole('menuitem', { name: /Show all columns/ })).toBeInTheDocument();
+    await expect(overlay().getByRole('button', { name: 'Show all columns' })).toBeInTheDocument();
   },
 };
 

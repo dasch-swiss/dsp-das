@@ -80,37 +80,27 @@ import { ColumnPickerEntry } from './table-view-state.service';
         <!-- Every click inside a mat-menu bubbles to the panel, which closes on it. Shaping a table
            is iterative, so each row stops the event: a user ticking four columns should not have
            to reopen the menu four times. -->
+        <!-- One link rather than a Show all beside a Hide all: it offers the other move from where
+             the columns stand, the way a select-all checkbox does. A class opens with every column
+             shown, so it reads Hide all until one is hidden (DEV-7494). -->
         <h4 class="section-header">
           {{ 'pages.dataBrowser.viewOptions.columns' | translate }}
-          <span class="section-meta">
-            {{
-              'pages.dataBrowser.viewOptions.columnsShown'
-                | translate: { count: visibleCount(), total: entries().length }
-            }}
-          </span>
-        </h4>
-
-        <!-- One control rather than a Show all beside a Hide all: only one of the two is ever the
-             useful next move, and the pair would make the user read both to find out which. It
-             reads the current state and offers the other, the way a select-all checkbox does. -->
-        <button
-          mat-menu-item
-          type="button"
-          class="option-row bulk-row"
-          data-cy="columns-bulk-toggle"
-          (click)="$event.stopPropagation(); allColumnsVisibilityChanged.emit(!allShown())">
-          <!-- An eye, not a checkbox. The rows below it are checkboxes because each carries a
-               column's own on/off state; this row carries none — it performs an action on all of
-               them. Borrowing their mark would invite the reader to look for which state it is
-               reporting. The eye is also what the column header's own hide control uses. -->
-          <mat-icon class="option-mark">{{ allShown() ? 'visibility_off' : 'visibility' }}</mat-icon>
-          <span class="option-label">
-            {{
+          <button
+            mat-button
+            type="button"
+            class="section-action"
+            data-cy="columns-bulk-toggle"
+            [attr.aria-label]="
               (allShown() ? 'pages.dataBrowser.viewOptions.hideAll' : 'pages.dataBrowser.viewOptions.showAll')
                 | translate
+            "
+            (click)="$event.stopPropagation(); allColumnsVisibilityChanged.emit(!allShown())">
+            {{
+              (allShown() ? 'pages.dataBrowser.viewOptions.hideAllShort' : 'pages.dataBrowser.viewOptions.showAllShort')
+                | translate
             }}
-          </span>
-        </button>
+          </button>
+        </h4>
 
         @for (entry of entries(); track entry.column.key) {
           <button
@@ -166,14 +156,12 @@ export class TableViewOptionsComponent {
   /** True to show every column, false to hide every column but the sticky one. */
   readonly allColumnsVisibilityChanged = output<boolean>();
 
-  protected readonly visibleCount = computed(() => this.entries().filter(entry => entry.isVisible).length);
-
   /**
-   * Whether every column the user can actually hide is currently shown.
+   * Whether every column the user can actually hide is currently shown — as it is by default — in
+   * which case the bulk link offers Hide all; otherwise Show all.
    *
-   * The sticky column is excluded rather than counted as always-on: counting it would mean a class
-   * whose only hideable columns are all hidden still reported "not all shown", and the control
-   * would offer to hide what is already hidden.
+   * The sticky column is left out: it is always shown and cannot be hidden, so it says nothing
+   * about whether the user has hidden anything.
    */
   protected readonly allShown = computed(() => this.entries().every(entry => entry.column.isSticky || entry.isVisible));
 

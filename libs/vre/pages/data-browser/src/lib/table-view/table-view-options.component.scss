@@ -80,6 +80,17 @@
   }
 }
 
+// The bulk Show all / Hide all link, at the end of the Columns header where the count used to be.
+.section-action {
+  --mat-button-text-container-height: 24px;
+  --mat-button-text-horizontal-padding: 6px;
+
+  margin: -4px -6px -4px auto;
+  font-size: 12px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
 .section-meta {
   margin-left: auto;
   letter-spacing: normal;
