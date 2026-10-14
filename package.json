@@ -93,7 +93,7 @@
     "rxjs": "^7.8.0",
     "ts-md5": "^2.0.0",
     "tslib": "^2.8.1",
-    "uuid": "14.0.2",
+    "uuid": "14.0.3",
     "zod": "^4.0.0",
     "zone.js": "0.16.3"
   },
@@ -181,7 +181,7 @@
     "webpack-dev-server": "^5.0.0",
     "webpack-merge": "^6.0.0",
     "@pixeleye/cli-install": {
-      "playwright-core": "1.59.0"
+      "playwright-core": "1.64.0"
     }
   }
 }
