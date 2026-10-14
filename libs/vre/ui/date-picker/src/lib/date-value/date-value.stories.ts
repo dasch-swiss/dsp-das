@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
 import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
@@ -22,6 +23,9 @@ import { DateValueComponent } from './date-value.component';
 })
 class DateValueStoryHost implements OnInit {
   readonly control = new FormControl<KnoraDate | KnoraPeriod | null>(null);
+  // A signal, so the host re-renders when the value moves: the app is zoneless, and nothing else
+  // marks this view dirty when a microtask writes the control.
+  private readonly _value = toSignal(this.control.valueChanges, { initialValue: null });
   initial: KnoraDate | KnoraPeriod | null = null;
 
   ngOnInit() {
@@ -30,7 +34,7 @@ class DateValueStoryHost implements OnInit {
   }
 
   asText(): string {
-    const v = this.control.value;
+    const v = this._value();
     if (v === null) return 'null';
     if (v instanceof KnoraPeriod) return `${this.one(v.start)} – ${this.one(v.end)}`;
     return this.one(v);

@@ -513,7 +513,7 @@ export class CalendarDateService {
   format(
     date: KnoraDate,
     formatPattern?: string,
-    displayOptions?: 'era' | 'calendar' | 'calendarOnly' | 'gravsearch' | 'all'
+    displayOptions?: 'era' | 'eraWhereAmbiguous' | 'calendar' | 'calendarOnly' | 'gravsearch' | 'all'
   ): string {
     if (!(date instanceof KnoraDate)) {
       return '';
@@ -560,6 +560,16 @@ export class CalendarDateService {
     switch (options) {
       case 'era':
         return value + (date.era === 'noEra' ? '' : date.era === 'BCE' || date.era === 'AD' ? ` ${date.era}` : '');
+      case 'eraWhereAmbiguous':
+        // BCE always, and CE below year 1000: "450" alone is ambiguous in a corpus that also holds
+        // BCE material, while "2024 CE" is noise. Islamic never shows one — it has no era.
+        if (date.era === 'noEra') {
+          return value;
+        }
+        if (date.era === 'BCE') {
+          return `${value} BCE`;
+        }
+        return date.year < 1000 ? `${value} CE` : value;
       case 'calendar':
         return `${value} ${this.calendarName(date.calendar)}`;
       case 'calendarOnly':

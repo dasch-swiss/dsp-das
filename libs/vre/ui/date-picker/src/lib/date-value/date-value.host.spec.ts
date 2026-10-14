@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,6 +28,17 @@ import { DateValueComponent } from './date-value.component';
 })
 class EditorHost {
   readonly control = new FormControl<KnoraDate | KnoraPeriod | null>(null);
+}
+
+/** The resource creation form: a required property's control carries `Validators.required`. */
+@Component({
+  imports: [DateValueComponent, ReactiveFormsModule],
+  template: `<form [formGroup]="form"><app-date-value formControlName="date" /></form>`,
+})
+class RequiredHost {
+  readonly form = new FormGroup({
+    date: new FormControl<KnoraDate | KnoraPeriod | null>(null, Validators.required),
+  });
 }
 
 describe('DateValueComponent, as the resource editor renders it', () => {
@@ -546,8 +557,10 @@ describe('DateValueComponent, as the resource editor renders it', () => {
     const toggle = () =>
       (component() as never as { onTogglePeriod: (e: Event) => void }).onTogglePeriod(new Event('click'));
 
-    it('reports nothing entered on an empty form', () => {
-      expect(host.control.errors).toEqual({ required: true });
+    // An optional property's control has no required validator; an empty date must not make the
+    // resource form invalid, or no resource with an optional date could be created.
+    it('accepts an empty value when the control does not require one', () => {
+      expect(host.control.valid).toBe(true);
     });
 
     it('reports nothing wrong with a complete date', () => {
@@ -768,5 +781,47 @@ describe('DateValueComponent, as the resource editor renders it', () => {
 
       expect([stored.day, stored.month, stored.calendar]).toEqual([1, 4, 'GREGORIAN']);
     });
+  });
+});
+
+describe('DateValueComponent, as the resource creation form renders a required date', () => {
+  let fixture: ComponentFixture<RequiredHost>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RequiredHost, BrowserAnimationsModule],
+      providers: [provideTranslateService()],
+    }).compileComponents();
+    fixture = TestBed.createComponent(RequiredHost);
+    fixture.detectChanges();
+  });
+
+  const control = () => fixture.componentInstance.form.controls.date;
+  const el = (hook: string) => (fixture.nativeElement as HTMLElement).querySelector(`[data-cy="${hook}"]`);
+
+  it('reports an empty value as missing', () => {
+    expect(control().errors).toEqual({ required: true });
+  });
+
+  it('says nothing before the user or the form has asked', () => {
+    expect(el('start-required')).toBeNull();
+  });
+
+  // Submitting marks the whole form touched; a component tracking touched on its own never saw it,
+  // so pressing Create with the date empty failed without a word.
+  it('says a date is required once the form is submitted', () => {
+    fixture.componentInstance.form.markAllAsTouched();
+    fixture.detectChanges();
+
+    expect(el('start-required')).not.toBeNull();
+  });
+
+  it('withdraws the message when the form is reset', () => {
+    fixture.componentInstance.form.markAllAsTouched();
+    fixture.detectChanges();
+    fixture.componentInstance.form.reset();
+    fixture.detectChanges();
+
+    expect(el('start-required')).toBeNull();
   });
 });

@@ -691,4 +691,44 @@ describe('DatePickerComponent', () => {
       expect(emitted.at(-1)).toBeNull();
     });
   });
+  describe('a new date from the owner', () => {
+    const typeYear = (text: string) => {
+      const year = overlay().querySelector<HTMLInputElement>('[data-cy="year-input"]')!;
+      year.value = text;
+      year.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+    };
+    const shownYear = () => overlay().querySelector<HTMLInputElement>('[data-cy="year-input"]')!.value;
+
+    // A form reset hands down a value the picker has seen before; it is still an instruction.
+    it('replaces the entry when the owner resets to an earlier date', () => {
+      const stored = new KnoraDate('GREGORIAN', 'CE', 2024, 6, 15);
+      show(stored);
+      typeYear('1850');
+      fixture.componentRef.setInput('date', emitted.at(-1)!);
+      fixture.detectChanges();
+
+      fixture.componentRef.setInput('date', stored);
+      fixture.detectChanges();
+
+      expect(shownYear()).toBe('2024');
+    });
+
+    it('keeps the entry when its own emission comes back', () => {
+      show(new KnoraDate('GREGORIAN', 'CE', 2024, 6, 15));
+      typeYear('1850');
+      fixture.componentRef.setInput('date', emitted.at(-1)!);
+      fixture.detectChanges();
+
+      expect(shownYear()).toBe('1850');
+    });
+
+    it('keeps the entry for an owner that never writes the date back', () => {
+      show(new KnoraDate('GREGORIAN', 'CE', 2024, 6, 15));
+      typeYear('1850');
+      typeYear('1851');
+
+      expect(shownYear()).toBe('1851');
+    });
+  });
 });

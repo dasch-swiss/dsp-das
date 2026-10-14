@@ -1,5 +1,24 @@
-import { ChangeDetectionStrategy, Component, computed, forwardRef, inject, input, signal } from '@angular/core';
-import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  forwardRef,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  TouchedChangeEvent,
+  ValidationErrors,
+  Validator,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -30,7 +49,8 @@ interface DateValueState {
  * and writers competing over those relabel dates:
  *
  * 1. One authoritative store: {@link _state}. Nothing else is read as the value.
- * 2. No `valueChanges` subscription feeding back into its own state. There are no subscriptions.
+ * 2. No `valueChanges` subscription feeding back into its own state. The one subscription follows
+ *    the bound control's touched state, and never writes the value.
  * 3. No imperative guard flags sequencing reads against writes; needing one means the design is
  *    wrong.
  * 4. `writeValue` and `setDisabledState` write `signal()`s — never `input()`, which is read-only
@@ -59,10 +79,26 @@ interface DateValueState {
   ],
 })
 export class DateValueComponent implements ControlValueAccessor, Validator {
-  /** When false, an empty value is allowed — this is how a caller makes a date optional. */
-  readonly valueRequired = input(true);
+  /**
+   * Whether a date must be given. Left unset, it follows the bound control: required when the
+   * control carries `Validators.required`, which is how the resource form marks a property whose
+   * cardinality demands a value. An optional date must not make the form invalid by being empty.
+   */
+  readonly valueRequired = input<boolean | undefined>(undefined);
 
   private readonly _calendarDates = inject(CalendarDateService);
+  private readonly _destroyRef = inject(DestroyRef);
+
+  /**
+   * Whether the bound control carries `Validators.required`. A plain field, not a signal: it is set
+   * in {@link validate}, during change detection, where writing a signal the view reads is an
+   * ExpressionChanged error — and it is fixed once the control is bound, before the view reads it.
+   */
+  private _controlRequired = false;
+
+  private _isRequired(): boolean {
+    return this.valueRequired() ?? this._controlRequired;
+  }
 
   /** The one authoritative store. */
   private readonly _state = signal<DateValueState>({
@@ -209,12 +245,41 @@ export class DateValueComponent implements ControlValueAccessor, Validator {
   });
 
   protected readonly showStartRequired = computed(
-    () => this.valueRequired() && this._touched() && this._state().start === null
+    () => this._isRequired() && this._touched() && this._state().start === null
   );
 
-  protected readonly showEndRequired = computed(
-    () => this._touched() && this._state().isPeriod && this._state().end === null
-  );
+  protected readonly showEndRequired = computed(() => this._touched() && this._isHalfAPeriod());
+
+  /** A period with a start and no end. An empty value is not half a period: there is nothing to finish. */
+  private readonly _isHalfAPeriod = computed(() => {
+    const { start, end, isPeriod } = this._state();
+    return isPeriod && start !== null && end === null;
+  });
+
+  /** The control the form bound this component to, once Angular has handed it over. */
+  private _control: AbstractControl | null = null;
+
+  /**
+   * Follows the bound control, which the form owns: required when it carries `Validators.required`,
+   * and touched when it is — so a form-wide `markAllAsTouched()` on submit shows this component's
+   * messages too.
+   *
+   * Taken from {@link validate}, which Angular calls with the control as soon as it is bound.
+   * Injecting `NgControl` instead is a cycle (it injects this component), and `formControlName`
+   * only attaches its control after this component's `ngOnInit` has run.
+   */
+  private _follow(control: AbstractControl): void {
+    if (control === this._control) {
+      return;
+    }
+    this._control = control;
+    this._controlRequired = control.hasValidator(Validators.required);
+    control.events.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(event => {
+      if (event instanceof TouchedChangeEvent) {
+        this._touched.set(event.touched);
+      }
+    });
+  }
 
   // -----------------------------------------------------------------------------------------
   // ControlValueAccessor
@@ -278,15 +343,14 @@ export class DateValueComponent implements ControlValueAccessor, Validator {
    * instant a user clicks "add end date" is scolding them for not having done something yet.
    * {@link showEndRequired} owns that display rule; this owns the truth.
    */
-  validate(): ValidationErrors | null {
-    const { start, end, isPeriod } = this._state();
-
-    if (this.valueRequired() && start === null) {
+  validate(control: AbstractControl): ValidationErrors | null {
+    this._follow(control);
+    if (this._isRequired() && this._state().start === null) {
       return { required: true };
     }
-    if (isPeriod && end === null) {
-      // Not gated on `valueRequired`: that input says whether a value must exist at all, not
-      // whether a period a user has explicitly asked for may be left half-built.
+    if (this._isHalfAPeriod()) {
+      // Not gated on being required: that says whether a value must exist at all, not whether a
+      // period a user has explicitly asked for may be left half-built.
       return { endRequired: true };
     }
     if (this.endBeforeStart()) {

@@ -1,7 +1,7 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition } from '@angular/cdk/overlay';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CalendarSystem } from '@dasch-swiss/vre/shared/calendar';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -343,12 +343,24 @@ export class CalendarMarkerComponent {
 
   private readonly _clipboard = inject(Clipboard);
 
+  constructor() {
+    inject(DestroyRef).onDestroy(() => clearTimeout(this._copiedReset));
+  }
+
   /** The value just copied, if any — its icon says so for a moment. */
   protected readonly copied = signal<string | null>(null);
 
+  /** Pending reset of {@link copied}; replaced by each copy, so a second one keeps its full moment. */
+  private _copiedReset?: ReturnType<typeof setTimeout>;
+
   protected copy(text: string): void {
-    this.copied.set(this._clipboard.copy(text) ? text : null);
-    setTimeout(() => this.copied.set(null), 1500);
+    clearTimeout(this._copiedReset);
+    if (!this._clipboard.copy(text)) {
+      this.copied.set(null);
+      return;
+    }
+    this.copied.set(text);
+    this._copiedReset = setTimeout(() => this.copied.set(null), 1500);
   }
 
   private readonly _open = signal(false);

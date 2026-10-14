@@ -3,7 +3,7 @@ import { input } from '@angular/core';
 import { KnoraDate, KnoraPeriod, ReadDateValue } from '@dasch-swiss/dsp-js';
 import { CALENDAR_SYSTEMS, CalendarSystem } from '@dasch-swiss/vre/shared/calendar';
 import { CalendarDateService } from '@dasch-swiss/vre/ui/ui';
-import { CalendarFacts, CalendarMarkerComponent, CalendarReading, KnoraDatePipe } from '@dasch-swiss/vre/ui/ui';
+import { CalendarFacts, CalendarMarkerComponent, CalendarReading } from '@dasch-swiss/vre/ui/ui';
 
 /**
  * Renders a date value in the calendar it is stored in, with a marker that reads it in the others.
@@ -36,7 +36,6 @@ export class DateViewerComponent {
   readonly value = input.required<ReadDateValue>();
 
   private readonly _calendarDates = inject(CalendarDateService);
-  private readonly _datePipe = new KnoraDatePipe();
 
   /**
    * Whether the marker has been opened. A property list can hold hundreds of dates, and the
@@ -141,25 +140,8 @@ export class DateViewerComponent {
     return `${this._format(start)}/${this._format(end)}`;
   }
 
-  /**
-   * One date as text, with the era shown where it carries information.
-   *
-   * Era appears on every BCE date and on CE years below 1000: "450" alone is ambiguous in a corpus
-   * that also holds BCE material, while "2024 CE" is noise. The Islamic calendar never shows one —
-   * AH is implied and it has no negative years.
-   *
-   * Formatted here rather than in `KnoraDatePipe` because that pipe also serves the date picker and
-   * advanced search, and this rule belongs to this surface rather than to every date in the app.
-   */
+  /** One date as text, with the era shown only where it carries information. */
   private _format(date: KnoraDate, withEra = true): string {
-    const text = this._datePipe.transform(date, 'dd.MM.YYYY');
-
-    if (!withEra || date.era === 'noEra') {
-      return text;
-    }
-    if (date.era === 'BCE') {
-      return `${text} BCE`;
-    }
-    return date.year < 1000 ? `${text} CE` : text;
+    return this._calendarDates.format(date, 'dd.MM.YYYY', withEra ? 'eraWhereAmbiguous' : undefined);
   }
 }

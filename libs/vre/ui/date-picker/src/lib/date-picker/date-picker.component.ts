@@ -7,6 +7,7 @@ import {
   computed,
   inject,
   input,
+  linkedSignal,
   output,
   signal,
   viewChild,
@@ -174,42 +175,40 @@ export class DatePickerComponent {
   private readonly _calendarDates = inject(CalendarDateService);
 
   /**
+   * The date this component last published — what an owner that writes `date` back will hand down.
+   * A plain field, read only inside {@link _draft}'s reset rule, so it is not a dependency.
+   */
+  private _lastPublished: KnoraDate | null | undefined = undefined;
+
+  /**
    * The single writable store: what the user has entered so far.
    *
-   * Seeded from `date` on first read and thereafter owned by the user's edits. It is not a second
-   * copy of the value — nothing reads it as the value. It is the half-finished input, which has to
-   * exist because year is a free-text field and a date is only a date once it is complete.
-   */
-  private readonly _draft = signal<DateDraft | null>(null);
-
-  /**
-   * Every `date` the draft has already accounted for: the one it was seeded from, and each one it
-   * has published since.
+   * It is not a second copy of the value — nothing reads it as the value. It is the half-finished
+   * input, which has to exist because year is a free-text field and a date is only a date once it
+   * is complete.
    *
-   * This is what lets the component tell a new instruction from its own echo. The owner writes
-   * `date` back after every emission, and some owners do not write it back at all, so "has this
-   * value passed through here already?" is the question that distinguishes the two — not "is this
-   * the most recent one".
+   * **A new `date` from the owner discards it.** The owner converts the value when the calendar
+   * changes, or resets the form, and hands the result down; a draft that outlived that kept the
+   * field showing a date the value had already left. The one `date` that keeps it is this
+   * component's own last emission travelling back through the owner — treating that as an
+   * instruction would discard a half-typed year on every keystroke. An owner that never writes
+   * `date` back never changes the source, so the draft simply stays.
    */
-  private readonly _accountedFor = signal<readonly (KnoraDate | null)[]>([]);
+  private readonly _draft = linkedSignal<KnoraDate | null, DateDraft | null>({
+    source: this.date,
+    computation: (given, previous) =>
+      previous?.value != null && this._lastPublished !== undefined && this._sameDate(given, this._lastPublished)
+        ? previous.value
+        : null,
+  });
 
-  /**
-   * The draft, falling back to the input while the user has not typed anything.
-   *
-   * **A new `date` from the owner wins over the draft.** The owner converts the value when the
-   * calendar changes and hands the result down; a draft that shadowed the input for the
-   * component's life kept the field showing the pre-conversion date while the value underneath had
-   * already moved. The draft still wins over the *same* `date` arriving again, which is the
-   * component's own emission travelling back through the owner — treating that as an instruction
-   * would discard a half-typed year on every keystroke.
-   */
+  /** The draft, falling back to the input while the user has not typed anything. */
   protected readonly draft = computed<DateDraft>(() => {
-    const given = this.date();
     const local = this._draft();
-
-    if (local !== null && this._hasAccountedFor(given)) {
+    if (local !== null) {
       return local;
     }
+    const given = this.date();
     return {
       year: given?.year ?? null,
       month: given?.month ?? null,
@@ -217,11 +216,6 @@ export class DatePickerComponent {
       era: this._eraFor(given?.era),
     };
   });
-
-  /** Whether this exact date has already passed through the draft, in either direction. */
-  private _hasAccountedFor(given: KnoraDate | null): boolean {
-    return this._accountedFor().some(seen => this._sameDate(seen, given));
-  }
 
   private _sameDate(a: KnoraDate | null, b: KnoraDate | null): boolean {
     if (a === null || b === null) {
@@ -478,26 +472,18 @@ export class DatePickerComponent {
     buildsOn: 'draft' | 'shown' = 'draft',
     { entersSomething } = { entersSomething: true }
   ): void {
-    // Read before anything is recorded: `draft()` consults `_accountedFor`, so adding to it first
-    // would make this read the stale local draft rather than the date currently displayed.
     const base = buildsOn === 'shown' ? this.shown() : this.draft();
     if (entersSomething) {
       this._entered.set(true);
     }
 
-    // The input the draft is diverging from counts as accounted for too: an owner that never
-    // writes `date` back would otherwise look like it was issuing that same date as a fresh
-    // instruction on the next read, discarding the edit that had just been made.
-    const seeded = this.date();
-    this._accountedFor.update(seen => (seen.some(d => this._sameDate(d, seeded)) ? seen : [...seen, seeded]));
-
     this._draft.set({ ...base, ...change });
 
-    // What the owner is about to be told, and so what it will write back. Recording it here is
-    // what lets {@link draft} recognise that echo and keep the user's entry, while still yielding
-    // to a `date` the owner arrived at some other way — a conversion, or a reload.
+    // What the owner is about to be told, and so what it will write back. Recording it lets
+    // {@link _draft} recognise that echo and keep the user's entry, while still yielding to a
+    // `date` the owner arrived at some other way — a conversion, a reset, or a reload.
     const published = this.committed();
-    this._accountedFor.update(seen => [...seen, published]);
+    this._lastPublished = published;
     this.dateChange.emit(published);
   }
 

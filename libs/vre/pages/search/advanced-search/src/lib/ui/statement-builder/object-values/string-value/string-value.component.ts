@@ -13,7 +13,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
@@ -75,11 +75,10 @@ export class StringValueComponent implements OnInit, OnChanges, AfterViewInit {
   matcher = new ValueErrorStateMatcher();
   inputControl = new FormControl();
 
-  // separate control and FormGroup needed for the date picker
   private readonly _calendarDates = inject(CalendarDateService);
 
+  // the date term, held apart from the text input because the picker works on a KnoraDate
   dateControl = new FormControl();
-  dateFormGroup = new FormGroup({ date: this.dateControl });
 
   ngOnInit() {
     this.inputControl.valueChanges
@@ -110,9 +109,10 @@ export class StringValueComponent implements OnInit, OnChanges, AfterViewInit {
       this.dateControl.setValue(knoraDate);
       // A stored term is in its own calendar; telling the picker otherwise relabelled it on the
       // next edit.
+      // A cleared term must not leave the old date restricting the calendars on offer.
+      this._date.set(knoraDate ?? null);
       if (knoraDate) {
         this.searchCalendar.set(knoraDate.calendar.toUpperCase() as CalendarSystem);
-        this._date.set(knoraDate);
       }
     }
   }
