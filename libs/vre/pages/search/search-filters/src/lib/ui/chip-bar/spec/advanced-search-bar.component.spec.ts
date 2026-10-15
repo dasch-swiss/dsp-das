@@ -372,7 +372,7 @@ describe('AdvancedSearchBarComponent fulltext term rules (DEV-6930)', () => {
     jest.advanceTimersByTime(400);
     fixture.detectChanges();
 
-    expect(writeState).not.toHaveBeenCalled();
+    expect(statePort.setFulltextTerm).not.toHaveBeenCalled();
     expect(errorText()).toBe('pages.search.termValidation.danglingOperator');
   });
 
@@ -380,7 +380,7 @@ describe('AdvancedSearchBarComponent fulltext term rules (DEV-6930)', () => {
     component.fulltextControl.setValue('foo AND bar');
     jest.advanceTimersByTime(400);
 
-    expect(writeState).toHaveBeenCalledWith({ q: 'foo AND bar' }, { replaceUrl: false });
+    expect(statePort.setFulltextTerm).toHaveBeenCalledWith('foo AND bar');
   });
 
   it('searches a three-character term', () => {

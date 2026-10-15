@@ -45,3 +45,10 @@ export * from './lib/clickable-list-card.component';
 export * from './lib/resource-rights-statement.component';
 export * from './lib/resource-authorship.component';
 export * from './lib/authorship-chip-editor.component';
+export { CalendarMarkerComponent, type CalendarFacts, type CalendarReading } from './lib/calendar-marker.component';
+export {
+  CalendarDateService,
+  WEEKDAY_KEYS,
+  type ConvertedKnoraDate,
+  type MonthGrid,
+} from './lib/calendar-date/calendar-date.service';

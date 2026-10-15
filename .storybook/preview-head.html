@@ -35,9 +35,9 @@
   Freeze "today" in the story iframe.
 
   Components that default to the current date render a different snapshot on every
-  day: `app-date-picker` calls `setToday()` when it has no value (its `Empty` and
-  `Disabled` stories), `createToday()` feeds the date validators, the footer prints
-  the current year. A build on Tuesday then diffs against Monday's baseline.
+  day: an empty `app-date-picker` shows the current year and month and draws that
+  month's grid, and the footer prints the current year. A build on Tuesday then
+  diffs against Monday's baseline.
 
   Only argument-less `new Date()` / `Date()` are pinned. `Date.now()` stays real on
   purpose: rxjs schedulers (`debounceTime`, `delay`, …) measure elapsed time with it
@@ -53,7 +53,9 @@
         return new RealDate(FIXED_NOW).toString();
       }
       var args = Array.prototype.slice.call(arguments);
-      return args.length ? new (Function.prototype.bind.apply(RealDate, [null].concat(args)))() : new RealDate(FIXED_NOW);
+      return args.length
+        ? new (Function.prototype.bind.apply(RealDate, [null].concat(args)))()
+        : new RealDate(FIXED_NOW);
     }
     FrozenDate.prototype = RealDate.prototype;
     FrozenDate.now = RealDate.now;
