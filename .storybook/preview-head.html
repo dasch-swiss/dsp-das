@@ -30,3 +30,37 @@
     caret-color: transparent !important;
   }
 </style>
+
+<!--
+  Freeze "today" in the story iframe.
+
+  Components that default to the current date render a different snapshot on every
+  day: an empty `app-date-picker` shows the current year and month and draws that
+  month's grid, and the footer prints the current year. A build on Tuesday then
+  diffs against Monday's baseline.
+
+  Only argument-less `new Date()` / `Date()` are pinned. `Date.now()` stays real on
+  purpose: rxjs schedulers (`debounceTime`, `delay`, …) measure elapsed time with it
+  and would never fire on a frozen clock. Runs before the app bundle, so every
+  component sees the fixed date.
+-->
+<script>
+  (function () {
+    var FIXED_NOW = Date.UTC(2024, 5, 15, 12, 0, 0); // 2024-06-15 12:00 UTC
+    var RealDate = Date;
+    function FrozenDate() {
+      if (!(this instanceof FrozenDate)) {
+        return new RealDate(FIXED_NOW).toString();
+      }
+      var args = Array.prototype.slice.call(arguments);
+      return args.length
+        ? new (Function.prototype.bind.apply(RealDate, [null].concat(args)))()
+        : new RealDate(FIXED_NOW);
+    }
+    FrozenDate.prototype = RealDate.prototype;
+    FrozenDate.now = RealDate.now;
+    FrozenDate.parse = RealDate.parse;
+    FrozenDate.UTC = RealDate.UTC;
+    window.Date = FrozenDate;
+  })();
+</script>
