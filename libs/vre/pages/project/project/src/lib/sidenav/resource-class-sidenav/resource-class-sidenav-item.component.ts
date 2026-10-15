@@ -13,7 +13,7 @@ import { ProjectPageService } from '../../project-page.service';
   selector: 'app-resource-class-sidenav-item',
   template: `
     @let label_ = label | appStringifyStringLiteral;
-    <!-- Full-bleed row: name, count, then the class's type icon (DEV-7494, sidebar design I2). -->
+    <!-- Full-bleed row: the class's type icon, its name, then its count (DEV-7494, sidebar design I4). -->
     <button
       type="button"
       class="item"
@@ -21,9 +21,9 @@ import { ProjectPageService } from '../../project-page.service';
       [attr.aria-current]="(isSelected$ | async) ? 'page' : null"
       [title]="label_"
       (click)="selectResourceClass()">
+      <mat-icon class="icon" aria-hidden="true">{{ icon }}</mat-icon>
       <span class="label">{{ label_ }}</span>
       <span class="count">{{ count | number }}</span>
-      <mat-icon class="icon" aria-hidden="true">{{ icon }}</mat-icon>
     </button>
   `,
   styles: [
