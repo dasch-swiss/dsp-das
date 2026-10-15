@@ -439,7 +439,9 @@ tr.is-checked .row-controls [data-cy='row-check'] {
 .frozen-shadow {
   position: absolute;
   top: 0;
-  z-index: 3;
+  // Over the sticky header too, so the shadow runs the full height including the header row.
+  // MatTable stacks sticky cells from z-index 100 (top) up to 101 (top and left); this goes above.
+  z-index: 110;
   width: 10px;
   background: linear-gradient(to right, rgba(15, 23, 42, 0.18), rgba(15, 23, 42, 0));
   pointer-events: none;

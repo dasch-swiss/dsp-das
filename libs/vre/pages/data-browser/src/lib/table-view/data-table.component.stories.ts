@@ -1154,6 +1154,12 @@ export const ShadesTheFrozenEdgeOnceTheTableScrolls: Story = {
 
     await waitFor(() => expect(shadow()).not.toBeNull());
     await alongTheEdge();
+    // Down the header row as well: above every sticky header cell, from the top of the table.
+    const headerZ = Math.max(
+      ...Array.from(canvasElement.querySelectorAll('thead th')).map(th => Number(getComputedStyle(th).zIndex) || 0)
+    );
+    await expect(Number(getComputedStyle(shadow()!).zIndex)).toBeGreaterThan(headerZ);
+    await expect(Math.round(shadow()!.getBoundingClientRect().top)).toBe(Math.round(edge.getBoundingClientRect().top));
     // The shadow is now the body's edge; only the header keeps a line there.
     await expect(getComputedStyle(bodyEdge).borderRightColor).toBe('rgba(0, 0, 0, 0)');
     await expect(getComputedStyle(edge).borderRightColor).not.toBe('rgba(0, 0, 0, 0)');
