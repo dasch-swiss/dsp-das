@@ -1,6 +1,5 @@
-import { AsyncPipe, DecimalPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, computed, inject, Input, ViewContainerRef } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
@@ -19,7 +18,7 @@ import { ResourceResultService } from '@dasch-swiss/vre/shared/app-helper-servic
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { catchError, combineLatest, distinctUntilChanged, first, from, of, ReplaySubject, switchMap } from 'rxjs';
+import { combineLatest, first, from, switchMap } from 'rxjs';
 import { DataBrowserPageService } from './data-browser-page.service';
 import { DataClassResultMetaComponent } from './data-class-result-meta.component';
 import { DataClassUrlStateService } from './data-class-url-state.service';
@@ -52,22 +51,12 @@ interface CreateResourceDialogProps {
   selector: 'app-data-class-header',
   template: `
     <div class="data-class-header">
-      <!-- Row 1 — what this is: the class, how many resources it holds, what it is about, and what
-           can be done with it (DEV-7494, design A1). -->
+      <!-- Row 1 — what this is: the class, what it is about, and what can be done with it
+           (DEV-7494, design A1). -->
       <div class="identity-row">
         <div class="identity">
           <div class="title-line">
             <h1 class="class-label">{{ classSelected.resClass.labels | appStringifyStringLiteral }}</h1>
-            @if (resourceCount(); as count) {
-              <span class="resource-count" data-cy="class-resource-count">
-                {{
-                  (count === 1
-                    ? 'pages.dataBrowser.dataClassHeader.resourceCountOne'
-                    : 'pages.dataBrowser.dataClassHeader.resourceCount'
-                  ) | translate: { count: count | number }
-                }}
-              </span>
-            }
           </div>
           @if (classSelected.resClass.comments.length) {
             @let description = classSelected.resClass.comments | appStringifyStringLiteral;
@@ -136,7 +125,6 @@ interface CreateResourceDialogProps {
   styleUrl: './data-class-header.component.scss',
   imports: [
     AsyncPipe,
-    DecimalPipe,
     MatButton,
     MatIcon,
     MatProgressBar,
@@ -159,28 +147,7 @@ export class DataClassHeaderComponent {
   readonly isRefreshing = computed(() => this._resourceResult.isRefreshing());
   private readonly _resourceResult = inject(ResourceResultService);
 
-  @Input({ required: true }) set classSelected(value: SelectedClass) {
-    this._classSelected = value;
-    this._classIri$.next(value.resClass.id);
-  }
-  get classSelected(): SelectedClass {
-    return this._classSelected;
-  }
-  private _classSelected!: SelectedClass;
-  private readonly _classIri$ = new ReplaySubject<string>(1);
-  private readonly _countApi = inject(ResourceClassCountApi);
-
-  /**
-   * How many resources the class holds, beside its name — the class's own count, not the filtered
-   * result's, which the pager shows. Null while loading or when the count query fails.
-   */
-  readonly resourceCount = toSignal(
-    this._classIri$.pipe(
-      distinctUntilChanged(),
-      switchMap(classIri => this._countApi.getResourceClassCount(classIri).pipe(catchError(() => of(null))))
-    ),
-    { initialValue: null }
-  );
+  @Input({ required: true }) classSelected!: SelectedClass;
 
   hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
 

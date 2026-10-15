@@ -628,8 +628,6 @@
         "scopeNote": "L'esportazione include tutte le risorse di questa classe, indipendentemente dai filtri applicati."
       },
       "dataClassHeader": {
-        "resourceCount": "{{count}} risorse",
-        "resourceCountOne": "1 risorsa",
         "searchLabel": "Cerca",
         "searchPlaceholder": "Cerca"
       },

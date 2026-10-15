@@ -628,8 +628,6 @@
         "scopeNote": "The export covers all resources of this class, regardless of the filters currently applied."
       },
       "dataClassHeader": {
-        "resourceCount": "{{count}} resources",
-        "resourceCountOne": "1 resource",
         "searchLabel": "Search",
         "searchPlaceholder": "Search"
       },
