@@ -1,5 +1,9 @@
 import { FormControl } from '@angular/forms';
-import { fulltextSearchTermValidator, searchTermMinLengthValidator } from './search-term.validator';
+import {
+  fulltextSearchTermValidator,
+  searchTermCompleteSyntaxValidator,
+  searchTermMinLengthValidator,
+} from './search-term.validator';
 
 describe('searchTermMinLengthValidator', () => {
   const validator = searchTermMinLengthValidator();
@@ -63,5 +67,72 @@ describe('fulltextSearchTermValidator', () => {
 
   it('still refuses a short wildcard term standing outside a phrase', () => {
     expect(validate('"a b*" de*')).toEqual({ searchWildcardTooShort: { requiredLength: 3 } });
+  });
+});
+
+describe('searchTermCompleteSyntaxValidator (DEV-7370)', () => {
+  const validator = searchTermCompleteSyntaxValidator();
+  const validate = (value: string | null) => validator(new FormControl(value));
+
+  it.each([null, '', '   '])('leaves an empty value alone (%p)', value => {
+    expect(validate(value)).toBeNull();
+  });
+
+  // The first two are the half-typed terms from the stage traces that dsp-api answered with a parse error.
+  it.each(['"rod of asclepious', '\\"rod of asclepious"', 'buch "a b" "c', '\\\\"open'])(
+    'holds back %p while its phrase is still open',
+    term => {
+      expect(validate(term)).toEqual({ searchTermUnclosedPhrase: true });
+    }
+  );
+
+  it.each(['foo \\', '\\', 'a\\\\\\'])('holds back %p, which ends on a lone backslash', term => {
+    expect(validate(term)).toEqual({ searchTermTrailingEscape: true });
+  });
+
+  // A backslash escapes the next character, so escaped quotes and escaped backslashes keep working.
+  it.each([
+    'rod of asclepious',
+    '"rod of asclepious"',
+    '\\"rod of asclepious\\"',
+    'say \\"hi',
+    '"a \\" b"',
+    '\\\\"a"',
+    'C:\\\\',
+  ])('accepts %p', term => {
+    expect(validate(term)).toBeNull();
+  });
+
+  // The first seven were measured against the dev API as Lucene parse errors (DEV-7441).
+  it.each(['foo AND', 'foo OR', 'foo NOT', 'foo &&', 'foo ||', 'AND foo', 'OR foo', '"a b" AND', 'NOT'])(
+    'holds back %p, whose Boolean operator is missing its term',
+    term => {
+      expect(validate(term)).toEqual({ searchTermDanglingOperator: true });
+    }
+  );
+
+  // The first three were measured as parse errors: an operator against a group's parenthesis, anywhere.
+  it.each(['(foo AND)', '(AND foo)', 'bar (foo AND)', 'bar (foo NOT) baz'])(
+    'holds back %p, whose operator lacks its term inside the group',
+    term => {
+      expect(validate(term)).toEqual({ searchTermDanglingOperator: true });
+    }
+  );
+
+  it.each(['(foo AND bar)', 'foo AND (bar)', '(NOT foo)', '"(foo AND)"', 'foo \\(AND)'])(
+    'accepts %p, whose operators all have their terms',
+    term => {
+      expect(validate(term)).toBeNull();
+    }
+  );
+
+  // `NOT foo`, `foo AND bar` and `"foo AND"` were measured to run. Lowercase is no operator, and quotes
+  // or a backslash make it a literal.
+  it.each(['NOT foo', 'foo AND bar', '"foo AND"', 'foo and', '"AND foo"', 'foo \\AND'])('accepts %p', term => {
+    expect(validate(term)).toBeNull();
+  });
+
+  it('counts a backslash before trailing whitespace as trailing, since the term is sent trimmed', () => {
+    expect(validate('foo \\ ')).toEqual({ searchTermTrailingEscape: true });
   });
 });

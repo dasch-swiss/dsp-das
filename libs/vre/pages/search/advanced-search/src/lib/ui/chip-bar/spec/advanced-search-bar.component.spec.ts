@@ -358,6 +358,47 @@ describe('AdvancedSearchBarComponent fulltext term rules (DEV-6930)', () => {
     expect(errorText()).toBe('pages.search.termValidation.tooShort');
   });
 
+  it('does not search a phrase whose closing quote is not typed yet (DEV-7370)', () => {
+    component.fulltextControl.setValue('"rod of asclepious');
+    jest.advanceTimersByTime(400);
+    fixture.detectChanges();
+
+    expect(writeState).not.toHaveBeenCalled();
+    expect(errorText()).toBe('pages.search.termValidation.unclosedPhrase');
+  });
+
+  it('searches the phrase once it is closed', () => {
+    component.fulltextControl.setValue('"rod of asclepious"');
+    jest.advanceTimersByTime(400);
+    fixture.detectChanges();
+
+    expect(writeState).toHaveBeenCalledWith({ q: '"rod of asclepious"' }, { replaceUrl: false });
+    expect(errorText()).toBeNull();
+  });
+
+  it('searches a term whose quotes are escaped', () => {
+    component.fulltextControl.setValue('\\"rod of asclepious');
+    jest.advanceTimersByTime(400);
+
+    expect(writeState).toHaveBeenCalledWith({ q: '\\"rod of asclepious' }, { replaceUrl: false });
+  });
+
+  it('does not search a term that ends on a Boolean operator (DEV-7441)', () => {
+    component.fulltextControl.setValue('foo AND');
+    jest.advanceTimersByTime(400);
+    fixture.detectChanges();
+
+    expect(writeState).not.toHaveBeenCalled();
+    expect(errorText()).toBe('pages.search.termValidation.danglingOperator');
+  });
+
+  it('searches once the term after the operator is typed', () => {
+    component.fulltextControl.setValue('foo AND bar');
+    jest.advanceTimersByTime(400);
+
+    expect(writeState).toHaveBeenCalledWith({ q: 'foo AND bar' }, { replaceUrl: false });
+  });
+
   it('searches a three-character term', () => {
     component.fulltextControl.setValue('ide');
     jest.advanceTimersByTime(400);
