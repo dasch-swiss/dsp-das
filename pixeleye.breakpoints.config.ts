@@ -19,5 +19,8 @@ export default {
   token: process.env['PIXELEYE_BREAKPOINTS_TOKEN'] || '',
   endpoint: process.env['PIXELEYE_ENDPOINT'] || 'http://localhost:5001',
   devices: BREAKPOINT_WIDTHS.map(desktop),
+  // The main run's booth (default port 3003) outlives its CLI process, and CI runs this capture
+  // in the same job right after it, so this one needs a port of its own.
+  boothPort: '3004',
   waitForStatus: false,
 };
