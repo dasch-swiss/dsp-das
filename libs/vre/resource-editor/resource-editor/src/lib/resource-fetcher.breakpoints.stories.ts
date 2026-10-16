@@ -1,17 +1,19 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { Constants, ReadMovingImageFileValue, ReadResource } from '@dasch-swiss/dsp-js';
+import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { Constants, KnoraApiConfig, ReadMovingImageFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { ProjectApiService, UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { UserService } from '@dasch-swiss/vre/core/session';
+import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { HeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
+import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { NEVER, of } from 'rxjs';
 import { expect, waitFor } from 'storybook/test';
 
 import { RepresentationService } from './representation/representation.service';
-import { ResourceFetcherComponent } from './resource-fetcher.component';
 import {
   makeEntityInfo,
   makeFilePropEntry,
@@ -19,6 +21,7 @@ import {
   makeTextPropDef,
   makeTextValue,
 } from './resource-stories.helper';
+import { SingleResourcePageComponent } from './single-resource-page.component';
 import {
   appConfigServiceStub,
   notificationServiceStub,
@@ -27,13 +30,15 @@ import {
   STORY_VIDEO_URL,
 } from './stories.helpers';
 
+const RESOURCE_IRI = 'http://rdfh.ch/0001/video-1';
+const ROUTE_PARAMS = { project: '0001', resource: 'video-1' };
 const ONTOLOGY = 'http://0.0.0.0:3333/ontology/0001/example/v2';
 
 // A video resource with a title, a description and a long-ish comment, so the property
 // column has enough text to show how it wraps at each width.
 const makeVideoResource = (): ReadResource => {
   const res = new ReadResource();
-  res.id = 'http://rdfh.ch/0001/video-1';
+  res.id = RESOURCE_IRI;
   res.type = `${ONTOLOGY}#Video`;
   res.label = 'Interview with the project team, 2024';
   res.attachedToProject = 'http://rdfh.ch/projects/0001';
@@ -80,30 +85,45 @@ const makeVideoResource = (): ReadResource => {
 };
 
 /**
- * A single resource (video player and properties) at full viewport width. Pixeleye captures it at
- * every breakpoint (`pixeleye.breakpoints.config.ts`); in Storybook, pick a width from the
- * viewport toolbar.
+ * The single resource page as users see it: global header, then the resource (video player and
+ * properties) in the page's centered layout. Pixeleye captures it at every breakpoint
+ * (`pixeleye.breakpoints.config.ts`); in Storybook, pick a width from the viewport toolbar.
  */
-const meta: Meta<ResourceFetcherComponent> = {
+const meta: Meta = {
   title: 'Pages / Breakpoints / Single Resource',
-  component: ResourceFetcherComponent,
-  argTypes: {
-    resourceIri: {
-      description: 'The IRI of the resource to load. Triggers a new fetch whenever it changes.',
-      table: { type: { summary: 'string' }, category: 'Inputs' },
-    },
-    afterResourceDeleted: {
-      description: 'Emitted when the fetched resource has been marked as deleted.',
-      table: { category: 'Outputs', type: { summary: 'EventEmitter<ReadResource>' } },
-    },
-  },
   parameters: { layout: 'fullscreen' },
   decorators: [
+    moduleMetadata({ imports: [HeaderComponent, SingleResourcePageComponent] }),
     applicationConfig({
       providers: [
         importProvidersFrom(OverlayModule),
         provideRouter([{ path: '**', component: class {} }]),
-        { provide: AppConfigService, useValue: appConfigServiceStub },
+        // SingleResourcePageComponent builds the resource IRI from the `/resource/:project/:resource`
+        // params; the fetcher and the value displays read query params from the snapshot.
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: of(ROUTE_PARAMS),
+            queryParams: of({}),
+            snapshot: {
+              params: ROUTE_PARAMS,
+              paramMap: convertToParamMap(ROUTE_PARAMS),
+              queryParams: {},
+              queryParamMap: convertToParamMap({}),
+            },
+            firstChild: null,
+          },
+        },
+        { provide: ResourceService, useValue: { getResourceIri: () => RESOURCE_IRI } },
+        {
+          provide: AppConfigService,
+          useValue: {
+            ...appConfigServiceStub,
+            dspConfig: { production: false, environment: 'dev', release: '0.0.0', color: 'accent' },
+            dspApiConfig: new KnoraApiConfig('https', 'api.example.com'),
+          },
+        },
+        { provide: UserService, useValue: { isLoggedIn$: of(false), user$: of(null), isSysAdmin$: of(false) } },
         { provide: ProjectApiService, useValue: projectApiServiceStub },
         {
           provide: AdminAPIApiService,
@@ -127,14 +147,18 @@ const meta: Meta<ResourceFetcherComponent> = {
       ],
     }),
   ],
+  // Mirrors GlobalPageComponent, which renders the header above the routed page.
+  render: () => ({ template: `<app-header /><app-single-resource-page />` }),
 };
 export default meta;
-type Story = StoryObj<ResourceFetcherComponent>;
+type Story = StoryObj;
 
 export const VideoResource: Story = {
-  name: 'Shows the video player and properties across the full width',
-  args: { resourceIri: 'http://rdfh.ch/0001/video-1' },
+  name: 'Shows the header, video player and properties',
   play: async ({ canvasElement, step }) => {
+    await step('The global header is shown', async () => {
+      await expect(canvasElement.querySelector('app-header')).not.toBeNull();
+    });
     await step('The video wrapper is rendered', async () => {
       await waitFor(() => expect(canvasElement.querySelector('app-resource-video')).not.toBeNull(), {
         timeout: 2000,
