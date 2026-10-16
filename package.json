@@ -58,7 +58,9 @@
     "test-storybook": "nx run dsp-app:test-storybook",
     "pixeleye": "pixeleye storybook http://localhost:4400",
     "postinstall": "npm run generate-openapi-module && nx reset",
-    "pixeleye:ci": "pixeleye storybook http://localhost:6006"
+    "pixeleye:ci": "pixeleye storybook http://localhost:6006",
+    "build-storybook:breakpoints": "STORYBOOK_BREAKPOINTS=true nx run dsp-app:build-storybook:ci --outputDir=dist/storybook-breakpoints --skip-nx-cache",
+    "pixeleye:breakpoints": "pixeleye storybook http://localhost:6007 -c pixeleye.breakpoints.config.ts"
   },
   "private": true,
   "dependencies": {
