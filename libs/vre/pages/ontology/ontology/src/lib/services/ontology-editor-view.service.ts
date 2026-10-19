@@ -29,6 +29,8 @@ export class OntologyEditorViewService {
    * via `reset()` so the next ontology re-seeds.
    */
   private _selectionInitialized = false;
+  /** Class IRIs seen in the previous emission, so classes created afterwards can be auto-selected. */
+  private _knownClassIris = new Set<string>();
   readonly classFilterText$ = new BehaviorSubject<string>('');
   readonly propertyFilterText$ = new BehaviorSubject<string>('');
   readonly activePropertyCategories$ = new BehaviorSubject<Set<string>>(new Set<string>());
@@ -118,6 +120,7 @@ export class OntologyEditorViewService {
     this.isPropertyDragging$.next(false);
     this.draggedProperty$.next(null);
     this._selectionInitialized = false;
+    this._knownClassIris = new Set<string>();
   }
 
   private _wireReconciliation(): void {
@@ -127,24 +130,34 @@ export class OntologyEditorViewService {
       // Default-select every class on the first non-empty emission for
       // this ontology. The flag is reset by `reset()` on ontology switch
       // so the next ontology re-seeds.
+      const knownIris = this._knownClassIris;
+      this._knownClassIris = validIris;
       if (!this._selectionInitialized && classes.length > 0) {
         this._selectionInitialized = true;
         this.selectedClassIris$.next(validIris);
         return;
       }
 
+      // Keep selected IRIs that still exist and select classes that were just
+      // created, so a new class shows up in the workspace right away.
       const current = this.selectedClassIris$.value;
-      let removed = false;
-      const intersected = new Set<string>();
+      let changed = false;
+      const next = new Set<string>();
       for (const iri of current) {
         if (validIris.has(iri)) {
-          intersected.add(iri);
+          next.add(iri);
         } else {
-          removed = true;
+          changed = true;
         }
       }
-      if (removed) {
-        this.selectedClassIris$.next(intersected);
+      for (const iri of validIris) {
+        if (!knownIris.has(iri) && !next.has(iri)) {
+          next.add(iri);
+          changed = true;
+        }
+      }
+      if (changed) {
+        this.selectedClassIris$.next(next);
       }
 
       const target = this.keyboardAssignTargetIri$.value;

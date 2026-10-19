@@ -130,6 +130,20 @@ describe('OntologyEditorViewService', () => {
   });
 
   describe('reconciliation on currentOntologyClasses$ emission', () => {
+    it('selects a class that appears after the initial seeding', () => {
+      const { service } = setup();
+      currentOntologyClasses$.next([makeClass('iri:A'), makeClass('iri:B')]);
+      service.deselectClassIris(['iri:A']);
+
+      // A newly created class shows up; the user's deselection of iri:A stays.
+      currentOntologyClasses$.next([makeClass('iri:A'), makeClass('iri:B'), makeClass('iri:C')]);
+
+      const selected = service.selectedClassIris$.value;
+      expect(selected.has('iri:A')).toBe(false);
+      expect(selected.has('iri:B')).toBe(true);
+      expect(selected.has('iri:C')).toBe(true);
+    });
+
     it('drops a selected class IRI within one emission when it disappears from the list', () => {
       const { service } = setup();
       currentOntologyClasses$.next([makeClass('iri:A'), makeClass('iri:B')]);
