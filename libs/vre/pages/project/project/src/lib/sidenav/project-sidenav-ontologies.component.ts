@@ -9,10 +9,17 @@ import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indi
 import { catchError, combineLatest, first, map, of, shareReplay, switchMap } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 import { ResourceClassSidenavComponent } from './resource-class-sidenav/resource-class-sidenav.component';
+import { TooltipIfTruncatedDirective } from './tooltip-if-truncated.directive';
 
 @Component({
   selector: 'app-projects-sidenav-ontologies',
-  imports: [AsyncPipe, MatIcon, ResourceClassSidenavComponent, AppProgressIndicatorComponent],
+  imports: [
+    AsyncPipe,
+    MatIcon,
+    ResourceClassSidenavComponent,
+    AppProgressIndicatorComponent,
+    TooltipIfTruncatedDirective,
+  ],
   template: `
     @if (projectOntologies$ | async; as projectOntologies) {
       @if (projectOntologies.length === 0) {
@@ -27,9 +34,11 @@ import { ResourceClassSidenavComponent } from './resource-class-sidenav/resource
               type="button"
               class="ontology-header"
               [attr.aria-expanded]="expanded"
-              [title]="onto.ontology.label"
+              [appTooltipIfTruncated]="onto.ontology.label"
+              [truncated]="ontologyLabel"
               (click)="toggle(onto.ontology.iri, expanded)">
-              <span class="ontology-label">{{ onto.ontology.label }}</span>
+              <!-- The full name in a tooltip, but only when it is cut off (DEV-7494). -->
+              <span #ontologyLabel class="ontology-label">{{ onto.ontology.label }}</span>
               <mat-icon class="ontology-chevron">{{ expanded ? 'expand_more' : 'chevron_right' }}</mat-icon>
             </button>
             @if (expanded) {

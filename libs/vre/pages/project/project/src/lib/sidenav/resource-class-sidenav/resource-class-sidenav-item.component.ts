@@ -8,6 +8,7 @@ import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { combineLatest, filter, first, map, of, startWith, switchMap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
+import { TooltipIfTruncatedDirective } from '../tooltip-if-truncated.directive';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
@@ -19,10 +20,12 @@ import { ProjectPageService } from '../../project-page.service';
       class="item"
       [class.selected]="isSelected$ | async"
       [attr.aria-current]="(isSelected$ | async) ? 'page' : null"
-      [title]="label_"
+      [appTooltipIfTruncated]="label_"
+      [truncated]="labelText"
       (click)="selectResourceClass()">
       <mat-icon class="icon" aria-hidden="true">{{ icon }}</mat-icon>
-      <span class="label">{{ label_ }}</span>
+      <!-- The full name in a tooltip, but only when it is cut off (DEV-7494). -->
+      <span #labelText class="label">{{ label_ }}</span>
       <span class="count">{{ count | number }}</span>
     </button>
   `,
@@ -86,7 +89,7 @@ import { ProjectPageService } from '../../project-page.service';
       }
     `,
   ],
-  imports: [AsyncPipe, DecimalPipe, MatIcon, StringifyStringLiteralPipe],
+  imports: [AsyncPipe, DecimalPipe, MatIcon, StringifyStringLiteralPipe, TooltipIfTruncatedDirective],
 })
 export class ResourceClassSidenavItemComponent {
   @Input({ required: true }) iri!: string;

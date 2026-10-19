@@ -2,7 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { applicationConfig, Meta, StoryObj } from '@storybook/angular';
 import { of } from 'rxjs';
-import { expect } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { STORY_PROVIDERS } from '../../stories.helpers';
 import { ResourceClassSidenavItemComponent } from './resource-class-sidenav-item.component';
 
@@ -84,15 +84,31 @@ export const LeavesOtherClassesUnmarked: Story = {
   },
 };
 
-/** A long name is cut with an ellipsis rather than wrapping the row, and is there in full on hover. */
-export const CutsALongNameAndShowsItInFullOnHover: Story = {
+const tooltip = () => document.querySelector('.mat-mdc-tooltip');
+
+/** A long name is cut with an ellipsis rather than wrapping the row, and shows in full in a tooltip. */
+export const ShowsTheFullNameInATooltipWhenCutOff: Story = {
   args: { label: label('Übergeordnetes Lexikon zu Untergeordnetem Lexikon'), count: 0 },
   play: async ({ canvasElement }) => {
     const name = row(canvasElement).querySelector('.label') as HTMLElement;
-
     await expect(name.scrollWidth).toBeGreaterThan(name.clientWidth);
-    await expect(row(canvasElement)).toHaveAttribute('title', 'Übergeordnetes Lexikon zu Untergeordnetem Lexikon');
     await expect(Math.round(row(canvasElement).getBoundingClientRect().height)).toBe(34);
+
+    await userEvent.hover(row(canvasElement));
+    await waitFor(() => expect(tooltip()).toHaveTextContent('Übergeordnetes Lexikon zu Untergeordnetem Lexikon'));
+    await userEvent.unhover(row(canvasElement));
+  },
+};
+
+/** A name that fits needs no tooltip: hovering it shows nothing. */
+export const ShowsNoTooltipWhenTheNameFits: Story = {
+  args: { label: label('Ort'), count: 4461 },
+  play: async ({ canvasElement }) => {
+    await userEvent.hover(row(canvasElement));
+    // Longer than the tooltip's show delay.
+    await new Promise(resolve => setTimeout(resolve, 600));
+    await expect(tooltip()).toBeNull();
+    await userEvent.unhover(row(canvasElement));
   },
 };
 

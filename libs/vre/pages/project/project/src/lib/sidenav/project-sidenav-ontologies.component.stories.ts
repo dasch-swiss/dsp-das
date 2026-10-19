@@ -96,6 +96,38 @@ export const OpensAndClosesGroupsFromTheirHeader: Story = {
   },
 };
 
+const LONG_NAME = ontology('Musiklexikon der Schweiz und angrenzender Regionen', [['Artikel', 17084]]);
+const tooltip = () => document.querySelector('.mat-mdc-tooltip');
+
+/** A data-model name too long for the sidebar is cut with an ellipsis and shows in full in a tooltip. */
+export const ShowsTheFullDataModelNameInATooltipWhenCutOff: Story = {
+  decorators: [withOntologies([LONG_NAME])],
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.querySelector('.ontology-label')).not.toBeNull());
+    const name = canvasElement.querySelector('.ontology-label') as HTMLElement;
+    await expect(name.scrollWidth).toBeGreaterThan(name.clientWidth);
+
+    const groupHeader = canvasElement.querySelector('button.ontology-header') as HTMLElement;
+    await userEvent.hover(groupHeader);
+    await waitFor(() => expect(tooltip()).toHaveTextContent('Musiklexikon der Schweiz und angrenzender Regionen'));
+    await userEvent.unhover(groupHeader);
+  },
+};
+
+/** A data-model name that fits needs no tooltip. */
+export const ShowsNoTooltipWhenTheDataModelNameFits: Story = {
+  decorators: [withOntologies([MEDIEN])],
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(header(canvasElement, 'Medien')).toBeTruthy());
+
+    await userEvent.hover(header(canvasElement, 'Medien'));
+    // Longer than the tooltip's show delay.
+    await new Promise(resolve => setTimeout(resolve, 600));
+    await expect(tooltip()).toBeNull();
+    await userEvent.unhover(header(canvasElement, 'Medien'));
+  },
+};
+
 /** The data-model label sits on the same 16px gutter as the class names below it. */
 export const AlignsGroupLabelsWithTheClassNames: Story = {
   decorators: [withOntologies([MUSIKLEXIKON])],
