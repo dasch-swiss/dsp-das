@@ -4,7 +4,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DefaultProperties } from '@dasch-swiss/vre/shared/app-helper-services';
-import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
+import { applicationConfig, componentWrapperDecorator, type Meta, type StoryObj } from '@storybook/angular';
 import { of } from 'rxjs';
 import { expect, within } from 'storybook/test';
 import { PropertyInfo } from '../ontology.types';
@@ -94,6 +94,39 @@ export const LongUsedInListWraps: Story = {
       const last = (await canvas.findByText('Resource Class 29')).getBoundingClientRect();
       await expect(last.right).toBeLessThanOrEqual(item.right);
       await expect(last.bottom).toBeLessThanOrEqual(item.bottom);
+    });
+  },
+};
+
+export const NarrowCardKeepsContentInside: Story = {
+  name: 'Keeps a long property id and class names inside a narrow card',
+  decorators: [
+    applicationConfig({
+      providers: [
+        ...sharedProviders,
+        {
+          provide: OntologyEditService,
+          useValue: makeOntologyEditServiceStub({
+            currentOntologyProperties$: of([
+              {
+                ...sampleProperties[0],
+                propDef: {
+                  ...sampleProperties[0].propDef,
+                  id: 'http://0.0.0.0:3333/ontology/0001/test/v2#letterHasRepertoriumNumber',
+                },
+                usedByClasses: manyClasses.slice(0, 3),
+              } as PropertyInfo,
+            ]),
+          }),
+        },
+      ],
+    }),
+    componentWrapperDecorator(story => `<div style="width: 134px">${story}</div>`),
+  ],
+  play: async ({ canvasElement, step }) => {
+    await step('Nothing in the card runs past its right edge', async () => {
+      const card = canvasElement.querySelector<HTMLElement>('.property-info')!;
+      await expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
     });
   },
 };

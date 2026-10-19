@@ -16,6 +16,8 @@
 
 .property-info {
   padding: 16px;
+  // A property id is one long word; on a narrow screen it must break rather than run out of the card.
+  overflow-wrap: anywhere;
 }
 
 .prop-container {
