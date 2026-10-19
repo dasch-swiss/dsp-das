@@ -3,12 +3,10 @@
 /**
  * Room for the absolutely positioned row-control cluster.
  *
- * Measured rather than guessed: 4px offset + the checkbox's full 40px touch target + the
- * explorer button's 48px host = 92px, so 104px leaves the label clear air. The two controls sit
- * flush against each other; their own touch targets already carry the visual spacing, and a gap
- * on top of those pushed the arrow into the label. The previous 76px gutter was narrower than
- * the cluster itself, and the arrow sat on the first characters of every label. Shrinking either
- * control to save width would be the wrong trade — they are the row's only affordances.
+ * Measured rather than guessed: the checkbox's full 40px touch target + the open arrow's 36px
+ * button (its 48px host is trimmed to the scaled button, see `.row-open`) = 76px, so 84px leaves
+ * the label clear air. The two controls sit flush against each other; their own touch targets
+ * already carry the visual spacing.
  *
  * The header is indented to match so the two read as one column with a control gutter, which is
  * what the design draws as two separate narrow columns.
@@ -20,14 +18,14 @@
 @mixin label-column-gutter {
   .is-label-cell,
   .is-label-header {
-    padding-left: 104px;
+    padding-left: 84px;
   }
 
-  // Without a checkbox only the open arrow is left: 4px offset + its 48px host, plus the same
-  // clear air.
+  // Without a checkbox only the open arrow is left: its 36px button, plus the same clear air. The
+  // gutter is empty until a row is hovered, so every pixel here is paid on every row (DEV-7494).
   &.no-selection .is-label-cell,
   &.no-selection .is-label-header {
-    padding-left: 64px;
+    padding-left: 44px;
   }
 }
 
@@ -336,7 +334,7 @@ tr:focus-within .row-resize-handle {
 
 .row-controls {
   position: absolute;
-  left: 4px;
+  left: 0;
   // On the label's first line, where the cells now start, rather than halfway down a tall row: the
   // cluster is 48px tall (the open arrow's touch target), the line's middle 16px down the cell.
   top: -8px;
@@ -383,6 +381,9 @@ tr.is-checked .row-controls [data-cy='row-check'] {
 
 .row-open {
   flex: none;
+  // The host stays 48px while the button inside is scaled to 36px, leaving 6px of nothing on each
+  // side that the gutter would otherwise have to pay for.
+  margin-inline: -6px;
 
   // The shared explorer button is laid out for the properties pane, where it hangs off a row of
   // text: zero-height host, scaled down, nudged 15px up. None of that is true in this gutter, so
