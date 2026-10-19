@@ -90,15 +90,22 @@ export const UsedInClassesEvenlySeparated: Story = {
     await step('The space before each dot equals the space after it', async () => {
       const separators = canvasElement.querySelectorAll<HTMLElement>('.used-in-separator');
       await expect(separators).toHaveLength(2);
-      separators.forEach(separator => {
-        const before = separator.previousElementSibling!.getBoundingClientRect();
-        const after = separator.parentElement!.nextElementSibling!.firstElementChild!.getBoundingClientRect();
+      for (const separator of separators) {
+        const usedInClass = separator.closest('.used-in-class')!;
+        const before = usedInClass.firstElementChild!.getBoundingClientRect();
+        const after = usedInClass.nextElementSibling!.firstElementChild!.getBoundingClientRect();
         const dot = separator.getBoundingClientRect();
         const gapBefore = dot.left - before.right;
         const gapAfter = after.left - dot.right;
-        expect(gapBefore).toBeGreaterThan(0);
-        expect(Math.abs(gapBefore - gapAfter)).toBeLessThan(1);
-      });
+        await expect(gapBefore).toBeGreaterThan(0);
+        await expect(Math.abs(gapBefore - gapAfter)).toBeLessThan(1);
+      }
+    });
+
+    await step('Screen readers hear the classes separated, not run together', async () => {
+      const usedIn = canvasElement.querySelector('.used-in-class')!.parentElement!.cloneNode(true) as Element;
+      usedIn.querySelectorAll('[aria-hidden="true"]').forEach(hidden => hidden.remove());
+      await expect(usedIn.textContent!.replace(/\s+/g, ' ')).toContain('Book, Letter, Person');
     });
   },
 };

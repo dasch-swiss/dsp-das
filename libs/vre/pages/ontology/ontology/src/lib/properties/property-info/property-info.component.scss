@@ -93,6 +93,16 @@
   margin-inline: 0.35em;
 }
 
+// Screen readers get a comma instead of the hidden dot, so the class names are not read as one word.
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .restricted-lock {
   margin-left: 0.25em;
 }
