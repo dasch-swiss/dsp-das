@@ -6,6 +6,7 @@ import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { applicationConfig, componentWrapperDecorator, type Preview } from '@storybook/angular';
 import { configure } from 'storybook/test';
+import { BREAKPOINT_VIEWPORTS } from './breakpoints';
 
 configure({ testIdAttribute: 'data-cy' });
 
@@ -26,9 +27,16 @@ function initTranslations(translate: TranslateService) {
   return () => translate.use('en');
 }
 
+const centeredColumn = componentWrapperDecorator(
+  story => `<div style="max-width: 1200px; margin: 0 auto;">${story}</div>`
+);
+
 const preview: Preview = {
   decorators: [
-    componentWrapperDecorator(story => `<div style="max-width: 1200px; margin: 0 auto;">${story}</div>`),
+    // Full-page stories (`layout: 'fullscreen'`, e.g. `Pages / Breakpoints / …`) must span the
+    // whole viewport, or their layout would be squeezed into a 1200px column.
+    (storyFn, context) =>
+      context.parameters['layout'] === 'fullscreen' ? storyFn() : centeredColumn(storyFn, context),
     applicationConfig({
       providers: [
         provideAnimations(),
@@ -64,6 +72,7 @@ const preview: Preview = {
         method: 'alphabetical',
       },
     },
+    viewport: { options: BREAKPOINT_VIEWPORTS },
     controls: {
       matchers: {
         color: /(background|color)$/i,
