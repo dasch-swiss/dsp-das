@@ -1,4 +1,21 @@
 <!--
+  Preload the Material Icons font.
+
+  Pixeleye does not photograph this page: it serializes the DOM and re-renders it in
+  another browser, where the icon font has to load again. Some snapshots were taken
+  before it arrived and show icon names as text ("add", "more_vert") instead of
+  glyphs (DEV-7525). A preload link survives the serialization, so the re-rendered
+  page starts fetching the font at once, and pixeleye's network-idle wait covers it.
+  `preview.ts` points the "Material Icons" font face at this same URL.
+-->
+<link
+  rel="preload"
+  as="font"
+  type="font/ttf"
+  crossorigin
+  href="assets/fonts/material-icons/MaterialIcons-Regular.ttf" />
+
+<!--
   Freeze CSS animations and transitions in the story iframe.
 
   Pixeleye captures a story as soon as it renders, so anything still animating is
@@ -35,9 +52,9 @@
   Freeze "today" in the story iframe.
 
   Components that default to the current date render a different snapshot on every
-  day: `app-date-picker` calls `setToday()` when it has no value (its `Empty` and
-  `Disabled` stories), `createToday()` feeds the date validators, the footer prints
-  the current year. A build on Tuesday then diffs against Monday's baseline.
+  day: an empty `app-date-picker` shows the current year and month and draws that
+  month's grid, and the footer prints the current year. A build on Tuesday then
+  diffs against Monday's baseline.
 
   Only argument-less `new Date()` / `Date()` are pinned. `Date.now()` stays real on
   purpose: rxjs schedulers (`debounceTime`, `delay`, …) measure elapsed time with it
@@ -53,7 +70,9 @@
         return new RealDate(FIXED_NOW).toString();
       }
       var args = Array.prototype.slice.call(arguments);
-      return args.length ? new (Function.prototype.bind.apply(RealDate, [null].concat(args)))() : new RealDate(FIXED_NOW);
+      return args.length
+        ? new (Function.prototype.bind.apply(RealDate, [null].concat(args)))()
+        : new RealDate(FIXED_NOW);
     }
     FrozenDate.prototype = RealDate.prototype;
     FrozenDate.now = RealDate.now;

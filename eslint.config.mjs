@@ -160,6 +160,27 @@ export default [
       ],
     },
   },
+  {
+    // CalendarDateService is the one home of the calendar rules applied to a KnoraDate (ARCH-MAP.md,
+    // vre/ui/ui). Elsewhere, the calendar library offers only its vocabulary; a component importing
+    // its arithmetic directly becomes a second owner of the era and astronomical-year mapping.
+    files: ['**/*.ts'],
+    ignores: ['**/shared/calendar/**', '**/calendar-date/calendar-date.service.ts', '**/*.spec.ts', '**/*.stories.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@dasch-swiss/vre/shared/calendar',
+              allowImportNames: ['CALENDAR_SYSTEMS', 'CalendarSystem'],
+              message: 'Calendar rules on a KnoraDate belong in CalendarDateService (@dasch-swiss/vre/ui/ui).',
+            },
+          ],
+        },
+      ],
+    },
+  },
   eslintConfigPrettier,
   {
     ignores: [
