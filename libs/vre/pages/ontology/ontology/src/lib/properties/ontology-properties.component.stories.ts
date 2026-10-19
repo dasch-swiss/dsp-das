@@ -66,6 +66,38 @@ export const WithProperties: Story = {
   },
 };
 
+const manyClasses = Array.from({ length: 30 }, (_, i) => ({
+  id: `http://0.0.0.0:3333/ontology/0001/test/v2#Class${i}`,
+  labels: [{ language: 'en', value: `Resource Class ${i}` }],
+  comments: [],
+}));
+
+export const LongUsedInListWraps: Story = {
+  name: 'Wraps a long "used in" list instead of cutting it off',
+  decorators: [
+    applicationConfig({
+      providers: [
+        ...sharedProviders,
+        {
+          provide: OntologyEditService,
+          useValue: makeOntologyEditServiceStub({
+            currentOntologyProperties$: of([{ ...sampleProperties[0], usedByClasses: manyClasses }]),
+          }),
+        },
+      ],
+    }),
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('The last class is shown inside the list item', async () => {
+      const item = canvasElement.querySelector('mat-list-item')!.getBoundingClientRect();
+      const last = (await canvas.findByText('Resource Class 29')).getBoundingClientRect();
+      await expect(last.right).toBeLessThanOrEqual(item.right);
+      await expect(last.bottom).toBeLessThanOrEqual(item.bottom);
+    });
+  },
+};
+
 export const EmptyList: Story = {
   name: 'Renders empty list when ontology has no properties',
   decorators: [

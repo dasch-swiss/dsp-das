@@ -51,7 +51,7 @@
       <span>
         <span class="mat-caption">&gt; {{ 'pages.ontology.propertyInfo.usedIn' | translate }} </span>
         @for (c of property.usedByClasses; track trackByFn($index, c); let last = $last) {
-        <span>
+        <span class="used-in-class">
           <span
             [matTooltip]="(c.labels | appStringifyStringLiteral ) + ': ' +(c.comments | appStringifyStringLiteral )"
             matTooltipPosition="above"

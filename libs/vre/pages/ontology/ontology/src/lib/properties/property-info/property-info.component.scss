@@ -50,26 +50,33 @@
       position: relative;
     }
   }
+}
 
-  &.info {
+// Not under `.mat-line`: the elements only carry a `mat-line` attribute, so rules nested there never applied
+// and a long "used in" line was cut off by the list item's nowrap (DEV-7481).
+.info {
+  font-size: small;
+
+  .mat-caption {
+    color: rgba($dark, 0.7);
+  }
+
+  .mat-icon {
+    width: 12px;
+    height: 12px;
     font-size: small;
-
-    .mat-caption {
-      color: rgba($dark, 0.7);
-    }
-
-    .mat-icon {
-      width: 12px;
-      height: 12px;
-      font-size: small;
-      top: 2px;
-      position: relative;
-    }
+    top: 2px;
+    position: relative;
   }
+}
 
-  &.with-line-break {
-    white-space: normal;
-  }
+.with-line-break {
+  white-space: normal;
+}
+
+// Keeps a class name and its dot together, so a long "used in" line wraps between classes, never inside a name.
+.used-in-class {
+  display: inline-block;
 }
 
 .edit-menu {
