@@ -33,6 +33,7 @@ import { PropertyItemComponent } from './property-item.component';
 @Component({
   selector: 'app-resource-class-info',
   templateUrl: './resource-class-info.component.html',
+  styleUrls: ['./resource-class-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AddPropertyMenuComponent,
@@ -93,29 +94,25 @@ export class ResourceClassInfoComponent {
   ) {}
 
   /**
-   * Predicate for the inner property-list cdkDropList: only accepts
-   * drops that originated from the same list (i.e. internal reorder).
-   * Rejects everything else -- cdkDropListGroup connects this list to
-   * every other card and to the library, but those cross-container
-   * drops are handled by the OUTER card-level cdkDropList below.
+   * True while a library property is dragged that cannot be added to this
+   * class, either because the class already has it or because the
+   * property's subjectType restricts it to another class.
    */
-  onlySameContainer = (drag: CdkDrag, drop: CdkDropList): boolean => drag.dropContainer === drop;
+  readonly isDropBlocked$ = this._view.draggedProperty$.pipe(
+    map(property => property !== null && !this._acceptsLibraryProperty(property))
+  );
 
   /**
-   * Predicate for the OUTER card-level cdkDropList: accepts ONLY
-   * library->card drags (drag.data is a PropertyInfo carrying
-   * `propDef`). Rejects:
-   * - same-container drops (the inner reorder list handles those),
-   * - cross-card class-to-class drags (drag.data has no `propDef`),
-   * - properties already assigned to this class (duplicate guard).
+   * Enter predicate of the card's property list. cdkDropListGroup connects
+   * the list to the library and to every other card, so it accepts:
+   * - reorders within this list,
+   * - library properties this class can take (see `isDropBlocked$`).
+   * Property rows dragged from another card carry no `propDef` data and are
+   * rejected; moving a property between classes is not supported.
    */
-  canAcceptLibraryDrop = (drag: CdkDrag, drop: CdkDropList): boolean => {
-    if (drag.dropContainer === drop) return false;
-    const data = drag.data as PropertyInfo | undefined;
-    if (!data || typeof data !== 'object' || !('propDef' in data)) {
-      return false;
-    }
-    return !this.resourceClass.iHasProperties.some(p => p.propertyIndex === data.propDef.id);
+  canAcceptDrop = (drag: CdkDrag, drop: CdkDropList): boolean => {
+    if (drag.dropContainer === drop) return true;
+    return this._isLibraryProperty(drag.data) && this._acceptsLibraryProperty(drag.data);
   };
 
   setCanBeDeleted() {
@@ -150,11 +147,16 @@ export class ResourceClassInfoComponent {
   }
 
   /**
-   * Internal property reordering inside this class card. Connected to
-   * itself only (enterPredicate `onlySameContainer`), so no cross-card
-   * or library drag can ever reach this handler.
+   * Reorders within the card, or adds a library property at the position
+   * it was dropped (the placeholder's position).
    */
-  onPropertyDropped(event: CdkDragDrop<ClassPropertyInfo[]>): void {
+  onPropertyDropped(event: CdkDragDrop<ClassPropertyInfo[], unknown, PropertyInfo | undefined>): void {
+    if (event.previousContainer !== event.container) {
+      if (this._isLibraryProperty(event.item.data)) {
+        this._assignAt(event.item.data, event.currentIndex);
+      }
+      return;
+    }
     if (event.previousIndex === event.currentIndex) return;
     moveItemInArray(this.resourceClass.properties, event.previousIndex, event.currentIndex);
     const updated = this.resourceClass.properties.map((p, index) => ({
@@ -162,18 +164,6 @@ export class ResourceClassInfoComponent {
       guiOrder: index + 1,
     }));
     this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, updated);
-  }
-
-  /**
-   * Outer card-level drop handler for library->card assignment. The
-   * card's outer cdkDropList accepts only PropertyInfo drags from the
-   * library (enterPredicate `canAcceptLibraryDrop`), so item.data here
-   * is always a PropertyInfo. Position is not preserved -- a single
-   * assignPropertyToClass$ call appends the property; users reorder
-   * afterwards via the inner drag handle.
-   */
-  onLibraryDrop(event: CdkDragDrop<ResourceClassInfo, unknown, PropertyInfo>): void {
-    this._assignAtPosition(event.item.data, event.currentIndex);
   }
 
   onCardinalityChange(updatedIHasProperty: IHasProperty) {
@@ -194,24 +184,21 @@ export class ResourceClassInfoComponent {
     this._notification.openSnackBar(this._translate.instant('pages.ontology.resourceClassInfo.idCopied'));
   }
 
-  /**
-   * Assign a property from the library to this class. The assign call
-   * appends with `guiOrder = max + 1`. A previous version of this
-   * method chained a follow-up `replaceGuiOrderOfCardinalities` to land
-   * the property at the user's dropped index, but the second request
-   * race-collided with concurrent assigns from rapid drops -- the
-   * server returned 400 "do not have cardinalities" because the
-   * `lastModificationDate` and class snapshot used by the reorder were
-   * stale relative to the in-flight assign. Drop position is no longer
-   * persisted on library-drop; users can reorder afterwards via the
-   * internal drag handle on the row, which is single-request and safe.
-   */
-  private _assignAtPosition(prop: PropertyInfo, _index: number): void {
+  private _isLibraryProperty(data: unknown): data is PropertyInfo {
+    return !!data && typeof data === 'object' && 'propDef' in data;
+  }
+
+  private _acceptsLibraryProperty(property: PropertyInfo): boolean {
+    const alreadyAssigned = this.resourceClass.iHasProperties.some(p => p.propertyIndex === property.propDef.id);
+    return !alreadyAssigned && this._oes.canAssignPropertyToClass(property, this.resourceClass.resourceClassDefinition);
+  }
+
+  private _assignAt(prop: PropertyInfo, index: number): void {
     const propertyLabel = prop.propDef.label ?? prop.propDef.id;
     const classLabel = this.resourceClass.label || this.resourceClass.id;
 
     this._oes
-      .assignPropertyToClass$(prop.propDef.id, this.resourceClass.resourceClassDefinition)
+      .assignPropertyToClass$(prop.propDef.id, this.resourceClass.resourceClassDefinition, index)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe({
         next: () => {

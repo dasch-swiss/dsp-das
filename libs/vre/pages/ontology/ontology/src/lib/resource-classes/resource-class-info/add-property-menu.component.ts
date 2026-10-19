@@ -125,6 +125,7 @@ export class AddPropertyMenuComponent implements OnChanges {
 
       allProps.forEach(prop => {
         if (usedByClass.has(prop.propDef.id)) return;
+        if (!this._oes.canAssignPropertyToClass(prop, resourceClass.resourceClassDefinition)) return;
 
         const group = groupedUnused.get(prop.baseOntologyId) ?? {
           ontologyId: prop.baseOntologyId,

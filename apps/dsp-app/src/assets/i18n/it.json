@@ -476,7 +476,8 @@
         "cannotDelete": "Questa classe non può essere eliminata perché è in uso!",
         "delete": "Elimina",
         "deleteConfirmation": "Vuoi eliminare questa classe di risorsa?",
-        "idCopied": "ID classe copiato negli appunti!"
+        "idCopied": "ID classe copiato negli appunti!",
+        "propertyRestricted": "Questa proprietà è limitata a un'altra classe."
       },
       "propertyForm": {
         "editTitle": "Modifica proprietà",

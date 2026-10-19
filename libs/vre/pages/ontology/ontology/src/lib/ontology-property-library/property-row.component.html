@@ -7,6 +7,7 @@
   (cdkDragEnded)="onDragEnded()"
   [attr.data-iri]="property.propDef.id"
   data-cy="property-row">
+  <div class="property-row__drop-placeholder" *cdkDragPlaceholder data-cy="property-drop-placeholder"></div>
   @if (editingEnabled) {
   <button
     type="button"

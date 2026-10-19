@@ -1,0 +1,29 @@
+// Shown on every card the dragged library property cannot be added to
+// (its subjectType restricts it to another class).
+.class-card--drop-blocked {
+  opacity: 0.5;
+}
+
+.class-card__drop-blocked-hint {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 8px;
+  font-size: 0.875rem;
+
+  mat-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+}
+
+// Keeps the list a usable drop target while the class has no properties.
+.class-card__properties {
+  min-height: 54px;
+}
+
+// The placeholder takes the empty-state text's place while hovering.
+.class-card__properties.cdk-drop-list-dragging .class-card__no-properties {
+  display: none;
+}

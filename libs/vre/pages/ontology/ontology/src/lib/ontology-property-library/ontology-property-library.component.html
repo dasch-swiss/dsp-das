@@ -98,7 +98,7 @@
       role="listitem"
       [property]="prop"
       [editingEnabled]="(isEditingEnabled$ | async) ?? false"
-      (dragStarted)="onPropertyDragStarted()"
+      (dragStarted)="onPropertyDragStarted(prop)"
       (dragEnded)="onPropertyDragEnded()" />
     }
   </div>

@@ -48,7 +48,8 @@ export const makeOntologyEditServiceStub = (partial: Record<string, unknown> = {
   deleteOntology$: () => of({}),
   updateGuiOrderOfClassProperties: () => {},
   removePropertyFromClass: () => {},
-  assignPropertyToClass: () => {},
+  assignPropertyToClass$: () => of(undefined),
+  canAssignPropertyToClass: () => true,
   propertyCanBeRemovedFromClass$: () => of({ canDo: true }),
   updateOntology$: () => of({}),
   createResourceClass$: () => of({}),
@@ -59,9 +60,9 @@ export const makeOntologyEditServiceStub = (partial: Record<string, unknown> = {
   ...partial,
 });
 
-export const makeOntologyPageServiceStub = (partial: Record<string, unknown> = {}) => ({
-  expandClasses$: new BehaviorSubject(true).asObservable(),
-  toggleExpandClasses: () => {},
+export const makeOntologyEditorViewServiceStub = (partial: Record<string, unknown> = {}) => ({
+  isEditingEnabled$: of(true),
+  draggedProperty$: new BehaviorSubject(null),
   ...partial,
 });
 

@@ -168,12 +168,12 @@ export class OntologyPropertyLibraryComponent {
     return this.activeCategories$.value.has(group);
   }
 
-  onPropertyDragStarted(): void {
-    this._view.setPropertyDragging(true);
+  onPropertyDragStarted(property: PropertyInfo): void {
+    this._view.setDraggedProperty(property);
   }
 
   onPropertyDragEnded(): void {
-    this._view.setPropertyDragging(false);
+    this._view.setDraggedProperty(null);
   }
 
   trackByPropertyId(_: number, prop: PropertyInfo): string {

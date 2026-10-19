@@ -476,7 +476,8 @@
         "cannotDelete": "Cette classe ne peut pas être supprimée car elle est utilisée !",
         "delete": "Supprimer",
         "deleteConfirmation": "Voulez-vous supprimer cette classe de ressource ?",
-        "idCopied": "ID de classe copié dans le presse-papiers !"
+        "idCopied": "ID de classe copié dans le presse-papiers !",
+        "propertyRestricted": "Cette propriété est limitée à une autre classe."
       },
       "propertyForm": {
         "editTitle": "Modifier la propriété",

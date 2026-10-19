@@ -476,7 +476,8 @@
         "cannotDelete": "Diese Klasse kann nicht gelöscht werden, da sie verwendet wird!",
         "delete": "Löschen",
         "deleteConfirmation": "Möchten Sie diese Ressourcenklasse löschen?",
-        "idCopied": "Klassen-ID in Zwischenablage kopiert!"
+        "idCopied": "Klassen-ID in Zwischenablage kopiert!",
+        "propertyRestricted": "Diese Eigenschaft ist auf eine andere Klasse beschränkt."
       },
       "propertyForm": {
         "editTitle": "Eigenschaft bearbeiten",

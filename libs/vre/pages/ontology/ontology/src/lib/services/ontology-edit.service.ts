@@ -34,7 +34,6 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import {
   BehaviorSubject,
-  catchError,
   combineLatest,
   concat,
   defer,
@@ -50,13 +49,13 @@ import {
   switchMap,
   take,
   tap,
-  throwError,
 } from 'rxjs';
 import { UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
 import { CreatePropertyData, UpdatePropertyData } from '../forms/property-form/property-form.type';
 import { ResourceClassFormData, UpdateResourceClassData } from '../forms/resource-class-form/resource-class-form.type';
 import { ClassPropertyInfo, ClassShortInfo, PropertyInfo, ResourceClassInfo } from '../ontology.types';
 import { MakeOntologyFor, OntologyContext } from './make-ontology-for';
+import { violatesSubjectTypeConstraint } from './property-assignability';
 
 @Injectable()
 export class OntologyEditService {
@@ -341,16 +340,17 @@ export class OntologyEditService {
   }
 
   /**
-   * Observable variant of property-to-class cardinality assignment. Emits
-   * once after the cardinality has been added and the ontology reloaded;
-   * errors are propagated to the caller. `_isTransacting` is reset in both
-   * success and error paths via `finalize`.
+   * Adds a cardinality for `propertyId` to the class. Emits once after the
+   * ontology has been reloaded; errors are propagated to the caller.
    *
-   * Used by the workspace drag-to-assign flow and by `AddPropertyMenu`'s
-   * "Assign to class…" menu, both of which need to react to completion /
-   * failure (snackbar feedback, a11y announcements).
+   * Without `index` the property is appended (`guiOrder = max + 1`). With
+   * `index` it is then moved to that position among the class's properties
+   * by a follow-up gui-order request. Both requests run inside one
+   * transaction: `_isTransacting` stays true from the first request until
+   * the final reload (reset via `finalize`), so drop targets stay disabled
+   * and no second assign can interleave with a stale `lastModificationDate`.
    */
-  assignPropertyToClass$(propertyId: string, classDefinition: ClassDefinition): Observable<void> {
+  assignPropertyToClass$(propertyId: string, classDefinition: ClassDefinition, index?: number): Observable<void> {
     this._isTransacting.next(true);
 
     const guiOrder = Math.max(0, ...classDefinition.propertiesList.map(p => p.guiOrder ?? 0)) + 1;
@@ -365,9 +365,32 @@ export class OntologyEditService {
 
     return this._dspApiConnection.v2.onto.addCardinalityToResourceClass(updateOntology).pipe(
       take(1),
-      switchMap(() => this._loadOntology$(ontoIri, propertyId)),
-      catchError(err => throwError(() => err)),
+      switchMap(() =>
+        index === undefined
+          ? this._loadOntology$(ontoIri, propertyId)
+          : this._loadOntology$(ontoIri, propertyId, true).pipe(
+              switchMap(() => this._moveClassPropertyTo$(classDefinition.id, propertyId, index))
+            )
+      ),
       finalize(() => this._isTransacting.next(false))
+    );
+  }
+
+  /**
+   * True unless dsp-api would reject adding `property` to `classDefinition`
+   * because the property's `subjectType` restricts it to a class that is
+   * neither this class nor one of its superclasses.
+   */
+  canAssignPropertyToClass(property: PropertyInfo, classDefinition: ClassDefinition): boolean {
+    const superClasses = new Map<string, string[]>();
+    (this._projectOntologiesSubject.value ?? []).forEach(onto =>
+      onto
+        .getClassDefinitionsByType<ResourceClassDefinitionWithAllLanguages>(ResourceClassDefinitionWithAllLanguages)
+        .forEach(c => superClasses.set(c.id, c.subClassOf))
+    );
+    superClasses.set(classDefinition.id, classDefinition.subClassOf);
+    return !violatesSubjectTypeConstraint(property.propDef.subjectType, classDefinition.id, iri =>
+      superClasses.get(iri)
     );
   }
 
@@ -545,10 +568,10 @@ export class OntologyEditService {
    * The existing void `_loadOntology` delegates here so all current call sites
    * keep their fire-and-forget semantics.
    */
-  private _loadOntology$(iri: string, highLightItem?: string): Observable<void> {
+  private _loadOntology$(iri: string, highLightItem?: string, keepTransacting = false): Observable<void> {
     return this._dspApiConnection.v2.onto.getOntology(iri, true).pipe(
       take(1),
-      tap(onto => this._afterUpdateOntology(onto, highLightItem)),
+      tap(onto => this._afterUpdateOntology(onto, highLightItem, keepTransacting)),
       map(() => undefined)
     );
   }
@@ -572,14 +595,43 @@ export class OntologyEditService {
     this._projectOntologiesSubject.next(ontologies.filter(onto => onto.id !== ontologyId));
   }
 
-  private _afterUpdateOntology(onto: ReadOntology, highLightItem?: string) {
+  /**
+   * Moves `propertyId` to `index` within the class's properties, reading the
+   * class from the just-reloaded ontology so the gui orders and the
+   * `lastModificationDate` sent are current.
+   */
+  private _moveClassPropertyTo$(classId: string, propertyId: string, index: number): Observable<void> {
+    return this.currentOntologyClasses$.pipe(
+      take(1),
+      switchMap(classes => {
+        const properties = [...(classes.find(c => c.id === classId)?.properties ?? [])];
+        const from = properties.findIndex(p => p.propDef.id === propertyId);
+        const to = Math.min(Math.max(index, 0), properties.length - 1);
+        if (from === -1 || from === to) {
+          return of(undefined);
+        }
+        const [moved] = properties.splice(from, 1);
+        properties.splice(to, 0, moved);
+        const reordered = properties.map((p, i) => ({ ...p.iHasProperty, guiOrder: i + 1 }));
+        const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, reordered);
+        return this._dspApiConnection.v2.onto.replaceGuiOrderOfCardinalities(updateOntology).pipe(
+          take(1),
+          switchMap(() => this._loadOntology$(this.ontologyId, propertyId))
+        );
+      })
+    );
+  }
+
+  private _afterUpdateOntology(onto: ReadOntology, highLightItem?: string, keepTransacting = false) {
     this._currentOntologyInfo.next(onto);
     this._currentOntology.next(onto);
     // Push the fresh ontology into the project-wide state so every subscriber
     // (class cards, property menus, page streams) receives the update.
     this._upsertProjectOntology(onto);
     this._canDeletePropertyMap.clear();
-    this._isTransacting.next(false);
+    if (!keepTransacting) {
+      this._isTransacting.next(false);
+    }
     this.latestChangedItem.next(highLightItem);
   }
 

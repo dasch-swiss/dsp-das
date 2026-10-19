@@ -1,4 +1,4 @@
-import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragHandle, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -27,7 +27,7 @@ import type { PropertyInfo } from '../ontology.types';
   selector: 'app-property-row',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CdkDrag, CdkDragHandle, MatIcon, MatIconButton, MatTooltip, TranslatePipe],
+  imports: [CdkDrag, CdkDragHandle, CdkDragPlaceholder, MatIcon, MatIconButton, MatTooltip, TranslatePipe],
   templateUrl: './property-row.component.html',
   styleUrls: ['./property-row.component.scss'],
 })

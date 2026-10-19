@@ -2,7 +2,7 @@ import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { BehaviorSubject, distinctUntilChanged, map, pairwise, startWith } from 'rxjs';
-import type { ResourceClassInfo } from '../ontology.types';
+import type { PropertyInfo, ResourceClassInfo } from '../ontology.types';
 import { OntologyEditService } from './ontology-edit.service';
 
 /**
@@ -36,6 +36,8 @@ export class OntologyEditorViewService {
   readonly keyboardAssignTargetIri$ = new BehaviorSubject<string | null>(null);
   /** Bound to `<as-split [disabled]>` in the shell template (Phase 1 spike outcome). */
   readonly isPropertyDragging$ = new BehaviorSubject<boolean>(false);
+  /** The library property currently being dragged, so class cards can flag themselves as invalid targets. */
+  readonly draggedProperty$ = new BehaviorSubject<PropertyInfo | null>(null);
 
   /** True when the current user has project-admin rights — controls edit affordances in the templates. */
   readonly isEditingEnabled$ = this._projectPageService.hasProjectAdminRights$.pipe(distinctUntilChanged());
@@ -100,6 +102,11 @@ export class OntologyEditorViewService {
     this.isPropertyDragging$.next(dragging);
   }
 
+  setDraggedProperty(property: PropertyInfo | null): void {
+    this.draggedProperty$.next(property);
+    this.setPropertyDragging(property !== null);
+  }
+
   /** Reset all view state to defaults. Called on ontology switch and may be called by callers. */
   reset(): void {
     this.selectedClassIris$.next(new Set<string>());
@@ -109,6 +116,7 @@ export class OntologyEditorViewService {
     this.unusedPropertiesOnly$.next(false);
     this.keyboardAssignTargetIri$.next(null);
     this.isPropertyDragging$.next(false);
+    this.draggedProperty$.next(null);
     this._selectionInitialized = false;
   }
 

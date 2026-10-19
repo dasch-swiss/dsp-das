@@ -41,7 +41,7 @@ const makeProviders = (properties: PropertyInfo[], classes: ResourceClassInfo[] 
       provide: OntologyEditorViewService,
       useValue: {
         isEditingEnabled$,
-        setPropertyDragging: () => undefined,
+        setDraggedProperty: () => undefined,
         setUnusedPropertiesOnly: () => undefined,
         setPropertyFilter: () => undefined,
         setPropertyCategoryFilters: () => undefined,

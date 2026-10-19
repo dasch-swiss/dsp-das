@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { BehaviorSubject, of } from 'rxjs';
-import type { ResourceClassInfo } from '../ontology.types';
+import type { PropertyInfo, ResourceClassInfo } from '../ontology.types';
 import { OntologyEditService } from './ontology-edit.service';
 import { OntologyEditorViewService } from './ontology-editor-view.service';
 
@@ -235,6 +235,17 @@ describe('OntologyEditorViewService', () => {
       service.setPropertyDragging(true);
       expect(service.isPropertyDragging$.value).toBe(true);
       service.setPropertyDragging(false);
+      expect(service.isPropertyDragging$.value).toBe(false);
+    });
+
+    it('setDraggedProperty publishes the property and the dragging flag', () => {
+      const { service } = setup();
+      const property = { propDef: { id: 'p' } } as unknown as PropertyInfo;
+      service.setDraggedProperty(property);
+      expect(service.draggedProperty$.value).toBe(property);
+      expect(service.isPropertyDragging$.value).toBe(true);
+      service.setDraggedProperty(null);
+      expect(service.draggedProperty$.value).toBeNull();
       expect(service.isPropertyDragging$.value).toBe(false);
     });
 

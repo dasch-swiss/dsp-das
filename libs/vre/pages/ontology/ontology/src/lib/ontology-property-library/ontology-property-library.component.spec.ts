@@ -31,7 +31,7 @@ describe('OntologyPropertyLibraryComponent', () => {
   let isEditingEnabled$: BehaviorSubject<boolean>;
   let viewService: {
     isEditingEnabled$: BehaviorSubject<boolean>;
-    setPropertyDragging: jest.Mock;
+    setDraggedProperty: jest.Mock;
     setUnusedPropertiesOnly: jest.Mock;
     setPropertyFilter: jest.Mock;
     setPropertyCategoryFilters: jest.Mock;
@@ -43,7 +43,7 @@ describe('OntologyPropertyLibraryComponent', () => {
 
     viewService = {
       isEditingEnabled$,
-      setPropertyDragging: jest.fn(),
+      setDraggedProperty: jest.fn(),
       setUnusedPropertiesOnly: jest.fn(),
       setPropertyFilter: jest.fn(),
       setPropertyCategoryFilters: jest.fn(),
@@ -165,16 +165,17 @@ describe('OntologyPropertyLibraryComponent', () => {
   });
 
   describe('drag lifecycle', () => {
-    it('sets isPropertyDragging true on drag start', () => {
+    it('publishes the dragged property on drag start', () => {
       setup();
-      component.onPropertyDragStarted();
-      expect(viewService.setPropertyDragging).toHaveBeenLastCalledWith(true);
+      const property = { propDef: { id: 'p' } } as unknown as PropertyInfo;
+      component.onPropertyDragStarted(property);
+      expect(viewService.setDraggedProperty).toHaveBeenLastCalledWith(property);
     });
 
-    it('sets isPropertyDragging false on drag end', () => {
+    it('clears the dragged property on drag end', () => {
       setup();
       component.onPropertyDragEnded();
-      expect(viewService.setPropertyDragging).toHaveBeenLastCalledWith(false);
+      expect(viewService.setDraggedProperty).toHaveBeenLastCalledWith(null);
     });
   });
 
