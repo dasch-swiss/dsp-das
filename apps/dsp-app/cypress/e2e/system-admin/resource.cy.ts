@@ -391,20 +391,19 @@ describe('Resource', () => {
           po.delete();
         });
     });
-    it.skip('date', () => {
+    it('date', () => {
       ResourceRequests.resourceRequest(ClassPropertyPayloads.date(finalLastModificationDate, propertyName), false, po.className, propertyName);
       po.visitAddPage();
 
       // create
       po.addInitialLabel();
-      cy.get('.mat-mdc-form-field-icon-suffix > .mat-icon').click();
-      cy.get('#mat-input-6').clear({ force: true }).type('2023');
-      cy.get(':nth-child(4) > :nth-child(4) > .selectable').click();
+      cy.get('[data-cy=date-field]').click();
+      cy.get('[data-cy=today-button]').click();
       po.clickOnSubmit();
 
-      // edit
+      // edit: adding an end, preset to the next day, makes it a period
       po.setupEdit();
-      cy.get('.date-form-grid > .mat-mdc-tooltip-trigger > .mat-mdc-button-touch-target').click();
+      cy.get('[data-cy=toggle-period]').click();
       po.saveEdit();
 
       // delete
