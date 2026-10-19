@@ -36,6 +36,7 @@ The property library is a single `cdkDropList` keyed by the static constant
 DOM diffing.
 
 Drops are disabled when:
+
 - `OntologyEditService.isTransacting$` is `true` (another write is in flight), or
 - `OntologyEditorViewService.isEditingEnabled$` is `false` (user lacks
   project-admin rights).
@@ -58,12 +59,12 @@ contract is explicit at the call site, not only enforced by the directive.
 
 ## Performance budgets
 
-| Scenario | Budget | Source |
-|---|---|---|
-| Filter typing on a 50-class ontology | < 16 ms per keystroke (one frame) | `debounceTime(150)` + `distinctUntilChanged` |
-| Workspace first paint on selection | < ~1 s on M1 + 4× CPU throttle | OnPush + `combineLatest` short-pipe |
-| Property library first paint | < ~1 s same conditions | filter recomputes on locale + filter + category change only |
-| Splitter resize | 60 fps | `<as-split [disabled]>` flips mid-drag to avoid layout thrash |
+| Scenario                             | Budget                            | Source                                                        |
+| ------------------------------------ | --------------------------------- | ------------------------------------------------------------- |
+| Filter typing on a 50-class ontology | < 16 ms per keystroke (one frame) | `debounceTime(150)` + `distinctUntilChanged`                  |
+| Workspace first paint on selection   | < ~1 s on M1 + 4× CPU throttle    | OnPush + `combineLatest` short-pipe                           |
+| Property library first paint         | < ~1 s same conditions            | filter recomputes on locale + filter + category change only   |
+| Splitter resize                      | 60 fps                            | `<as-split [disabled]>` flips mid-drag to avoid layout thrash |
 
 These budgets are derived from the PRD's "Quality Gates" section and the
 plan's risk matrix entry on MatTree auto-expand. Verification is done in
