@@ -131,6 +131,9 @@ export const ReadOnly: Story = {
     await step('Restriction banner is rendered', async () => {
       await expect(canvasElement.querySelector('app-resource-restriction')).not.toBeNull();
     });
+    await step('PDF page is painted', async () => {
+      await waitForPdfPainted(canvasElement);
+    });
   },
 };
 
