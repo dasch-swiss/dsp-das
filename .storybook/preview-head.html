@@ -1,4 +1,21 @@
 <!--
+  Preload the Material Icons font.
+
+  Pixeleye does not photograph this page: it serializes the DOM and re-renders it in
+  another browser, where the icon font has to load again. Some snapshots were taken
+  before it arrived and show icon names as text ("add", "more_vert") instead of
+  glyphs (DEV-7525). A preload link survives the serialization, so the re-rendered
+  page starts fetching the font at once, and pixeleye's network-idle wait covers it.
+  `preview.ts` points the "Material Icons" font face at this same URL.
+-->
+<link
+  rel="preload"
+  as="font"
+  type="font/ttf"
+  crossorigin
+  href="assets/fonts/material-icons/MaterialIcons-Regular.ttf" />
+
+<!--
   Freeze CSS animations and transitions in the story iframe.
 
   Pixeleye captures a story as soon as it renders, so anything still animating is
