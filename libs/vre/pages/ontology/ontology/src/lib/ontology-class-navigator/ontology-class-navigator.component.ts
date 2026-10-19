@@ -210,7 +210,7 @@ export class OntologyClassNavigatorComponent implements OnInit {
 
   private _resolveLabel(labels: StringLiteralV2[] | undefined, fallback: string): string {
     if (!labels || labels.length === 0) return fallback;
-    const lang = this._localization.getCurrentLanguage();
+    const lang = this._localization.currentLanguage;
     return (
       labels.find(l => 'language' in l && l.language === lang)?.value ??
       labels.find(l => !('language' in l) || !l.language)?.value ??

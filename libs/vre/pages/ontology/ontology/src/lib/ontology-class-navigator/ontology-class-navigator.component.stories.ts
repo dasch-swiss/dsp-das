@@ -60,7 +60,7 @@ const makeProviders = (classes: ResourceClassInfo[], selected: Set<string> = new
       provide: LocalizationService,
       useValue: {
         currentLanguage$: new BehaviorSubject('en'),
-        getCurrentLanguage: () => 'en',
+        currentLanguage: 'en',
       },
     },
   ];

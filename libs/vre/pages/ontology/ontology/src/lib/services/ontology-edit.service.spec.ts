@@ -9,6 +9,7 @@ import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { createMockLocalizationService } from '@dasch-swiss/vre/shared/app-helper-services/testing';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, of, throwError } from 'rxjs';
@@ -71,7 +72,7 @@ describe('OntologyEditService.assignPropertyToClass$', () => {
           } as unknown as KnoraApiConnection,
         },
         { provide: NotificationService, useValue: { openSnackBar: jest.fn() } },
-        { provide: LocalizationService, useValue: { getCurrentLanguage: () => 'en' } },
+        { provide: LocalizationService, useValue: createMockLocalizationService().service },
         { provide: OntologyService, useValue: { getInPreferedLanguage: () => '' } },
         {
           provide: ProjectPageService,

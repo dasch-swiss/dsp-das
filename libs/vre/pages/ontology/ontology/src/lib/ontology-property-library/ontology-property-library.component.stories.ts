@@ -59,7 +59,7 @@ const makeProviders = (properties: PropertyInfo[], classes: ResourceClassInfo[] 
       provide: LocalizationService,
       useValue: {
         currentLanguage$: new BehaviorSubject('en'),
-        getCurrentLanguage: () => 'en',
+        currentLanguage: 'en',
       },
     },
     { provide: NotificationService, useValue: { openSnackBar: () => undefined } },

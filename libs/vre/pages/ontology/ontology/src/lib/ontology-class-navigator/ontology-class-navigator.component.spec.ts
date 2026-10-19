@@ -84,7 +84,7 @@ describe('OntologyClassNavigatorComponent', () => {
           provide: LocalizationService,
           useValue: {
             currentLanguage$: new BehaviorSubject('en'),
-            getCurrentLanguage: () => 'en',
+            currentLanguage: 'en',
           },
         },
         { provide: MatDialog, useValue: dialog },
