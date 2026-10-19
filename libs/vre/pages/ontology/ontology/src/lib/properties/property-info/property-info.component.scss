@@ -1,4 +1,4 @@
-@use "config" as *;
+@use 'config' as *;
 
 :host {
   width: 100%;
@@ -77,6 +77,15 @@
   top: 0;
   right: 0;
   align-items: center;
+}
+
+// The dot between "used in" classes carries its own spacing, so it is equal on both sides (DEV-7481).
+.used-in-separator {
+  margin-inline: 0.35em;
+}
+
+.restricted-lock {
+  margin-left: 0.25em;
 }
 
 .not-used {

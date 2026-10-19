@@ -67,6 +67,42 @@ export const DefaultView: Story = {
   },
 };
 
+const classInfo = (name: string, restricted = false) => {
+  const id = `http://0.0.0.0:3333/ontology/0001/test/v2#${name}`;
+  return {
+    id,
+    labels: [{ language: 'en', value: name }],
+    comments: [{ language: 'en', value: `A ${name}` }],
+    ...(restricted ? { restrictedToClass: id } : {}),
+  };
+};
+
+export const UsedInClassesEvenlySeparated: Story = {
+  name: 'Separates the classes a property is used in with an evenly spaced dot',
+  decorators: [applicationConfig({ providers: sharedProviders })],
+  args: {
+    property: {
+      ...sampleProperty,
+      usedByClasses: [classInfo('Book', true), classInfo('Letter'), classInfo('Person')],
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('The space before each dot equals the space after it', async () => {
+      const separators = canvasElement.querySelectorAll<HTMLElement>('.used-in-separator');
+      await expect(separators).toHaveLength(2);
+      separators.forEach(separator => {
+        const before = separator.previousElementSibling!.getBoundingClientRect();
+        const after = separator.parentElement!.nextElementSibling!.firstElementChild!.getBoundingClientRect();
+        const dot = separator.getBoundingClientRect();
+        const gapBefore = dot.left - before.right;
+        const gapAfter = after.left - dot.right;
+        expect(gapBefore).toBeGreaterThan(0);
+        expect(Math.abs(gapBefore - gapAfter)).toBeLessThan(1);
+      });
+    });
+  },
+};
+
 export const ReadOnlyForNonAdmin: Story = {
   name: 'Hides action buttons for non-admin users',
   decorators: [
