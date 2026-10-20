@@ -21,6 +21,7 @@ import {
   resourceFetcherServiceStub,
   withheldFileValue,
 } from '../../resource-stories.helper';
+import { STORY_PDF_URL, waitForPdfPainted } from '../../stories.helpers';
 import { ResourcePdfComponent } from './resource-pdf.component';
 
 const makeResource = (permission = 'CR'): DspResource => {
@@ -32,7 +33,7 @@ const makeResource = (permission = 'CR'): DspResource => {
 
   const fileValue = {
     type: Constants.DocumentFileValue,
-    fileUrl: 'https://ingest.stage.dasch.swiss/projects/0810/assets/4ljB8UqvMFX-diQyaSUVIbo/original',
+    fileUrl: STORY_PDF_URL,
     filename: 'document.pdf',
     userHasPermission: 'RV',
     copyrightHolder: null,
@@ -117,6 +118,9 @@ export const Editable: Story = {
     await step('PDF viewer is rendered', async () => {
       await expect(canvasElement.querySelector('app-pdf-document')).not.toBeNull();
     });
+    await step('PDF page is painted', async () => {
+      await waitForPdfPainted(canvasElement);
+    });
   },
 };
 
@@ -126,6 +130,9 @@ export const ReadOnly: Story = {
   play: async ({ canvasElement, step }) => {
     await step('Restriction banner is rendered', async () => {
       await expect(canvasElement.querySelector('app-resource-restriction')).not.toBeNull();
+    });
+    await step('PDF page is painted', async () => {
+      await waitForPdfPainted(canvasElement);
     });
   },
 };

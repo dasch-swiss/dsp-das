@@ -497,7 +497,10 @@
       },
       "termValidation": {
         "tooShort": "Enter at least 3 characters",
-        "wildcardTooShort": "A wildcard needs at least 3 other characters in the same word"
+        "wildcardTooShort": "A wildcard needs at least 3 other characters in the same word",
+        "unclosedPhrase": "Close the quotation mark to search for a phrase",
+        "trailingEscape": "A backslash needs a character after it",
+        "danglingOperator": "AND, OR and NOT need a search term next to them"
       },
       "searchTips": {
         "title": "Search tips",
@@ -555,7 +558,8 @@
         "errors": {
           "uri": "Value must be a URI value.",
           "integer": "Value must be an integer value.",
-          "decimal": "Value must be a decimal value."
+          "decimal": "Value must be a decimal value.",
+          "invalidRegex": "Not a valid regular expression. Use .* to match any characters, e.g. .*word.*"
         },
         "fulltextSearchPlaceholder": "Search…",
         "noDataModel": "This project has no data model yet. A data model is needed before you can search its resources."
@@ -626,6 +630,7 @@
   "resourceEditor": {
     "properties": "Properties",
     "labelAnnotations": "Annotations",
+    "representation": "Representation",
     "restricted": "Access restricted: Images may be of lower quality and some values may be hidden.",
     "versioned": "This is an outdated version of the resource.",
     "seeCurrentVersion": "Go to current version",
@@ -1056,12 +1061,77 @@
     },
     "datePicker": {
       "clickToSelect": "Click to select a date",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "done": "Done",
       "calendar": "Calendar",
       "today": "Today",
       "month": "Month",
       "none": "None",
+      "noDay": "Month precision (no day)",
+      "yearPrecisionShortcut": "Year precision",
+      "suggestedMonth": "Showing the current month as a suggestion. Nothing is entered until you pick a day or choose a month.",
+      "skippedByReform": "Skipped by the Gregorian reform",
+      "yearPrecision": "Year precision. Choose a month to select a day.",
       "year": "Year",
-      "bceWarning": "Attention: Date <strong>before common era</strong>."
+      "bceWarning": "Attention: Date <strong>before common era</strong>.",
+      "storedValue": "Stored value: {{date}}",
+      "convertedStored": "{{to}} has been converted from {{from}} (stored value).",
+      "convertedStoredSameDay": "{{to}} has been converted from {{from}} (stored value), which equals the same day.",
+      "convertedStoredSamePeriod": "{{to}} has been converted from {{from}} (stored value), which equals the same period.",
+      "preHijraNote": "Islamic is not available: this date lies before the Hijra. Islamic years start at 1 AH and have no negative years.",
+      "endBeforeStart": "End date must be after start date.",
+      "era": "Era",
+      "yearMustBePositive": "A valid year is greater than 0.",
+      "addEndDate": "Add end date",
+      "removeEndDate": "Delete end date",
+      "dateRequired": "One date is required",
+      "endDateRequired": "End date is required"
+    },
+    "calendarMarker": {
+      "calendars": {
+        "GREGORIAN": "Gregorian",
+        "JULIAN": "Julian",
+        "ISLAMIC": "Islamic (tabular)"
+      },
+      "beforeHijra": "Before the Hijra",
+      "inEachCalendar": "{{calendar}}. This date in each calendar",
+      "jdn": "JDN",
+      "periodOfDays": "Period of {{count}} days",
+      "reformGapNote": "{{date}} lies in the ten days the Gregorian reform skipped in October 1582. It is stored as given, in the proleptic Gregorian calendar — the same day as {{julian}}.",
+      "machineReadable": "ISO 8601 · EDTF",
+      "copy": "Copy",
+      "prolepticGregorian": "Proleptic Gregorian"
+    },
+    "weekdays": {
+      "monday": {
+        "long": "Monday",
+        "short": "M"
+      },
+      "tuesday": {
+        "long": "Tuesday",
+        "short": "T"
+      },
+      "wednesday": {
+        "long": "Wednesday",
+        "short": "W"
+      },
+      "thursday": {
+        "long": "Thursday",
+        "short": "T"
+      },
+      "friday": {
+        "long": "Friday",
+        "short": "F"
+      },
+      "saturday": {
+        "long": "Saturday",
+        "short": "S"
+      },
+      "sunday": {
+        "long": "Sunday",
+        "short": "S"
+      }
     }
   },
   "shared": {

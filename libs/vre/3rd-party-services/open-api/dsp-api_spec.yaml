@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DSP-API
-  version: v39.0.0-17-g9ddad36
+  version: v40.4.0-2-g97f1108
   summary: DSP-API is part of the DaSCH Service Platform, a repository for the long-term
     preservation and reuse of data in the humanities.
   contact:
@@ -1930,7 +1930,11 @@ paths:
         required: true
         schema:
           type: string
-        example: fix-top-left
+        examples:
+          Example0:
+            value: fix-top-left
+          Example1:
+            value: backfill-value-has-xml
       requestBody:
         description: |
           The optional parameters as json for the maintenance action.
@@ -5509,7 +5513,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       responses:
         '200':
           description: ''
@@ -5573,7 +5577,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       responses:
         '200':
           description: ''
@@ -5637,7 +5641,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       responses:
         '200':
           description: ''
@@ -5826,7 +5830,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       responses:
         '200':
           description: ''
@@ -5892,7 +5896,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       responses:
         '200':
           description: ''
@@ -6096,7 +6100,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6169,7 +6173,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6243,7 +6247,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6316,7 +6320,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -6390,7 +6394,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6463,7 +6467,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -6537,7 +6541,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       requestBody:
         content:
           application/json:
@@ -6610,7 +6614,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       requestBody:
         content:
           application/json:
@@ -6683,7 +6687,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       requestBody:
         content:
           application/json:
@@ -6756,7 +6760,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/6zCwTadoT5GwFDvqNaWgIw
+        example: http://rdfh.ch/users/bPJvAuV0TcWnfwpukUf9zg
       requestBody:
         content:
           application/json:
@@ -6819,19 +6823,20 @@ paths:
     get:
       tags:
       - Admin API
-      description: 'Step 1 of the view-restrictions report: every resource class in
-        the project with its label, ontology, total resource count, and per-audience
-        resource-level restriction counts. Answered by a single triplestore query,
-        so the whole table can be rendered before any value counts arrive. Each audience
-        reports `hidden` (permission code 0 — nothing is served) and `restrictedView`
-        (code 1 — a degraded version is served) separately; the two are disjoint.
-        `totalResources` is the class''s whole population — restricted or not — and
-        is the denominator for the counts here, which are in the same unit. It is
-        derived from the same query rather than from a separate count. **Every** class
-        is reported, including classes with nothing restricted (all-zero counts, non-zero
-        `totalResources`) and classes holding no resources at all (zero population).
-        Takes no item-type filter: resource-level counts are never filtered. The user
-        must be project admin or system admin.'
+      description: 'Step 1 of the view-restrictions report: every resource class with
+        resources in the project, with its label, ontology, total resource count,
+        and per-audience resource-level restriction counts. Answered by a single triplestore
+        query, so the whole table can be rendered before any value counts arrive.
+        Each audience reports `hidden` (permission code 0 — nothing is served) and
+        `restrictedView` (code 1 — a degraded version is served) separately; the two
+        are disjoint. `totalResources` is the class''s whole population — restricted
+        or not — and is the denominator for the counts here, which are in the same
+        unit. It is derived from the same query rather than from a separate count.
+        Requesting this report refreshes the project''s cached counts. Every class
+        with one or more non-deleted resources is reported, including classes with
+        nothing restricted (all-zero counts, non-zero `totalResources`). Takes no
+        item-type filter: resource-level counts are never filtered. The user must
+        be project admin or system admin.'
       operationId: getAdminProjectsIriProjectiriView-restrictionsClasses
       parameters:
       - name: projectIri
@@ -6915,14 +6920,17 @@ paths:
       tags:
       - Admin API
       description: 'Step 2 of the view-restrictions report: the per-audience value-level
-        restriction counts for ONE resource class, answered by a single triplestore
-        query. Clients call this once per class from the step-1 list, which bounds
-        each request and lets a failure affect only that class''s row. Counts restricted
-        values inside the class''s resources — file values, ordinary values, comments
-        — which is a different unit from the resource counts in step 1 and must never
-        be summed with them. `itemType` narrows to one kind of value; `All` means
-        all value types (it does not include whole resources, which step 1 already
-        reports). The user must be project admin or system admin.'
+        restriction counts for ONE resource class. The counts come from the cached
+        value counts of the whole project, which step 1 refreshes; without a refresh
+        they are at most 60 minutes old. Clients call this once per class from the
+        step-1 list; the first call reads the counts of every class of the project,
+        later calls are served from the cache. Counts restricted values inside the
+        class''s resources — file values, ordinary values, comments, and user link
+        values (standoff link values are not counted) — which is a different unit
+        from the resource counts in step 1 and must never be summed with them. `itemType`
+        narrows to one kind of value; `All` means all value types (it does not include
+        whole resources, which step 1 already reports). The user must be project admin
+        or system admin.'
       operationId: getAdminProjectsIriProjectiriView-restrictionsValues
       parameters:
       - name: projectIri
@@ -7020,7 +7028,10 @@ paths:
       description: Paginated list of resources affected by a restriction under a given
         resource class, each with its per-audience visibility and the nested restricted
         file values / values / comments. Ordered by label then IRI, so paging is stable
-        across requests. The user must be project admin or system admin.
+        across requests. The restricted literals come from the cached counts, so an
+        object whose permissions changed after the last refresh by `/classes` (at
+        most 60 minutes) can be missing until the next refresh. The user must be project
+        admin or system admin.
       operationId: getAdminProjectsIriProjectiriView-restrictionsItems
       parameters:
       - name: projectIri
@@ -7224,14 +7235,17 @@ paths:
       tags:
       - Admin API
       description: 'Step 2 of the property-grouped report: the per-audience restriction
-        counts for ONE value property, across every resource class that uses it, answered
-        by a single triplestore query. Each audience reports `hidden` (permission
-        code 0 — nothing is served) and `restrictedView` (code 1 — a degraded version
-        is served) separately; the two are disjoint. `totalValues` is how many values
-        of this property the project holds, restricted or not. It is a true denominator:
-        the counts beside it are in the same unit, so "94 of 66,484 are hidden" is
-        a sound statement. It is derived from the same query rather than from a separate
-        count. The user must be project admin or system admin.'
+        counts for ONE value property, across every resource class that uses it. The
+        counts come from the cached value counts of the project, which `/classes`
+        refreshes and which are otherwise at most 60 minutes old. Each audience reports
+        `hidden` (permission code 0 — nothing is served) and `restrictedView` (code
+        1 — a degraded version is served) separately; the two are disjoint. `totalValues`
+        is how many values of this property the project holds, restricted or not.
+        It is a true denominator: the counts beside it are in the same unit, so "94
+        of 66,484 are hidden" is a sound statement. A value of a resource typed with
+        two classes counts once for each class, so `totalValues` can exceed the number
+        of distinct values the drill-down lists. The user must be project admin or
+        system admin.'
       operationId: getAdminProjectsIriProjectiriView-restrictionsProperty-values
       parameters:
       - name: projectIri
@@ -7331,7 +7345,10 @@ paths:
         visibility. Each resource reports its **own** resource class: a property spans
         classes, which is the whole reason this report exists, so the class belongs
         to the row rather than to the table. Ordered by label then IRI, so paging
-        is stable across requests. The user must be project admin or system admin.'
+        is stable across requests. The restricted literals come from the cached counts,
+        so an object whose permissions changed after the last refresh by `/classes`
+        (at most 60 minutes) can be missing until the next refresh. The user must
+        be project admin or system admin.'
       operationId: getAdminProjectsIriProjectiriView-restrictionsProperty-items
       parameters:
       - name: projectIri
@@ -7656,7 +7673,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/3_51gA2eTkix8FHQy06OrA
+        example: http://rdfh.ch/lists/0001/PSwAYmpzRVOvF_zpW8kWhw
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -7784,7 +7801,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/3_51gA2eTkix8FHQy06OrA
+        example: http://rdfh.ch/lists/0001/PSwAYmpzRVOvF_zpW8kWhw
       - name: allLanguages
         in: query
         description: If true, return rdfs:label and rdfs:comment as JSON-LD arrays
@@ -11184,6 +11201,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchTimeoutException'
       security:
       - httpAuth: []
       - httpAuth1: []
@@ -11309,6 +11332,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchTimeoutException'
       security:
       - httpAuth: []
       - httpAuth1: []
@@ -11435,6 +11464,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchTimeoutException'
       security:
       - httpAuth: []
       - httpAuth1: []
@@ -11560,6 +11595,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchTimeoutException'
       security:
       - httpAuth: []
       - httpAuth1: []
@@ -16267,8 +16308,10 @@ paths:
     get:
       tags:
       - API v3
-      description: Checks the status of an export. The response will indicate whether
+      description: 'Checks the status of an export. The response will indicate whether
         the export is still in progress, has completed successfully, or has failed.
+        The `projectIri` in the path is not validated: the export is resolved by its
+        id alone and need not belong to a project that still exists.'
       operationId: getV3ProjectsProjectiriExportsExportid
       parameters:
       - name: projectIri
@@ -16315,19 +16358,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
               examples:
-                project_not_found:
-                  description: |-
-                    Example template string for code `project_not_found`:
-                    ```
-                    The project '{id}' was not found.
-                    ```
-                  value:
-                    message: The project '{id}' was not found.
-                    errors:
-                    - code: project_not_found
-                      message: The project '{id}' was not found.
-                      details:
-                        id: example_id
                 export_not_found:
                   description: |-
                     Example template string for code `export_not_found`:
@@ -16348,8 +16378,10 @@ paths:
     delete:
       tags:
       - API v3
-      description: Deletes an export irrevocably. Only exports in state failed or
-        completed can be deleted.
+      description: 'Deletes an export irrevocably. Only exports in state failed or
+        completed can be deleted. The `projectIri` in the path is not validated: the
+        export is resolved by its id alone and need not belong to a project that still
+        exists.'
       operationId: deleteV3ProjectsProjectiriExportsExportid
       parameters:
       - name: projectIri
@@ -16392,19 +16424,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
               examples:
-                project_not_found:
-                  description: |-
-                    Example template string for code `project_not_found`:
-                    ```
-                    The project '{id}' was not found.
-                    ```
-                  value:
-                    message: The project '{id}' was not found.
-                    errors:
-                    - code: project_not_found
-                      message: The project '{id}' was not found.
-                      details:
-                        id: example_id
                 export_not_found:
                   description: |-
                     Example template string for code `export_not_found`:
@@ -16447,9 +16466,10 @@ paths:
     get:
       tags:
       - API v3
-      description: Download an export. An export can only be downloaded when it has
+      description: 'Download an export. An export can only be downloaded when it has
         completed successfully. If it is still in progress or has failed, the response
-        will be 409 Conflict.
+        will be 409 Conflict. The `projectIri` in the path is not validated: the export
+        is resolved by its id alone and need not belong to a project that still exists.'
       operationId: getV3ProjectsProjectiriExportsExportidDownload
       parameters:
       - name: projectIri
@@ -16502,19 +16522,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
               examples:
-                project_not_found:
-                  description: |-
-                    Example template string for code `project_not_found`:
-                    ```
-                    The project '{id}' was not found.
-                    ```
-                  value:
-                    message: The project '{id}' was not found.
-                    errors:
-                    - code: project_not_found
-                      message: The project '{id}' was not found.
-                      details:
-                        id: example_id
                 export_not_found:
                   description: |-
                     Example template string for code `export_not_found`:
@@ -17160,6 +17167,140 @@ paths:
                         projectIri: example_projectIri
       security:
       - httpAuth: []
+  /internal/landing-pages/resources/{shortcode}/{resourceId}:
+    get:
+      tags:
+      - FAIR
+      description: The landing page of a public resource, or a 303 to a representation
+        the `Accept` header asks for.
+      operationId: getInternalLanding-pagesResourcesShortcodeResourceid
+      parameters:
+      - name: shortcode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resourceId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: Repeated header lines are combined into one comma-separated value.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: ''
+          headers:
+            Vary:
+              required: true
+              schema:
+                type: string
+            Cache-Control:
+              required: true
+              schema:
+                type: string
+    head:
+      tags:
+      - FAIR
+      description: As the landing GET, without the body.
+      operationId: headInternalLanding-pagesResourcesShortcodeResourceid
+      parameters:
+      - name: shortcode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resourceId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: Repeated header lines are combined into one comma-separated value.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: ''
+        '500':
+          description: ''
+          headers:
+            Vary:
+              required: true
+              schema:
+                type: string
+            Cache-Control:
+              required: true
+              schema:
+                type: string
+  /fair/resources/{shortcode}/{resourceId}/metadata.jsonld:
+    get:
+      tags:
+      - FAIR
+      description: The schema.org JSON-LD description of a public resource.
+      operationId: getFairResourcesShortcodeResourceidMetadata.jsonld
+      parameters:
+      - name: shortcode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resourceId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: ''
+  /fair/resources/{shortcode}/{resourceId}/metadata.datacite.json:
+    get:
+      tags:
+      - FAIR
+      description: The DataCite JSON description of a public resource.
+      operationId: getFairResourcesShortcodeResourceidMetadata.datacite.json
+      parameters:
+      - name: shortcode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resourceId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: ''
   /version:
     get:
       tags:
@@ -17174,12 +17315,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/VersionResponse'
               example:
-                webapi: v39.0.0-17-g9ddad36
-                buildCommit: 9ddad36b7
+                webapi: v40.4.0-2-g97f1108
+                buildCommit: 97f11083f
                 buildTime: dev
                 fuseki: 6.2.0
                 scala: 3.8.4
-                sipi: v9.1.0
+                sipi: v9.1.1
                 name: version
         '400':
           description: ''
@@ -17363,12 +17504,12 @@ components:
       - forGroup
       properties:
         iri:
-          $ref: '#/components/schemas/PermissionIri'
+          type: string
         forProject:
           description: IRI for a project.
           type: string
         forGroup:
-          $ref: '#/components/schemas/GroupIri'
+          type: string
         hasPermissions:
           type: array
           uniqueItems: true
@@ -17460,14 +17601,14 @@ components:
       type: object
       properties:
         username:
-          $ref: '#/components/schemas/Username'
+          type: string
         email:
           type: string
           pattern: ^.+@.+$
         givenName:
-          $ref: '#/components/schemas/GivenName'
+          type: string
         familyName:
-          $ref: '#/components/schemas/FamilyName'
+          type: string
         lang:
           type: string
     CanDeleteListResponseADM:
@@ -17478,21 +17619,15 @@ components:
       - canDeleteList
       properties:
         listIri:
-          $ref: '#/components/schemas/ListIri'
+          type: string
         canDeleteList:
           type: boolean
-    CanJoin:
-      title: CanJoin
-      type: object
-    CannotJoin:
-      title: CannotJoin
-      type: object
     ChangeDoapRequest:
       title: ChangeDoapRequest
       type: object
       properties:
         forGroup:
-          $ref: '#/components/schemas/GroupIri'
+          type: string
         forResourceClass:
           type: string
         forProperty:
@@ -17509,7 +17644,7 @@ components:
       - forGroup
       properties:
         forGroup:
-          $ref: '#/components/schemas/GroupIri'
+          type: string
     ChangePermissionHasPermissionsApiRequestADM:
       title: ChangePermissionHasPermissionsApiRequestADM
       type: object
@@ -17586,14 +17721,6 @@ components:
         lastModificationDate:
           type: string
           format: date-time
-    Comments:
-      title: Comments
-      type: object
-      properties:
-        value:
-          type: array
-          items:
-            $ref: '#/components/schemas/StringLiteralV2'
     Conflict:
       title: Conflict
       type: object
@@ -17642,12 +17769,12 @@ components:
       - forGroup
       properties:
         id:
-          $ref: '#/components/schemas/PermissionIri'
+          type: string
         forProject:
           description: IRI for a project.
           type: string
         forGroup:
-          $ref: '#/components/schemas/GroupIri'
+          type: string
         hasPermissions:
           type: array
           uniqueItems: true
@@ -17660,12 +17787,12 @@ components:
       - forProject
       properties:
         id:
-          $ref: '#/components/schemas/PermissionIri'
+          type: string
         forProject:
           description: IRI for a project.
           type: string
         forGroup:
-          $ref: '#/components/schemas/GroupIri'
+          type: string
         forResourceClass:
           type: string
         forProperty:
@@ -17725,12 +17852,12 @@ components:
       - forProject
       properties:
         iri:
-          $ref: '#/components/schemas/PermissionIri'
+          type: string
         forProject:
           description: IRI for a project.
           type: string
         forGroup:
-          $ref: '#/components/schemas/GroupIri'
+          type: string
         forResourceClass:
           type: string
         forProperty:
@@ -17858,14 +17985,6 @@ components:
       - shortcode
       properties:
         shortcode:
-          $ref: '#/components/schemas/Shortcode'
-    FamilyName:
-      title: FamilyName
-      type: object
-      required:
-      - value
-      properties:
-        value:
           type: string
     Forbidden:
       title: Forbidden
@@ -17886,14 +18005,6 @@ components:
       - message
       properties:
         message:
-          type: string
-    GivenName:
-      title: GivenName
-      type: object
-      required:
-      - value
-      properties:
-        value:
           type: string
     GravsearchException:
       title: GravsearchException
@@ -17931,32 +18042,25 @@ components:
       type: object
       required:
       - name
-      - descriptions
       - project
       - status
       - selfjoin
       properties:
         id:
-          $ref: '#/components/schemas/GroupIri'
+          type: string
         name:
-          $ref: '#/components/schemas/GroupName'
+          type: string
         descriptions:
-          $ref: '#/components/schemas/GroupDescriptions'
+          type: array
+          items:
+            $ref: '#/components/schemas/StringLiteralV2'
         project:
           description: IRI for a project.
           type: string
         status:
-          $ref: '#/components/schemas/GroupStatus'
+          type: boolean
         selfjoin:
-          $ref: '#/components/schemas/GroupSelfJoin'
-    GroupDescriptions:
-      title: GroupDescriptions
-      type: object
-      properties:
-        value:
-          type: array
-          items:
-            $ref: '#/components/schemas/StringLiteralV2'
+          type: boolean
     GroupGetResponseADM:
       title: GroupGetResponseADM
       type: object
@@ -17965,14 +18069,6 @@ components:
       properties:
         group:
           $ref: '#/components/schemas/Group'
-    GroupIri:
-      title: GroupIri
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
     GroupMembersGetResponseADM:
       title: GroupMembersGetResponseADM
       type: object
@@ -17981,30 +18077,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserDto'
-    GroupName:
-      title: GroupName
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
-    GroupSelfJoin:
-      title: GroupSelfJoin
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: boolean
-    GroupStatus:
-      title: GroupStatus
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: boolean
     GroupStatusUpdateRequest:
       title: GroupStatusUpdateRequest
       type: object
@@ -18012,19 +18084,21 @@ components:
       - status
       properties:
         status:
-          $ref: '#/components/schemas/GroupStatus'
+          type: boolean
     GroupUpdateRequest:
       title: GroupUpdateRequest
       type: object
       properties:
         name:
-          $ref: '#/components/schemas/GroupName'
+          type: string
         descriptions:
-          $ref: '#/components/schemas/GroupDescriptions'
+          type: array
+          items:
+            $ref: '#/components/schemas/StringLiteralV2'
         status:
-          $ref: '#/components/schemas/GroupStatus'
+          type: boolean
         selfjoin:
-          $ref: '#/components/schemas/GroupSelfJoin'
+          type: boolean
     GroupsGetResponseADM:
       title: GroupsGetResponseADM
       type: object
@@ -18085,22 +18159,6 @@ components:
           $ref: '#/components/schemas/Visibility'
         projectMember:
           $ref: '#/components/schemas/Visibility'
-    Keyword:
-      title: Keyword
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
-    Labels:
-      title: Labels
-      type: object
-      properties:
-        value:
-          type: array
-          items:
-            $ref: '#/components/schemas/StringLiteralV2'
     LanguageStringDto:
       title: LanguageStringDto
       type: object
@@ -18138,19 +18196,19 @@ components:
     ListChangeCommentsRequest:
       title: ListChangeCommentsRequest
       type: object
-      required:
-      - comments
       properties:
         comments:
-          $ref: '#/components/schemas/Comments'
+          type: array
+          items:
+            $ref: '#/components/schemas/StringLiteralV2'
     ListChangeLabelsRequest:
       title: ListChangeLabelsRequest
       type: object
-      required:
-      - labels
       properties:
         labels:
-          $ref: '#/components/schemas/Labels'
+          type: array
+          items:
+            $ref: '#/components/schemas/StringLiteralV2'
     ListChangeNameRequest:
       title: ListChangeNameRequest
       type: object
@@ -18158,7 +18216,7 @@ components:
       - name
       properties:
         name:
-          $ref: '#/components/schemas/ListName'
+          type: string
     ListChangePositionRequest:
       title: ListChangePositionRequest
       type: object
@@ -18167,9 +18225,10 @@ components:
       - parentNodeIri
       properties:
         position:
-          $ref: '#/components/schemas/Position'
+          type: integer
+          format: int32
         parentNodeIri:
-          $ref: '#/components/schemas/ListIri'
+          type: string
     ListChangeRequest:
       title: ListChangeRequest
       type: object
@@ -18178,20 +18237,25 @@ components:
       - projectIri
       properties:
         listIri:
-          $ref: '#/components/schemas/ListIri'
+          type: string
         projectIri:
           description: IRI for a project.
           type: string
         hasRootNode:
-          $ref: '#/components/schemas/ListIri'
+          type: string
         position:
-          $ref: '#/components/schemas/Position'
+          type: integer
+          format: int32
         name:
-          $ref: '#/components/schemas/ListName'
+          type: string
         labels:
-          $ref: '#/components/schemas/Labels'
+          type: array
+          items:
+            $ref: '#/components/schemas/StringLiteralV2'
         comments:
-          $ref: '#/components/schemas/Comments'
+          type: array
+          items:
+            $ref: '#/components/schemas/StringLiteralV2'
     ListChildNodeADM:
       title: ListChildNodeADM
       type: object
@@ -18246,22 +18310,26 @@ components:
       title: ListCreateChildNodeRequest
       type: object
       required:
-      - labels
       - parentNodeIri
       - projectIri
       properties:
         id:
-          $ref: '#/components/schemas/ListIri'
+          type: string
         comments:
-          $ref: '#/components/schemas/Comments'
+          type: array
+          items:
+            $ref: '#/components/schemas/StringLiteralV2'
         labels:
-          $ref: '#/components/schemas/Labels'
+          type: array
+          items:
+            $ref: '#/components/schemas/StringLiteralV2'
         name:
-          $ref: '#/components/schemas/ListName'
+          type: string
         parentNodeIri:
-          $ref: '#/components/schemas/ListIri'
+          type: string
         position:
-          $ref: '#/components/schemas/Position'
+          type: integer
+          format: int32
         projectIri:
           description: IRI for a project.
           type: string
@@ -18269,18 +18337,20 @@ components:
       title: ListCreateRootNodeRequest
       type: object
       required:
-      - comments
-      - labels
       - projectIri
       properties:
         id:
-          $ref: '#/components/schemas/ListIri'
+          type: string
         comments:
-          $ref: '#/components/schemas/Comments'
+          type: array
+          items:
+            $ref: '#/components/schemas/StringLiteralV2'
         labels:
-          $ref: '#/components/schemas/Labels'
+          type: array
+          items:
+            $ref: '#/components/schemas/StringLiteralV2'
         name:
-          $ref: '#/components/schemas/ListName'
+          type: string
         projectIri:
           description: IRI for a project.
           type: string
@@ -18303,14 +18373,6 @@ components:
       properties:
         list:
           $ref: '#/components/schemas/ListADM'
-    ListIri:
-      title: ListIri
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
     ListItemDeleteResponseADM:
       title: ListItemDeleteResponseADM
       oneOf:
@@ -18321,14 +18383,6 @@ components:
       oneOf:
       - $ref: '#/components/schemas/ListGetResponseADM'
       - $ref: '#/components/schemas/ListNodeGetResponseADM'
-    ListName:
-      title: ListName
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
     ListNodeADM:
       title: ListNodeADM
       oneOf:
@@ -18428,14 +18482,6 @@ components:
       - $ref: '#/components/schemas/EmailPassword'
       - $ref: '#/components/schemas/IriPassword'
       - $ref: '#/components/schemas/UsernamePassword'
-    Logo:
-      title: Logo
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
     LogoutResponse:
       title: LogoutResponse
       type: object
@@ -18447,14 +18493,6 @@ components:
           type: integer
           format: int32
         message:
-          type: string
-    Longname:
-      title: Longname
-      type: object
-      required:
-      - value
-      properties:
-        value:
           type: string
     Map_Seq_IRI:
       title: Map_Seq_IRI
@@ -18641,14 +18679,6 @@ components:
         currentPage:
           type: integer
           format: int32
-    Password:
-      title: Password
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
     PasswordChangeRequest:
       title: PasswordChangeRequest
       type: object
@@ -18657,9 +18687,9 @@ components:
       - newPassword
       properties:
         requesterPassword:
-          $ref: '#/components/schemas/Password'
+          type: string
         newPassword:
-          $ref: '#/components/schemas/Password'
+          type: string
     PermissionADM:
       title: PermissionADM
       type: object
@@ -18681,7 +18711,7 @@ components:
       - deleted
       properties:
         permissionIri:
-          $ref: '#/components/schemas/PermissionIri'
+          type: string
         deleted:
           type: boolean
     PermissionGetResponseADM:
@@ -18697,16 +18727,8 @@ components:
       - permissionType
       properties:
         iri:
-          $ref: '#/components/schemas/PermissionIri'
-        permissionType:
           type: string
-    PermissionIri:
-      title: PermissionIri
-      type: object
-      required:
-      - value
-      properties:
-        value:
+        permissionType:
           type: string
     PermissionsDataADM:
       title: PermissionsDataADM
@@ -18736,15 +18758,6 @@ components:
       properties:
         value:
           type: string
-    Position:
-      title: Position
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: integer
-          format: int32
     Project:
       title: Project
       type: object
@@ -18758,11 +18771,11 @@ components:
           description: IRI for a project.
           type: string
         shortname:
-          $ref: '#/components/schemas/Shortname'
+          type: string
         shortcode:
-          $ref: '#/components/schemas/Shortcode'
+          type: string
         longname:
-          $ref: '#/components/schemas/Longname'
+          type: string
         description:
           type: array
           items:
@@ -18772,13 +18785,13 @@ components:
           items:
             type: string
         logo:
-          $ref: '#/components/schemas/Logo'
+          type: string
         ontologies:
           type: array
           items:
             type: string
         selfjoin:
-          $ref: '#/components/schemas/SelfJoin'
+          type: boolean
         allowedCopyrightHolders:
           type: array
           uniqueItems: true
@@ -18817,11 +18830,11 @@ components:
           description: IRI for a project.
           type: string
         shortname:
-          $ref: '#/components/schemas/Shortname'
+          type: string
         shortcode:
-          $ref: '#/components/schemas/Shortcode'
+          type: string
         longname:
-          $ref: '#/components/schemas/Longname'
+          type: string
         description:
           type: array
           items:
@@ -18829,11 +18842,11 @@ components:
         keywords:
           type: array
           items:
-            $ref: '#/components/schemas/Keyword'
+            type: string
         logo:
-          $ref: '#/components/schemas/Logo'
+          type: string
         selfjoin:
-          $ref: '#/components/schemas/SelfJoin'
+          type: boolean
         allowedCopyrightHolders:
           type: array
           uniqueItems: true
@@ -18922,7 +18935,7 @@ components:
       type: object
       properties:
         longname:
-          $ref: '#/components/schemas/Longname'
+          type: string
         description:
           type: array
           items:
@@ -18930,11 +18943,11 @@ components:
         keywords:
           type: array
           items:
-            $ref: '#/components/schemas/Keyword'
+            type: string
         logo:
-          $ref: '#/components/schemas/Logo'
+          type: string
         selfjoin:
-          $ref: '#/components/schemas/SelfJoin'
+          type: boolean
     ProjectsGetResponse:
       title: ProjectsGetResponse
       type: object
@@ -19243,43 +19256,14 @@ components:
       properties:
         message:
           type: string
-    SelfJoin:
-      title: SelfJoin
-      oneOf:
-      - $ref: '#/components/schemas/CanJoin'
-      - $ref: '#/components/schemas/CannotJoin'
     SetRestrictedViewRequest:
       title: SetRestrictedViewRequest
       type: object
       properties:
         size:
-          $ref: '#/components/schemas/Size'
+          type: string
         watermark:
-          $ref: '#/components/schemas/Watermark'
-    Shortcode:
-      title: Shortcode
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
-    Shortname:
-      title: Shortname
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
-    Size:
-      title: Size
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
+          type: boolean
     SparqlPassthroughOverloadedException:
       title: SparqlPassthroughOverloadedException
       type: object
@@ -19335,7 +19319,7 @@ components:
       - status
       properties:
         status:
-          $ref: '#/components/schemas/UserStatus'
+          type: boolean
     StringLiteralSequenceV2:
       title: StringLiteralSequenceV2
       type: object
@@ -19349,14 +19333,6 @@ components:
       oneOf:
       - $ref: '#/components/schemas/LanguageTaggedStringLiteralV2'
       - $ref: '#/components/schemas/PlainStringLiteralV2'
-    SystemAdmin:
-      title: SystemAdmin
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: boolean
     SystemAdminChangeRequest:
       title: SystemAdminChangeRequest
       type: object
@@ -19364,7 +19340,7 @@ components:
       - systemAdmin
       properties:
         systemAdmin:
-          $ref: '#/components/schemas/SystemAdmin'
+          type: boolean
     TokenResponse:
       title: TokenResponse
       type: object
@@ -19402,22 +19378,22 @@ components:
           description: IRI for a user.
           type: string
         username:
-          $ref: '#/components/schemas/Username'
+          type: string
         email:
           type: string
           pattern: ^.+@.+$
         givenName:
-          $ref: '#/components/schemas/GivenName'
+          type: string
         familyName:
-          $ref: '#/components/schemas/FamilyName'
+          type: string
         password:
-          $ref: '#/components/schemas/Password'
+          type: string
         status:
-          $ref: '#/components/schemas/UserStatus'
+          type: boolean
         lang:
           type: string
         systemAdmin:
-          $ref: '#/components/schemas/SystemAdmin'
+          type: boolean
     UserDto:
       title: UserDto
       type: object
@@ -19487,22 +19463,6 @@ components:
       properties:
         user:
           $ref: '#/components/schemas/UserDto'
-    UserStatus:
-      title: UserStatus
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: boolean
-    Username:
-      title: Username
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
     UsernamePassword:
       title: UsernamePassword
       type: object
@@ -19511,7 +19471,7 @@ components:
       - password
       properties:
         username:
-          $ref: '#/components/schemas/Username'
+          type: string
         password:
           type: string
     UsersResponse:
@@ -19656,14 +19616,6 @@ components:
       - Hidden
       - RestrictedView
       - Visible
-    Watermark:
-      title: Watermark
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: boolean
   securitySchemes:
     httpAuth:
       type: http

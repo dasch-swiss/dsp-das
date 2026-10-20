@@ -2,11 +2,21 @@
 <mat-form-field class="width-100-percent" appearance="fill">
   <mat-label>{{ 'pages.search.advancedSearch.valueLabels.label' | translate }}</mat-label>
   <input matInput type="text" [formControl]="inputControl" data-cy="label-input" required />
+  @if (inputControl.hasError('invalidRegex')) {
+  <mat-error>
+    <span class="custom-error-message"> {{ 'pages.search.advancedSearch.errors.invalidRegex' | translate }} </span>
+  </mat-error>
+  }
 </mat-form-field>
 } @case (constants.TextValue) {
 <mat-form-field class="width-100-percent" appearance="fill">
   <mat-label>{{ 'pages.search.advancedSearch.valueLabels.text' | translate }}</mat-label>
   <input matInput type="text" [formControl]="inputControl" data-cy="text-value-input" required />
+  @if (inputControl.hasError('invalidRegex')) {
+  <mat-error>
+    <span class="custom-error-message"> {{ 'pages.search.advancedSearch.errors.invalidRegex' | translate }} </span>
+  </mat-error>
+  }
 </mat-form-field>
 } @case (constants.BooleanValue) {
 <mat-form-field class="width-100-percent" appearance="fill">
@@ -65,7 +75,17 @@
 }
 <!-- date value -->
 @case (constants.DateValue) {
-<div [formGroup]="dateFormGroup" class="width-100-percent">
-  <app-date-picker [formControlName]="'date'" (emitDateChanged)="onDateSelected($event)" />
+<!-- The calendar is chosen inside the picker's panel here. A control of its own stacked above the
+field made this column twice the height of the selects beside it, and the row centres its children,
+so the toggles sat above them and the field hung below. The picker still never changes a calendar:
+it reports the choice and is handed back a converted date. -->
+<div class="width-100-percent">
+  <app-date-picker
+    [date]="dateControl.value"
+    [calendar]="searchCalendar()"
+    [showsCalendarSelector]="true"
+    [availableCalendars]="availableCalendars()"
+    (dateChange)="onDateSelected($event)"
+    (calendarChange)="onCalendarSelected($event)" />
 </div>
 } }
