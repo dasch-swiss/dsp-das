@@ -30,14 +30,11 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 
 Standard `nx` / `npm` invocations live in `package.json` scripts. Regenerating the generated OpenAPI client has a deploy-coupling gotcha — `check-openapi-sync` compares the vendored spec against the live dev API, so a red check is *expected* until the dsp-api change is deployed to dev. **Never edit the vendored spec to silence it.** Use the `/update-openapi-client` skill for the full sequence.
 
+## Coding Conventions
+
+Read [`CONVENTIONS.md`](CONVENTIONS.md) before writing code: components, dependency injection, RxJS, library boundaries, styles, testing and commit conventions.
+
 ## Architecture Overview
-
-### VRE Library Architecture
-
-**Layer ownership rules:**
-- Services that call the DSP-API over HTTP belong in `libs/vre/3rd-party-services/api` — not in `shared/` or inline in components. Extract inline HTTP calls into a dedicated `*ApiService` there (precedent: `ResourceLegalV2ApiService`, `LegalInfoApiService`).
-- Per-project caching of API data goes into a helper service (precedent: `ProjectDataRightsService` in `shared/app-helper-services`), not into each consuming component.
-- When moving a file between libs, update the barrel `index.ts` exports of both libs — imports go through `@dasch-swiss/vre/*` aliases, so a missed barrel export breaks consumers at build time.
 
 ### Project Images
 
@@ -47,11 +44,6 @@ Standard `nx` / `npm` invocations live in `package.json` scripts. Regenerating t
 - License captions are managed in `libs/vre/pages/project/project/src/lib/description/license-captions-mapping.ts`
 
 ## Development Notes
-
-### Code Style
-
-- Self-closing tags for component selectors in templates
-- no usage of ::ng-deep
 
 ### Storybook Convention
 
