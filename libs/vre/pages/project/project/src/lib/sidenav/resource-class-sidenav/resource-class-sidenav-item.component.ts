@@ -14,12 +14,13 @@ import { TooltipIfTruncatedDirective } from '../tooltip-if-truncated.directive';
   selector: 'app-resource-class-sidenav-item',
   template: `
     @let label_ = label | appStringifyStringLiteral;
+    @let selected = isSelected$ | async;
     <!-- Full-bleed row: the class's type icon, its name, then its count (DEV-7494, sidebar design I4). -->
     <button
       type="button"
       class="item"
-      [class.selected]="isSelected$ | async"
-      [attr.aria-current]="(isSelected$ | async) ? 'page' : null"
+      [class.selected]="selected"
+      [attr.aria-current]="selected ? 'page' : null"
       [appTooltipIfTruncated]="label_"
       [truncated]="labelText"
       (click)="selectResourceClass()">
