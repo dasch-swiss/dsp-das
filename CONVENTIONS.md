@@ -20,7 +20,7 @@ Build commands and gotchas live in [`CLAUDE.md`](CLAUDE.md), the library topolog
 | Private fields | `_camelCase` | `private readonly _apiService` |
 | Injected services | `private readonly _name`, abbreviations allowed | `_cd`, `_translateService` |
 | Constants | `UPPER_CASE` | `PERMISSION_HEADERS` |
-| Translation keys | dotted paths | `'resourceEditor.video.errors.networkError'` |
+| Translation keys | dotted paths | `'resourceEditor.representations.video.cannotPlay'` |
 
 ## Comments
 
