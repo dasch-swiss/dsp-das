@@ -1,4 +1,5 @@
 @use "config" as *;
+@use "responsive" as *;
 
 // Sticky footer: fill at least the viewport below the header so the footer stays at the bottom on short pages.
 :host {
@@ -9,6 +10,8 @@
 
 .content {
   flex: 1 0 auto;
+  // Include the padding in the 100% width, otherwise the page overflows sideways.
+  box-sizing: border-box;
 }
 
 .project-overview-subtitle {
@@ -45,11 +48,15 @@
   grid-template-columns: 1fr;
   min-height: 280px;
 
-  @media (min-width: 768px) and (pointer: fine) and (hover: hover) {
-    grid-template-columns: 1fr 1fr;
+  @include bp-up(sm) {
+    @media (pointer: fine) and (hover: hover) {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
-  @media (min-width: 1200px) and (pointer: fine) and (hover: hover) {
-    grid-template-columns: 1fr 1fr 1fr;
+  @include bp-up(lg) {
+    @media (pointer: fine) and (hover: hover) {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
   }
 }
