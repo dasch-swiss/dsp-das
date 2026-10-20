@@ -16,7 +16,7 @@ Build commands and gotchas live in [`CLAUDE.md`](CLAUDE.md), the library topolog
 
 | Element | Convention | Example |
 |---------|-----------|---------|
-| Selectors | `app-` prefix, kebab-case (ESLint-enforced) | `selector: 'app-my-component'` |
+| Selectors | `app-` prefix, kebab-case for components (not lint-enforced); camelCase attribute for directives (lint-enforced) | `selector: 'app-my-component'` |
 | Private fields | `_camelCase` | `private readonly _apiService` |
 | Injected services | `private readonly _name`, abbreviations allowed | `_cd`, `_translateService` |
 | Constants | `UPPER_CASE` | `PERMISSION_HEADERS` |
@@ -40,13 +40,13 @@ Build commands and gotchas live in [`CLAUDE.md`](CLAUDE.md), the library topolog
 - Prefer an inline `template:` over `templateUrl:` for small templates.
 - Use `@if`, `@for` (with `track` on a unique id) and `@switch`. `*ngIf`, `*ngFor` and `*ngSwitch` fail lint (`prefer-control-flow`).
 - Self-closing tags for component selectors in templates. Do not use `::ng-deep`.
-- Inputs: `@Input({ required: true }) name!: T` for mandatory inputs — the `!` only there — and `@Input() name = default` for optional ones. Outputs are typed: `@Output() loaded = new EventEmitter<boolean>()`.
+- Inputs: `@Input({ required: true }) name!: T` for mandatory inputs — the `!` only there — and `@Input() name = default` for optional ones. Outputs are typed: `@Output() loaded = new EventEmitter<boolean>()`. Signal inputs and outputs (`input.required<T>()`, `input<T>(default)`, `output<T>()`) are allowed in new components.
 - Put `data-cy` attributes on interactive elements; e2e and Storybook tests select by them.
 
 ## Dependency Injection
 
 - Prefer `inject()` field injection in new code: `private readonly _apiService = inject(APIV2ApiService)`. Constructor injection is still common in existing code, and the `prefer-inject` lint rule is off, so do not rewrite working code only to convert it.
-- Use `@Inject(Token)` for InjectionTokens (`DspApiConnectionToken`, `DspApiConfigToken`) and for `MAT_DIALOG_DATA`.
+- Inject InjectionTokens the same way: `inject(DspApiConnectionToken)`, `inject(MAT_DIALOG_DATA)`. The tokens are typed, so the field needs no annotation. `@Inject(Token)` belongs only in existing constructor-injected code.
 - Use `{ optional: true }` for optional services. Mark every injected field `readonly`.
 
 ## Library Boundaries
@@ -59,15 +59,15 @@ Layer ownership, barrel exports and cross-feature access are recorded in [`ARCH-
 
 ## RxJS
 
-- End subscriptions with `takeUntilDestroyed(this._destroyRef)`, not a stored `Subscription` and a manual `unsubscribe()`.
+- End subscriptions with `takeUntilDestroyed(this._destroyRef)` as the last operator, not a stored `Subscription` and a manual `unsubscribe()`. An operator after it that subscribes to an inner stream (`switchMap`, `mergeMap`) outlives the component.
 - Use `finalize()` for cleanup that must run on both completion and error, for example resetting a loading flag.
 - Handle errors with `catchError()`. Return `EMPTY` when the stream must simply complete.
 
 ```typescript
 this._apiService.getData().pipe(
-  takeUntilDestroyed(this._destroyRef),
   finalize(() => { this.loading = false; this._cd.markForCheck(); }),
   catchError(() => { this.failedToLoad = true; return EMPTY; }),
+  takeUntilDestroyed(this._destroyRef),
 ).subscribe(res => { this.data = res; });
 ```
 
@@ -96,7 +96,7 @@ Per-environment settings live in `apps/dsp-app/src/config/config.*.json` and rea
 
 ## Commit Conventions
 
-- Conventional Commits: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, with an optional scope such as `feat(resource-editor):`. release-please turns `feat` and `fix` into the changelog and the version.
+- Conventional Commits: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, with an optional scope such as `feat(resource-editor):`. release-please bumps the version on `feat` and `fix`; every type except `perf` also gets a changelog section (`release-please-config.json`).
 - The repo squash-merges, so the PR title becomes the commit on `main`. The `Check PR Title` workflow requires the Conventional Commits format and at most 140 characters.
 - Put the Linear issue id in the title when there is one, for example `fix(ontology): translate validator error messages (DEV-7283)`.
 
@@ -110,7 +110,8 @@ These must be clean:
 
 - `npm run lint-all` — ESLint across all projects, including the alphabetical `import/order` rule. `npm run lint-fix-all` fixes what it can.
 - `npm run test-ci-all` — every project's Jest suite.
-- `nx run vre-ui-ui:test-storybook` when you changed a component that has stories.
+- `npx nx build dsp-app`: the type-check, since lint is not type-aware.
+- `npm run test-storybook`, with `npm run storybook` running, when you changed a component that has stories.
 
 ## Where to Go for Depth
 
