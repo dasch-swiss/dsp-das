@@ -52,7 +52,7 @@ function build(defs: ResourcePropertyDefinitionWithAllLanguages[], list?: IHasPr
 }
 
 describe('buildColumnModel', () => {
-  it('PrependsTheLabelColumnAsStickyAndSortableButNotEditable', () => {
+  it('PrependsTheLabelColumnAsStickyAndSortableAndEditable', () => {
     const columns = build([propDef({})]);
 
     expect(columns[0]).toEqual(
@@ -60,7 +60,7 @@ describe('buildColumnModel', () => {
         key: LABEL_COLUMN_KEY,
         isSticky: true,
         isSortable: true,
-        isEditable: false,
+        isEditable: true,
       })
     );
     expect(columns[0].propertyIri).toBeUndefined();
@@ -243,10 +243,15 @@ describe('rightsColumns', () => {
 
   // Gravsearch can neither order nor filter by the rights statement, so a control for either would
   // be a control that does nothing.
-  it('MarksThemReadOnlyAndNeitherSortableNorFilterable', () => {
+  it('MarksThemNeitherSortableNorFilterable', () => {
     for (const column of columns) {
-      expect(column).toMatchObject({ isEditable: false, isSortable: false, isFilterable: false, isSticky: false });
+      expect(column).toMatchObject({ isSortable: false, isFilterable: false, isSticky: false });
     }
+  });
+
+  // License and holder are the project's; authorship is the resource's own and edits in place.
+  it('MarksOnlyAuthorshipEditable', () => {
+    expect(columns.map(column => column.isEditable)).toEqual([false, false, true]);
   });
 });
 

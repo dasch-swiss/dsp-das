@@ -220,6 +220,21 @@ table {
   margin-right: 4px;
 }
 
+// Read-only columns: a lock before the name and the name muted, so the columns an editor can work
+// in stand out from the ones they cannot (DEV-7494, option A of the read-only columns design).
+.header-lock {
+  flex: none;
+  margin-right: 4px;
+  font-size: 13px;
+  width: 13px;
+  height: 13px;
+  color: rgba(0, 0, 0, 0.42);
+}
+
+.mat-mdc-header-cell.is-read-only .header-label {
+  color: rgba(0, 0, 0, 0.42);
+}
+
 .mat-mdc-header-cell.is-pinned .header-label {
   color: #234a69;
 }
