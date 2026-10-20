@@ -1,19 +1,33 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { DataBrowserPageComponent } from './data-browser-page.component';
 
-/** A BreakpointObserver for a screen of the given width: `(min-width: Npx)` matches when width ≥ N. */
-const observerFor = (screenWidth: number): Partial<BreakpointObserver> => ({
-  isMatched: (query: string | readonly string[]) =>
-    [query].flat().every(single => screenWidth >= Number(/min-width:\s*(\d+)px/.exec(single)?.[1])),
-  observe: () => of({ matches: true, breakpoints: {} }),
-});
+/**
+ * A window whose width can change: `(min-width: Npx)` matches when its width ≥ N, and `observe`
+ * emits on every change, as the real BreakpointObserver does when a query flips.
+ */
+const windowOf = (initialWidth: number) => {
+  let width = initialWidth;
+  const changes = new BehaviorSubject<BreakpointState>({ matches: true, breakpoints: {} });
+  const observer: Partial<BreakpointObserver> = {
+    isMatched: (query: string | readonly string[]) =>
+      [query].flat().every(single => width >= Number(/min-width:\s*(\d+)px/.exec(single)?.[1])),
+    observe: () => changes.asObservable(),
+  };
+  return {
+    observer,
+    resizeTo: (newWidth: number) => {
+      width = newWidth;
+      changes.next({ matches: true, breakpoints: {} });
+    },
+  };
+};
 
-const sidebarWidthAt = (screenWidth: number): number => {
+const pageIn = (window: ReturnType<typeof windowOf>): DataBrowserPageComponent => {
   TestBed.resetTestingModule();
-  TestBed.configureTestingModule({ providers: [{ provide: BreakpointObserver, useValue: observerFor(screenWidth) }] });
-  return TestBed.runInInjectionContext(() => new DataBrowserPageComponent()).sidebarWidth();
+  TestBed.configureTestingModule({ providers: [{ provide: BreakpointObserver, useValue: window.observer }] });
+  return TestBed.runInInjectionContext(() => new DataBrowserPageComponent());
 };
 
 describe('DataBrowserPageComponent', () => {
@@ -29,8 +43,25 @@ describe('DataBrowserPageComponent', () => {
       [2559, 320],
       [2560, 360],
       [3840, 360],
-    ])('on a %ipx screen it is %ipx wide', (screenWidth, expected) => {
-      expect(sidebarWidthAt(screenWidth)).toBe(expected);
+    ])('on a %ipx window it is %ipx wide', (windowWidth, expected) => {
+      expect(pageIn(windowOf(windowWidth)).sidebarWidth()).toBe(expected);
+    });
+
+    it('follows the window across breakpoints until the user drags it', () => {
+      const window = windowOf(1600);
+      const page = pageIn(window);
+
+      window.resizeTo(2000);
+      expect(page.sidebarWidth()).toBe(320);
+
+      page.onSidebarDragged({ gutterNum: 1, sizes: [412, '*'] });
+      expect(page.sidebarWidth()).toBe(412);
+
+      // Resizing the window no longer changes it, whichever breakpoint it lands in.
+      window.resizeTo(1300);
+      expect(page.sidebarWidth()).toBe(412);
+      window.resizeTo(2600);
+      expect(page.sidebarWidth()).toBe(412);
     });
   });
 });
