@@ -53,6 +53,8 @@ import { TooltipIfTruncatedDirective } from './tooltip-if-truncated.directive';
   `,
   styles: [
     `
+      @use '../../../../../../../../apps/dsp-app/src/styles/config' as *;
+
       :host {
         display: block;
         /* Breathing room above the first group, as the class header has above its title. */
@@ -82,14 +84,14 @@ import { TooltipIfTruncatedDirective } from './tooltip-if-truncated.directive';
         font: 500 12px/1 var(--font-sans, Roboto, sans-serif);
         letter-spacing: 0.04em;
         text-transform: uppercase;
-        color: #6b7280;
+        color: $cool_gray_500;
 
         &:hover {
-          color: #374151;
+          color: $cool_gray_700;
         }
 
         &:focus-visible {
-          outline: 2px solid var(--primary, #336790);
+          outline: 2px solid $primary;
           outline-offset: -2px;
         }
       }

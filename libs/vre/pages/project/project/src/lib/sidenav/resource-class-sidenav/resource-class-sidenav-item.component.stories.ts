@@ -69,7 +69,8 @@ export const MarksTheSelectedClassLikeTheResultList: Story = {
 
     await expect(item).toHaveAttribute('aria-current', 'page');
     await expect(style.backgroundColor).toBe('rgb(214, 224, 232)');
-    await expect(style.borderLeftColor).toBe('rgb(51, 103, 143)');
+    // $primary and $primary_100 from the app's palette.
+    await expect(style.borderLeftColor).toBe('rgb(51, 103, 144)');
     // No bold: the result list does not bolden its selected row either.
     await expect(style.fontWeight).toBe('400');
   },
