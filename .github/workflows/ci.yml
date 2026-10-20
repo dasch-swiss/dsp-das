@@ -483,8 +483,13 @@ jobs:
     outputs:
       uploaded: ${{ steps.capture.outputs.uploaded }}
     timeout-minutes: 30
+    # A concurrency group holds one running + one pending job; a newly queued
+    # job cancels the pending one regardless of cancel-in-progress. main gets
+    # its own group so a PR job can never bump its baseline build (PR #3527's
+    # merge lost its build that way). Cost: at most one main + one PR upload
+    # hit the VM at once.
     concurrency:
-      group: pixeleye-shared-vm
+      group: ${{ github.ref == 'refs/heads/main' && 'pixeleye-main' || 'pixeleye-shared-vm' }}
       cancel-in-progress: false
     permissions:
       contents: read
