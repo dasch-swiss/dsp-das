@@ -1,6 +1,6 @@
 import { Cardinality } from '@dasch-swiss/dsp-js';
-import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
 import { UserService } from '@dasch-swiss/vre/core/session';
+import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
 import { of } from 'rxjs';
 import { expect, userEvent, waitFor } from 'storybook/test';
 
