@@ -41,30 +41,30 @@ export interface EditPasswordDialogProps {
             [validatorErrors]="[
               { errorKey: 'incorrect', message: 'pages.userSettings.passwordForm.incorrectPassword' | translate },
             ]" />
-
-          <button mat-raised-button color="primary" (click)="checkAdminPassword()">
-            {{ 'ui.common.actions.next' | translate }}
-          </button>
         </mat-step>
 
         <mat-step [label]="'pages.userSettings.passwordForm.newPasswordStep' | translate">
           <app-password-confirm-form (afterFormInit)="newPasswordFormGroup = $event" />
-
-          <button
-            mat-raised-button
-            color="primary"
-            appLoadingButton
-            [isLoading]="updateLoading"
-            (click)="updateNewPassword()"
-            style="margin-top: 16px">
-            {{ 'ui.common.actions.update' | translate }}
-          </button>
         </mat-step>
       </mat-stepper>
     </div>
 
     <div mat-dialog-actions align="end">
       <button mat-button color="primary" matDialogClose>{{ 'ui.common.actions.cancel' | translate }}</button>
+      @if (stepper.selectedIndex === 0) {
+        <button mat-raised-button color="primary" (click)="checkAdminPassword()">
+          {{ 'ui.common.actions.next' | translate }}
+        </button>
+      } @else {
+        <button
+          mat-raised-button
+          color="primary"
+          appLoadingButton
+          [isLoading]="updateLoading"
+          (click)="updateNewPassword()">
+          {{ 'ui.common.actions.update' | translate }}
+        </button>
+      }
     </div>
   `,
   styles: [

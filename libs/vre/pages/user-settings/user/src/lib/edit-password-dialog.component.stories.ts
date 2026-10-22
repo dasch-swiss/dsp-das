@@ -59,5 +59,14 @@ export const AdvancesToNextStep: Story = {
     await step('Update button appears for new password step', async () => {
       await expect(canvas.getByRole('button', { name: /update/i })).toBeInTheDocument();
     });
+    await step('Update and Cancel buttons sit side by side at the same height', async () => {
+      const verticalCenter = (el: HTMLElement) => {
+        const rect = el.getBoundingClientRect();
+        return rect.top + rect.height / 2;
+      };
+      const update = canvas.getByRole('button', { name: /update/i });
+      const cancel = canvas.getByRole('button', { name: /cancel/i });
+      await expect(Math.abs(verticalCenter(update) - verticalCenter(cancel))).toBeLessThan(1);
+    });
   },
 };
