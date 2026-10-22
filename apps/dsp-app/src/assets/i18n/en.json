@@ -401,7 +401,33 @@
         "editInfo": "Edit data model info",
         "deleteTooltip": "Delete data model",
         "cannotDelete": "This data model cant be deleted because it is in use!",
-        "deleteConfirmation": "Do you want to delete this data model ?"
+        "deleteConfirmation": "Do you want to delete this data model ?",
+        "classFilterPlaceholder": "Filter classes",
+        "propertyFilterPlaceholder": "Filter properties",
+        "workspaceGrid": "Selected class cards",
+        "dragProperty": "Drag a property onto a class card to assign it",
+        "unusedOnly": "Unused only",
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all",
+        "assignToClass": "Assign to class…",
+        "propertyCategoriesLabel": "Property categories",
+        "emptyFilter": "No matches",
+        "emptyOntology": "This data model has no classes yet",
+        "noSelection": "Select classes in the navigator to start editing",
+        "emptyProperties": "No properties yet",
+        "addProperty": "Add property",
+        "createNewClass": "Create new class",
+        "a11y": {
+          "dragOver": "Over {{classLabel}}",
+          "assigned": "Assigned {{propertyLabel}} to {{classLabel}}",
+          "assignDuplicate": "{{propertyLabel}} is already assigned to {{classLabel}}",
+          "assignFailed": "Failed to assign {{propertyLabel}} to {{classLabel}}"
+        },
+        "notify": {
+          "assigned": "{{propertyLabel}} assigned to {{classLabel}}",
+          "assignFailed": "Failed to assign {{propertyLabel}} to {{classLabel}}",
+          "alreadyAssigned": "{{propertyLabel}} is already on {{classLabel}}"
+        }
       },
       "sidenav": {
         "classes": "Classes",
@@ -450,7 +476,8 @@
         "cannotDelete": "This class cannot be deleted because it is in use!",
         "delete": "Delete",
         "deleteConfirmation": "Do you want to delete this resource class?",
-        "idCopied": "Class ID copied to clipboard!"
+        "idCopied": "Class ID copied to clipboard!",
+        "propertyRestricted": "This property is restricted to another class."
       },
       "propertyForm": {
         "editTitle": "Edit property",
@@ -465,7 +492,8 @@
       "addPropertyMenu": {
         "addProperty": "Add property",
         "createNewFromType": "Create new from type",
-        "addExistingProperty": "Add existing property"
+        "addExistingProperty": "Add existing property",
+        "assignFailed": "Failed to assign property"
       },
       "resourceClassForm": {
         "createSubtitle": "Create resource class",

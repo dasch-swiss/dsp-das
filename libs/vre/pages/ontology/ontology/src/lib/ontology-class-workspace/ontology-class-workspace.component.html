@@ -1,0 +1,23 @@
+<div class="workspace" [attr.aria-busy]="(isTransacting$ | async) ? 'true' : null">
+  @if (visibleClasses$ | async; as classes) { @if (classes.length === 0) {
+  <div class="workspace__empty" data-cy="class-workspace-empty">
+    @if (hasUnselectedClasses$ | async) {
+    <p class="workspace__empty-text">{{ 'pages.ontology.editor.noSelection' | translate }}</p>
+    } @else {
+    <p class="workspace__empty-text">{{ 'pages.ontology.editor.emptyOntology' | translate }}</p>
+    }
+  </div>
+  } @else {
+  <div
+    class="workspace__grid"
+    data-cy="class-workspace-grid"
+    role="list"
+    [attr.aria-label]="'pages.ontology.editor.workspaceGrid' | translate">
+    @for (klass of classes; track trackByClassIri($index, klass)) {
+    <div class="workspace__card" role="listitem" [attr.data-iri]="klass.id">
+      <app-resource-class-info [resourceClass]="klass" />
+    </div>
+    }
+  </div>
+  } }
+</div>

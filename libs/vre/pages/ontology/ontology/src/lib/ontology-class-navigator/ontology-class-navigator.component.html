@@ -1,0 +1,98 @@
+<div class="navigator">
+  <header class="navigator__header">
+    <div class="navigator__header-row">
+      <mat-form-field appearance="outline" class="navigator__filter">
+        <mat-label>{{ 'pages.ontology.editor.classFilterPlaceholder' | translate }}</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          type="search"
+          [formControl]="filterControl"
+          data-cy="class-navigator-filter"
+          [attr.aria-label]="'pages.ontology.editor.classFilterPlaceholder' | translate" />
+        @if (filterControl.value) {
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="clearFilter()"
+          [attr.aria-label]="'ui.common.actions.clear' | translate"
+          data-cy="class-navigator-filter-clear">
+          <mat-icon>close</mat-icon>
+        </button>
+        }
+      </mat-form-field>
+
+      @if (isEditingEnabled$ | async) {
+      <button
+        mat-icon-button
+        type="button"
+        class="navigator__create"
+        [matMenuTriggerFor]="createClassMenu"
+        [attr.aria-label]="'pages.ontology.editor.createNewClass' | translate"
+        [matTooltip]="'pages.ontology.editor.createNewClass' | translate"
+        data-cy="create-class-button">
+        <mat-icon>add</mat-icon>
+      </button>
+      <mat-menu #createClassMenu="matMenu" xPosition="before">
+        @for (type of defaultClasses; track type.iri) {
+        <button mat-menu-item type="button" (click)="openCreateClass(type)" [attr.data-cy]="type.iri.split('#').pop()">
+          <mat-icon>{{ type.icon }}</mat-icon>
+          {{ type.label }}
+        </button>
+        }
+      </mat-menu>
+      }
+    </div>
+
+    <div class="navigator__bulk-actions">
+      <button
+        mat-button
+        type="button"
+        (click)="selectAllVisible()"
+        data-cy="class-navigator-select-all"
+        [disabled]="(latestList$ | async)?.length === 0">
+        {{ 'pages.ontology.editor.selectAll' | translate }}
+      </button>
+      <button
+        mat-button
+        type="button"
+        (click)="deselectAllVisible()"
+        data-cy="class-navigator-deselect-all"
+        [disabled]="(latestList$ | async)?.length === 0">
+        {{ 'pages.ontology.editor.deselectAll' | translate }}
+      </button>
+    </div>
+  </header>
+
+  @if (filteredList$ | async; as list) { @if (list.length === 0) {
+  <p class="navigator__empty" data-cy="class-navigator-empty">
+    @if (filterControl.value) { {{ 'pages.ontology.editor.emptyFilter' | translate }} } @else { {{
+    'pages.ontology.editor.emptyOntology' | translate }} }
+  </p>
+  } @else if (selectedIris$ | async; as selected) {
+  <ul class="navigator__classes" data-cy="class-navigator-list" role="list">
+    @for (node of list; track trackNode($index, node)) {
+    <li class="navigator__class" [attr.data-iri]="node.iri">
+      <mat-checkbox
+        [checked]="isSelected(node.iri, selected)"
+        (change)="toggleClass(node.iri)"
+        [attr.data-iri]="node.iri"
+        data-cy="class-navigator-class-checkbox">
+        {{ node.label }}
+      </mat-checkbox>
+      @if (node.matchedProperties.length) {
+      <ul class="navigator__matched-properties" data-cy="class-navigator-matched-properties" role="list">
+        @for (prop of node.matchedProperties; track trackProp($index, prop)) {
+        <li class="navigator__matched-property">
+          <mat-icon class="navigator__matched-icon" aria-hidden="true">subdirectory_arrow_right</mat-icon>
+          <span class="navigator__matched-label">{{ prop.label }}</span>
+        </li>
+        }
+      </ul>
+      }
+    </li>
+    }
+  </ul>
+  } }
+</div>
