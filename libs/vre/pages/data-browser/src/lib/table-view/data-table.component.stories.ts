@@ -14,7 +14,7 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { EDITABLE_PROPERTY_IRI, makeReadResource, STORY_PROVIDERS } from '../stories.helpers';
 import { rightsColumns } from './build-column-model';
 import { DataTableComponent } from './data-table.component';
-import { LABEL_COLUMN_KEY, TableColumn } from './table-column.model';
+import { DEFAULT_EDIT_WIDTH, LABEL_COLUMN_KEY, TableColumn } from './table-column.model';
 
 const ONTO = 'http://0.0.0.0:3333/ontology/0001/test/v2#';
 
@@ -831,7 +831,7 @@ export const WidensAColumnForItsEditorWhileEditing: Story = {
 
     await userEvent.hover(canvasElement.querySelector('[data-cy="property-value"]') as HTMLElement);
     await userEvent.click(canvasElement.querySelector('[data-cy="edit-button"]') as HTMLElement);
-    await waitFor(() => expect(width()).toBe(300));
+    await waitFor(() => expect(width()).toBe(DEFAULT_EDIT_WIDTH));
 
     await userEvent.click(canvasElement.querySelector('[data-cy="undo-button"]') as HTMLElement);
     await waitFor(() => expect(width()).toBe(120));
