@@ -54,6 +54,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
           <h3>{{ 'resourceEditor.resourceCreator.form.properties' | translate }}</h3>
         }
         <app-create-resource-form-row
+          class="label-row"
           [label]="('resourceEditor.resourceCreator.form.resourceLabel' | translate) + ' *'"
           [tooltip]="'resourceEditor.resourceCreator.form.resourceLabelTooltip' | translate"
           data-cy="resource-label">
@@ -165,6 +166,9 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
   ],
   styles: [
     '.row { display: flex; padding: 16px 0;}',
+    // The space under the resource label the property rows below have under theirs; it used to come
+    // from the label's own 16px padding, gone now that labels are centred on 36px fields (DEV-7611).
+    '.label-row { display: block; padding-bottom: 16px; }',
     '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
     '.form { display: block; margin-right: 100px;}',
     '.form-actions { display: flex; justify-content: end; gap: 8px; margin-top: 16px; }',

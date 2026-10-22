@@ -24,7 +24,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       .grid-h3 {
         width: 140px;
         text-align: end;
-        padding: 16px;
+        /* Centred on the 36px fields of the compact create form (DEV-7611); 16px above put the
+           label 9px below its field and made each row taller than the field. */
+        padding: 8px 16px;
         margin: 0;
         color: rgb(107, 114, 128);
 
