@@ -69,7 +69,9 @@ function calendarOf(value: KnoraDate | KnoraPeriod | null): string | null {
       <div class="edit-line">
         <div class="edit-content">
           @if (template) {
-            <ng-container *ngTemplateOutlet="template; context: { item: group.controls.item }"></ng-container>
+            <div class="compact-value-editor" data-cy="value-editor">
+              <ng-container *ngTemplateOutlet="template; context: { item: group.controls.item }"></ng-container>
+            </div>
           }
           @if (group.controls.comment.value !== null) {
             <app-property-value-basic-comment [control]="group.controls.comment" />
@@ -137,7 +139,7 @@ function calendarOf(value: KnoraDate | KnoraPeriod | null): string | null {
       /* Level with the middle of the editor's first field, as the shown value's actions are with
          its first line. */
       .edit-actions {
-        padding-top: 14px;
+        padding-top: 4px;
       }
       .comment-toggle {
         --mat-button-text-container-height: 26px;

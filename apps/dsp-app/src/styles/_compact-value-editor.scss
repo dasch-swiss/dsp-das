@@ -1,0 +1,21 @@
+@use '@angular/material' as mat;
+
+// The resource editor's value editors — the templates of the template editor switcher, as stamped
+// when editing a value or creating a resource — at Material's smallest form field (36px) rather
+// than its default 56px (DEV-7611). Put on the element wrapping the stamped editor only, not on the
+// comment beside it, which keeps the standard size.
+//
+// Global, not in the components that stamp the editors: Material's density mixins emit nested
+// selectors (`.mat-mdc-icon-button` …), which a component's emulated encapsulation scopes to its
+// own template, so they never reach the editors' internals, and `::ng-deep` is not available to us.
+// The fields are outlined (the switcher's default options): a filled field hides its label below
+// 52px, and the list editor shows its selection as one.
+.compact-value-editor {
+  @include mat.form-field-density(-5);
+  // An icon button inside an editor — the time editor's datepicker toggle, the boolean editor's
+  // clear button — at the field's height rather than 48px, which stretched the field or its row.
+  @include mat.icon-button-density(-3);
+
+  // The date editor is not a Material field; its own variable brings it to the same height.
+  --date-field-min-height: 36px;
+}

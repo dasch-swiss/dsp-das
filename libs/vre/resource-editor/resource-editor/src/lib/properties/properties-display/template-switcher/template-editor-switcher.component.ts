@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatError, MatFormField } from '@angular/material/form-field';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
   Constants,
@@ -43,6 +43,16 @@ import { TimeValueComponent } from './value-components/time-value.component';
     GeolocationValueComponent,
     GeonameValueComponent,
     LinkValueComponent,
+  ],
+  // The editors are drawn compact (DEV-7611):
+  // - no empty error line reserved under every field, only the space a message needs when shown;
+  // - outlined, the one appearance whose label survives Material's 36px density — a filled field
+  //   hides it, which blanked the list editor (its selection is the label) and the interval's
+  //   Start/End. One appearance for all editors, so they look alike side by side.
+  // Reaches the editors wherever these templates are stamped, since an embedded view injects from
+  // where it was declared.
+  providers: [
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { subscriptSizing: 'dynamic', appearance: 'outline' } },
   ],
   template: `
     <ng-template #intEditorTpl let-item="item">

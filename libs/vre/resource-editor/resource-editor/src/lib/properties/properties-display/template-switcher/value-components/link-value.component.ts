@@ -62,6 +62,8 @@ interface ResourceGroup {
         [attr.aria-label]="'resourceEditor.templateSwitcher.linkValue.label' | translate"
         [placeholder]="'resourceEditor.templateSwitcher.linkValue.placeholder' | translate"
         data-cy="link-input"
+        (focus)="isFocused = true"
+        (blur)="isFocused = false"
         (input)="onInputValueChange()"
         [matAutocomplete]="auto" />
       <mat-autocomplete
@@ -99,7 +101,11 @@ interface ResourceGroup {
           </mat-option>
         }
       </mat-autocomplete>
-      <mat-hint>{{ 'resourceEditor.resourceProperties.valueComponents.searchHelp' | translate }}</mat-hint>
+      @if (showsSearchHelp) {
+        <mat-hint data-cy="link-search-help">{{
+          'resourceEditor.resourceProperties.valueComponents.searchHelp' | translate
+        }}</mat-hint>
+      }
       @if (control.errors; as errors) {
         <mat-error>{{ errors | humanReadableError }}</mat-error>
       }
@@ -115,6 +121,8 @@ interface ResourceGroup {
   `,
 })
 export class LinkValueComponent implements OnInit {
+  private static readonly MIN_SEARCH_LENGTH = 3;
+
   private cancelPreviousSearchRequest$ = new Subject<void>();
 
   @Input({ required: true }) control!: FormControl<string | null>;
@@ -127,6 +135,7 @@ export class LinkValueComponent implements OnInit {
   @ViewChild('input') input!: ElementRef<HTMLInputElement>;
 
   loading = false;
+  isFocused = false;
   useDefaultValue = true;
   hasSearched = false;
   groupedResources: ResourceGroup[] = [];
@@ -140,6 +149,15 @@ export class LinkValueComponent implements OnInit {
     public linkValueDataService: LinkValueDataService,
     private _viewContainerRef: ViewContainerRef
   ) {}
+
+  /**
+   * The "type 3 letters" help, only while it can help: the user is in the field and has not yet
+   * typed enough to search. Shown at all times it kept a line of space under the field, which the
+   * compact editors are otherwise rid of (DEV-7611).
+   */
+  get showsSearchHelp(): boolean {
+    return this.isFocused && (this.input?.nativeElement.value.length ?? 0) < LinkValueComponent.MIN_SEARCH_LENGTH;
+  }
 
   ngOnInit() {
     this._getResourceProperties();
@@ -158,7 +176,7 @@ export class LinkValueComponent implements OnInit {
   onInputValueChange() {
     this.groupedResources = [];
     const searchTerm = this.input.nativeElement.value;
-    if (!this.readResource || searchTerm?.length < 3) {
+    if (!this.readResource || searchTerm?.length < LinkValueComponent.MIN_SEARCH_LENGTH) {
       return;
     }
 
