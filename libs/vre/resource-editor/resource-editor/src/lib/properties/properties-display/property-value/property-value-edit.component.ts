@@ -11,7 +11,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Cardinality, Constants, KnoraDate, KnoraPeriod, ReadValue } from '@dasch-swiss/dsp-js';
@@ -44,6 +44,7 @@ function calendarOf(value: KnoraDate | KnoraPeriod | null): string | null {
   imports: [
     AsyncPipe,
     NgTemplateOutlet,
+    MatButton,
     MatIconButton,
     MatIcon,
     MatTooltip,
@@ -64,8 +65,7 @@ function calendarOf(value: KnoraDate | KnoraPeriod | null): string | null {
     @if (!loading) {
       <!-- The editor, then its actions at the end of the same line — the same place and size as the
            Edit and Delete buttons of the value being shown: Cancel, and Save as the one filled
-           button (DEV-7494). Adding or removing the comment is one of them too rather than a row of
-           its own under the editor, so the line is only as tall as the editor (DEV-7611). -->
+           button. The comment is a text link under the editor (DEV-7494). -->
       <div class="edit-line">
         <div class="edit-content">
           @if (template) {
@@ -76,18 +76,23 @@ function calendarOf(value: KnoraDate | KnoraPeriod | null): string | null {
           @if (group.controls.comment.value !== null) {
             <app-property-value-basic-comment [control]="group.controls.comment" />
           }
+          <button
+            mat-button
+            color="primary"
+            type="button"
+            class="comment-toggle"
+            data-cy="toggle-comment-button"
+            (click)="toggleCommentValue()">
+            <mat-icon>{{ commentIsNotNull ? 'remove' : 'add' }}</mat-icon>
+            {{
+              (commentIsNotNull
+                ? 'resourceEditor.resourceProperties.actions.removeComment'
+                : 'resourceEditor.resourceProperties.actions.addComment'
+              ) | translate
+            }}
+          </button>
         </div>
         <div class="value-actions edit-actions">
-          <button
-            mat-icon-button
-            type="button"
-            class="value-action value-action-muted"
-            data-cy="toggle-comment-button"
-            (click)="toggleCommentValue()"
-            [attr.aria-label]="commentToggleLabel | translate"
-            [matTooltip]="commentToggleLabel | translate">
-            <mat-icon>{{ commentIsNotNull ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
-          </button>
           <button
             mat-icon-button
             type="button"
@@ -136,6 +141,16 @@ function calendarOf(value: KnoraDate | KnoraPeriod | null): string | null {
       .edit-actions {
         padding-top: 4px;
       }
+      .comment-toggle {
+        --mat-button-text-container-height: 26px;
+        --mat-button-text-horizontal-padding: 4px;
+        font-size: 12px;
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+      }
     `,
   ],
 })
@@ -155,12 +170,6 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
 
   get commentIsNotNull() {
     return this.group.controls.comment.value !== null;
-  }
-
-  get commentToggleLabel(): string {
-    return this.commentIsNotNull
-      ? 'resourceEditor.resourceProperties.actions.removeComment'
-      : 'resourceEditor.resourceProperties.actions.addComment';
   }
 
   get projectShortcode(): string {

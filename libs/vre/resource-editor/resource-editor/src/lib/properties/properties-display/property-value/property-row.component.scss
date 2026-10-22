@@ -12,8 +12,7 @@
   text-align: right;
   flex-shrink: 0;
   line-height: normal;
-  // Level with the first line of the values beside it, which are padded by the same variable.
-  padding: var(--property-value-padding-block, 16px) 16px;
+  padding: 16px;
   margin-right: 16px;
   overflow-wrap: break-word;
 }
