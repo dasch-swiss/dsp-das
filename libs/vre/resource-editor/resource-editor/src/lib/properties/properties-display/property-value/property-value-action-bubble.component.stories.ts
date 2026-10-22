@@ -1,5 +1,6 @@
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { of } from 'rxjs';
 import { expect, userEvent, waitFor } from 'storybook/test';
 
@@ -33,6 +34,9 @@ const makeResourceFetcherServiceStub = (resourceVersion: string | null = null): 
   resource$: of({ res: { attachedToUser: 'http://rdfh.ch/users/test-user' } } as any),
 });
 
+/** Logged in unless a story says otherwise; the real service needs the app's config. */
+const makeUserServiceStub = (isLoggedIn: boolean): Partial<UserService> => ({ isLoggedIn$: of(isLoggedIn) });
+
 const meta: Meta<PropertyValueActionBubbleComponent> = {
   title:
     'Resource Editor / 4. Properties / Resource Default Tabs / Properties Display / Property Value / Properties Display / Property Value Action Bubble',
@@ -63,6 +67,7 @@ export const EditAndDeleteVisible: Story = {
       providers: [
         { provide: PropertyValueService, useValue: makePropertyValueServiceStub('CR', Cardinality._0_n) },
         { provide: ResourceFetcherService, useValue: makeResourceFetcherServiceStub() },
+        { provide: UserService, useValue: makeUserServiceStub(true) },
       ],
     }),
   ],
@@ -88,6 +93,7 @@ export const DeleteDisabledWhenLastRequiredValue: Story = {
       providers: [
         { provide: PropertyValueService, useValue: makePropertyValueServiceStub('CR', Cardinality._1, 1) },
         { provide: ResourceFetcherService, useValue: makeResourceFetcherServiceStub() },
+        { provide: UserService, useValue: makeUserServiceStub(true) },
       ],
     }),
   ],
@@ -107,6 +113,7 @@ export const NoButtonsForReadOnlyUser: Story = {
       providers: [
         { provide: PropertyValueService, useValue: makePropertyValueServiceStub('RV', Cardinality._0_n) },
         { provide: ResourceFetcherService, useValue: makeResourceFetcherServiceStub() },
+        { provide: UserService, useValue: makeUserServiceStub(true) },
       ],
     }),
   ],
@@ -128,6 +135,7 @@ export const NoButtonsInHistoricalVersion: Story = {
       providers: [
         { provide: PropertyValueService, useValue: makePropertyValueServiceStub('CR', Cardinality._0_n) },
         { provide: ResourceFetcherService, useValue: makeResourceFetcherServiceStub('20240615T100000Z') },
+        { provide: UserService, useValue: makeUserServiceStub(true) },
       ],
     }),
   ],
@@ -150,6 +158,7 @@ export const CreationInfoInTheEditTooltip: Story = {
       providers: [
         { provide: PropertyValueService, useValue: makePropertyValueServiceStub('CR', Cardinality._0_n) },
         { provide: ResourceFetcherService, useValue: makeResourceFetcherServiceStub() },
+        { provide: UserService, useValue: makeUserServiceStub(true) },
       ],
     }),
   ],
@@ -173,11 +182,31 @@ export const InfoButtonForReadOnlyUser: Story = {
       providers: [
         { provide: PropertyValueService, useValue: makePropertyValueServiceStub('V', Cardinality._0_n) },
         { provide: ResourceFetcherService, useValue: makeResourceFetcherServiceStub() },
+        { provide: UserService, useValue: makeUserServiceStub(true) },
       ],
     }),
   ],
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('[data-cy="edit-button"]')).toBeNull();
     await expect(canvasElement.querySelector('[data-cy="info-button"]')).not.toBeNull();
+  },
+};
+
+/** A visitor who is not logged in gets no button only to show a creation date (DEV-7494). */
+export const NoInfoButtonWhenLoggedOut: Story = {
+  name: 'Shows no info button when the user is logged out',
+  args: { date: DATE },
+  decorators: [
+    applicationConfig({
+      providers: [
+        { provide: PropertyValueService, useValue: makePropertyValueServiceStub('V', Cardinality._0_n) },
+        { provide: ResourceFetcherService, useValue: makeResourceFetcherServiceStub() },
+        { provide: UserService, useValue: makeUserServiceStub(false) },
+      ],
+    }),
+  ],
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('[data-cy="edit-button"]')).toBeNull();
+    await expect(canvasElement.querySelector('[data-cy="info-button"]')).toBeNull();
   },
 };
