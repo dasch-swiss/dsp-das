@@ -673,6 +673,7 @@
         "editFilter": "Filter bearbeiten",
         "pin": "Fixieren",
         "unpin": "Lösen",
+        "scrollBackToStart": "Klicken, um zur ersten Spalte zurückzuscrollen.",
         "oneColumnScrolledUnder": "1 Spalte darunter verborgen",
         "columnsScrolledUnder": "{{count}} Spalten darunter verborgen",
         "selectRow": "{{label}} zum Vergleich hinzufügen",

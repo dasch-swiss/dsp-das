@@ -1201,7 +1201,7 @@ export const ShowsThePinBeforeAPinnedColumnsName: Story = {
   },
 };
 
-/** Says how many columns are hidden under the frozen ones, once whole columns are. */
+/** Says how many columns are hidden under the frozen ones, once whole columns are, and scrolls back. */
 export const CountsTheColumnsScrolledUnderTheFrozenOnes: Story = {
   render: storyArgs => ({
     props: {
@@ -1230,7 +1230,12 @@ export const CountsTheColumnsScrolledUnderTheFrozenOnes: Story = {
     scroller.scrollLeft = 300;
     scroller.dispatchEvent(new Event('scroll'));
 
-    await waitFor(() => expect(hint()).toHaveTextContent('2 columns scrolled under'));
+    await waitFor(() => expect(hint()).toHaveTextContent('2'));
+    await expect(hint()?.getAttribute('aria-label')).toContain('2 columns scrolled under');
+
+    await userEvent.click(hint() as HTMLElement);
+    await waitFor(() => expect(scroller.scrollLeft).toBe(0));
+    await waitFor(() => expect(hint()).toBeNull());
   },
 };
 

@@ -673,6 +673,7 @@
         "editFilter": "Edit filter",
         "pin": "Pin",
         "unpin": "Unpin",
+        "scrollBackToStart": "Click to scroll back to the first column.",
         "oneColumnScrolledUnder": "1 column scrolled under",
         "columnsScrolledUnder": "{{count}} columns scrolled under",
         "selectRow": "Add {{label}} to the comparison",

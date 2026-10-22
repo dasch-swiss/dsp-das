@@ -673,6 +673,7 @@
         "editFilter": "Modifier le filtre",
         "pin": "Épingler",
         "unpin": "Désépingler",
+        "scrollBackToStart": "Cliquez pour revenir à la première colonne.",
         "oneColumnScrolledUnder": "1 colonne masquée dessous",
         "columnsScrolledUnder": "{{count}} colonnes masquées dessous",
         "selectRow": "Ajouter {{label}} à la comparaison",

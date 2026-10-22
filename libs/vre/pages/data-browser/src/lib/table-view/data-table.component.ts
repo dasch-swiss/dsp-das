@@ -192,6 +192,27 @@ const FILLER_COLUMN_KEY = '__filler';
                   </button>
                 }
 
+                <!-- How many columns are hidden under the frozen ones, and the way back to them. In
+                     the label's header, the one cell that never scrolls, so it covers no data and
+                     no column name (DEV-7494, option A of the scrolled-under hint design). -->
+                @if (column.isSticky && scrolledUnder().count > 0) {
+                  @let hiddenColumns =
+                    (scrolledUnder().count === 1
+                      ? 'pages.dataBrowser.table.oneColumnScrolledUnder'
+                      : 'pages.dataBrowser.table.columnsScrolledUnder'
+                    ) | translate: { count: scrolledUnder().count };
+                  @let scrollBack = hiddenColumns + '. ' + ('pages.dataBrowser.table.scrollBackToStart' | translate);
+                  <button
+                    type="button"
+                    class="scroll-back"
+                    data-cy="scrolled-under-hint"
+                    [attr.aria-label]="scrollBack"
+                    [matTooltip]="scrollBack"
+                    (click)="scrollToStart()">
+                    <mat-icon>chevron_left</mat-icon>{{ scrolledUnder().count }}
+                  </button>
+                }
+
                 <!-- Freezes the column after the label, so it stays in view while the rest scroll
                      past. The label is frozen already and has nothing to toggle. -->
                 @if (!column.isSticky) {
@@ -392,23 +413,6 @@ const FILLER_COLUMN_KEY = '__filler';
         [style.left.px]="scrolledUnder().edge"
         [style.height.px]="scrolledUnder().height"></span>
     }
-    <!-- Says that the frozen columns are covering others, which the shadow alone only hints at. -->
-    @if (scrolledUnder().count > 0) {
-      <span
-        class="scroll-hint"
-        data-cy="scrolled-under-hint"
-        aria-hidden="true"
-        [style.left.px]="scrolledUnder().edge + 8"
-        [style.top.px]="scrolledUnder().top + 8">
-        <mat-icon>chevron_left</mat-icon>
-        {{
-          (scrolledUnder().count === 1
-            ? 'pages.dataBrowser.table.oneColumnScrolledUnder'
-            : 'pages.dataBrowser.table.columnsScrolledUnder'
-          ) | translate: { count: scrolledUnder().count }
-        }}
-      </span>
-    }
   `,
   styleUrl: './data-table.component.scss',
   imports: [
@@ -537,7 +541,7 @@ export class DataTableComponent {
   /**
    * How far the table is scrolled sideways, as the frozen zone sees it: whether there is a frozen
    * edge to shade, how many scrolling columns are entirely hidden under it, and where its edge and
-   * the header's bottom are, to place the shadow and the hint.
+   * the header's bottom are, to place the shadow.
    */
   protected readonly scrolledUnder = signal(
     { shadowed: false, count: 0, edge: 0, top: 0, height: 0 },
@@ -771,6 +775,11 @@ export class DataTableComponent {
     const order = [...this.visibleColumns()];
     moveItemInArray(order, event.previousIndex, event.currentIndex);
     this.columnsReordered.emit(order);
+  }
+
+  /** Back to the first column, from the hint that says how many are scrolled under. */
+  protected scrollToStart(): void {
+    this._scroller().nativeElement.scrollTo({ left: 0, behavior: 'smooth' });
   }
 
   protected measureScroll(): void {
