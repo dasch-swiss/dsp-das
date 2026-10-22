@@ -3,6 +3,7 @@ import { importProvidersFrom } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
 import { of } from 'rxjs';
@@ -16,11 +17,27 @@ const linkValueDataServiceStub: Partial<LinkValueDataService> = {
   resourceClasses: [],
 };
 
+const ANYTHING = 'http://api.dasch.swiss/ontology/0001/anything/v2';
+
+// The component provides its own LinkValueDataService, so the real one runs on what these return:
+// a link property and its link value property, as the API describes them.
+const linkProperty = Object.assign(new ResourcePropertyDefinition(), {
+  id: `${ANYTHING}#hasOtherThing`,
+  objectType: `${ANYTHING}#Thing`,
+  isLinkProperty: true,
+});
+const linkValueProperty = Object.assign(new ResourcePropertyDefinition(), {
+  id: `${ANYTHING}#hasOtherThingValue`,
+  isLinkValueProperty: true,
+});
+
 const dspApiConnectionStub = {
   v2: {
     ontologyCache: {
+      reloadCachedItem: () => of(new Map()),
       getOntology: () => of(new Map()),
-      getResourceClassDefinition: () => of({ classes: {}, properties: {} }),
+      getResourceClassDefinition: () =>
+        of({ classes: {}, properties: { [linkProperty.id]: linkProperty, [linkValueProperty.id]: linkValueProperty } }),
     },
     search: {
       doSearchByLabel: () => of({ resources: [] }),
@@ -91,7 +108,8 @@ export const Empty: Story = {
  */
 export const ShowsSearchHelpOnlyWhileNeeded: Story = {
   name: 'Shows the search help only while focused and fewer than three letters are typed',
-  args: { ...Empty.args, control: new FormControl<string | null>(null) },
+  // The link *value* property, as the editor is given in the app.
+  args: { ...Empty.args, control: new FormControl<string | null>(null), propIri: `${ANYTHING}#hasOtherThingValue` },
   // As the template editor switcher provides it to every value editor.
   decorators: [
     applicationConfig({
