@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, DestroyRef, EventEmitter, Inject, Input, 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import {
@@ -77,7 +77,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
         <h3>{{ 'legal.dataSide.heading' | translate }}</h3>
         <app-create-resource-form-row [label]="'legal.dataSide.license' | translate">
           <div
-            style="display: flex; align-items: center; gap: 4px; padding: 16px 0"
+            style="display: flex; align-items: center; gap: 4px; padding: 8px 0"
             [attr.aria-label]="
               'legal.dataSide.readOnlyValue'
                 | translate
@@ -107,7 +107,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
         </app-create-resource-form-row>
         <app-create-resource-form-row [label]="'legal.dataSide.copyrightHolder' | translate">
           <div
-            style="display: flex; align-items: center; gap: 4px; padding: 16px 0"
+            style="display: flex; align-items: center; gap: 4px; padding: 8px 0"
             [attr.aria-label]="
               'legal.dataSide.readOnlyValue'
                 | translate
@@ -131,6 +131,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
             [ariaLabel]="'legal.dataSide.authorship' | translate"
             [placeholder]="'resourceEditor.resourceCreator.authorship.placeholder' | translate"
             [hint]="'legal.dataSide.authorshipHint' | translate"
+            [hintOnlyWhileFocused]="true"
             [removeAuthorLabel]="removeDataAuthorLabel"
             dataCy="data-authorship-chips" />
         </app-create-resource-form-row>
@@ -154,6 +155,14 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
       <app-progress-indicator />
     }
   `,
+  // Compact throughout (DEV-7611): the resource label, the legal fields and the file form at the
+  // 36px of the property editors between them — outlined, so a field keeps its label at that
+  // height, and with no empty error line reserved under every field. The read-only legal rows are
+  // padded to the same height.
+  host: { class: 'compact-value-editor' },
+  providers: [
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { subscriptSizing: 'dynamic', appearance: 'outline' } },
+  ],
   styles: [
     '.row { display: flex; padding: 16px 0;}',
     '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',

@@ -1,21 +1,30 @@
 @use '@angular/material' as mat;
 
-// The resource editor's value editors — the templates of the template editor switcher, as stamped
-// when editing a value or creating a resource — at Material's smallest form field (36px) rather
-// than its default 56px (DEV-7611). Put on the element wrapping the stamped editor only, not on the
-// comment beside it, which keeps the standard size.
+// The resource editor's forms — the value editors of the template editor switcher (editing a value,
+// creating a resource), their comment, and the create-resource form around them — at Material's
+// smallest form field (36px) rather than its default 56px (DEV-7611).
 //
-// Global, not in the components that stamp the editors: Material's density mixins emit nested
-// selectors (`.mat-mdc-icon-button` …), which a component's emulated encapsulation scopes to its
-// own template, so they never reach the editors' internals, and `::ng-deep` is not available to us.
-// The fields are outlined (the switcher's default options): a filled field hides its label below
+// Global, not in the components that use it: Material's density mixins emit nested selectors
+// (`.mat-mdc-icon-button` …), which a component's emulated encapsulation scopes to its own
+// template, so they never reach the editors' internals, and `::ng-deep` is not available to us.
+// The fields are outlined (the hosts' default options): a filled field hides its label below
 // 52px, and the list editor shows its selection as one.
 .compact-value-editor {
   @include mat.form-field-density(-5);
   // An icon button inside an editor — the time editor's datepicker toggle, the boolean editor's
   // clear button — at the field's height rather than 48px, which stretched the field or its row.
   @include mat.icon-button-density(-3);
+  // Chips (authorship) that fit a 36px field instead of growing it.
+  @include mat.chips-density(-2);
 
-  // The date editor is not a Material field; its own variable brings it to the same height.
+  // The date editor is not a Material field; its own variables bring it to the same height and lay
+  // the calendar beside the dates when there is room, rather than on a line of its own.
   --date-field-min-height: 36px;
+  --date-value-display: flex;
+  --date-fields-margin-top: 0;
+
+  // The rich-text editor opens a few lines tall rather than 256px; it grows as text is written.
+  .ck-editor__editable_inline {
+    min-height: 96px;
+  }
 }

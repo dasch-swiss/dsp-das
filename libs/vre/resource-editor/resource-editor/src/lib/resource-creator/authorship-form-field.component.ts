@@ -40,6 +40,8 @@ import { finalize } from 'rxjs/operators';
         [matAutocomplete]="auto"
         [matAutocompleteDisabled]="filteredAuthorship.length === 0"
         [formControl]="autocompleteFormControl"
+        (focus)="isFocused = true"
+        (blur)="isFocused = false"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         (matChipInputTokenEnd)="addItemFromMaterial($event)" />
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectItem($event)">
@@ -50,7 +52,11 @@ import { finalize } from 'rxjs/operators';
         }
       </mat-autocomplete>
 
-      <mat-hint>{{ 'resourceEditor.resourceCreator.authorship.pressEnterOrTab' | translate }}</mat-hint>
+      <!-- Only while typing, where it helps: shown at all times it kept a line of space under the
+           field, which the compact create form is otherwise rid of (DEV-7611). -->
+      @if (isFocused) {
+        <mat-hint>{{ 'resourceEditor.resourceCreator.authorship.pressEnterOrTab' | translate }}</mat-hint>
+      }
 
       @if (control.invalid && control.touched && control.errors![0]; as error) {
         <mat-error>
@@ -79,6 +85,7 @@ export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
 
   readonly separatorKeysCodes: number[] = [ENTER, TAB];
   selectedItems: string[] = [];
+  isFocused = false;
   availableAuthorship: string[] = [];
   filteredAuthorship: string[] = [];
   loading = true;

@@ -18,7 +18,15 @@ import { TranslatePipe } from '@ngx-translate/core';
     ReactiveFormsModule,
     TranslatePipe,
   ],
-  template: ` <mat-form-field style="flex: 1; width: 100%; margin: 10px 0" subscriptSizing="dynamic">
+  // Compact like the value it comments on (DEV-7611): 36px for one line, growing with the text.
+  // Outlined, because a filled field hides its label at that height and "Comment" is all that tells
+  // this field from the value above it; the top margin is room for that label, which rises above
+  // the field's border.
+  host: { class: 'compact-value-editor' },
+  template: ` <mat-form-field
+    appearance="outline"
+    style="flex: 1; width: 100%; margin-top: 8px"
+    subscriptSizing="dynamic">
     <mat-label>{{ 'resourceEditor.resourceProperties.comment' | translate }}</mat-label>
     @if (control.disabled) {
       <mat-icon matPrefix style="color: #808080">lock</mat-icon>

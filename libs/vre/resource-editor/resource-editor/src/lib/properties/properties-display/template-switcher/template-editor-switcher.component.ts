@@ -1,3 +1,4 @@
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatError, MatFormField } from '@angular/material/form-field';
@@ -26,6 +27,7 @@ import { TimeValueComponent } from './value-components/time-value.component';
 @Component({
   selector: 'app-template-editor-switcher',
   imports: [
+    CdkTextareaAutosize,
     MatFormField,
     MatInput,
     ReactiveFormsModule,
@@ -116,10 +118,14 @@ import { TimeValueComponent } from './value-components/time-value.component';
 
     <ng-template #paragraphEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
+        <!-- Three lines to start, growing with the text up to twelve: nine fixed rows made an
+             empty paragraph the tallest thing in a table row (DEV-7611). -->
         <textarea
           matInput
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="3"
+          cdkAutosizeMaxRows="12"
           [formControl]="item"
-          rows="9"
           [placeholder]="('resourceEditor.templateSwitcher.example' | translate) + ' Lorem ipsum ...'"></textarea>
       </mat-form-field>
       @if (item.touched && item.errors; as errors) {

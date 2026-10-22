@@ -1,7 +1,7 @@
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
 import { BehaviorSubject } from 'rxjs';
-import { expect, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 
 import { PropertyValueEditComponent } from './property-value-edit.component';
 import { PropertyValueService } from './property-value.service';
@@ -119,6 +119,38 @@ export const RendersCompactEditorField: Story = {
 
     await step('The field is 36px tall, error line included', async () => {
       await expect(field.getBoundingClientRect().height).toBeLessThanOrEqual(36.5);
+    });
+  },
+};
+
+/**
+ * Adding a comment is one of the line's actions, beside Cancel and Save, not a row of its own under
+ * the editor, so the edit line is only as tall as the editor (DEV-7611).
+ */
+export const OffersCommentAmongActions: Story = {
+  name: 'Offers the comment as an action beside Cancel and Save',
+  args: { ...EditExistingValue.args },
+  play: async ({ canvasElement, step }) => {
+    const toggle = await waitFor(() => {
+      const element = canvasElement.querySelector<HTMLElement>('[data-cy="toggle-comment-button"]');
+      expect(element).not.toBeNull();
+      return element!;
+    });
+
+    await step('The comment toggle sits with Cancel and Save', async () => {
+      await expect(toggle.closest('.edit-actions')?.querySelector('[data-cy="save-button"]')).not.toBeNull();
+    });
+    await step('The line is no taller than the editor and its padding', async () => {
+      const line = canvasElement.querySelector('.edit-line') as HTMLElement;
+      const editor = canvasElement.querySelector('[data-cy="value-editor"]') as HTMLElement;
+      const padding = parseFloat(getComputedStyle(line).paddingTop) + parseFloat(getComputedStyle(line).paddingBottom);
+      await expect(line.getBoundingClientRect().height).toBeLessThanOrEqual(
+        editor.getBoundingClientRect().height + padding + 0.5
+      );
+    });
+    await step('Clicking it opens the comment field', async () => {
+      await userEvent.click(toggle);
+      await waitFor(() => expect(canvasElement.querySelector('app-property-value-basic-comment')).not.toBeNull());
     });
   },
 };

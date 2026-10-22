@@ -57,10 +57,9 @@ import { PropertyValueService } from './property-value.service';
     `
       /* A quiet text button under the values: as tall as a line, not a toolbar. */
       .add-value {
-        --mat-button-text-container-height: 30px;
+        --mat-button-text-container-height: 26px;
         --mat-button-text-horizontal-padding: 6px;
 
-        margin-top: 2px;
         font-size: 13px;
       }
     `,

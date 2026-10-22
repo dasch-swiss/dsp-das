@@ -35,6 +35,10 @@ import { StandoffLinksPropertyComponent } from './standoff-links-property.compon
     <app-standoff-links-property [resource]="resource" />
     <app-incoming-links-property [resource]="resource.res" />
   `,
+  // The values, their editors and the labels beside them sit 8px from the row's edges rather than
+  // 16px, so more of a resource fits on screen (DEV-7611). Through the variable every part already
+  // reads — the shown value, its action bubble, the edit line, the label — so they stay level.
+  styles: [':host { display: block; --property-value-padding-block: 8px; }'],
   imports: [
     PropertyRowComponent,
     PropertyValuesWithFootnotesComponent,
