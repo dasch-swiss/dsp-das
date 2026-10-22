@@ -2,8 +2,14 @@ import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/angular';
 
+// `STORYBOOK_BREAKPOINTS=true` builds only the full-page breakpoint stories, for the separate
+// pixeleye run that captures them at every breakpoint width (`pixeleye.breakpoints.config.ts`).
+const BREAKPOINTS_ONLY = process.env['STORYBOOK_BREAKPOINTS'] === 'true';
+
 const config: StorybookConfig = {
-  stories: ['../libs/**/*.stories.@(ts|mdx)', '../apps/**/*.stories.@(ts|mdx)'],
+  stories: BREAKPOINTS_ONLY
+    ? ['../libs/**/*.breakpoints.stories.ts', '../apps/**/*.breakpoints.stories.ts']
+    : ['../libs/**/*.stories.@(ts|mdx)', '../apps/**/*.stories.@(ts|mdx)'],
   addons: [],
   framework: {
     name: getAbsolutePath('@storybook/angular'),

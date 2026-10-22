@@ -58,9 +58,8 @@ function isSortableProperty(propDef: ResourcePropertyDefinitionWithAllLanguages)
 /**
  * The label column, prepended to every class.
  *
- * Sortable — label is the Data tab's default sort. Not editable: the resource label is not a
- * property value, so it has no `PropertyInfoValues` and no editor component; changing it goes
- * through the resource editor's own header. Sticky, and therefore also immovable and un-hideable
+ * Sortable — label is the Data tab's default sort. Editable, though not through a property editor:
+ * its cell opens the viewer's own label dialog (DEV-7494). Sticky, and therefore also immovable and un-hideable
  * (PRD REQ-2.10) — with no cap on visible columns, horizontal scrolling is the normal case, and a
  * table whose rows lose their identity as you scroll right is not readable.
  */
@@ -69,7 +68,7 @@ function labelColumn(label: string): TableColumn {
     key: LABEL_COLUMN_KEY,
     label,
     valueType: '',
-    isEditable: false,
+    isEditable: true,
     isSortable: true,
     isFilterable: true,
     isSticky: true,
@@ -159,8 +158,9 @@ export function buildColumnModel(
  * The Resource Rights Statement as three trailing columns: license, copyright holder, authorship.
  *
  * Kept out of {@link buildColumnModel}, which turns a class's properties into columns — these are
- * not properties, and every class gets them alike. Read-only, like the statement's license and
- * holder in the viewer; neither sortable nor filterable, because Gravsearch can do neither on them.
+ * not properties, and every class gets them alike. License and holder are read-only, like the
+ * statement's in the viewer, where they are the project's; authorship is the resource's own and
+ * edits in place (DEV-7494). Neither sortable nor filterable, because Gravsearch can do neither on them.
  *
  * @param titles the header of each column, already localised
  */
@@ -170,7 +170,7 @@ export function rightsColumns(titles: Readonly<Record<RightsField, string>>): Ta
     label: titles[field],
     valueType: '',
     rightsField: field,
-    isEditable: false,
+    isEditable: field === 'authorship',
     isSortable: false,
     isFilterable: false,
     isSticky: false,

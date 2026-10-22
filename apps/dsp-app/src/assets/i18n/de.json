@@ -559,7 +559,8 @@
         "errors": {
           "uri": "Der Wert muss ein URI-Wert sein.",
           "integer": "Der Wert muss eine Ganzzahl sein.",
-          "decimal": "Der Wert muss ein Dezimalwert sein."
+          "decimal": "Der Wert muss ein Dezimalwert sein.",
+          "invalidRegex": "Kein gültiger regulärer Ausdruck. Verwenden Sie .* für beliebige Zeichen, z. B. .*Wort.*"
         },
         "fulltextSearchPlaceholder": "Suchen…",
         "noDataModel": "Dieses Projekt hat noch kein Datenmodell. Ein Datenmodell wird benötigt, um die Ressourcen zu durchsuchen."
@@ -658,6 +659,9 @@
         "sortColumnAscending": "Nach {{column}} aufsteigend sortieren",
         "sortColumnDescending": "Nach {{column}} absteigend sortieren",
         "filterByColumn": "Nach {{column}} filtern",
+        "readOnly": "Schreibgeschützt",
+        "readOnlyInTable": "Kann in der Tabelle nicht bearbeitet werden. Öffnen Sie die Ressource, um zu sehen, wie der Wert gesetzt wird.",
+        "readOnlyProjectWide": "Gilt für das ganze Projekt und wird in den Projekteinstellungen festgelegt.",
         "pinColumn": "{{column}} fixieren",
         "unpinColumn": "{{column}} lösen",
         "imageColumn": "Bild",

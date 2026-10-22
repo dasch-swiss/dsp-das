@@ -559,7 +559,8 @@
         "errors": {
           "uri": "La valeur doit être une valeur URI.",
           "integer": "La valeur doit être un nombre entier.",
-          "decimal": "La valeur doit être une valeur décimale."
+          "decimal": "La valeur doit être une valeur décimale.",
+          "invalidRegex": "Expression régulière non valide. Utilisez .* pour n'importe quels caractères, p. ex. .*mot.*"
         },
         "fulltextSearchPlaceholder": "Rechercher…",
         "noDataModel": "Ce projet n'a pas encore de modèle de données. Un modèle de données est nécessaire pour rechercher ses ressources."
@@ -658,6 +659,9 @@
         "sortColumnAscending": "Trier par {{column}}, ordre croissant",
         "sortColumnDescending": "Trier par {{column}}, ordre décroissant",
         "filterByColumn": "Filtrer par {{column}}",
+        "readOnly": "Lecture seule",
+        "readOnlyInTable": "Non modifiable dans le tableau. Ouvrez la ressource pour voir comment cette valeur est définie.",
+        "readOnlyProjectWide": "Défini pour tout le projet, dans les paramètres du projet.",
         "pinColumn": "Épingler {{column}}",
         "unpinColumn": "Désépingler {{column}}",
         "imageColumn": "Image",

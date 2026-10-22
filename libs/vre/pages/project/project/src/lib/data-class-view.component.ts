@@ -1,5 +1,6 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
@@ -14,13 +15,29 @@ import { OntologyService, ResourceResultService } from '@dasch-swiss/vre/shared/
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { CenteredBoxComponent, NoResultsFoundComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AngularSplitModule } from 'angular-split';
+import { AngularSplitModule, SplitGutterInteractionEvent } from 'angular-split';
 import { combineLatest, distinctUntilChanged, EMPTY, first, map, skip } from 'rxjs';
 import { DataClassHeaderComponent } from './data-class-header.component';
 import { DataClassPanelComponent } from './data-class-panel.component';
 import { provideDataClassSearch } from './data-class-query.service';
 import { DataClassUrlStateService, DataClassView } from './data-class-url-state.service';
 import { ProjectPageService } from './project-page.service';
+
+/**
+ * The result list's default width from each breakpoint up, widest first.
+ * The min-widths are the md–xxl tokens of `apps/dsp-app/src/styles/_responsive.scss` (DEV-7557).
+ */
+export const RESULT_LIST_WIDTHS: readonly (readonly [minWidth: number, width: number])[] = [
+  [2560, 440],
+  [1920, 400],
+  [1536, 380],
+  [1280, 360],
+];
+
+/** Below the md breakpoint (1280). */
+export const RESULT_LIST_WIDTH_BELOW_MD = 300;
+
+const QUERIES = RESULT_LIST_WIDTHS.map(([minWidth]) => `(min-width: ${minWidth}px)`);
 
 @Component({
   selector: 'app-data-class-view',
@@ -43,7 +60,9 @@ import { ProjectPageService } from './project-page.service';
         @if ((selectedResources$ | async)?.length && multipleViewerService.selectMode) {
           <app-resource-list-selection />
         }
-        <as-split>
+        <!-- In list view the result list's width follows the screen's breakpoint until the user drags
+             its gutter (DEV-7557); in table view it takes the whole width. -->
+        <as-split direction="horizontal" unit="pixel" (dragEnd)="onResultListDragged($event)">
           <as-split-area [size]="panelSize()" cdkScrollable>
             <app-data-class-panel [classSelected]="classSelected" />
           </as-split-area>
@@ -130,10 +149,31 @@ export class DataClassViewComponent {
   readonly multipleViewerService = inject(MultipleViewerService);
   readonly selectedResources$ = this.multipleViewerService.selectedResources$;
 
+  private readonly _breakpoints = inject(BreakpointObserver);
+
+  /** The width for the widest breakpoint the screen reaches. */
+  private readonly _breakpointWidth = toSignal(
+    this._breakpoints.observe(QUERIES).pipe(map(() => this._widthForScreen())),
+    { initialValue: this._widthForScreen() }
+  );
+
+  /** The width the user dragged the result list to, if they have. */
+  private readonly _draggedWidth = signal<number | undefined>(undefined);
+
+  /**
+   * The breakpoint's width until the user drags the result list; from then on, their width —
+   * resizing the window no longer changes it.
+   */
+  readonly resultListWidth = computed(() => this._draggedWidth() ?? this._breakpointWidth());
+
   readonly viewerIsVisible = computed(() => this._view() !== 'table');
 
-  readonly panelSize = computed(() => (this._view() === 'table' ? 100 : 34));
-  readonly viewerSize = computed(() => 66);
+  /**
+   * The split is in pixels: the list gets its width and the viewer the rest (`*`). In table view the
+   * list is the rest, and the hidden viewer gets a number so the split never sees two `*`.
+   */
+  readonly panelSize = computed(() => (this.viewerIsVisible() ? this.resultListWidth() : ('*' as const)));
+  readonly viewerSize = computed(() => (this.viewerIsVisible() ? ('*' as const) : 0));
 
   dataIsNotFound = false;
   data$ = combineLatest([
@@ -202,5 +242,17 @@ export class DataClassViewComponent {
 
   onResourceDeleted() {
     this._projectPageService.reloadProject();
+  }
+
+  onResultListDragged({ sizes }: SplitGutterInteractionEvent): void {
+    const [width] = sizes;
+    if (typeof width === 'number') {
+      this._draggedWidth.set(width);
+    }
+  }
+
+  private _widthForScreen(): number {
+    const match = RESULT_LIST_WIDTHS.find((_, index) => this._breakpoints.isMatched(QUERIES[index]));
+    return match ? match[1] : RESULT_LIST_WIDTH_BELOW_MD;
   }
 }

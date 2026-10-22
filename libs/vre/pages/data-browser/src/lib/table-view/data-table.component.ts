@@ -58,6 +58,11 @@ interface RenderColumn extends TableColumn {
   readonly filterTooltipKey: string;
   /** Pinned after the label by the user, and so sticky like it. Never true on the label itself. */
   readonly isPinned: boolean;
+  /**
+   * Why the column cannot be edited here, as a translation key — or `null` when it can, or when the
+   * user could not edit anything anyway and a lock on some columns would single out nothing.
+   */
+  readonly readOnlyReasonKey: string | null;
 }
 
 /**
@@ -131,7 +136,11 @@ const FILLER_COLUMN_KEY = '__filler';
               scope="col"
               [class.is-label-header]="column.isSticky"
               [style.width.px]="column.width"
-              [attr.aria-label]="column.label"
+              [attr.aria-label]="
+                column.readOnlyReasonKey
+                  ? column.label + ', ' + ('pages.dataBrowser.table.readOnly' | translate)
+                  : column.label
+              "
               [attr.aria-sort]="column.ariaSort"
               cdkDrag
               [cdkDragData]="column.key"
@@ -139,11 +148,19 @@ const FILLER_COLUMN_KEY = '__filler';
               [class.is-movable]="!column.isSticky"
               [class.is-pinned]="column.isPinned"
               [class.is-frozen]="column.isSticky || column.isPinned"
+              [class.is-read-only]="column.readOnlyReasonKey"
               [attr.tabindex]="column.isSticky ? null : 0"
               [attr.aria-keyshortcuts]="column.isSticky ? null : 'ArrowLeft ArrowRight'"
               (keydown)="onHeaderKeydown(column.key, $event)">
               <div class="header-content">
                 <!-- A pinned column's pin moves before its name (see the stylesheet). -->
+                <!-- A read-only column says so before its name, and why on hover, so an editor
+                     learns it before reaching for a cell that offers no Edit (DEV-7494). -->
+                @if (column.readOnlyReasonKey; as reasonKey) {
+                  <mat-icon class="header-lock" data-cy="column-read-only" [matTooltip]="reasonKey | translate"
+                    >lock</mat-icon
+                  >
+                }
                 <span class="header-label" [appTruncatedTooltip]="column.label">{{ column.label }}</span>
 
                 <!-- Only where the Data tab's own sort rule allows it (REQ-3.2). A control the
@@ -474,6 +491,11 @@ export class DataTableComponent {
    * draws no checkboxes and narrows the label gutter to the open arrow alone.
    */
   readonly selectable = input(true);
+  /**
+   * Whether the user may edit this project's data. Only then are read-only columns marked: to a
+   * visitor every column is read-only, and a lock on some of them would say something untrue.
+   */
+  readonly canEdit = input(false);
 
   /**
    * A row's checkbox, as a change rather than as "add" and "remove" outputs.
@@ -610,6 +632,7 @@ export class DataTableComponent {
     const descending = this.sortDescending();
     const filtered = this.filteredColumnKeys();
     const pinned = this.pinnedColumns();
+    const canEdit = this.canEdit();
 
     return this.columns().map((column): RenderColumn => {
       const isSorted = column.key === sortedKey;
@@ -644,6 +667,12 @@ export class DataTableComponent {
           : 'pages.dataBrowser.table.filterByColumn',
         filterTooltipKey: isFiltered ? 'pages.dataBrowser.table.editFilter' : 'pages.dataBrowser.table.filter',
         isPinned: pinned.includes(column.key),
+        readOnlyReasonKey:
+          !canEdit || column.isEditable
+            ? null
+            : column.rightsField
+              ? 'pages.dataBrowser.table.readOnlyProjectWide'
+              : 'pages.dataBrowser.table.readOnlyInTable',
       };
     });
   });

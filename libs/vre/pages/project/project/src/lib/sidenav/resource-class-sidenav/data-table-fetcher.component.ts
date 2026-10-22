@@ -74,6 +74,7 @@ import { ProjectPageService } from '../../project-page.service';
             [checkedResourceIds]="checkedResourceIds()"
             [selectionActive]="selectionActive()"
             [selectable]="isLoggedIn()"
+            [canEdit]="canEdit()"
             [sortedColumnKey]="sortedColumnKey()"
             [sortDescending]="sortDescending()"
             [filteredColumnKeys]="filteredColumnKeys()"
@@ -143,6 +144,9 @@ export class DataTableFetcherComponent implements OnChanges {
 
   /** Selecting rows for comparison is for signed-in users only. */
   readonly isLoggedIn = toSignal(inject(UserService).isLoggedIn$, { initialValue: false });
+
+  /** Project members can edit its data, so only they are shown which columns they cannot. */
+  readonly canEdit = toSignal(inject(ProjectPageService).hasProjectMemberRights$, { initialValue: false });
 
   /**
    * The project's legal info, for the rights-statement columns — the same cached lookup the
