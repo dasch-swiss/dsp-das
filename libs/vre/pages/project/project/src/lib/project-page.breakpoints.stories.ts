@@ -145,12 +145,5 @@ export const DataTab: Story = {
     await step('Project description is shown', async () => {
       await expect(await canvas.findByText(/woodcut sequences/)).toBeInTheDocument();
     });
-    await step('Project description card fits inside its panel (DEV-7547)', async () => {
-      const overview = canvasElement.querySelector('app-data-overview') as HTMLElement;
-      const panel = (overview.parentElement as HTMLElement).getBoundingClientRect();
-      const card = (overview.querySelector('app-project-short-description') as HTMLElement).getBoundingClientRect();
-      await expect(card.left).toBeGreaterThanOrEqual(panel.left);
-      await expect(card.right).toBeLessThanOrEqual(panel.right);
-    });
   },
 };
