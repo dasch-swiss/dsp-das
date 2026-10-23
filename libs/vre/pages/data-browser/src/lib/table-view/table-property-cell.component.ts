@@ -113,11 +113,6 @@ export class TablePropertyCellComponent implements OnChanges, OnDestroy {
     });
   }
 
-  /**
-   * `ngOnChanges` rather than an `effect`, because the ordering matters: effects run *after* the
-   * view is created, and the action bubble dereferences the fetcher's first emission unguarded —
-   * so a cell primed one tick late throws on the resource that is still `undefined`.
-   */
   protected onEditingChange(editing: boolean): void {
     this._editing = editing;
     this.editingChange.emit(editing);
@@ -130,6 +125,11 @@ export class TablePropertyCellComponent implements OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * `ngOnChanges` rather than an `effect`, because the ordering matters: effects run *after* the
+   * view is created, and the action bubble dereferences the fetcher's first emission unguarded —
+   * so a cell primed one tick late throws on the resource that is still `undefined`.
+   */
   ngOnChanges() {
     const resource = this.dspResource();
     this._primed = resource.res;

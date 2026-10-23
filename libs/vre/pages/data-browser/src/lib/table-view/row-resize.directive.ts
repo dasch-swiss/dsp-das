@@ -1,5 +1,8 @@
 import { DestroyRef, Directive, ElementRef, inject, input, NgZone, output } from '@angular/core';
 
+/** How much one arrow-key press moves the edge. Matches the column handle's step. */
+const KEYBOARD_STEP_PX = 16;
+
 /**
  * Drags a row's bottom edge to resize it, the counterpart of {@link ColumnResizeDirective}.
  *
@@ -16,9 +19,6 @@ import { DestroyRef, Directive, ElementRef, inject, input, NgZone, output } from
  * capping every cell of the row would make the short ones scroll containers too, and the editor's
  * hover bubble would give each of them a scrollbar with nothing to scroll.
  */
-/** How much one arrow-key press moves the edge. Matches the column handle's step. */
-const KEYBOARD_STEP_PX = 16;
-
 @Directive({
   selector: '[appRowResize]',
   host: {
