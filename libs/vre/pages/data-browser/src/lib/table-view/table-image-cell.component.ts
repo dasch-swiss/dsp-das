@@ -151,6 +151,7 @@ export class TableImageCellComponent implements OnChanges {
   private readonly _representation = inject(RepresentationService);
   private readonly _objectUrls: string[] = [];
   private readonly _requests: Subscription[] = [];
+  private _loadedUrl?: string;
   private _openTimer?: ReturnType<typeof setTimeout>;
   private _closeTimer?: ReturnType<typeof setTimeout>;
 
@@ -162,6 +163,11 @@ export class TableImageCellComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
+    // A rebuilt row hands over an equal image as a new object; only a new URL is worth a download.
+    if (this.image().url === this._loadedUrl) {
+      return;
+    }
+    this._loadedUrl = this.image().url;
     this._release();
     this.failed.set(false);
     this.thumbnailSrc.set(undefined);
