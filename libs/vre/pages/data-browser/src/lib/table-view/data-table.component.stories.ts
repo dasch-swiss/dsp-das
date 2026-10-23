@@ -283,7 +283,8 @@ export const RendersTypedValuesThroughTheViewersOwnTemplates: Story = {
     const canvas = within(canvasElement);
 
     await expect(canvas.getByText('15.06.2024')).toBeInTheDocument();
-    await expect(canvas.getByText('(Gregorian)')).toBeInTheDocument();
+    // The calendar is the date viewer's marker, as in the resource viewer.
+    await expect(canvas.getByText('Gregorian')).toBeInTheDocument();
     await expect(canvas.queryByText(/GREGORIAN:/)).toBeNull();
 
     const toggle = canvas.getByRole('switch');
@@ -440,7 +441,8 @@ export const HidesRowCheckboxesForAnonymousVisitors: Story = {
     await expect(canvasElement.querySelector('[data-cy="row-open"]')).not.toBeNull();
 
     const labelCell = canvasElement.querySelector('td.is-label-cell') as HTMLElement;
-    await expect(getComputedStyle(labelCell).paddingLeft).toBe('64px');
+    // Only the open arrow is left in the gutter: its 36px button plus clear air (DEV-7494).
+    await expect(getComputedStyle(labelCell).paddingLeft).toBe('44px');
   },
 };
 
