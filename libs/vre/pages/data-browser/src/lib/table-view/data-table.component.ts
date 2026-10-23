@@ -598,10 +598,12 @@ export class DataTableComponent {
    *
    * An overlay rather than a new query: re-running the search would re-sort and re-filter, and a
    * row whose new value no longer matches would jump or vanish under the user who had just typed
-   * it. The query's order is left alone and only the row's contents are replaced.
+   * it. The query's order is left alone and only the row's contents are replaced. Reset by a new
+   * page only, not by new columns: a language switch rebuilds the columns, and dropping the overlay
+   * then would show the values from before the save.
    */
   private readonly _reloaded = linkedSignal<unknown, ReadonlyMap<string, ReadResource>>({
-    source: this._dataIdentity,
+    source: this.resources,
     computation: () => new Map(),
   });
 
@@ -868,6 +870,7 @@ export class DataTableComponent {
     // columns next to it would slide under it.
     this._table()?.updateStickyColumnStyles();
   }
+
   protected onColumnWidthReset(key: string): void {
     this.columnWidthReset.emit(key);
     this._table()?.updateStickyColumnStyles();
