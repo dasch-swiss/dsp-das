@@ -175,7 +175,11 @@ export class TableImageCellComponent implements OnChanges {
 
     this._load(this.image().url).subscribe({
       next: src => this.thumbnailSrc.set(src),
-      error: () => this.failed.set(true),
+      error: () => {
+        this.failed.set(true);
+        // The same URL is tried again on the next change rather than staying broken.
+        this._loadedUrl = undefined;
+      },
     });
   }
 
