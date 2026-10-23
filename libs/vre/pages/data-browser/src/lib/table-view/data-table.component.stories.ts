@@ -283,8 +283,8 @@ export const RendersTypedValuesThroughTheViewersOwnTemplates: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await expect(canvas.getByText('15.06.2024')).toBeInTheDocument();
-    await expect(canvas.getByText('(Gregorian)')).toBeInTheDocument();
+    await expect(canvasElement.querySelector('[data-cy="date-text"]')?.textContent?.trim()).toBe('15.06.2024');
+    await expect(canvasElement.querySelector('[data-cy="calendar-marker"]')).not.toBeNull();
     await expect(canvas.queryByText(/GREGORIAN:/)).toBeNull();
 
     const toggle = canvas.getByRole('switch');
