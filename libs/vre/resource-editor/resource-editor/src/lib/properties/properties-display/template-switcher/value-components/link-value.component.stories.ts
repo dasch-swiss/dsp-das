@@ -2,13 +2,13 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { importProvidersFrom } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular';
 import { of } from 'rxjs';
 import { expect, userEvent, waitFor } from 'storybook/test';
 
+import { provideCompactFormFieldOptions } from '../compact-form-field-options';
 import { LinkValueDataService } from './link-value-data.service';
 import { LinkValueComponent } from './link-value.component';
 
@@ -103,17 +103,17 @@ export const Empty: Story = {
 };
 
 /**
- * The search help shows only while it can help — the field is focused and fewer than three letters
- * are typed — so at rest the compact editor reserves no line for it under the field (DEV-7611).
+ * The search help appears on the first focus and stays until three letters are typed, so an untouched
+ * compact editor reserves no line for it, and leaving the field never moves what is below it.
  */
-export const ShowsSearchHelpOnlyWhileNeeded: Story = {
-  name: 'Shows the search help only while focused and fewer than three letters are typed',
+export const ShowsSearchHelpOnceFocusedUntilEnoughIsTyped: Story = {
+  name: 'Shows the search help from the first focus until three letters are typed',
   // The link *value* property, as the editor is given in the app.
   args: { ...Empty.args, control: new FormControl<string | null>(null), propIri: `${ANYTHING}#hasOtherThingValue` },
   // As the template editor switcher provides it to every value editor.
   decorators: [
     applicationConfig({
-      providers: [{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { subscriptSizing: 'dynamic' } }],
+      providers: [provideCompactFormFieldOptions()],
     }),
   ],
   play: async ({ canvasElement, step }) => {
@@ -134,10 +134,11 @@ export const ShowsSearchHelpOnlyWhileNeeded: Story = {
       await userEvent.type(input, 'abc');
       await waitFor(() => expect(help()).toBeNull());
     });
-    await step('Leaving the field keeps it hidden', async () => {
+    await step('Clearing the field shows it again, and leaving the field keeps it', async () => {
       await userEvent.clear(input);
+      await waitFor(() => expect(help()).not.toBeNull());
       await userEvent.tab();
-      await waitFor(() => expect(help()).toBeNull());
+      await expect(help()).not.toBeNull();
     });
   },
 };

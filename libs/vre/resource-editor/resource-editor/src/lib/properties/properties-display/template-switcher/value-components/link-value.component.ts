@@ -62,8 +62,7 @@ interface ResourceGroup {
         [attr.aria-label]="'resourceEditor.templateSwitcher.linkValue.label' | translate"
         [placeholder]="'resourceEditor.templateSwitcher.linkValue.placeholder' | translate"
         data-cy="link-input"
-        (focus)="isFocused = true"
-        (blur)="isFocused = false"
+        (focus)="hasBeenFocused = true"
         (input)="onInputValueChange()"
         [matAutocomplete]="auto" />
       <mat-autocomplete
@@ -135,7 +134,7 @@ export class LinkValueComponent implements OnInit {
   @ViewChild('input') input!: ElementRef<HTMLInputElement>;
 
   loading = false;
-  isFocused = false;
+  hasBeenFocused = false;
   useDefaultValue = true;
   hasSearched = false;
   groupedResources: ResourceGroup[] = [];
@@ -151,12 +150,14 @@ export class LinkValueComponent implements OnInit {
   ) {}
 
   /**
-   * The "type 3 letters" help, only while it can help: the user is in the field and has not yet
-   * typed enough to search. Shown at all times it kept a line of space under the field, which the
-   * compact editors are otherwise rid of (DEV-7611).
+   * The "type 3 letters" help from the first focus on, until enough is typed to search or a resource
+   * is chosen (whose label may well be shorter). It does not go away on blur: that would move
+   * whatever is below the field while it is being clicked.
    */
   get showsSearchHelp(): boolean {
-    return this.isFocused && (this.input?.nativeElement.value.length ?? 0) < LinkValueComponent.MIN_SEARCH_LENGTH;
+    const text = this.input?.nativeElement.value ?? '';
+    const showsChosenResource = text !== '' && text === this.displayResource(this.control.value);
+    return this.hasBeenFocused && !showsChosenResource && text.length < LinkValueComponent.MIN_SEARCH_LENGTH;
   }
 
   ngOnInit() {

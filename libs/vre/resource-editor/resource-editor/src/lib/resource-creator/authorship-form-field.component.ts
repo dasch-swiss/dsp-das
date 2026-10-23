@@ -4,7 +4,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipInput, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { LegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/api';
@@ -40,8 +40,7 @@ import { finalize } from 'rxjs/operators';
         [matAutocomplete]="auto"
         [matAutocompleteDisabled]="filteredAuthorship.length === 0"
         [formControl]="autocompleteFormControl"
-        (focus)="isFocused = true"
-        (blur)="isFocused = false"
+        (focus)="hasBeenFocused = true"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         (matChipInputTokenEnd)="addItemFromMaterial($event)" />
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectItem($event)">
@@ -52,9 +51,7 @@ import { finalize } from 'rxjs/operators';
         }
       </mat-autocomplete>
 
-      <!-- Only while typing, where it helps: shown at all times it kept a line of space under the
-           field, which the compact create form is otherwise rid of (DEV-7611). -->
-      @if (isFocused) {
+      @if (hasBeenFocused || !hintWaitsForFocus) {
         <mat-hint>{{ 'resourceEditor.resourceCreator.authorship.pressEnterOrTab' | translate }}</mat-hint>
       }
 
@@ -85,7 +82,14 @@ export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
 
   readonly separatorKeysCodes: number[] = [ENTER, TAB];
   selectedItems: string[] = [];
-  isFocused = false;
+  hasBeenFocused = false;
+  /**
+   * In a compact host (dynamic subscript) the hint waits for the first focus instead of taking a
+   * line under every untouched field; once shown it stays, so leaving the field does not move what
+   * is below it.
+   */
+  readonly hintWaitsForFocus =
+    inject(MAT_FORM_FIELD_DEFAULT_OPTIONS, { optional: true })?.subscriptSizing === 'dynamic';
   availableAuthorship: string[] = [];
   filteredAuthorship: string[] = [];
   loading = true;

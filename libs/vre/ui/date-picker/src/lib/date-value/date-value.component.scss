@@ -1,24 +1,22 @@
 // Named and valued as in date-picker.component.scss, whose local tokens this follows.
 $primary-600: #336790;
 
-// One line: start, en dash, end, and the control that adds or removes the end. The pickers are
-// closed fields rather than open panels, so the row stays a row.
-// A denser host — the resource editor's compact value editors — lays the calendar beside the dates
-// when there is room, and under them when there is not (DEV-7611). The notes and errors keep a line
-// of their own either way. Stacked by default.
+// Stacked by default. A host that sets `--date-value-display: flex` gets the calendar beside the
+// dates when there is room and above them when there is not; notes and errors keep their own line.
 .date-value {
   display: var(--date-value-display, block);
   flex-wrap: wrap;
   align-items: center;
   column-gap: 12px;
+  row-gap: 8px;
 
   > app-calendar-selector {
     flex: 0 1 360px;
     min-width: 0;
   }
 
-  // The dates and their end-date toggle move to the next line as one rather than shrink beside the
-  // calendar, which wrapped the toggle under the date.
+  // The dates and their end-date toggle wrap as one block; shrunk beside the calendar, the toggle
+  // would wrap under the date.
   > .date-fields {
     flex: none;
     max-width: 100%;
@@ -31,6 +29,8 @@ $primary-600: #336790;
   }
 }
 
+// One line: start, en dash, end, and the control that adds or removes the end. The pickers are
+// closed fields rather than open panels, so the row stays a row.
 .date-fields {
   display: flex;
   flex-wrap: wrap;

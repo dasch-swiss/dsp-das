@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, DestroyRef, EventEmitter, Inject, Input, 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import {
@@ -32,6 +32,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize, switchMap, take } from 'rxjs';
 import { FormValueGroup } from '../properties/properties-display/property-value/form-value-array.type';
 import { propertiesTypeMapping } from '../properties/properties-display/property-value/resource-payloads-mapping';
+import { provideCompactFormFieldOptions } from '../properties/properties-display/template-switcher/compact-form-field-options';
 import { FileForm } from '../representation/file-form.type';
 import { FileRepresentationType } from '../representation/file-representation.type';
 import { fileValueMapping } from '../representation/file-value-mapping';
@@ -132,7 +133,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
             [ariaLabel]="'legal.dataSide.authorship' | translate"
             [placeholder]="'resourceEditor.resourceCreator.authorship.placeholder' | translate"
             [hint]="'legal.dataSide.authorshipHint' | translate"
-            [hintOnlyWhileFocused]="true"
+            [hintAfterFirstFocus]="true"
             [removeAuthorLabel]="removeDataAuthorLabel"
             dataCy="data-authorship-chips" />
         </app-create-resource-form-row>
@@ -156,18 +157,12 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
       <app-progress-indicator />
     }
   `,
-  // Compact throughout (DEV-7611): the resource label, the legal fields and the file form at the
-  // 36px of the property editors between them — outlined, so a field keeps its label at that
-  // height, and with no empty error line reserved under every field. The read-only legal rows are
-  // padded to the same height.
+  // Compact throughout, so the label, legal and file fields match the property editors between them.
   host: { class: 'compact-value-editor' },
-  providers: [
-    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { subscriptSizing: 'dynamic', appearance: 'outline' } },
-  ],
+  providers: [provideCompactFormFieldOptions()],
   styles: [
     '.row { display: flex; padding: 16px 0;}',
-    // The space under the resource label the property rows below have under theirs; it used to come
-    // from the label's own 16px padding, gone now that labels are centred on 36px fields (DEV-7611).
+    // The same space under the resource label as the property rows below have under theirs.
     '.label-row { display: block; padding-bottom: 16px; }',
     '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
     '.form { display: block; margin-right: 100px;}',

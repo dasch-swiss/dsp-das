@@ -127,11 +127,9 @@ function calendarOf(value: KnoraDate | KnoraPeriod | null): string | null {
         display: flex;
         align-items: flex-start;
         gap: 4px;
-        padding: var(--property-value-padding-block, 16px) 0;
-        /* The 36px editor centred on the property's label, as the value it replaces is: the label's
-           first line sits 24px down, so 16px above a 36px field put it 10px low (DEV-7611). Never
-           more than a denser host's own padding, such as the table's 4px. */
-        padding-top: min(var(--property-value-padding-block, 16px), 6px);
+        /* The top padding centres a 36px editor on the label's first line, and never exceeds a
+           denser host's own padding (the table's 4px). */
+        padding: min(var(--property-value-padding-block, 16px), 6px) 0 var(--property-value-padding-block, 16px);
         border-radius: 4px;
         /* None in the viewer; a denser host such as the Data tab's table sets one. */
         background: var(--property-value-edit-background, none);

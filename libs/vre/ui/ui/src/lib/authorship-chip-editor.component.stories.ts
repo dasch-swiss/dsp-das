@@ -28,8 +28,8 @@ const meta: Meta<AuthorshipChipEditorComponent> = {
       description: 'Optional helper text under the field.',
       table: { type: { summary: 'string | undefined' }, category: 'Content' },
     },
-    hintOnlyWhileFocused: {
-      description: 'Show the hint only while the input is focused, for compact forms (DEV-7611).',
+    hintAfterFirstFocus: {
+      description: 'Show the hint from the first focus on instead of from the start, for compact forms.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' }, category: 'Appearance' },
     },
     dataCy: {
@@ -63,9 +63,9 @@ export const ShowsHintAtAllTimesByDefault: Story = {
   },
 };
 
-export const ShowsHintOnlyWhileFocused: Story = {
-  name: 'Shows the hint only while focused when asked to',
-  args: { ...ShowsHintAtAllTimesByDefault.args, hintOnlyWhileFocused: true },
+export const ShowsHintFromFirstFocusWhenAsked: Story = {
+  name: 'Shows the hint from the first focus on when asked to',
+  args: { ...ShowsHintAtAllTimesByDefault.args, hintAfterFirstFocus: true },
   play: async ({ canvasElement, step }) => {
     const input = canvasElement.querySelector('[data-cy="authorship-chips"]') as HTMLInputElement;
 
@@ -76,9 +76,9 @@ export const ShowsHintOnlyWhileFocused: Story = {
       await userEvent.click(input);
       await waitFor(() => expect(canvasElement.textContent).toContain(HINT));
     });
-    await step('Leaving the input hides it again', async () => {
+    await step('Leaving the input keeps it, so nothing below moves', async () => {
       await userEvent.tab();
-      await waitFor(() => expect(canvasElement.textContent).not.toContain(HINT));
+      await expect(canvasElement.textContent).toContain(HINT);
     });
   },
 };

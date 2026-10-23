@@ -1,7 +1,7 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatError, MatFormField } from '@angular/material/form-field';
+import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
   Constants,
@@ -15,6 +15,7 @@ import { DateValueComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { CkEditorComponent, CommonInputComponent, HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import { JsLibPotentialError } from '../property-value/JsLibPotentialError';
+import { provideCompactFormFieldOptions } from './compact-form-field-options';
 import { BooleanValueComponent } from './value-components/boolean-value.component';
 import { ColorValueComponent } from './value-components/color-value.component';
 import { GeolocationValueComponent } from './value-components/geolocation-value.component';
@@ -46,16 +47,9 @@ import { TimeValueComponent } from './value-components/time-value.component';
     GeonameValueComponent,
     LinkValueComponent,
   ],
-  // The editors are drawn compact (DEV-7611):
-  // - no empty error line reserved under every field, only the space a message needs when shown;
-  // - outlined, the one appearance whose label survives Material's 36px density — a filled field
-  //   hides it, which blanked the list editor (its selection is the label) and the interval's
-  //   Start/End. One appearance for all editors, so they look alike side by side.
-  // Reaches the editors wherever these templates are stamped, since an embedded view injects from
-  // where it was declared.
-  providers: [
-    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { subscriptSizing: 'dynamic', appearance: 'outline' } },
-  ],
+  // Reaches the editors wherever these templates are stamped: an embedded view injects from where it
+  // was declared.
+  providers: [provideCompactFormFieldOptions()],
   template: `
     <ng-template #intEditorTpl let-item="item">
       <mat-form-field style="width: 100%">

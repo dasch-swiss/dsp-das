@@ -1,29 +1,23 @@
 @use '@angular/material' as mat;
 
-// The resource editor's forms — the value editors of the template editor switcher (editing a value,
-// creating a resource), their comment, and the create-resource form around them — at Material's
-// smallest form field (36px) rather than its default 56px (DEV-7611).
+// The resource editor's forms at Material's smallest form field (36px): the value editors, their
+// comment, and the create-resource form. Hosts pair this class with provideCompactFormFieldOptions()
+// (outline appearance: a filled field hides its label below 52px).
 //
-// Global, not in the components that use it: Material's density mixins emit nested selectors
-// (`.mat-mdc-icon-button` …), which a component's emulated encapsulation scopes to its own
-// template, so they never reach the editors' internals, and `::ng-deep` is not available to us.
-// The fields are outlined (the hosts' default options): a filled field hides its label below
-// 52px, and the list editor shows its selection as one.
+// Must stay global: the density mixins emit nested selectors that a component's emulated
+// encapsulation would scope away from the editors' internals.
 .compact-value-editor {
   @include mat.form-field-density(-5);
-  // An icon button inside an editor — the time editor's datepicker toggle, the boolean editor's
-  // clear button — at the field's height rather than 48px, which stretched the field or its row.
   @include mat.icon-button-density(-3);
-  // Chips (authorship) that fit a 36px field instead of growing it.
   @include mat.chips-density(-2);
 
-  // The date editor is not a Material field; its own variables bring it to the same height and lay
-  // the calendar beside the dates when there is room, rather than on a line of its own.
+  // Components outside Material's density system, sized to match.
   --date-field-min-height: 36px;
   --date-value-display: flex;
   --date-fields-margin-top: 0;
+  --ck-editor-margin-bottom: 0;
+  --create-form-label-padding-block: 8px;
 
-  // The rich-text editor opens a few lines tall rather than 256px; it grows as text is written.
   .ck-editor__editable_inline {
     min-height: 96px;
   }
