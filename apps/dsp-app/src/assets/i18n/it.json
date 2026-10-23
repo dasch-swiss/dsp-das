@@ -664,6 +664,7 @@
         "readOnlyProjectWide": "Impostato per l'intero progetto, nelle impostazioni del progetto.",
         "pinColumn": "Blocca {{column}}",
         "unpinColumn": "Sblocca {{column}}",
+        "labelColumn": "Etichetta",
         "imageColumn": "Immagine",
         "previewImage": "Anteprima dell'immagine di {{label}}",
         "editColumnFilter": "Modifica il filtro su {{column}}",

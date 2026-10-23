@@ -13,6 +13,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
 import { MatTable, MatTableModule } from '@angular/material/table';
@@ -608,10 +609,16 @@ export class DataTableComponent {
 
   private readonly _translate = inject(TranslateService);
 
-  private readonly _rowRights = computed<RowRights>(() => ({
-    rights: this.projectRights(),
-    placeholderLabel: this._translate.instant('legal.dataSide.placeholder'),
-  }));
+  /** Read by `_rowRights` so the placeholder text follows a language switch. */
+  private readonly _language = toSignal(this._translate.onLangChange);
+
+  private readonly _rowRights = computed<RowRights>(() => {
+    this._language();
+    return {
+      rights: this.projectRights(),
+      placeholderLabel: this._translate.instant('legal.dataSide.placeholder'),
+    };
+  });
 
   /**
    * Built rows by `ReadResource` identity, with the rights they were built against. Valid only for

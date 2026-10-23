@@ -664,6 +664,7 @@
         "readOnlyProjectWide": "Set for the whole project, in the project settings.",
         "pinColumn": "Pin {{column}}",
         "unpinColumn": "Unpin {{column}}",
+        "labelColumn": "Label",
         "imageColumn": "Image",
         "previewImage": "Preview the image of {{label}}",
         "editColumnFilter": "Edit the filter on {{column}}",

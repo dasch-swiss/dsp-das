@@ -664,6 +664,7 @@
         "readOnlyProjectWide": "Gilt für das ganze Projekt und wird in den Projekteinstellungen festgelegt.",
         "pinColumn": "{{column}} fixieren",
         "unpinColumn": "{{column}} lösen",
+        "labelColumn": "Label",
         "imageColumn": "Bild",
         "previewImage": "Bild von {{label}} anzeigen",
         "editColumnFilter": "Filter für {{column}} bearbeiten",

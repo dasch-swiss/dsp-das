@@ -249,6 +249,9 @@ export class DataTableFetcherComponent implements OnChanges {
   ) {
     this._searchState.hasActiveState$.pipe(takeUntilDestroyed()).subscribe(active => (this.filtersAreActive = active));
 
+    // Column titles are resolved once per build, so a language switch has to rebuild them.
+    this._translate.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._rebuildColumns());
+
     // Same reload signal the list uses, so creating a resource adds its row here too. `skip(1)`
     // drops the BehaviorSubject's replayed value, which would otherwise run the initial load twice.
     this._dataBrowserPageService.onNavigationReload$
@@ -402,7 +405,7 @@ export class DataTableFetcherComponent implements OnChanges {
       this.resClass,
       definitions,
       propDef => this._stringify.transform(propDef.labels),
-      'Label'
+      this._translate.instant('pages.dataBrowser.table.labelColumn')
     );
     // The image right after the label: for a class of pages or photographs it is what identifies a
     // row at a glance, more than any property does.
