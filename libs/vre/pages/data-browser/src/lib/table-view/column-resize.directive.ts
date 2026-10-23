@@ -102,6 +102,8 @@ export class ColumnResizeDirective {
    * would write a `localStorage` entry per frame once the host persists the layout.
    */
   readonly widthChanged = output<number>();
+  /** Home: the column goes back to its default, which the host stores as no width at all. */
+  readonly widthReset = output<void>();
 
   private readonly _host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly _zone = inject(NgZone);
@@ -190,7 +192,7 @@ export class ColumnResizeDirective {
   /** A column the user has fiddled with and wants back; cheaper to offer than an undo. */
   resetToDefault(): void {
     this._applyWidth(this.defaultWidth());
-    this.widthChanged.emit(this.defaultWidth());
+    this.widthReset.emit();
   }
 
   /**
@@ -237,6 +239,12 @@ export class ColumnResizeDirective {
       return;
     }
     this._cell = undefined;
+
+    // A click without a drag sets nothing: storing the measured width would pin the column to it,
+    // including a width an open editor has only temporarily widened it to.
+    if (Math.round(this._currentWidth) === Math.round(this._startWidth)) {
+      return;
+    }
 
     // Back into the zone: the emission updates the persisted layout, which has to be seen by the
     // bindings that render the column's width from now on.

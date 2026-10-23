@@ -82,6 +82,7 @@ import { ProjectPageService } from '../../project-page.service';
             (resourceCheckedChanged)="onResourceCheckedChanged($event)"
             (columnsReordered)="onColumnsReordered($event)"
             (columnResized)="onColumnResized($event)"
+            (columnWidthReset)="onColumnWidthReset($event)"
             (sortToggled)="onSortToggled($event)"
             (filterRequested)="onFilterRequested($event)"
             (columnPinToggled)="onColumnPinToggled($event)"
@@ -339,6 +340,10 @@ export class DataTableFetcherComponent implements OnChanges {
 
   onColumnResized({ key, width }: { key: string; width: number }) {
     this._tableState.setColumnWidth(key, width);
+  }
+
+  onColumnWidthReset(key: string) {
+    this._tableState.resetColumnWidth(key);
   }
 
   /**

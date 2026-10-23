@@ -247,6 +247,7 @@ const FILLER_COLUMN_KEY = '__filler';
                 [defaultWidth]="column.defaultWidth"
                 [width]="column.width"
                 (widthChanged)="onColumnResized(column.key, $event)"
+                (widthReset)="onColumnWidthReset(column.key)"
                 [attr.aria-label]="'pages.dataBrowser.table.resizeColumn' | translate: { column: column.label }"></span>
             </th>
 
@@ -513,6 +514,8 @@ export class DataTableComponent {
   /** The whole new display order, not a delta — the host persists the array as it stands. */
   readonly columnsReordered = output<string[]>();
   readonly columnResized = output<{ key: string; width: number }>();
+  /** A column's stored width is dropped, so it renders at its default again. */
+  readonly columnWidthReset = output<string>();
   /**
    * The sort the user just asked for, already resolved to a direction.
    *
@@ -853,6 +856,10 @@ export class DataTableComponent {
     // invalidates that cache when the set of columns changes. A resize changes a width without
     // changing the set, so the label column would keep the offset of the old layout and the
     // columns next to it would slide under it.
+    this._table()?.updateStickyColumnStyles();
+  }
+  protected onColumnWidthReset(key: string): void {
+    this.columnWidthReset.emit(key);
     this._table()?.updateStickyColumnStyles();
   }
 

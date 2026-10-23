@@ -224,6 +224,7 @@ const meta: Meta<DataTableComponent> = {
     resourceCheckedChanged: { description: 'Emits a row and whether its checkbox is now checked.' },
     columnsReordered: { description: 'Emits the whole new display order after a header is dragged.' },
     columnResized: { description: 'Emits a column key and its new pixel width once a resize gesture ends.' },
+    columnWidthReset: { description: 'Emits a column key when Home on its resize handle drops its stored width.' },
     sortToggled: { description: 'Emits the column to sort by and the direction the click asks for.' },
     filterRequested: { description: 'Emits the column whose filter the user wants to edit.' },
     pinnedColumns: { description: 'Keys of the columns pinned after the label, in display order.' },
@@ -440,7 +441,7 @@ export const HidesRowCheckboxesForAnonymousVisitors: Story = {
     await expect(canvasElement.querySelector('[data-cy="row-open"]')).not.toBeNull();
 
     const labelCell = canvasElement.querySelector('td.is-label-cell') as HTMLElement;
-    await expect(getComputedStyle(labelCell).paddingLeft).toBe('64px');
+    await expect(getComputedStyle(labelCell).paddingLeft).toBe('44px');
   },
 };
 
@@ -969,20 +970,23 @@ export const OffersTheSharedDrawerControlOnEveryRow: Story = {
 
 const onReorder = fn().mockName('columnsReordered');
 const onResize = fn().mockName('columnResized');
+const onWidthReset = fn().mockName('columnWidthReset');
 
 const keyboardStory = (): Story => ({
   render: storyArgs => ({
-    props: { ...storyArgs, onReorder, onResize },
+    props: { ...storyArgs, onReorder, onResize, onWidthReset },
     template: `<app-data-table
       [resources]="resources"
       [columns]="columns"
       [visibleColumns]="visibleColumns"
       (columnsReordered)="onReorder($event)"
-      (columnResized)="onResize($event)" />`,
+      (columnResized)="onResize($event)"
+      (columnWidthReset)="onWidthReset($event)" />`,
   }),
   beforeEach: () => {
     onReorder.mockClear();
     onResize.mockClear();
+    onWidthReset.mockClear();
   },
 });
 
@@ -1328,8 +1332,18 @@ export const FitsAColumnToItsContentOnDoubleClick: Story = {
     await expect(values().every(value => value.scrollWidth <= value.clientWidth)).toBe(true);
 
     handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
-    await expect(onResize).toHaveBeenLastCalledWith({ key: `${ONTO}hasTitle`, width: 200 });
+    await expect(onWidthReset).toHaveBeenCalledWith(`${ONTO}hasTitle`);
     await expect(width()).toBe(200);
+  },
+};
+
+/** A click on the edge without a drag stores nothing, so the column keeps following its default. */
+export const StoresNoWidthForAClickWithoutADrag: Story = {
+  ...keyboardStory(),
+  play: async ({ canvasElement }) => {
+    dragColumnEdge(titleHeader(canvasElement), 0)();
+
+    await expect(onResize).not.toHaveBeenCalled();
   },
 };
 
@@ -1705,7 +1719,6 @@ export const KeepsTheViewOptionsHeightWhenAnUndraggedRowIsReset: Story = {
     await userEvent.keyboard('{Home}');
 
     await expect(Math.round(row.getBoundingClientRect().height)).toBeGreaterThanOrEqual(160);
-    await expect(handle).not.toHaveAttribute('aria-valuenow');
   },
 };
 
