@@ -1,4 +1,5 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import {
   afterRenderEffect,
   ChangeDetectionStrategy,
@@ -88,8 +89,11 @@ const FILLER_COLUMN_KEY = '__filler';
   selector: 'app-data-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <!-- cdkScrollable: overlays opened from a cell (the image preview) close when the table scrolls,
+         which the overlay's scroll strategy only sees from a registered scroll container. -->
     <div
       #scroller
+      cdkScrollable
       class="table-scroll"
       [class.selection-active]="selectionActive()"
       [class.no-selection]="!selectable()"
@@ -418,6 +422,7 @@ const FILLER_COLUMN_KEY = '__filler';
   `,
   styleUrl: './data-table.component.scss',
   imports: [
+    CdkScrollable,
     MatTableModule,
     MatIcon,
     TranslatePipe,
