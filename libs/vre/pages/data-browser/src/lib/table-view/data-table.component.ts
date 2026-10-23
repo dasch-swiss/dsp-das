@@ -32,7 +32,7 @@ import { ScrollWhenTallerDirective } from './scroll-when-taller.directive';
 import { editWidthForValueType, LABEL_COLUMN_KEY, TableColumn } from './table-column.model';
 import { TableImageCellComponent } from './table-image-cell.component';
 import { TablePropertyCellComponent } from './table-property-cell.component';
-import { buildRows, TableRow } from './table-row.model';
+import { buildRow, RowRights, TableRow, withRights } from './table-row.model';
 import { TruncatedTooltipDirective } from './truncated-tooltip.directive';
 
 /**
@@ -599,13 +599,39 @@ export class DataTableComponent {
 
   private readonly _translate = inject(TranslateService);
 
+  private readonly _rowRights = computed<RowRights>(() => ({
+    rights: this.projectRights(),
+    placeholderLabel: this._translate.instant('legal.dataSide.placeholder'),
+  }));
+
+  /**
+   * Built rows by `ReadResource` identity, with the rights they were built against. Valid only for
+   * `_cacheColumns`: a new column set discards it, so an unchanged resource keeps its row (and its
+   * open editors) across saves elsewhere.
+   */
+  private _rowCache = new WeakMap<ReadResource, { row: TableRow; rowRights: RowRights }>();
+  private _cacheColumns: TableColumn[] | undefined;
+
   readonly rows = computed<TableRow[]>(() => {
     const reloaded = this._reloaded();
     const resources =
       reloaded.size === 0 ? this.resources() : this.resources().map(resource => reloaded.get(resource.id) ?? resource);
-    return buildRows(resources, this.columns(), {
-      rights: this.projectRights(),
-      placeholderLabel: this._translate.instant('legal.dataSide.placeholder'),
+    const columns = this.columns();
+    const rowRights = this._rowRights();
+
+    if (columns !== this._cacheColumns) {
+      this._rowCache = new WeakMap();
+      this._cacheColumns = columns;
+    }
+
+    return resources.map(resource => {
+      const cached = this._rowCache.get(resource);
+      if (cached?.rowRights === rowRights) {
+        return cached.row;
+      }
+      const row = cached ? withRights(cached.row, columns, rowRights) : buildRow(resource, columns, rowRights);
+      this._rowCache.set(resource, { row, rowRights });
+      return row;
     });
   });
 
@@ -833,9 +859,8 @@ export class DataTableComponent {
    * Replace one row's resource with what dsp-api returned after a save, a delete or a reorder.
    *
    * Only the overlay moves; `resources` is left as the query returned it, so the row keeps its
-   * position and `trackBy` keeps its view. Every cell of the row is rebound, which re-primes each
-   * one's fetcher and returns any open editor in the row to display mode — the same thing the
-   * resource viewer does to its own properties when it reloads.
+   * position and `trackBy` keeps its view. Only that row is rebuilt, so its open editors return to
+   * display mode; other rows and their open editors are untouched.
    */
   protected onResourceReloaded(resource: ReadResource): void {
     this._reloaded.update(current => new Map(current).set(resource.id, resource));
