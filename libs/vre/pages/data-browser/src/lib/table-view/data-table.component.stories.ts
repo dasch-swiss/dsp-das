@@ -1694,6 +1694,21 @@ export const DrawsEveryRowAtTheViewOptionsHeight: Story = {
   },
 };
 
+/** Resetting a row the user never dragged leaves it at the View-options height, like its neighbours. */
+export const KeepsTheViewOptionsHeightWhenAnUndraggedRowIsReset: Story = {
+  args: { rowHeight: 160 },
+  play: async ({ canvasElement }) => {
+    const row = canvasElement.querySelector('tr.mat-mdc-row') as HTMLElement;
+    const handle = row.querySelector('[data-cy="row-resize"]') as HTMLElement;
+
+    handle.focus();
+    await userEvent.keyboard('{Home}');
+
+    await expect(Math.round(row.getBoundingClientRect().height)).toBeGreaterThanOrEqual(160);
+    await expect(handle).not.toHaveAttribute('aria-valuenow');
+  },
+};
+
 /** A row the user dragged is a more specific request than the slider's, so it wins. */
 export const LetsADraggedRowOverrideTheViewOptionsHeight: Story = {
   args: { rowHeight: 160 },

@@ -269,7 +269,8 @@ const FILLER_COLUMN_KEY = '__filler';
                   appRowResize
                   data-cy="row-resize"
                   [minHeight]="rowMinHeight"
-                  [height]="rowHeightFor(row.id) ?? 0"
+                  [height]="rowHeightFor(row.id)"
+                  [fallbackHeight]="rowHeight()"
                   (heightChanged)="onRowResized(row.id, $event)"
                   (heightReset)="onRowHeightReset(row.id)"
                   [attr.aria-label]="'pages.dataBrowser.table.resizeRow' | translate: { label: row.label }"></span>
