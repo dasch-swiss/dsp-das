@@ -128,8 +128,8 @@ const QUERIES = RESULT_LIST_WIDTHS.map(([minWidth]) => `(min-width: ${minWidth}p
   ],
   // Scoped here rather than on the panel so the class header and the list resolve one query, and so
   // a class switch tears the whole search state down with the view. `ResourceResultService` joins
-  // them for the same reason: the count and pager move into the header in Phase 4, and they have to
-  // read the same instance the list writes.
+  // them for the same reason: the count and pager live in the header, and they have to read the same
+  // instance the list writes.
   providers: [...provideSearchFilters(), ...provideDataClassSearch(), ResourceResultService],
 })
 export class DataClassViewComponent {

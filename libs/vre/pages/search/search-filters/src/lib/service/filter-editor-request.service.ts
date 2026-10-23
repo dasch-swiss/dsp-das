@@ -9,8 +9,8 @@ import { Observable, Subject } from 'rxjs';
  * below it, and their nearest common ancestor knows about neither. A column's filter control
  * therefore cannot reach the bar with an output.
  *
- * Routing the request to the bar rather than letting the header mount its own editor is what makes
- * PRD REQ-3.7 true by construction: the bar is the one place that knows which chips already exist,
+ * Routing the request to the bar rather than letting the header mount its own editor guarantees by
+ * construction that a property never gets two filters: the bar is the one place that knows which chips already exist,
  * so it can re-open the chip on that predicate instead of minting a second filter on the same
  * property. A header-owned popover would have to reimplement that check — and the whole
  * confirm-and-persist path with it.

@@ -282,7 +282,7 @@ export class AdvancedSearchBarComponent implements OnInit {
   /**
    * Open the filter editor on one property, wherever the request came from.
    *
-   * An existing chip on that property is re-opened rather than joined by a second one (PRD REQ-3.7).
+   * An existing chip on that property is re-opened rather than joined by a second one.
    * That is not merely tidier: two chips on the same predicate produce two `FILTER` clauses ANDed
    * together in Gravsearch, so a user who filtered twice from the same column header would silently
    * narrow their results to the intersection and have no single chip to undo it with.

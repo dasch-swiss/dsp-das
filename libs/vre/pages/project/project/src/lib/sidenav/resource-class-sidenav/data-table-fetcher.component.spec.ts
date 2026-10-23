@@ -464,7 +464,7 @@ describe('DataTableFetcherComponent', () => {
       expect(multipleViewer.notifyResourceChanged).toHaveBeenCalledWith('a');
     });
 
-    /** Shaping is a rendering decision: none of it re-runs the query (REQ-2.3). */
+    /** Shaping is a rendering decision: none of it re-runs the query. */
     it('PersistsReorderPinAndResizeWithoutReQuerying', () => {
       create();
       const { sub } = collect();

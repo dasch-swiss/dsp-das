@@ -526,9 +526,10 @@ export class DataTableComponent {
    * The sort the user just asked for, already resolved to a direction.
    *
    * The direction is decided here rather than by the host because the table is the only thing that
-   * knows which header was clicked relative to the one currently sorted. Two-state by design: a third "unsorted" step would have to mean *something* to Gravsearch, which always
-   * orders by label when nothing else is asked for — so it would really be "sort by label", a state
-   * the label column's own control already offers.
+   * knows which header was clicked relative to the one currently sorted. Two-state by design: a
+   * third "unsorted" step would have to mean *something* to Gravsearch, which always orders by
+   * label when nothing else is asked for — so it would really be "sort by label", a state the
+   * label column's own control already offers.
    */
   readonly sortToggled = output<{ key: string; descending: boolean }>();
   /** The column whose filter the user wants to edit. The host decides where the editor opens. */

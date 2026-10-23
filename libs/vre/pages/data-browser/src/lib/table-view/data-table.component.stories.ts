@@ -724,7 +724,7 @@ const editingStory = (args: Story['args']): Story => ({
 });
 
 /**
- * The whole shape of the feature: there is no table-specific editing affordance. A
+ * There is no table-specific editing affordance. A
  * cell the editor can open *is* the editor's own unit, mounted in the cell; a cell it cannot open
  * is text.
  */
@@ -856,7 +856,7 @@ export const TintsTheValueBeingEdited: Story = {
   },
 };
 
-/** The same, from the other end: the control opens the editor the resource viewer opens. */
+/** A cell's edit control opens the same editor the resource viewer opens. */
 export const OpensTheViewersOwnEditorFromTheBubble: Story = {
   ...editingStory({}),
   play: async ({ canvasElement }) => {
