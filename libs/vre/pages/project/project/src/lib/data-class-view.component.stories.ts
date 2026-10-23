@@ -148,13 +148,23 @@ export default meta;
 type Story = StoryObj<DataClassViewComponent>;
 
 export const LongTitles: Story = {
-  name: 'Shows long class title and description in the header, long resource titles in the breakpoint-wide result list',
+  name: 'Shows long class title (two lines at most, actions wrap below) and description in the header, long resource titles in the breakpoint-wide result list',
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
     await step('Long class title and description are shown in the header', async () => {
       await expect(await canvas.findByText(LONG_CLASS_TITLE)).toBeVisible();
       await expect(canvas.getByText(LONG_CLASS_DESCRIPTION)).toBeVisible();
+    });
+
+    await step('The long class title keeps its width next to the actions, and is whole on hover', async () => {
+      const label = canvas.getByRole('heading', { name: LONG_CLASS_TITLE });
+      const row = canvasElement.querySelector('.identity-row') as HTMLElement;
+      const { paddingLeft, paddingRight } = getComputedStyle(row);
+      const rowContentWidth = row.clientWidth - parseFloat(paddingLeft) - parseFloat(paddingRight);
+      // The actions wrap below rather than squeeze the label under its 360px basis (DEV-7592).
+      await expect(label.getBoundingClientRect().width).toBeGreaterThanOrEqual(Math.min(360, rowContentWidth));
+      await expect(label).toHaveAttribute('title', LONG_CLASS_TITLE);
     });
 
     await step('Every resource is listed, the long titles included', async () => {

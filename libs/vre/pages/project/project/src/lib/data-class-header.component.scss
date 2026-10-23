@@ -27,11 +27,16 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 24px;
+  // The actions drop below the class rather than squeezing a long label into a narrow column
+  // (DEV-7592).
+  flex-wrap: wrap;
+  gap: 12px 24px;
   padding: 20px 24px 16px;
 }
 
+// Takes what the actions leave, but never less than its basis: below that the actions wrap.
 .identity {
+  flex: 1 1 360px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -50,6 +55,14 @@
   font-size: 22px;
   font-weight: 500;
   line-height: 28px;
+  min-width: 0;
+  // Two lines at most; the whole of it on hover.
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
 }
 
 .class-description {

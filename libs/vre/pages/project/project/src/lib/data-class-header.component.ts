@@ -56,7 +56,9 @@ interface CreateResourceDialogProps {
       <div class="identity-row">
         <div class="identity">
           <div class="title-line">
-            <h1 class="class-label">{{ classSelected.resClass.labels | appStringifyStringLiteral }}</h1>
+            @let label = classSelected.resClass.labels | appStringifyStringLiteral;
+            <!-- Two lines at most; the whole of it on hover. -->
+            <h1 class="class-label" [title]="label">{{ label }}</h1>
           </div>
           @if (classSelected.resClass.comments.length) {
             @let description = classSelected.resClass.comments | appStringifyStringLiteral;
