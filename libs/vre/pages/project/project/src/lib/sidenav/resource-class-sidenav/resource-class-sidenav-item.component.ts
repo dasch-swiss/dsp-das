@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -8,55 +8,91 @@ import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { combineLatest, filter, first, map, of, startWith, switchMap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
+import { TooltipIfTruncatedDirective } from '../tooltip-if-truncated.directive';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
   template: `
-    <div (click)="selectResourceClass()" class="item" [ngClass]="{ selected: isSelected$ | async }">
-      <span class="label">
-        {{ label | appStringifyStringLiteral }}
-      </span>
-      <div class="metadata">
-        <span>{{ count }}</span>
-        <mat-icon class="icon">{{ icon }}</mat-icon>
-      </div>
-    </div>
+    @let label_ = label | appStringifyStringLiteral;
+    @let selected = isSelected$ | async;
+    <!-- Full-bleed row: the class's type icon, its name, then its count (DEV-7494, sidebar design I4). -->
+    <button
+      type="button"
+      class="item"
+      [class.selected]="selected"
+      [attr.aria-current]="selected ? 'page' : null"
+      [appTooltipIfTruncated]="label_"
+      [truncated]="labelText"
+      (click)="selectResourceClass()">
+      <mat-icon class="icon" aria-hidden="true">{{ icon }}</mat-icon>
+      <!-- The full name in a tooltip, but only when it is cut off (DEV-7494). -->
+      <span #labelText class="label">{{ label_ }}</span>
+      <span class="count">{{ count | number }}</span>
+    </button>
   `,
   styles: [
     `
+      @use '../../../../../../../../../apps/dsp-app/src/styles/config' as *;
+
       .item {
         display: flex;
         align-items: center;
-        padding: 8px 16px;
+        gap: 8px;
+        width: 100%;
+        height: 34px;
+        /* 14px + the 2px selection bar: text on the same 16px gutter as the rest of the page. */
+        padding: 0 12px 0 14px;
+        border: 0;
+        border-left: 2px solid transparent;
+        background: transparent;
         cursor: pointer;
+        text-align: left;
+        font: 400 14px/1 var(--font-sans, Roboto, sans-serif);
+        color: $cool_gray_800;
 
         &:hover {
-          background-color: #ebebeb;
+          background: $cool_gray_100;
         }
+
+        &:focus-visible {
+          outline: 2px solid $primary;
+          outline-offset: -2px;
+        }
+
+        /* The result list's selection, exactly: tint and accent bar, nothing else — so the two
+           lists side by side mark "selected" the same way. */
         &.selected {
-          border-left: 2px solid #33678f;
-          background-color: #d6e0e8;
+          border-left-color: $primary;
+          background: $primary_100;
         }
       }
 
       .label {
         flex: 1;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
-      .metadata {
-        justify-content: end;
-        display: flex;
-        align-items: center;
-        color: #b9b9b9;
-        margin-right: 0;
+      .count {
+        flex: none;
+        font-size: 12px;
+        font-weight: 400;
+        color: $cool_gray_400;
+        font-variant-numeric: tabular-nums;
       }
 
       .icon {
-        margin-left: 8px;
+        flex: none;
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: $cool_gray_400;
       }
     `,
   ],
-  imports: [AsyncPipe, NgClass, MatIcon, StringifyStringLiteralPipe],
+  imports: [AsyncPipe, DecimalPipe, MatIcon, StringifyStringLiteralPipe, TooltipIfTruncatedDirective],
 })
 export class ResourceClassSidenavItemComponent {
   @Input({ required: true }) iri!: string;

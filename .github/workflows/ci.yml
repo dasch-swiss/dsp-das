@@ -482,9 +482,14 @@ jobs:
     continue-on-error: true
     outputs:
       uploaded: ${{ steps.capture.outputs.uploaded }}
-    timeout-minutes: 20
+    timeout-minutes: 30
+    # A concurrency group holds one running + one pending job; a newly queued
+    # job cancels the pending one regardless of cancel-in-progress. main gets
+    # its own group so a PR job can never bump its baseline build (PR #3527's
+    # merge lost its build that way). Cost: at most one main + one PR upload
+    # hit the VM at once.
     concurrency:
-      group: pixeleye-shared-vm
+      group: ${{ github.ref == 'refs/heads/main' && 'pixeleye-main' || 'pixeleye-shared-vm' }}
       cancel-in-progress: false
     permissions:
       contents: read
@@ -541,6 +546,38 @@ jobs:
           echo "uploaded=true" >> "$GITHUB_OUTPUT"
         env:
           PIXELEYE_TOKEN: ${{ secrets.PIXELEYE_TOKEN }}
+          PIXELEYE_ENDPOINT: ${{ vars.PIXELEYE_ENDPOINT }}
+      # Breakpoint run: the `Pages / Breakpoints / …` stories at every breakpoint
+      # width (pixeleye.breakpoints.config.ts), uploaded to their own pixeleye
+      # project. Its status is informational, not a required check. These steps
+      # live in this job, not a job of their own, so they hold the same
+      # `pixeleye-shared-vm` slot: a second job would wait in the group, and a
+      # pending job there is cancelled as soon as another branch queues one.
+      # continue-on-error keeps a breakpoint failure from touching the main run.
+      - name: Check breakpoint token
+        id: breakpoints-token
+        run: |
+          if [ -z "$PIXELEYE_BREAKPOINTS_TOKEN" ]; then
+            echo "::notice::PIXELEYE_BREAKPOINTS_TOKEN is not set; skipping breakpoint snapshots"
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          PIXELEYE_BREAKPOINTS_TOKEN: ${{ secrets.PIXELEYE_BREAKPOINTS_TOKEN }}
+      - name: Build breakpoint Storybook
+        if: steps.breakpoints-token.outputs.present == 'true'
+        continue-on-error: true
+        run: npm run build-storybook:breakpoints
+      - name: Capture and upload breakpoint snapshots
+        if: steps.breakpoints-token.outputs.present == 'true'
+        continue-on-error: true
+        run: |
+          npx http-server dist/storybook-breakpoints --port 6007 --silent &
+          npx wait-on tcp:6007 --timeout 60000
+          npm run pixeleye:breakpoints
+        env:
+          PIXELEYE_BREAKPOINTS_TOKEN: ${{ secrets.PIXELEYE_BREAKPOINTS_TOKEN }}
           PIXELEYE_ENDPOINT: ${{ vars.PIXELEYE_ENDPOINT }}
 
   pixeleye-status-fallback:
@@ -605,7 +642,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: 3.14
+          python-version: 3.15
           cache: 'pip'
       - name: Install dependencies
         run: pip install -r docs/requirements.txt
