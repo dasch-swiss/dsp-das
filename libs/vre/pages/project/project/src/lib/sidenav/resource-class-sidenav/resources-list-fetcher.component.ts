@@ -190,7 +190,7 @@ export class ResourcesListFetcherComponent implements OnChanges {
    * empty class. Two things defeat that inference and both fall back to can-view:
    *   - an unknown count, because a timed-out count must never tell the user they lack permissions;
    *   - active filters, because zero results is the *expected* outcome of narrowing and the empty
-   *     state has to win over the permissions panel (REQ-2.7).
+   *     state has to win over the permissions panel.
    */
   private _applyCount(resources: ReadResource[], pageIndex: number, numberOfResults: number | null): ReadResource[] {
     this.userCanViewResources =
@@ -213,7 +213,7 @@ export class ResourcesListFetcherComponent implements OnChanges {
    * The memory of "entry already happened" lives on `DataBrowserPageService`, not on this
    * component: a List ⇄ Table switch destroys and recreates this fetcher, and an instance with no
    * memory would treat the switch as a fresh entry and select its own first row over the resource
-   * the user had open in the table (REQ-5.5).
+   * the user had open in the table.
    */
   private _applySelection(resources: ReadResource[]): { resources: ReadResource[]; selectFirstResource: boolean } {
     const isClassEntry = this.classLabel !== this._dataBrowserPageService.selectionResolvedForClass;
@@ -225,7 +225,7 @@ export class ResourcesListFetcherComponent implements OnChanges {
       } else {
         // Only on entry. A filter that narrows to nothing must leave the viewer and the comparison
         // set alone — the user can widen the filter again and expects their open resource still
-        // there (REQ-2.8).
+        // there.
         this._multipleViewerService.reset();
       }
     }

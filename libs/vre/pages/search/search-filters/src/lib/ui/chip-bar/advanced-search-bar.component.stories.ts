@@ -249,7 +249,7 @@ const headerFilterRequests = new FilterEditorRequestService();
 
 /**
  * The Data tab's column headers do not host a filter editor of their own; they name a property and
- * the bar opens its own (DEV-7466 REQ-3.5). Driven here through the real service rather than by
+ * the bar opens its own (DEV-7466). Driven here through the real service rather than by
  * calling the method, because the routing *is* what is under test.
  */
 export const OpensTheEditorOnAPropertyNamedFromOutsideTheBar: Story = {

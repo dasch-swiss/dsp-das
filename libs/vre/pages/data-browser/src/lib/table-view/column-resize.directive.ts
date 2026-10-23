@@ -1,23 +1,5 @@
 import { DestroyRef, Directive, ElementRef, inject, input, NgZone, output } from '@angular/core';
 
-/**
- * Drags a column's right edge to resize it.
- *
- * Hand-rolled because Angular Material 21.2.9 ships no column-resize primitive. One exists in
- * `@angular/cdk-experimental`, which is neither a dependency of this repo nor covered by the CDK's
- * compatibility guarantee — adopting it would tie the Data tab to a package that may change shape
- * between patch releases.
- *
- * Put this on a thin element inside the `<th>`, not on the `<th>` itself: the whole header cell is
- * a `cdkDrag` for column reorder, and a pointer-down on the cell has to mean "move this column"
- * everywhere except on the few pixels that mean "resize it".
- *
- * The live width is written straight onto the `<th>`'s inline style rather than onto a CSS custom
- * property consumed by the generated `.mat-column-<key>` rule: MatTable derives that class name
- * from the column key, our keys are property IRIs, and a stylesheet cannot be authored ahead of
- * time for class names that only exist once an ontology is loaded. Under `table-layout: fixed` the
- * header cell's width is authoritative for the whole column anyway, so one inline write resizes it.
- */
 /** How much one arrow-key press moves the edge. Coarse enough to be useful, fine enough to aim. */
 const KEYBOARD_STEP_PX = 16;
 
@@ -63,6 +45,24 @@ function neededWidth(cell: HTMLTableCellElement, extra: number): number {
   return right - cell.getBoundingClientRect().left + paddingRight + extra;
 }
 
+/**
+ * Drags a column's right edge to resize it.
+ *
+ * Hand-rolled because Angular Material 21.2.9 ships no column-resize primitive. One exists in
+ * `@angular/cdk-experimental`, which is neither a dependency of this repo nor covered by the CDK's
+ * compatibility guarantee — adopting it would tie the Data tab to a package that may change shape
+ * between patch releases.
+ *
+ * Put this on a thin element inside the `<th>`, not on the `<th>` itself: the whole header cell is
+ * a `cdkDrag` for column reorder, and a pointer-down on the cell has to mean "move this column"
+ * everywhere except on the few pixels that mean "resize it".
+ *
+ * The live width is written straight onto the `<th>`'s inline style rather than onto a CSS custom
+ * property consumed by the generated `.mat-column-<key>` rule: MatTable derives that class name
+ * from the column key, our keys are property IRIs, and a stylesheet cannot be authored ahead of
+ * time for class names that only exist once an ontology is loaded. Under `table-layout: fixed` the
+ * header cell's width is authoritative for the whole column anyway, so one inline write resizes it.
+ */
 @Directive({
   selector: '[appColumnResize]',
   host: {
@@ -102,6 +102,9 @@ export class ColumnResizeDirective {
    * would write a `localStorage` entry per frame once the host persists the layout.
    */
   readonly widthChanged = output<number>();
+
+  /** Home: the column goes back to its default, which the host stores as no width at all. */
+  readonly widthReset = output<void>();
 
   private readonly _host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly _zone = inject(NgZone);
@@ -190,7 +193,7 @@ export class ColumnResizeDirective {
   /** A column the user has fiddled with and wants back; cheaper to offer than an undo. */
   resetToDefault(): void {
     this._applyWidth(this.defaultWidth());
-    this.widthChanged.emit(this.defaultWidth());
+    this.widthReset.emit();
   }
 
   /**
@@ -237,6 +240,12 @@ export class ColumnResizeDirective {
       return;
     }
     this._cell = undefined;
+
+    // A click without a drag sets nothing: storing the measured width would pin the column to it,
+    // including a width an open editor has only temporarily widened it to.
+    if (Math.round(this._currentWidth) === Math.round(this._startWidth)) {
+      return;
+    }
 
     // Back into the zone: the emission updates the persisted layout, which has to be seen by the
     // bindings that render the column's width from now on.

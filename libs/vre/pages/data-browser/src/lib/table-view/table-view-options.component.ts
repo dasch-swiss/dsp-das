@@ -43,10 +43,11 @@ import { ColumnPickerEntry } from './table-view-state.service';
         </h4>
 
         <!-- Not menu items, so the panel's own click handler would close the menu on the first
-             touch; the wrapper swallows it. Auto lets each row hug its content; Manual sets them
-             all to one height, from a slider rather than presets because the right height depends
-             on what is in the cells. -->
-        <div class="row-height-control" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+             touch; the wrapper swallows it, and every key but Escape, which must still reach the
+             menu to close it. Auto lets each row hug its content; Manual sets them all to one
+             height, from a slider rather than presets because the right height depends on what is
+             in the cells. -->
+        <div class="row-height-control" (click)="$event.stopPropagation()" (keydown)="onControlKeydown($event)">
           <mat-button-toggle-group
             class="row-height-mode"
             data-cy="row-height-mode"
@@ -197,6 +198,12 @@ export class TableViewOptionsComponent {
       ? this._translate.instant('pages.dataBrowser.viewOptions.rowHeightAuto')
       : `${height}px`;
   });
+
+  protected onControlKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'Escape') {
+      event.stopPropagation();
+    }
+  }
 
   /**
    * Auto emits `undefined` rather than a number, so the layout stores nothing at all instead of a

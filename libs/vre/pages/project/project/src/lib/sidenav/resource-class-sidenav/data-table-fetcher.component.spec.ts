@@ -165,7 +165,7 @@ describe('DataTableFetcherComponent', () => {
           provide: ProjectPageService,
           useValue: {
             currentProject$: of({ id: 'http://rdfh.ch/projects/0001', shortcode: '0001' } as ReadProject),
-            hasProjectMemberRights$: of(true),
+            hasProjectMemberRights$: of(false),
           },
         },
         { provide: ProjectDataRightsService, useValue: dataRights },
@@ -464,7 +464,7 @@ describe('DataTableFetcherComponent', () => {
       expect(multipleViewer.notifyResourceChanged).toHaveBeenCalledWith('a');
     });
 
-    /** Shaping is a rendering decision: none of it re-runs the query (REQ-2.3). */
+    /** Shaping is a rendering decision: none of it re-runs the query. */
     it('PersistsReorderPinAndResizeWithoutReQuerying', () => {
       create();
       const { sub } = collect();

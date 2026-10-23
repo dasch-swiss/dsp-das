@@ -124,7 +124,7 @@ describe('ResourcesListFetcherComponent', () => {
   });
 
   /**
-   * REQ-5.5. A List ⇄ Table switch destroys and recreates this fetcher, so "entry already
+   * A List ⇄ Table switch destroys and recreates this fetcher, so "entry already
    * happened" cannot live on the instance: a fresh one would select its own first row over the
    * resource the user had opened in the table view they just left.
    */
@@ -371,7 +371,7 @@ describe('ResourcesListFetcherComponent', () => {
       querySubject.next(`${QUERY} FILTER(?narrow)`);
 
       // Entry behaviour only. Widening the filter again should find the user's resource still open,
-      // so a filter-driven empty result must not clear the viewer (REQ-2.8).
+      // so a filter-driven empty result must not clear the viewer.
       expect(mockMultipleViewerService.reset).not.toHaveBeenCalled();
       sub.unsubscribe();
     });

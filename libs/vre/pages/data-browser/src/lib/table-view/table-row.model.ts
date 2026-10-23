@@ -263,7 +263,7 @@ function cellFor(
 
   // The resource editor's own answer to "is there an editor for this property", not a second
   // opinion: a property `commonProperty` dropped has no `PropertyInfoValues` here either, which is
-  // exactly the read-only family of PRD §9.11. The column model's `isEditable` agrees, but this is
+  // exactly the read-only family. The column model's `isEditable` agrees, but this is
   // the authority — it is the object the editor would actually be handed.
   const propertyInfo = dspResource?.resProps.find(prop => prop.propDef.id === column.propertyIri);
   if (propertyInfo) {
@@ -294,24 +294,38 @@ function cellFor(
   };
 }
 
+/** Resolve one resource against the column model. */
+export function buildRow(resource: ReadResource, columns: TableColumn[], rowRights: RowRights): TableRow {
+  const dspResource = _generate(resource);
+
+  return {
+    resource,
+    dspResource,
+    id: resource.id,
+    label: resource.label,
+    cells: columns.reduce<Record<string, TableCell>>((cells, column) => {
+      cells[column.key] = cellFor(resource, dspResource, column, rowRights);
+      return cells;
+    }, {}),
+  };
+}
+
+/** The row with only its rights-statement cells rebuilt; its `dspResource` and other cells are kept by identity. */
+export function withRights(row: TableRow, columns: TableColumn[], rowRights: RowRights): TableRow {
+  const cells = { ...row.cells };
+  for (const column of columns) {
+    if (column.rightsField) {
+      cells[column.key] = cellFor(row.resource, row.dspResource, column, rowRights);
+    }
+  }
+  return { ...row, cells };
+}
+
 /** Resolve a page of resources against the column model. */
 export function buildRows(
   resources: ReadResource[],
   columns: TableColumn[],
   rowRights: RowRights = { placeholderLabel: '' }
 ): TableRow[] {
-  return resources.map(resource => {
-    const dspResource = _generate(resource);
-
-    return {
-      resource,
-      dspResource,
-      id: resource.id,
-      label: resource.label,
-      cells: columns.reduce<Record<string, TableCell>>((cells, column) => {
-        cells[column.key] = cellFor(resource, dspResource, column, rowRights);
-        return cells;
-      }, {}),
-    };
-  });
+  return resources.map(resource => buildRow(resource, columns, rowRights));
 }

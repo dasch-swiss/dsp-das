@@ -156,7 +156,7 @@ table {
 
 // Shared shape for the header controls. Each hides until the column is hovered *unless* it is
 // active — the sorted column, a filtered one, a pinned one — which must stay readable from across
-// the table (REQ-3.3).
+// the table.
 .header-sort,
 .header-filter,
 .header-pin {
@@ -463,24 +463,35 @@ tr.is-checked .row-controls [data-cy='row-check'] {
   pointer-events: none;
 }
 
-.scroll-hint {
-  position: absolute;
-  z-index: 3;
+// The count of columns hidden under the frozen ones, in the label's header: pushed to its far end,
+// beside the frozen edge the columns went under. It never shrinks; the label's name ellipsises first.
+.scroll-back {
+  flex: none;
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 2px 8px 2px 4px;
-  border-radius: 10px;
-  background: rgba(31, 35, 40, 0.78);
-  color: #fff;
-  font-size: 11px;
-  line-height: 16px;
-  pointer-events: none;
+  margin-left: auto;
+  height: 24px;
+  padding: 0 8px 0 2px;
+  border: 1px solid #b7c8d6;
+  border-radius: 12px;
+  background: #fff;
+  color: #234a69;
+  font: 500 12px/1 var(--font-sans, inherit);
+  cursor: pointer;
 
   mat-icon {
-    font-size: 14px;
-    width: 14px;
-    height: 14px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    background: #f2f6f9;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary, #336790);
+    outline-offset: 1px;
   }
 }
 

@@ -1,5 +1,8 @@
 import { DestroyRef, Directive, ElementRef, inject, input, NgZone, output } from '@angular/core';
 
+/** How much one arrow-key press moves the edge. Matches the column handle's step. */
+const KEYBOARD_STEP_PX = 16;
+
 /**
  * Drags a row's bottom edge to resize it, the counterpart of {@link ColumnResizeDirective}.
  *
@@ -16,9 +19,6 @@ import { DestroyRef, Directive, ElementRef, inject, input, NgZone, output } from
  * capping every cell of the row would make the short ones scroll containers too, and the editor's
  * hover bubble would give each of them a scrollbar with nothing to scroll.
  */
-/** How much one arrow-key press moves the edge. Matches the column handle's step. */
-const KEYBOARD_STEP_PX = 16;
-
 @Directive({
   selector: '[appRowResize]',
   host: {
@@ -39,8 +39,14 @@ const KEYBOARD_STEP_PX = 16;
 export class RowResizeDirective {
   /** Below this a row has no room for even one line plus its padding. */
   readonly minHeight = input.required<number>();
-  /** The row's current height, for the announcement only. */
-  readonly height = input.required<number>();
+  /** The row's set height, for the announcement only; undefined while the row hugs its content. */
+  readonly height = input.required<number | undefined>();
+  /**
+   * What the row falls back to once its own height is cleared: the View-options height, or
+   * undefined for Auto. Applied here because the template's binding to it has not changed, so
+   * Angular would not write it back after the reset strips the inline style.
+   */
+  readonly fallbackHeight = input<number | undefined>(undefined);
 
   /**
    * Emitted once per gesture on release, and once per key press.
@@ -105,7 +111,7 @@ export class RowResizeDirective {
 
   /** Back to whatever the content asks for, which is cheaper to offer than an undo. */
   onDoubleClick(): void {
-    this._applyHeight(undefined);
+    this._applyHeight(this.fallbackHeight());
     this.heightReset.emit();
   }
 
@@ -124,7 +130,7 @@ export class RowResizeDirective {
     // Otherwise the arrow also scrolls the table while the row is being sized.
     event.preventDefault();
 
-    const current = this._host.nativeElement.closest('tr')?.getBoundingClientRect().height ?? this.height();
+    const current = this._host.nativeElement.closest('tr')?.getBoundingClientRect().height ?? this.minHeight();
     const next = Math.max(this.minHeight(), Math.round(current + delta));
 
     this._applyHeight(next);
@@ -143,6 +149,11 @@ export class RowResizeDirective {
       return;
     }
     this._row = undefined;
+
+    // A click without a drag sets nothing: storing the measured height would pin the row to it.
+    if (Math.round(this._currentHeight) === Math.round(this._startHeight)) {
+      return;
+    }
 
     // Back into the zone: the emission is what the host renders the row's height from afterwards.
     this._zone.run(() => this.heightChanged.emit(Math.round(this._currentHeight)));

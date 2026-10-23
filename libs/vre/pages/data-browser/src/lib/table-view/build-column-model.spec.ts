@@ -95,7 +95,7 @@ describe('buildColumnModel', () => {
   });
 
   // The three kinds `GenerateProperty.commonProperty` drops. A cell of any of them has no
-  // `PropertyInfoValues`, so there is no editor component to mount (PRD §9.11).
+  // `PropertyInfoValues`, so there is no editor component to mount.
   /**
    * dsp-api reifies every link property into a `…Value` sibling sharing its label, so keeping
    * both produced two identically headed columns — one of which could never hold a value.

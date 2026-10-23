@@ -46,7 +46,7 @@ describe('TableViewStateService', () => {
 
     /**
      * The label column is what keeps a row identifiable once the table scrolls sideways, so
-     * "hide all" has to leave a table of labels rather than a table of nothing (REQ-2.10).
+     * "hide all" has to leave a table of labels rather than a table of nothing.
      */
     it('LeavesTheStickyLabelColumnShowingWhenHidingEverything', () => {
       service.setAllColumnsVisible(false);

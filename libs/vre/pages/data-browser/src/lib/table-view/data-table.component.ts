@@ -1,4 +1,5 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import {
   afterRenderEffect,
   ChangeDetectionStrategy,
@@ -12,6 +13,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
 import { MatTable, MatTableModule } from '@angular/material/table';
@@ -32,7 +34,7 @@ import { ScrollWhenTallerDirective } from './scroll-when-taller.directive';
 import { editWidthForValueType, LABEL_COLUMN_KEY, TableColumn } from './table-column.model';
 import { TableImageCellComponent } from './table-image-cell.component';
 import { TablePropertyCellComponent } from './table-property-cell.component';
-import { buildRows, TableRow } from './table-row.model';
+import { buildRow, RowRights, TableRow, withRights } from './table-row.model';
 import { TruncatedTooltipDirective } from './truncated-tooltip.directive';
 
 /**
@@ -88,8 +90,11 @@ const FILLER_COLUMN_KEY = '__filler';
   selector: 'app-data-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <!-- cdkScrollable: overlays opened from a cell (the image preview) close when the table scrolls,
+         which the overlay's scroll strategy only sees from a registered scroll container. -->
     <div
       #scroller
+      cdkScrollable
       class="table-scroll"
       [class.selection-active]="selectionActive()"
       [class.no-selection]="!selectable()"
@@ -163,7 +168,7 @@ const FILLER_COLUMN_KEY = '__filler';
                 }
                 <span class="header-label" [appTruncatedTooltip]="column.label">{{ column.label }}</span>
 
-                <!-- Only where the Data tab's own sort rule allows it (REQ-3.2). A control the
+                <!-- Only where the Data tab's own sort rule allows it. A control the
                      query cannot honour is worse than none: the user would click it and watch the
                      order not change. -->
                 @if (column.isSortable) {
@@ -189,6 +194,27 @@ const FILLER_COLUMN_KEY = '__filler';
                     [matTooltip]="column.filterTooltipKey | translate"
                     (click)="filterRequested.emit(column.key)">
                     <mat-icon>filter_list</mat-icon>
+                  </button>
+                }
+
+                <!-- How many columns are hidden under the frozen ones, and the way back to them. In
+                     the label's header, the one cell that never scrolls, so it covers no data and
+                     no column name (DEV-7494, option A of the scrolled-under hint design). -->
+                @if (column.isSticky && scrolledUnder().count > 0) {
+                  @let hiddenColumns =
+                    (scrolledUnder().count === 1
+                      ? 'pages.dataBrowser.table.oneColumnScrolledUnder'
+                      : 'pages.dataBrowser.table.columnsScrolledUnder'
+                    ) | translate: { count: scrolledUnder().count };
+                  @let scrollBack = hiddenColumns + '. ' + ('pages.dataBrowser.table.scrollBackToStart' | translate);
+                  <button
+                    type="button"
+                    class="scroll-back"
+                    data-cy="scrolled-under-hint"
+                    [attr.aria-label]="scrollBack"
+                    [matTooltip]="scrollBack"
+                    (click)="scrollToStart()">
+                    <mat-icon>chevron_left</mat-icon>{{ scrolledUnder().count }}
                   </button>
                 }
 
@@ -226,6 +252,7 @@ const FILLER_COLUMN_KEY = '__filler';
                 [defaultWidth]="column.defaultWidth"
                 [width]="column.width"
                 (widthChanged)="onColumnResized(column.key, $event)"
+                (widthReset)="onColumnWidthReset(column.key)"
                 [attr.aria-label]="'pages.dataBrowser.table.resizeColumn' | translate: { column: column.label }"></span>
             </th>
 
@@ -248,7 +275,8 @@ const FILLER_COLUMN_KEY = '__filler';
                   appRowResize
                   data-cy="row-resize"
                   [minHeight]="rowMinHeight"
-                  [height]="rowHeightFor(row.id) ?? 0"
+                  [height]="rowHeightFor(row.id)"
+                  [fallbackHeight]="rowHeight()"
                   (heightChanged)="onRowResized(row.id, $event)"
                   (heightReset)="onRowHeightReset(row.id)"
                   [attr.aria-label]="'pages.dataBrowser.table.resizeRow' | translate: { label: row.label }"></span>
@@ -339,7 +367,7 @@ const FILLER_COLUMN_KEY = '__filler';
                 <!-- The read-only family: link, file-value, geometry and anything the ontology
                      does not mark editable. GenerateProperty.commonProperty drops them, so there
                      is no PropertyInfoValues to hand the viewer and no editor to mount — they
-                     render as text, and keep the collapse a viewer cell cannot have (REQ-4.7). -->
+                     render as text, and keep the collapse a viewer cell cannot have. -->
                 @let expanded = isExpanded(row.id, column.key);
                 <div class="cell-values" [appScrollWhenTaller]="rowCap(row.id)">
                   @for (value of expanded ? cell.values : cell.collapsedValues; track value.id) {
@@ -392,26 +420,10 @@ const FILLER_COLUMN_KEY = '__filler';
         [style.left.px]="scrolledUnder().edge"
         [style.height.px]="scrolledUnder().height"></span>
     }
-    <!-- Says that the frozen columns are covering others, which the shadow alone only hints at. -->
-    @if (scrolledUnder().count > 0) {
-      <span
-        class="scroll-hint"
-        data-cy="scrolled-under-hint"
-        aria-hidden="true"
-        [style.left.px]="scrolledUnder().edge + 8"
-        [style.top.px]="scrolledUnder().top + 8">
-        <mat-icon>chevron_left</mat-icon>
-        {{
-          (scrolledUnder().count === 1
-            ? 'pages.dataBrowser.table.oneColumnScrolledUnder'
-            : 'pages.dataBrowser.table.columnsScrolledUnder'
-          ) | translate: { count: scrolledUnder().count }
-        }}
-      </span>
-    }
   `,
   styleUrl: './data-table.component.scss',
   imports: [
+    CdkScrollable,
     MatTableModule,
     MatIcon,
     TranslatePipe,
@@ -463,7 +475,7 @@ export class DataTableComponent {
    * Keys of the columns a filter chip currently exists on.
    *
    * Derived from the shared filter state, not from anything the table did — so a chip removed in
-   * the bar stops being indicated here with no further wiring (REQ-3.8).
+   * the bar stops being indicated here with no further wiring.
    */
   readonly filteredColumnKeys = input<ReadonlySet<string>>(new Set<string>());
   /** Keys of the columns pinned after the label, in display order. Always visible ones. */
@@ -502,20 +514,22 @@ export class DataTableComponent {
    *
    * The host maps it onto `MultipleViewerService.addResources` / `removeResources`, which is how
    * the list view's row behaves — including past six, where the viewer itself takes over and shows
-   * the too-many-resources message (REQ-5.4).
+   * the too-many-resources message.
    */
   readonly resourceCheckedChanged = output<{ resource: ReadResource; checked: boolean }>();
   /** The whole new display order, not a delta — the host persists the array as it stands. */
   readonly columnsReordered = output<string[]>();
   readonly columnResized = output<{ key: string; width: number }>();
+  /** A column's stored width is dropped, so it renders at its default again. */
+  readonly columnWidthReset = output<string>();
   /**
    * The sort the user just asked for, already resolved to a direction.
    *
    * The direction is decided here rather than by the host because the table is the only thing that
-   * knows which header was clicked relative to the one currently sorted. Two-state by design
-   * (REQ-3.1): a third "unsorted" step would have to mean *something* to Gravsearch, which always
-   * orders by label when nothing else is asked for — so it would really be "sort by label", a state
-   * the label column's own control already offers.
+   * knows which header was clicked relative to the one currently sorted. Two-state by design: a
+   * third "unsorted" step would have to mean *something* to Gravsearch, which always orders by
+   * label when nothing else is asked for — so it would really be "sort by label", a state the
+   * label column's own control already offers.
    */
   readonly sortToggled = output<{ key: string; descending: boolean }>();
   /** The column whose filter the user wants to edit. The host decides where the editor opens. */
@@ -537,7 +551,7 @@ export class DataTableComponent {
   /**
    * How far the table is scrolled sideways, as the frozen zone sees it: whether there is a frozen
    * edge to shade, how many scrolling columns are entirely hidden under it, and where its edge and
-   * the header's bottom are, to place the shadow and the hint.
+   * the header's bottom are, to place the shadow.
    */
   protected readonly scrolledUnder = signal(
     { shadowed: false, count: 0, edge: 0, top: 0, height: 0 },
@@ -574,7 +588,7 @@ export class DataTableComponent {
    *
    * Changing either half means the rows on screen are no longer the rows that were there — a new
    * page, a new sort, a new filter, a new class. Everything the user did *to* those rows is keyed
-   * off this so that it is discarded exactly then, which is what REQ-4.11 asks for, rather than by
+   * off this so that it is discarded exactly then, rather than by
    * each of those five gestures remembering to clear it. The open editors go with them: a cell's
    * editor lives inside the row's view, so replacing the rows destroys it.
    */
@@ -585,23 +599,56 @@ export class DataTableComponent {
    *
    * An overlay rather than a new query: re-running the search would re-sort and re-filter, and a
    * row whose new value no longer matches would jump or vanish under the user who had just typed
-   * it. The query's order is left alone and only the row's contents are replaced (REQ-4.4,
-   * REQ-4.5).
+   * it. The query's order is left alone and only the row's contents are replaced. Reset by a new
+   * page only, not by new columns: a language switch rebuilds the columns, and dropping the overlay
+   * then would show the values from before the save.
    */
   private readonly _reloaded = linkedSignal<unknown, ReadonlyMap<string, ReadResource>>({
-    source: this._dataIdentity,
+    source: this.resources,
     computation: () => new Map(),
   });
 
   private readonly _translate = inject(TranslateService);
 
+  /** Read by `_rowRights` so the placeholder text follows a language switch. */
+  private readonly _language = toSignal(this._translate.onLangChange);
+
+  private readonly _rowRights = computed<RowRights>(() => {
+    this._language();
+    return {
+      rights: this.projectRights(),
+      placeholderLabel: this._translate.instant('legal.dataSide.placeholder'),
+    };
+  });
+
+  /**
+   * Built rows by `ReadResource` identity, with the rights they were built against. Valid only for
+   * `_cacheColumns`: a new column set discards it, so an unchanged resource keeps its row (and its
+   * open editors) across saves elsewhere.
+   */
+  private _rowCache = new WeakMap<ReadResource, { row: TableRow; rowRights: RowRights }>();
+  private _cacheColumns: TableColumn[] | undefined;
+
   readonly rows = computed<TableRow[]>(() => {
     const reloaded = this._reloaded();
     const resources =
       reloaded.size === 0 ? this.resources() : this.resources().map(resource => reloaded.get(resource.id) ?? resource);
-    return buildRows(resources, this.columns(), {
-      rights: this.projectRights(),
-      placeholderLabel: this._translate.instant('legal.dataSide.placeholder'),
+    const columns = this.columns();
+    const rowRights = this._rowRights();
+
+    if (columns !== this._cacheColumns) {
+      this._rowCache = new WeakMap();
+      this._cacheColumns = columns;
+    }
+
+    return resources.map(resource => {
+      const cached = this._rowCache.get(resource);
+      if (cached?.rowRights === rowRights) {
+        return cached.row;
+      }
+      const row = cached ? withRights(cached.row, columns, rowRights) : buildRow(resource, columns, rowRights);
+      this._rowCache.set(resource, { row, rowRights });
+      return row;
     });
   });
 
@@ -707,7 +754,7 @@ export class DataTableComponent {
    *
    * The label column is drag-disabled, which stops it being *picked up* but says nothing about
    * another column being dropped in front of it. Without this the sticky column could end up at
-   * index 1, pinned to the left edge with a scrolling column underneath it (REQ-2.10) — and the same
+   * index 1, pinned to the left edge with a scrolling column underneath it — and the same
    * goes for a scrolling column dropped among the pins.
    */
   protected readonly canDropAt = (index: number, drag: CdkDrag<string>): boolean => {
@@ -747,7 +794,7 @@ export class DataTableComponent {
     const order = [...this.visibleColumns()];
     const from = order.indexOf(key);
     const to = from + delta;
-    // The same groups `canDropAt` keeps for the pointer: never in front of the label (REQ-2.10),
+    // The same groups `canDropAt` keeps for the pointer: never in front of the label,
     // and never across the line between the pinned and the scrolling columns.
     const [first, last] = this._slotsFor(key);
     if (from < 0 || to < first || to > last) {
@@ -771,6 +818,11 @@ export class DataTableComponent {
     const order = [...this.visibleColumns()];
     moveItemInArray(order, event.previousIndex, event.currentIndex);
     this.columnsReordered.emit(order);
+  }
+
+  /** Back to the first column, from the hint that says how many are scrolled under. */
+  protected scrollToStart(): void {
+    this._scroller().nativeElement.scrollTo({ left: 0, behavior: 'smooth' });
   }
 
   protected measureScroll(): void {
@@ -820,13 +872,17 @@ export class DataTableComponent {
     this._table()?.updateStickyColumnStyles();
   }
 
+  protected onColumnWidthReset(key: string): void {
+    this.columnWidthReset.emit(key);
+    this._table()?.updateStickyColumnStyles();
+  }
+
   /**
    * Replace one row's resource with what dsp-api returned after a save, a delete or a reorder.
    *
    * Only the overlay moves; `resources` is left as the query returned it, so the row keeps its
-   * position and `trackBy` keeps its view. Every cell of the row is rebound, which re-primes each
-   * one's fetcher and returns any open editor in the row to display mode — the same thing the
-   * resource viewer does to its own properties when it reloads.
+   * position and `trackBy` keeps its view. Only that row is rebuilt, so its open editors return to
+   * display mode; other rows and their open editors are untouched.
    */
   protected onResourceReloaded(resource: ReadResource): void {
     this._reloaded.update(current => new Map(current).set(resource.id, resource));

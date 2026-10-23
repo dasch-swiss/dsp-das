@@ -60,7 +60,7 @@ function isSortableProperty(propDef: ResourcePropertyDefinitionWithAllLanguages)
  *
  * Sortable — label is the Data tab's default sort. Editable, though not through a property editor:
  * its cell opens the viewer's own label dialog (DEV-7494). Sticky, and therefore also immovable and un-hideable
- * (PRD REQ-2.10) — with no cap on visible columns, horizontal scrolling is the normal case, and a
+ * — with no cap on visible columns, horizontal scrolling is the normal case, and a
  * table whose rows lose their identity as you scroll right is not readable.
  */
 function labelColumn(label: string): TableColumn {

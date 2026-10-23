@@ -56,6 +56,14 @@ export class TableViewStateService {
     this.layout.set(this._layoutStore.load(classIri, columns));
   }
 
+  /** `undefined` is Auto, and removes the field rather than storing a sentinel. */
+  setRowHeight(rowHeight: number | undefined): void {
+    this._update(layout => {
+      const { rowHeight: _previous, ...rest } = layout;
+      return rowHeight === undefined ? rest : { ...rest, rowHeight };
+    });
+  }
+
   /**
    * Show or hide one column.
    *
@@ -67,17 +75,9 @@ export class TableViewStateService {
    * A hidden column, by contrast, goes back into `hidden` in model order, because that list is only
    * ever read as the picker's own ordering.
    */
-  /** `undefined` is Auto, and removes the field rather than storing a sentinel. */
-  setRowHeight(rowHeight: number | undefined): void {
-    this._update(layout => {
-      const { rowHeight: _previous, ...rest } = layout;
-      return rowHeight === undefined ? rest : { ...rest, rowHeight };
-    });
-  }
-
   setColumnVisible(key: string, isVisible: boolean): void {
     // The label column carries the row's identity while the rest of the table scrolls horizontally
-    // past it, so hiding it is not offered (REQ-2.10). Guarded here as well as in the picker: a
+    // past it, so hiding it is not offered. Guarded here as well as in the picker: a
     // stored layout written by an older build could still ask for it.
     if (key === LABEL_COLUMN_KEY) {
       return;
@@ -194,7 +194,7 @@ export class TableViewStateService {
    * A class with forty properties is the reason this exists: reaching a working table from the
    * default eight means ticking thirty-two rows, and getting back means ticking them again. The
    * sticky label column is exempt in both directions, so "hide all" leaves a table of labels
-   * rather than a table of nothing (REQ-2.10).
+   * rather than a table of nothing.
    *
    * Showing all appends the hidden columns in model order rather than rebuilding the whole list,
    * so a user who has already dragged their visible columns into an order keeps it.

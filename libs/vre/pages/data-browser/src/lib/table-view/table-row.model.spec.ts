@@ -7,8 +7,8 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ProjectDataRights } from '@dasch-swiss/vre/shared/app-helper-services';
 import { imageColumn, rightsColumns } from './build-column-model';
-import { IMAGE_COLUMN_KEY, RIGHTS_COLUMN_KEYS } from './table-column.model';
-import { buildRows, RowRights } from './table-row.model';
+import { IMAGE_COLUMN_KEY, LABEL_COLUMN_KEY, RIGHTS_COLUMN_KEYS, TableColumn } from './table-column.model';
+import { buildRow, buildRows, RowRights, withRights } from './table-row.model';
 
 const PLACEHOLDER = 'urn:dasch:placeholder';
 
@@ -146,5 +146,20 @@ describe('buildRows — image', () => {
 
     expect(cell.image).toBeUndefined();
     expect(cell.isEmpty).toBe(true);
+  });
+});
+
+describe('withRights', () => {
+  const labelColumn = { key: LABEL_COLUMN_KEY } as TableColumn;
+
+  it('RebuildsOnlyTheRightsCellsAndKeepsTheRestByIdentity', () => {
+    const columns = [labelColumn, ...COLUMNS];
+    const row = buildRow(resource(), columns, { placeholderLabel: 'Placeholder' });
+
+    const next = withRights(row, columns, { rights: RIGHTS, placeholderLabel: 'Placeholder' });
+
+    expect(next.dspResource).toBe(row.dspResource);
+    expect(next.cells[LABEL_COLUMN_KEY]).toBe(row.cells[LABEL_COLUMN_KEY]);
+    expect(next.cells[RIGHTS_COLUMN_KEYS.license]).toMatchObject({ text: 'CC BY 4.0' });
   });
 });

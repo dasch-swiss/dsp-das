@@ -136,11 +136,11 @@ export class DataClassUrlStateService implements SearchFilterState {
   /**
    * A non-default sort counts as active state here, unlike on the Search tab. There, a direction
    * without an `orderBy` is meaningless and is dropped on read; here label is the implied default, so
-   * `orderDir` alone is a real, resettable choice and must reveal the Reset control (REQ-1.10).
+   * `orderDir` alone is a real, resettable choice and must reveal the Reset control.
    *
    * `view` is deliberately absent. It narrows nothing — it only changes how the same results are
    * drawn — so counting it would leave the Reset control permanently lit in table view and imply
-   * that Reset would switch the user back to the list (DEV-7466 REQ-1.14).
+   * that Reset would switch the user back to the list (DEV-7466).
    */
   readonly hasActiveState$: Observable<boolean> = this._params$.pipe(
     map(p => !!(p.q || p.filters || p.orderBy || p.orderDir)),
@@ -230,8 +230,8 @@ export class DataClassUrlStateService implements SearchFilterState {
 
   /**
    * `view` is not named here, and `_write` only touches the keys it is given — so Reset clears the
-   * query the user built without also throwing away the view they are reading it in (REQ-1.14).
-   * The same omission is what carries the view across a class switch, which calls this (REQ-1.15).
+   * query the user built without also throwing away the view they are reading it in.
+   * The same omission is what carries the view across a class switch, which calls this.
    */
   reset(): void {
     this._write({ q: undefined, filters: undefined, orderBy: undefined, orderDir: undefined }, { replaceUrl: true });
