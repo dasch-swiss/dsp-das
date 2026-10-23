@@ -199,17 +199,17 @@ export class TableViewOptionsComponent {
       : `${height}px`;
   });
 
-  /**
-   * Auto emits `undefined` rather than a number, so the layout stores nothing at all instead of a
-   * sentinel every reader would have to know about. Manual applies a height at once — the slider
-   * then starts from what the table is showing, rather than from a position nothing reflects.
-   */
   protected onControlKeydown(event: KeyboardEvent): void {
     if (event.key !== 'Escape') {
       event.stopPropagation();
     }
   }
 
+  /**
+   * Auto emits `undefined` rather than a number, so the layout stores nothing at all instead of a
+   * sentinel every reader would have to know about. Manual applies a height at once — the slider
+   * then starts from what the table is showing, rather than from a position nothing reflects.
+   */
   protected onModeChange(mode: 'auto' | 'manual'): void {
     this.rowHeightChanged.emit(mode === 'auto' ? undefined : this.lastManualHeight());
   }

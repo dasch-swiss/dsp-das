@@ -102,6 +102,7 @@ export class ColumnResizeDirective {
    * would write a `localStorage` entry per frame once the host persists the layout.
    */
   readonly widthChanged = output<number>();
+
   /** Home: the column goes back to its default, which the host stores as no width at all. */
   readonly widthReset = output<void>();
 
