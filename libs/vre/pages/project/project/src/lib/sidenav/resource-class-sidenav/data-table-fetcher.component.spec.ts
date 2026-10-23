@@ -163,7 +163,10 @@ describe('DataTableFetcherComponent', () => {
         { provide: ErrorReportingService, useValue: { report } },
         {
           provide: ProjectPageService,
-          useValue: { currentProject$: of({ id: 'http://rdfh.ch/projects/0001', shortcode: '0001' } as ReadProject) },
+          useValue: {
+            currentProject$: of({ id: 'http://rdfh.ch/projects/0001', shortcode: '0001' } as ReadProject),
+            hasProjectMemberRights$: of(false),
+          },
         },
         { provide: ProjectDataRightsService, useValue: dataRights },
         { provide: UserService, useValue: { isLoggedIn$: of(true) } },
