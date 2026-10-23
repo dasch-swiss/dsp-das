@@ -168,7 +168,7 @@ const FILLER_COLUMN_KEY = '__filler';
                 }
                 <span class="header-label" [appTruncatedTooltip]="column.label">{{ column.label }}</span>
 
-                <!-- Only where the Data tab's own sort rule allows it (REQ-3.2). A control the
+                <!-- Only where the Data tab's own sort rule allows it. A control the
                      query cannot honour is worse than none: the user would click it and watch the
                      order not change. -->
                 @if (column.isSortable) {
@@ -367,7 +367,7 @@ const FILLER_COLUMN_KEY = '__filler';
                 <!-- The read-only family: link, file-value, geometry and anything the ontology
                      does not mark editable. GenerateProperty.commonProperty drops them, so there
                      is no PropertyInfoValues to hand the viewer and no editor to mount — they
-                     render as text, and keep the collapse a viewer cell cannot have (REQ-4.7). -->
+                     render as text, and keep the collapse a viewer cell cannot have. -->
                 @let expanded = isExpanded(row.id, column.key);
                 <div class="cell-values" [appScrollWhenTaller]="rowCap(row.id)">
                   @for (value of expanded ? cell.values : cell.collapsedValues; track value.id) {
@@ -475,7 +475,7 @@ export class DataTableComponent {
    * Keys of the columns a filter chip currently exists on.
    *
    * Derived from the shared filter state, not from anything the table did — so a chip removed in
-   * the bar stops being indicated here with no further wiring (REQ-3.8).
+   * the bar stops being indicated here with no further wiring.
    */
   readonly filteredColumnKeys = input<ReadonlySet<string>>(new Set<string>());
   /** Keys of the columns pinned after the label, in display order. Always visible ones. */
@@ -514,7 +514,7 @@ export class DataTableComponent {
    *
    * The host maps it onto `MultipleViewerService.addResources` / `removeResources`, which is how
    * the list view's row behaves — including past six, where the viewer itself takes over and shows
-   * the too-many-resources message (REQ-5.4).
+   * the too-many-resources message.
    */
   readonly resourceCheckedChanged = output<{ resource: ReadResource; checked: boolean }>();
   /** The whole new display order, not a delta — the host persists the array as it stands. */
@@ -526,8 +526,7 @@ export class DataTableComponent {
    * The sort the user just asked for, already resolved to a direction.
    *
    * The direction is decided here rather than by the host because the table is the only thing that
-   * knows which header was clicked relative to the one currently sorted. Two-state by design
-   * (REQ-3.1): a third "unsorted" step would have to mean *something* to Gravsearch, which always
+   * knows which header was clicked relative to the one currently sorted. Two-state by design: a third "unsorted" step would have to mean *something* to Gravsearch, which always
    * orders by label when nothing else is asked for — so it would really be "sort by label", a state
    * the label column's own control already offers.
    */
@@ -588,7 +587,7 @@ export class DataTableComponent {
    *
    * Changing either half means the rows on screen are no longer the rows that were there — a new
    * page, a new sort, a new filter, a new class. Everything the user did *to* those rows is keyed
-   * off this so that it is discarded exactly then, which is what REQ-4.11 asks for, rather than by
+   * off this so that it is discarded exactly then, rather than by
    * each of those five gestures remembering to clear it. The open editors go with them: a cell's
    * editor lives inside the row's view, so replacing the rows destroys it.
    */
@@ -599,8 +598,7 @@ export class DataTableComponent {
    *
    * An overlay rather than a new query: re-running the search would re-sort and re-filter, and a
    * row whose new value no longer matches would jump or vanish under the user who had just typed
-   * it. The query's order is left alone and only the row's contents are replaced (REQ-4.4,
-   * REQ-4.5).
+   * it. The query's order is left alone and only the row's contents are replaced.
    */
   private readonly _reloaded = linkedSignal<unknown, ReadonlyMap<string, ReadResource>>({
     source: this._dataIdentity,
@@ -753,7 +751,7 @@ export class DataTableComponent {
    *
    * The label column is drag-disabled, which stops it being *picked up* but says nothing about
    * another column being dropped in front of it. Without this the sticky column could end up at
-   * index 1, pinned to the left edge with a scrolling column underneath it (REQ-2.10) — and the same
+   * index 1, pinned to the left edge with a scrolling column underneath it — and the same
    * goes for a scrolling column dropped among the pins.
    */
   protected readonly canDropAt = (index: number, drag: CdkDrag<string>): boolean => {
@@ -793,7 +791,7 @@ export class DataTableComponent {
     const order = [...this.visibleColumns()];
     const from = order.indexOf(key);
     const to = from + delta;
-    // The same groups `canDropAt` keeps for the pointer: never in front of the label (REQ-2.10),
+    // The same groups `canDropAt` keeps for the pointer: never in front of the label,
     // and never across the line between the pinned and the scrolling columns.
     const [first, last] = this._slotsFor(key);
     if (from < 0 || to < first || to > last) {

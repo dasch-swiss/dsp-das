@@ -40,7 +40,7 @@ interface CreateResourceDialogProps {
 }
 
 /**
- * The class view's two-row header, above the split (PRD §9; DEV-7494, design A1).
+ * The class view's two-row header, above the split (DEV-7494, design A1).
  *
  * Row 1 identifies the class and carries its actions; row 2 is a toolbar band with the search and
  * filters, the pager, View options and the view toggle. Both sit above the split rather than inside

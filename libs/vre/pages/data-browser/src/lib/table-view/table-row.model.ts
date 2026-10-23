@@ -263,7 +263,7 @@ function cellFor(
 
   // The resource editor's own answer to "is there an editor for this property", not a second
   // opinion: a property `commonProperty` dropped has no `PropertyInfoValues` here either, which is
-  // exactly the read-only family of PRD §9.11. The column model's `isEditable` agrees, but this is
+  // exactly the read-only family. The column model's `isEditable` agrees, but this is
   // the authority — it is the object the editor would actually be handed.
   const propertyInfo = dspResource?.resProps.find(prop => prop.propDef.id === column.propertyIri);
   if (propertyInfo) {

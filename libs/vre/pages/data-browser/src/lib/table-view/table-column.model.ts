@@ -119,7 +119,7 @@ export interface TableColumn {
    *
    * False for link, file-value and geometry properties, and for anything not `isEditable`:
    * `GenerateProperty.commonProperty` drops exactly those from `PropertyInfoValues`, so there is no
-   * editor component to mount. Those columns render read-only (PRD §9.11).
+   * editor component to mount. Those columns render read-only.
    */
   readonly isEditable: boolean;
   /**
@@ -127,7 +127,7 @@ export interface TableColumn {
    *
    * Narrower than `isEditable`: the Data tab's existing rule excludes link properties and list
    * values, because ordering by a URI or by a reference to another resource is not meaningful. The
-   * table does not widen it (PRD §9.12).
+   * table does not widen it.
    */
   readonly isSortable: boolean;
   /** Whether the header offers a filter control. Mirrors what the shared filter bar can express. */

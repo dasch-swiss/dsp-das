@@ -139,7 +139,7 @@ export class TableLayoutService {
       return typeof parsed === 'object' && parsed !== null ? (parsed as StoredLayout) : undefined;
     } catch {
       // Unparseable payload — hand-edited, truncated by a quota failure mid-write, or written by a
-      // version that predates the schema prefix. Discard it and fall back (PRD REQ-2.9b).
+      // version that predates the schema prefix. Discard it and fall back.
       return undefined;
     }
   }
@@ -149,7 +149,7 @@ export class TableLayoutService {
    *
    * Three cases, and all three are real rather than defensive: ontologies are edited while people
    * have the app open.
-   *   - a stored key the class no longer defines is dropped (REQ-2.9);
+   *   - a stored key the class no longer defines is dropped;
    *   - a column the layout never heard of is added visible, as in a layout made today, and where it
    *     sits in the model: right after the column before it there. A new image column lands next to
    *     the label rather than at the far end, and the rights columns after the last property;

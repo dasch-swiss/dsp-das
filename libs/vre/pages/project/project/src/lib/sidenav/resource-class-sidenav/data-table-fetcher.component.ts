@@ -47,7 +47,7 @@ import { ProjectPageService } from '../../project-page.service';
  * The divergence is the second fetch. Gravsearch does the ordering, filtering, paging and counting
  * exactly as the list does, but its CONSTRUCT clause only projects properties that were filtered
  * on — so the resources it returns carry the label and little else. A table needs every column's
- * values, and Phase 6 needs each resource's full entityInfo to mount the resource editor, so the
+ * values, and each resource needs its full entityInfo to mount the resource editor, so the
  * page's IRIs are fetched again in one batch. Page size is 25, well under the URL-chained GET's
  * ~50-IRI ceiling.
  */
@@ -201,7 +201,7 @@ export class DataTableFetcherComponent implements OnChanges {
     return this._multipleViewerService.selectMode && selected.length > 0;
   });
 
-  /** Which rows are in the comparison set, so their checkboxes read as checked (REQ-5.4). */
+  /** Which rows are in the comparison set, so their checkboxes read as checked. */
   readonly checkedResourceIds = computed<ReadonlySet<string>>(() => {
     const selected = this._selectedResources();
     return this._multipleViewerService.selectMode ? new Set(selected.map(resource => resource.id)) : new Set<string>();
@@ -211,17 +211,17 @@ export class DataTableFetcherComponent implements OnChanges {
    * The sort the query is running, mirrored onto the header that announces it.
    *
    * `rdfs:label` is the Data tab's default and is not a property IRI, so it maps onto the synthetic
-   * label column's key. Phase 5 adds the controls that write this; reading it now is what lets the
-   * table announce `aria-sort` from the day it renders.
+   * label column's key. Reading it is what lets the
+   * table announce `aria-sort`.
    */
   readonly sortedColumnKey = signal<string | undefined>(undefined);
   readonly sortDescending = signal(false);
 
   /**
-   * Which columns carry a filter chip, so their headers can say so (REQ-3.7).
+   * Which columns carry a filter chip, so their headers can say so.
    *
    * Read off the shared filter state rather than tracked by the table, which is what makes removing
-   * a chip in the bar clear the header indication with no code of its own (REQ-3.8).
+   * a chip in the bar clear the header indication with no code of its own.
    */
   readonly filteredColumnKeys = signal<ReadonlySet<string>>(new Set<string>());
 
@@ -260,7 +260,7 @@ export class DataTableFetcherComponent implements OnChanges {
 
     // The table highlights whatever the viewer has open and ticks whatever is in the comparison
     // set, so switching between list and table keeps the user's place and their selection rather
-    // than losing either at the boundary (REQ-5.5). The service is provided by the data-browser
+    // than losing either at the boundary. The service is provided by the data-browser
     // page, above both views, so neither switch tears it down.
     this._multipleViewerService.selectedResources$
       .pipe(takeUntilDestroyed())
@@ -318,7 +318,7 @@ export class DataTableFetcherComponent implements OnChanges {
    * The row checkbox, mapped onto the same two calls `ResourceListItemComponent` makes.
    *
    * Nothing is capped here. Past six selected resources the viewer itself swaps the comparison for
-   * its too-many message, which is the list view's behaviour and so is the table's (REQ-5.4).
+   * its too-many message, which is the list view's behaviour and so is the table's.
    */
   onResourceCheckedChanged({ resource, checked }: { resource: ReadResource; checked: boolean }) {
     if (checked) {
@@ -331,7 +331,7 @@ export class DataTableFetcherComponent implements OnChanges {
   /**
    * Both shaping gestures persist and redraw, and neither re-runs the query: the page's resources
    * already carry every property, so which columns are drawn and how wide they are is a rendering
-   * decision the client makes on its own (REQ-2.3).
+   * decision the client makes on its own.
    */
   onColumnsReordered(order: string[]) {
     this._tableState.setVisibleOrder(order);
@@ -351,11 +351,11 @@ export class DataTableFetcherComponent implements OnChanges {
 
   /**
    * The same writer the list view's sort header uses, so the two controls share one piece of state
-   * and a sort set in the table survives a switch back to the list (REQ-3.4).
+   * and a sort set in the table survives a switch back to the list.
    *
    * No page-index reset here. `_data$` already resets the offset when the query changes, and
    * `data-class-sort-header.component.ts` carries the standing warning that a second writer leaves
-   * no way to tell which one won (REQ-3.10).
+   * no way to tell which one won.
    */
   onSortToggled({ key, descending }: { key: string; descending: boolean }) {
     this._urlState.setSort(this._predicateIriOf(key), descending);
@@ -366,7 +366,7 @@ export class DataTableFetcherComponent implements OnChanges {
    *
    * The table deliberately does not host a filter popover of its own: the bar is the only component
    * that knows which chips exist, and so the only one that can re-open the chip on this property
-   * instead of adding a second filter to it (REQ-3.6, REQ-3.7).
+   * instead of adding a second filter to it.
    */
   onFilterRequested(key: string) {
     this._filterEditorRequests.open(this._predicateIriOf(key));
@@ -459,10 +459,9 @@ export class DataTableFetcherComponent implements OnChanges {
 
   /** Identical heuristic to the list's: see `ResourcesListFetcherComponent._applyCount`. */
   private _applyCount(resources: ReadResource[], pageIndex: number, numberOfResults: number | null): ReadResource[] {
-    // The table's entry behaviour is to select nothing and leave the viewer collapsed (REQ-5.3) —
+    // The table's entry behaviour is to select nothing and leave the viewer collapsed —
     // but that is still a resolution, and it has to be recorded, or switching to the list would
-    // count as a fresh class entry there and select a first row over the user's own choice
-    // (REQ-5.5).
+    // count as a fresh class entry there and select a first row over the user's own choice.
     this._dataBrowserPageService.selectionResolvedForClass = this.classLabel;
 
     this.userCanViewResources =

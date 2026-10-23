@@ -28,7 +28,7 @@ import { DspResource, filterUndefined, PropertyInfoValues } from '@dasch-swiss/v
  * Delete, the value-type editor, validation, the comment control, the delete dialog, the add
  * control where cardinality allows one, the drag handles for reordering, and the write path. An
  * edit made in a cell and the same edit made in the panel beside it are the same code rather than
- * two implementations that agree today (PRD §6).
+ * two implementations that agree today.
  *
  * The component exists at all for one reason: `app-property-values`'s subtree injects a
  * `ResourceFetcherService` it does not provide, and in a table that service has to be *this row's*
@@ -78,7 +78,7 @@ export class TablePropertyCellComponent implements OnChanges, OnDestroy {
    *
    * The table overlays it onto the page the query returned and re-renders the row from it, which
    * is what keeps a saved row in place even once its new value contradicts the active sort or
-   * filter (REQ-4.4, REQ-4.5).
+   * filter.
    */
   readonly resourceReloaded = output<ReadResource>();
 

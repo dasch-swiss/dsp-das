@@ -41,7 +41,7 @@ function propDef(id: string, objectType: string): ResourcePropertyDefinitionWith
 /**
  * A definition the resource editor drops, standing in for the whole read-only family — link, file
  * value and geometry. `commonProperty` filters link properties out, so no `PropertyInfoValues`
- * reaches the cell and it renders as text (REQ-4.7).
+ * reaches the cell and it renders as text.
  */
 function readOnlyPropDef(id: string, objectType: string): ResourcePropertyDefinitionWithAllLanguages {
   return { ...propDef(id, objectType), isLinkProperty: true } as ResourcePropertyDefinitionWithAllLanguages;
@@ -260,7 +260,7 @@ const TYPED_COLUMNS: TableColumn[] = [
 ];
 
 /**
- * The reason a cell mounts the viewer's own property unit at all (PRD §6): a value reads the same
+ * The reason a cell mounts the viewer's own property unit at all: a value reads the same
  * in the grid as it does in the panel beside it. `strval` cannot express either of these —
  * dsp-api ships a date as `GREGORIAN:2024-6-15` and a boolean as the word "true".
  */
@@ -302,7 +302,7 @@ const READ_ONLY_COLUMNS: TableColumn[] = [
 ];
 
 /**
- * REQ-4.7. Link, file-value, geometry and non-editable properties are dropped by
+ * Link, file-value, geometry and non-editable properties are dropped by
  * `GenerateProperty.commonProperty`, so there is no `PropertyInfoValues` to hand the viewer and
  * no editor to mount. Those cells render as text — and the rest of the row is unaffected, which
  * is the other half of the claim.
@@ -364,7 +364,7 @@ const manyAuthors = () =>
 
 /**
  * A read-only column has no add control, so an empty cell there would be indistinguishable from
- * one the reader has simply not scrolled to (REQ-1.6).
+ * one the reader has simply not scrolled to.
  */
 export const MarksAnEmptyReadOnlyCellAsNotSet: Story = {
   args: {
@@ -563,7 +563,7 @@ export const SortsAscendingWhenAnUnsortedColumnIsActivated: Story = {
 };
 
 /**
- * Two-state, never three (REQ-3.1): activating the column that is already sorted flips the
+ * Two-state, never three: activating the column that is already sorted flips the
  * direction instead of stepping through an "unsorted" state the query cannot express.
  */
 export const TogglesDirectionWhenTheSortedColumnIsActivatedAgain: Story = {
@@ -585,7 +585,7 @@ export const OffersNoSortControlWhereTheQueryCannotOrderBy: Story = {
       column(LABEL_COLUMN_KEY, 'Label'),
       column(`${ONTO}hasTitle`, 'Title'),
       // A link property: the Data tab's sort rule excludes it, so the header must offer nothing
-      // rather than a control that would produce an order the list view cannot display (REQ-3.2).
+      // rather than a control that would produce an order the list view cannot display.
       column(`${ONTO}hasPlace`, 'Place', { isSortable: false }),
     ],
   }),
@@ -621,7 +621,7 @@ export const NamesEachHeaderActionInATooltip: Story = {
 
 /**
  * Hiding the sorted column does not clear the sort — it lives in the URL, and the list view's own
- * control still shows it (REQ-3.4). The table simply has no header left to announce it on.
+ * control still shows it. The table simply has no header left to announce it on.
  */
 export const KeepsTheSortWhenItsColumnIsHidden: Story = {
   ...headerControlsStory({
@@ -647,7 +647,7 @@ export const AsksTheFilterBarToOpenTheColumnsFilter: Story = {
 };
 
 /**
- * REQ-3.7: a column already carrying a chip says so, and its control offers to edit that chip
+ * A column already carrying a chip says so, and its control offers to edit that chip
  * rather than to add a second filter on the same property.
  */
 export const MarksAColumnThatAlreadyCarriesAFilterChip: Story = {
@@ -724,7 +724,7 @@ const editingStory = (args: Story['args']): Story => ({
 });
 
 /**
- * REQ-4.1 and the whole shape of the feature: there is no table-specific editing affordance. A
+ * The whole shape of the feature: there is no table-specific editing affordance. A
  * cell the editor can open *is* the editor's own unit, mounted in the cell; a cell it cannot open
  * is text.
  */
@@ -856,7 +856,7 @@ export const TintsTheValueBeingEdited: Story = {
   },
 };
 
-/** REQ-4.1 again, from the other end: the control opens the editor the resource viewer opens. */
+/** The same, from the other end: the control opens the editor the resource viewer opens. */
 export const OpensTheViewersOwnEditorFromTheBubble: Story = {
   ...editingStory({}),
   play: async ({ canvasElement }) => {
@@ -871,7 +871,7 @@ export const OpensTheViewersOwnEditorFromTheBubble: Story = {
 };
 
 /**
- * REQ-4.6: the gate is the resource editor's own permission check, applied by the editor itself.
+ * The gate is the resource editor's own permission check, applied by the editor itself.
  * The table adds nothing — which is exactly why a resource the viewer would refuse to edit is not
  * editable from a cell either.
  */
@@ -892,7 +892,7 @@ export const OffersNoEditOrDeleteWithoutModifyPermission: Story = {
   },
 };
 
-/** REQ-4.12: adding a value is the editor's own control, offered where cardinality allows one. */
+/** Adding a value is the editor's own control, offered where cardinality allows one. */
 export const OffersTheViewersAddControlWhereCardinalityAllowsAnotherValue: Story = {
   ...editingStory({}),
   play: async ({ canvasElement }) => {
@@ -929,7 +929,7 @@ const rowControlsStory = (args: Story['args']): Story => ({
   },
 });
 
-/** REQ-5.4: the row checkbox feeds the comparison selection, exactly as the list view's does. */
+/** The row checkbox feeds the comparison selection, exactly as the list view's does. */
 export const AddsARowToTheComparisonWhenItIsChecked: Story = {
   ...rowControlsStory({}),
   play: async ({ canvasElement }) => {
@@ -1005,7 +1005,7 @@ export const MovesAColumnWithTheKeyboardFromItsHeader: Story = {
   },
 };
 
-/** The sticky label column stays at index 0, for the keyboard exactly as for a drop (REQ-2.10). */
+/** The sticky label column stays at index 0, for the keyboard exactly as for a drop. */
 export const RefusesToMoveAColumnInFrontOfTheStickyOne: Story = {
   ...keyboardStory(),
   play: async ({ canvasElement }) => {
@@ -1599,7 +1599,7 @@ export const NarrowsTheLabelColumnBelowItsLongestLabel: Story = {
 };
 
 /**
- * REQ-1.12: a class wider than the viewport scrolls sideways rather than reflowing. The columns
+ * A class wider than the viewport scrolls sideways rather than reflowing. The columns
  * keep the widths they were given — a table that reflowed would silently stop being a grid the
  * user can scan a property down.
  */
